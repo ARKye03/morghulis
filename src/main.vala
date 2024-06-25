@@ -1,5 +1,3 @@
-#! /usr/bin/env -S vala --pkg gtk4 --pkg gtk4-layer-shell-0
-
 using Gtk;
 
 class ZooreMain : GLib.Object {

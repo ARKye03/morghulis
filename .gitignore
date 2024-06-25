@@ -30,3 +30,4 @@
 # Vala
 bin/
 .direnv/
+/subprojects/blueprint-compiler
