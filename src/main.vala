@@ -9,6 +9,8 @@ class ZooreMain : GLib.Object {
 
         app.activate.connect(() => {
             var window = new Zoore.Bar(app);
+            var applauncher = new Zoore.Apps(app);
+            applauncher.present();
             window.present();
         });
 

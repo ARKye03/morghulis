@@ -1,3 +1,5 @@
 {
-    "mesonbuild.configureOnOpen": false
+    "mesonbuild.configureOnOpen": false,
+    "C_Cpp.default.compileCommands": "/home/archkye/arch_progs/vala_layer/builddir/compile_commands.json",
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild"
 }

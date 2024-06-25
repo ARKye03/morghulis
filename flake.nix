@@ -13,8 +13,7 @@
             nixpkgs-fmt
           ];
           shell = pkgs.mkShell {
-            nativeBuildInputs = with pkgs.buildPackages; [
-              gtk4
+            nativeBuildInputs = with pkgs; [
               gtk4-layer-shell
               vala
               vala-language-server
@@ -23,9 +22,15 @@
               meson
               ninja
               pkg-config
-              gobject-introspection
               glfw-wayland
             ] ++ nix-utils;
+            buildInputs = with pkgs; [
+              gtk4
+              # gobject-introspection
+              glib
+              gdk-pixbuf
+              json-glib
+            ];
             shellHook = ''
               export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
             '';

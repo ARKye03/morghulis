@@ -1,0 +1,24 @@
+using Gtk 4.0;
+
+template $MyAppWindow: ApplicationWindow {
+  default-width: 600;
+  default-height: 300;
+  title: _("Hello, Blueprint!");
+
+  [titlebar]
+  HeaderBar {}
+
+  CenterBox {
+    start-widget: Label {
+      label: _("Hello, World!");
+    };
+
+    center-widget: Label {
+      label: _("Hello, World!");
+    };
+
+    end-widget: Label {
+      label: _("Hello, World!");
+    };
+  }
+}
