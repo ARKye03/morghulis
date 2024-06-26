@@ -1,8 +1,8 @@
+targets = files('ui/NavBar.blp')
+
 blueprints = custom_target(
     'blueprints',
-    input: files(
-        'ui/NavBar.blp',
-    ),
+    input: targets,
     output: '.',
     command: [
         find_program('blueprint-compiler'),
@@ -13,10 +13,8 @@ blueprints = custom_target(
     ],
 )
 
-asresources = gnome.compile_resources(
-    'as-resources',
-    'ui/NavBar.blp',
-    source_dir: 'data',
-    c_name: 'as',
+project_resources = gnome.compile_resources(
+    project_name + '-resources',
+    project_name + '.gresource.xml',
     dependencies: blueprints,
 )

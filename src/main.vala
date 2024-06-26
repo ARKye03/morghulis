@@ -1,19 +1,44 @@
 using Gtk;
+using GtkLayerShell;
 
-class ZooreMain : GLib.Object {
-    public static int main(string[] argv) {
-        var app = new
-            Gtk.Application(
-                            "zoore.vala",
-                            GLib.ApplicationFlags.FLAGS_NONE);
+public class Zoore : Gtk.Application {
+    public NavBar nav_bar;
 
-        app.activate.connect(() => {
-            var window = new Zoore.Bar(app);
-            var applauncher = new Zoore.Apps(app);
-            applauncher.present();
-            window.present();
-        });
+    private static Zoore _instance;
+    public static Zoore instance {
+        get {
+            if (_instance == null)
+                _instance = new Zoore();
 
-        return app.run(argv);
+            return _instance;
+        }
+    }
+
+    construct {
+        application_id = "org.gtk.Example";
+        flags = ApplicationFlags.FLAGS_NONE;
+    }
+
+    public override void activate() {
+        if (nav_bar != null) {
+            nav_bar.show();
+            return;
+        }
+
+        nav_bar = new NavBar(this);
+        GtkLayerShell.init_for_window(nav_bar);
+        GtkLayerShell.auto_exclusive_zone_enable(nav_bar);
+        GtkLayerShell.set_margin(nav_bar, GtkLayerShell.Edge.RIGHT, 10);
+        GtkLayerShell.set_margin(nav_bar, GtkLayerShell.Edge.LEFT, 10);
+        GtkLayerShell.set_anchor(nav_bar, GtkLayerShell.Edge.TOP, true);
+        GtkLayerShell.set_anchor(nav_bar, GtkLayerShell.Edge.RIGHT, true);
+        GtkLayerShell.set_anchor(nav_bar, GtkLayerShell.Edge.LEFT, true);
+
+        nav_bar.present();
+    }
+
+    public static int main(string[] args) {
+        var app = Zoore.instance;
+        return app.run(args);
     }
 }

@@ -5,9 +5,9 @@ project(
     meson_version: '>= 1.4.0',
 )
 
-# gnome = import('gnome')
+gnome = import('gnome')
 
 project_name = meson.project_name()
 
-# subdir('data')
+subdir('data')
 subdir('src')

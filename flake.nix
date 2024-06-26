@@ -13,7 +13,8 @@
             nixpkgs-fmt
           ];
           shell = pkgs.mkShell {
-            nativeBuildInputs = with pkgs; [
+            nativeBuildInputs = with pkgs.buildPackages; [
+              gtk4
               gtk4-layer-shell
               vala
               vala-language-server
@@ -23,16 +24,17 @@
               ninja
               pkg-config
               glfw-wayland
+              gobject-introspection
+              blueprint-compiler
             ] ++ nix-utils;
-            buildInputs = with pkgs; [
-              gtk4
-              # gobject-introspection
-              glib
-              gdk-pixbuf
-              json-glib
-            ];
+            # buildInputs = with pkgs; [
+            #   glib
+            #   gdk-pixbuf
+            #   json-glib
+            # ];
             shellHook = ''
-              export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+              # export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+              export GTK_THEME=adw-gtk3:dark # Forcing to use Arch Linux's active theme
             '';
           };
         in
