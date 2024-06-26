@@ -4,8 +4,15 @@ template $NavBar: Window {
   default-height: 40;
 
   CenterBox {
-    start-widget: Label {
-      label: _("Hello, World!");
+    start-widget: Box {
+      Button {
+        label: "Launch";
+        name: "apps_button";
+      }
+
+      Box {
+        name: "workspaces";
+      }
     };
 
     center-widget: Label {
