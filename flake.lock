@@ -1,5 +1,59 @@
 {
   "nodes": {
+    "astal-hyprland": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1719577636,
+        "narHash": "sha256-CeTwG26NHVEbAr6SpXTO6oYzSgVxzrtIAgLo0sKEIVc=",
+        "owner": "astal-sh",
+        "repo": "hyprland",
+        "rev": "5ed3561c736c8f28a2123905d6ef3b33f9e4d3ee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "astal-sh",
+        "repo": "hyprland",
+        "type": "github"
+      }
+    },
+    "astal-mpris": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1719577361,
+        "narHash": "sha256-IFEa/aNCSj7TtxetRlWH75W7un3JtjOZNjjt1wtpBuU=",
+        "owner": "astal-sh",
+        "repo": "mpris",
+        "rev": "33ad109d13d26b147a97397e497e1e1e5f89ac8c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "astal-sh",
+        "repo": "mpris",
+        "type": "github"
+      }
+    },
+    "astal-notifd": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1719577270,
+        "narHash": "sha256-6eiDJwOGAMlLBrO/zCKs0RJonSdysXEpNd7Fz2JHh0k=",
+        "owner": "astal-sh",
+        "repo": "notifd",
+        "rev": "1e0f338ebf189014c0515e46358acf520f03a7ea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "astal-sh",
+        "repo": "notifd",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -20,6 +74,54 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1716137900,
+        "narHash": "sha256-sowPU+tLQv8GlqtVtsXioTKeaQvlMz/pefcdwg8MvfM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6c0b7a92c30122196a761b440ac0d46d3d9954f1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1718895438,
+        "narHash": "sha256-k3JqJrkdoYwE3fHE6xGDY676AYmyh4U2Zw+0Bwe5DLU=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "d603719ec6e294f034936c0d0dc06f689d91b6c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1716137900,
+        "narHash": "sha256-sowPU+tLQv8GlqtVtsXioTKeaQvlMz/pefcdwg8MvfM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6c0b7a92c30122196a761b440ac0d46d3d9954f1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
         "lastModified": 1719082008,
         "narHash": "sha256-jHJSUH619zBQ6WdC21fFAlDxHErKVDJ5fpN0Hgx4sjs=",
         "owner": "NixOS",
@@ -34,8 +136,11 @@
     },
     "root": {
       "inputs": {
+        "astal-hyprland": "astal-hyprland",
+        "astal-mpris": "astal-mpris",
+        "astal-notifd": "astal-notifd",
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_4"
       }
     },
     "systems": {

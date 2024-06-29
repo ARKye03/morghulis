@@ -1,9 +1,14 @@
 {
   description = "my project description";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    astal-hyprland.url = "github:astal-sh/hyprland";
+    astal-mpris.url = "github:astal-sh/mpris";
+    astal-notifd.url = "github:astal-sh/notifd";
+  };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, astal-hyprland, astal-mpris, astal-notifd }:
     flake-utils.lib.eachDefaultSystem
       (system:
         let
@@ -11,6 +16,14 @@
           nix-utils = with pkgs; [
             nil
             nixpkgs-fmt
+          ];
+          astalServices = [
+            astal-hyprland.packages.${system}.default
+            (astal-mpris.packages.${system}.default.overrideAttrs
+              {
+                patches = [ ./mpris.patch ];
+              })
+            astal-notifd.packages.${system}.default
           ];
           shell = pkgs.mkShell {
             nativeBuildInputs = with pkgs.buildPackages; [
@@ -22,20 +35,20 @@
               muon
               meson
               ninja
-              pkg-config
               glfw-wayland
               gobject-introspection
               blueprint-compiler
             ] ++ nix-utils;
-            # buildInputs = with pkgs; [
-            #   glib
-            #   gdk-pixbuf
-            #   json-glib
-            # ];
+            buildInputs = with pkgs; [
+              pkg-config
+              glib
+              gdk-pixbuf
+              json-glib
+            ] ++ astalServices;
             shellHook = /* shell */ ''
               export LD_LIBRARY_PATH=
               export GTK_THEME=adw-gtk3:dark # Forcing to use Arch Linux's active theme
-              export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+              # export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
             '';
           };
         in
