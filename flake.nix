@@ -32,9 +32,10 @@
             #   gdk-pixbuf
             #   json-glib
             # ];
-            shellHook = ''
-              # export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+            shellHook = /* shell */ ''
+              export LD_LIBRARY_PATH=
               export GTK_THEME=adw-gtk3:dark # Forcing to use Arch Linux's active theme
+              export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
             '';
           };
         in
