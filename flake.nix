@@ -18,7 +18,12 @@
             nixpkgs-fmt
           ];
           astalServices = [
-            astal-hyprland.packages.${system}.default
+
+            (astal-hyprland.packages.${system}.default.overrideAttrs
+              {
+                patches = [ ./mpris.patch ];
+              })
+
             (astal-mpris.packages.${system}.default.overrideAttrs
               {
                 patches = [ ./mpris.patch ];
