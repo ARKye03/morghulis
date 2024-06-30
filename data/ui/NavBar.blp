@@ -3,19 +3,27 @@ using Gtk 4.0;
 template $NavBar: Window {
   default-height: 40;
 
+  styles [
+    "NavBar_Master"
+  ]
+
   CenterBox {
     start-widget: Box {
-      Button apps_button {
-        label: "Launch";
-        name: "apps_button";
-        tooltip-text: "Applications";
+      spacing: 10;
 
-        child: Image apps_button_icon {};
+      Button apps_button {
+        label: "L";
+        name: "apps_button";
+        valign: center;
       }
 
-      Box {
+      Box workspaces {
         name: "workspaces";
-        spacing: 10;
+        spacing: 5;
+
+        styles [
+          "workspaces"
+        ]
       }
     };
 

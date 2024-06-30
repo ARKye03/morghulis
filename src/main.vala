@@ -3,6 +3,8 @@ using GtkLayerShell;
 
 public class Zoore : Gtk.Application {
     public NavBar nav_bar;
+    private bool _cssLoaded = false;
+
 
     private static Zoore _instance;
     public static Zoore instance {
@@ -25,16 +27,52 @@ public class Zoore : Gtk.Application {
             return;
         }
 
-        nav_bar = new NavBar(this);
-        GtkLayerShell.init_for_window(nav_bar);
-        GtkLayerShell.auto_exclusive_zone_enable(nav_bar);
-        GtkLayerShell.set_margin(nav_bar, GtkLayerShell.Edge.RIGHT, 10);
-        GtkLayerShell.set_margin(nav_bar, GtkLayerShell.Edge.LEFT, 10);
-        GtkLayerShell.set_anchor(nav_bar, GtkLayerShell.Edge.TOP, true);
-        GtkLayerShell.set_anchor(nav_bar, GtkLayerShell.Edge.RIGHT, true);
-        GtkLayerShell.set_anchor(nav_bar, GtkLayerShell.Edge.LEFT, true);
+        // Ensure CSS is loaded only once.
+        if (!_cssLoaded) {
+            LoadCss();
+            _cssLoaded = true;
+        }
 
-        nav_bar.present();
+        nav_bar = new NavBar(this);
+
+        PresentLayer(nav_bar,
+                     new GtkLayerShell.Edge[] {
+            GtkLayerShell.Edge.TOP,
+            GtkLayerShell.Edge.RIGHT,
+            GtkLayerShell.Edge.LEFT
+        },
+                     new GtkLayerShell.Edge[] {
+            GtkLayerShell.Edge.RIGHT,
+            GtkLayerShell.Edge.LEFT,
+            GtkLayerShell.Edge.BOTTOM
+        },
+                     GtkLayerShell.Layer.TOP
+        );
+    }
+
+    void PresentLayer(Gtk.Window window,
+                      GtkLayerShell.Edge[] anchors,
+                      GtkLayerShell.Edge[] margins,
+                      GtkLayerShell.Layer layer = GtkLayerShell.Layer.TOP) {
+        GtkLayerShell.init_for_window(window);
+        GtkLayerShell.auto_exclusive_zone_enable(window);
+        GtkLayerShell.set_layer(window, layer);
+
+        foreach (var item in anchors) {
+            GtkLayerShell.set_anchor(window, item, true);
+        }
+
+        foreach (var item in margins) {
+            GtkLayerShell.set_margin(window, item, 10);
+        }
+
+        window.present();
+    }
+
+    void LoadCss() {
+        var provider = new Gtk.CssProvider();
+        provider.load_from_path("src/styles/style.css");
+        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     public static int main(string[] args) {
