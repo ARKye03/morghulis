@@ -5,13 +5,17 @@ template $NavBar: Window {
 
   CenterBox {
     start-widget: Box {
-      Button {
+      Button apps_button {
         label: "Launch";
         name: "apps_button";
+        tooltip-text: "Applications";
+
+        child: Image apps_button_icon {};
       }
 
       Box {
         name: "workspaces";
+        spacing: 10;
       }
     };
 
