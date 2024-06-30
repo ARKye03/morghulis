@@ -53,6 +53,7 @@
             shellHook = /* shell */ ''
               export LD_LIBRARY_PATH=
               export GTK_THEME=adw-gtk3:dark # Forcing to use Arch Linux's active theme
+              export XCURSOR_THEME="Catppuccin-Mocha-Dark"
               # export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
             '';
           };
