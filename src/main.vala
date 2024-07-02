@@ -70,8 +70,23 @@ public class Zoore : Gtk.Application {
     }
 
     void LoadCss() {
+        var input = "src/styles/main.scss";
+        var output = "/tmp/zoore/style.css";
+        string[] argv = { "sassc", input, output };
+
+        try {
+            var dir = File.new_for_path("/tmp/zoore");
+            if (!dir.query_exists()) {
+                dir.make_directory_with_parents();
+            }
+            var subprocess = new GLib.Subprocess.newv(argv, GLib.SubprocessFlags.STDOUT_PIPE);
+            subprocess.wait(); // Ensure the process completes before proceeding
+        } catch (GLib.Error e) {
+            stdout.printf("Error: %s\n", e.message);
+        }
+
         var provider = new Gtk.CssProvider();
-        provider.load_from_path("src/styles/style.css");
+        provider.load_from_path(output);
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
