@@ -27,12 +27,49 @@ template $NavBar: Window {
       }
     };
 
-    center-widget: Label mpris_label {
-      label: "oooops";
+    center-widget: Button mpris_button {
+      name: "mpris_button";
+      valign: center;
+
+      styles [
+        "mpris_button"
+      ]
+
+      child: Label mpris_label {
+        label: "oooops";
+      };
     };
 
-    end-widget: Label {
-      label: _("Hello, World!");
+    end-widget: Box right_box {
+      spacing: 10;
+
+      styles [
+        "right_box"
+      ]
+
+      Label volume {
+        name: "volume";
+
+        styles [
+          "navbar_label"
+        ]
+      }
+
+      Label clock {
+        name: "clock";
+
+        styles [
+          "navbar_label"
+        ]
+      }
+
+      Box systray {}
+
+      Button power_button {
+        label: "Power";
+        name: "power_button";
+        valign: center;
+      }
     };
   }
 }
