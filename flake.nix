@@ -45,6 +45,7 @@
               blueprint-compiler
             ] ++ nix-utils;
             buildInputs = with pkgs; [
+              libpulseaudio
               pkg-config
               glib
               gdk-pixbuf

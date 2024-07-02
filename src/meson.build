@@ -9,6 +9,7 @@ executable(
         dependency('astal-notifd-0.1'),
         dependency('astal-hyprland-0.1'),
         dependency('astal-mpris-0.1'),
+        dependency('libpulse-simple'),
     ],
     install: true,
 )
