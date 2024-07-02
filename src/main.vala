@@ -34,6 +34,18 @@ public class Zoore : Gtk.Application {
         }
 
         nav_bar = new NavBar(this);
+        // var test = new Gtk.Window();
+        // test.set_child(new Gtk.Label("Hello World"));
+
+        // PresentLayer(nav_bar,
+        // new GtkLayerShell.Edge[] {
+        // GtkLayerShell.Edge.TOP,
+        // },
+        // new GtkLayerShell.Edge[] {
+        // GtkLayerShell.Edge.BOTTOM
+        // },
+        // GtkLayerShell.Layer.TOP
+        // );
 
         PresentLayer(nav_bar,
                      new GtkLayerShell.Edge[] {

@@ -73,7 +73,7 @@ public class NavBar : Gtk.Window {
             workspace_buttons.append (workspace_button);
         }
         UpdateWorkspaces ();
-        hyprland.event.connect (UpdateWorkspaces);
+        hyprland.notify["focused-workspace"].connect (UpdateWorkspaces);
     }
 
     void UpdateWorkspaces () {
