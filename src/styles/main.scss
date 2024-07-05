@@ -35,6 +35,10 @@
         color: #9575CD;
     }
 }
+.mpris_button{
+    @include MasterWidget();
+    background-color: transparent;
+}
 .navbar_label{
     @include MasterWidget;
     padding: 1px 10px; 
