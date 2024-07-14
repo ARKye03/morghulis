@@ -21,12 +21,12 @@
 
             (astal-hyprland.packages.${system}.default.overrideAttrs
               {
-                patches = [ ./mpris.patch ];
+                patches = [ ./astal.patch ];
               })
 
             (astal-mpris.packages.${system}.default.overrideAttrs
               {
-                patches = [ ./mpris.patch ];
+                patches = [ ./astal.patch ];
               })
             astal-notifd.packages.${system}.default
           ];
