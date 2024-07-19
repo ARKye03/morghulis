@@ -3,12 +3,12 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    astal-hyprland.url = "github:astal-sh/hyprland";
     astal-mpris.url = "github:astal-sh/mpris";
     astal-notifd.url = "github:astal-sh/notifd";
+    astal-river.url = "github:astal-sh/river";
   };
 
-  outputs = { self, nixpkgs, flake-utils, astal-hyprland, astal-mpris, astal-notifd }:
+  outputs = { self, nixpkgs, flake-utils, astal-river, astal-mpris, astal-notifd }:
     flake-utils.lib.eachDefaultSystem
       (system:
         let
@@ -18,12 +18,7 @@
             nixpkgs-fmt
           ];
           astalServices = [
-
-            (astal-hyprland.packages.${system}.default.overrideAttrs
-              {
-                patches = [ ./astal.patch ];
-              })
-
+            astal-river.packages.${system}.default
             (astal-mpris.packages.${system}.default.overrideAttrs
               {
                 patches = [ ./astal.patch ];

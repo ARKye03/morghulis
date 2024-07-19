@@ -7,7 +7,7 @@ executable(
         dependency('gtk4'),
         dependency('gtk4-layer-shell-0'),
         dependency('astal-notifd-0.1'),
-        dependency('astal-hyprland-0.1'),
+        dependency('astal-river-0.1'),
         dependency('astal-mpris-0.1'),
         dependency('libpulse-simple'),
     ],

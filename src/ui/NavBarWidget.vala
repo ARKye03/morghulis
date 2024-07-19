@@ -1,11 +1,13 @@
-using AstalHyprland;
+using AstalRiver;
 using PulseAudio;
+using Gdk;
 
 [GtkTemplate (ui = "/org/gtk/com.github.ARKye03.zoore_layer/ui/NavBar.ui")]
 public class NavBar : Gtk.Window {
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default ();
-    public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default ();
+    public AstalRiver.River river = AstalRiver.River.get_default ();
     public List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
+    public AstalRiver.Output MainOutput = AstalRiver.River.get_default ().get_output ("HDMI-A-1");
 
 
     [GtkChild]
@@ -72,19 +74,21 @@ public class NavBar : Gtk.Window {
             workspaces.append (workspace_button);
             workspace_buttons.append (workspace_button);
         }
+        print ("Hello");
         UpdateWorkspaces ();
-        hyprland.notify["focused-workspace"].connect (UpdateWorkspaces);
+        river.changed.connect (UpdateWorkspaces);
     }
 
     void UpdateWorkspaces () {
-        var focused_workspace_id = hyprland.focused_workspace.id;
+        var focused_workspace_id = MainOutput.focused_tags;
+        print ("\n" + focused_workspace_id.to_string ());
 
         int index = 0;
         workspace_buttons.foreach ((button) => {
             if (button != null) {
                 if (index + 1 == focused_workspace_id) {
                     button.set_css_classes (new string[] { "focused" });
-                } else if (workspace_has_windows (index + 1)) {
+                } else if (workspace_has_windows (index)) {
                     button.set_css_classes (new string[] { "has-windows" });
                 } else {
                     button.set_css_classes (new string[] { "empty" });
@@ -97,14 +101,14 @@ public class NavBar : Gtk.Window {
     // Function to create a lambda function with the current value of i
     void connect_button_to_workspace (Gtk.Button button, int workspaceNumber) {
         button.clicked.connect (() => {
-            // Execute process command `hyprctl dispatch workspace ${workspaceNumber}`
-            hyprland.dispatch ("workspace", workspaceNumber.to_string ());
+            // river.run_command_async(["set-focused-tags", `${1 << (i-1)}`], null);
+            river.run_command_async (new string[] { "set-focused-tags", (1 << (workspaceNumber - 1)).to_string () }, null);
         });
     }
 
     bool workspace_has_windows (int workspaceNumber) {
-        var WindowCount = hyprland.get_workspace (workspaceNumber).clients.length ();
-        return WindowCount > 0;
+        // var WindowCount = hyprland.get_workspace (workspaceNumber).clients.length ();
+        return false;
     }
 
     void MprisRenderer () {
