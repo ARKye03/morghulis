@@ -1,5 +1,5 @@
 {
-  description = "my project description";
+  description = "Morghulis";
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
@@ -53,26 +53,16 @@
             ] ++ astalServices;
             shellHook = /* shell */ ''
               export LD_LIBRARY_PATH=
-              export GTK_THEME=adw-gtk3:dark # Forcing to use Arch Linux's active theme
+              export GTK_THEME=adw-gtk3:dark
               export XCURSOR_THEME="Catppuccin-Mocha-Dark"
               # export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
             '';
           };
         in
         {
-          apps.${system}.zoore = flake-utils.lib.mkApp {
-            drv = pkgs.stdenv.mkDerivation {
-              name = "zoore";
-              # Assuming `build/src/com.github.ARKye03.zoore_layer` is a source directory
-              # You need to ensure this derivation actually builds your application
-              # This is a placeholder for the build instructions
-              buildInputs = [ pkgs.gcc ]; # Example dependency
-              buildPhase = "echo Building..."; # Placeholder build command
-              installPhase = ''
-                mkdir -p $out/bin
-                cp -r build/src/com.github.ARKye03.zoore_layer $out/bin/zoore # Adjust this to your actual build output
-              '';
-            };
+          apps.default = {
+            type = "app";
+            program = "build/src/com.github.ARKye03.zoore_layer";
           };
           devShells.default = shell;
         }
