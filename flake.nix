@@ -60,9 +60,19 @@
           };
         in
         {
-          apps.${system}.zoore = {
-            type = "app";
-            program = "build/src/com.github.ARKye03.zoore_layer";
+          apps.${system}.zoore = flake-utils.lib.mkApp {
+            drv = pkgs.stdenv.mkDerivation {
+              name = "zoore";
+              # Assuming `build/src/com.github.ARKye03.zoore_layer` is a source directory
+              # You need to ensure this derivation actually builds your application
+              # This is a placeholder for the build instructions
+              buildInputs = [ pkgs.gcc ]; # Example dependency
+              buildPhase = "echo Building..."; # Placeholder build command
+              installPhase = ''
+                mkdir -p $out/bin
+                cp -r build/src/com.github.ARKye03.zoore_layer $out/bin/zoore # Adjust this to your actual build output
+              '';
+            };
           };
           devShells.default = shell;
         }
