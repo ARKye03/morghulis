@@ -60,6 +60,10 @@
           };
         in
         {
+          apps.${system}.zoore = {
+            type = "app";
+            program = "build/src/com.github.ARKye03.zoore_layer";
+          };
           devShells.default = shell;
         }
       );
