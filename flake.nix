@@ -15,19 +15,24 @@
           pkgs = nixpkgs.legacyPackages.${system};
           nix-utils = with pkgs; [
             nil
+            nixd
             nixpkgs-fmt
           ];
           astalServices = [
 
-            (astal-hyprland.packages.${system}.default.overrideAttrs
+            (
+              astal-hyprland.packages.${system}.default/* .overrideAttrs
               {
                 patches = [ ./astal.patch ];
-              })
+              } */
+            )
 
-            (astal-mpris.packages.${system}.default.overrideAttrs
+            (
+              astal-mpris.packages.${system}.default/* .overrideAttrs
               {
                 patches = [ ./astal.patch ];
-              })
+              } */
+            )
             astal-notifd.packages.${system}.default
           ];
           shell = pkgs.mkShell {
