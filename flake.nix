@@ -3,38 +3,19 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    astal-hyprland.url = "github:astal-sh/hyprland";
-    astal-mpris.url = "github:astal-sh/mpris";
-    astal-notifd.url = "github:astal-sh/notifd";
+    astal.url = "github:aylur/astal";
   };
 
-  outputs = { self, nixpkgs, flake-utils, astal-hyprland, astal-mpris, astal-notifd }:
+  outputs = { self, nixpkgs, flake-utils, astal}:
     flake-utils.lib.eachDefaultSystem
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           nix-utils = with pkgs; [
-            nil
             nixd
             nixpkgs-fmt
           ];
-          astalServices = [
-
-            (
-              astal-hyprland.packages.${system}.default/* .overrideAttrs
-              {
-                patches = [ ./astal.patch ];
-              } */
-            )
-
-            (
-              astal-mpris.packages.${system}.default/* .overrideAttrs
-              {
-                patches = [ ./astal.patch ];
-              } */
-            )
-            astal-notifd.packages.${system}.default
-          ];
+          astal-lib = astal.packages.${system}.default;
           shell = pkgs.mkShell {
             nativeBuildInputs = with pkgs.buildPackages; [
               gtk4
@@ -50,12 +31,12 @@
               blueprint-compiler
             ] ++ nix-utils;
             buildInputs = with pkgs; [
-              libpulseaudio
               pkg-config
               glib
               gdk-pixbuf
               json-glib
-            ] ++ astalServices;
+              astal-lib
+            ];
             shellHook = /* shell */ ''
               export LD_LIBRARY_PATH=
               export GTK_THEME=adw-gtk3:dark

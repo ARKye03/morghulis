@@ -1,5 +1,4 @@
 using AstalHyprland;
-using PulseAudio;
 
 [GtkTemplate (ui = "/org/gtk/com.github.ARKye03.zoore_layer/ui/NavBar.ui")]
 public class NavBar : Gtk.Window {
