@@ -84,7 +84,7 @@ public class Zoore : Gtk.Application {
     void LoadCss() {
         var input = "src/styles/main.scss";
         var output = "/tmp/zoore/style.css";
-        string[] argv = { "sassc", input, output };
+        string[] argv = { "sass", input, output };
 
         try {
             var dir = File.new_for_path("/tmp/zoore");
