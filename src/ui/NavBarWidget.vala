@@ -72,7 +72,10 @@ public class NavBar : Gtk.Window {
             workspace_buttons.append (workspace_button);
         }
         UpdateWorkspaces ();
-        hyprland.event.connect (UpdateWorkspaces);
+        hyprland.notify["focused-workspace"].connect (UpdateWorkspaces);
+        hyprland.client_added.connect (UpdateWorkspaces);
+        hyprland.client_removed.connect (UpdateWorkspaces);
+        hyprland.client_moved.connect (UpdateWorkspaces);
     }
 
     void UpdateWorkspaces () {
@@ -112,6 +115,7 @@ public class NavBar : Gtk.Window {
         mpris_button.clicked.connect (() => {
             mpd.play_pause ();
         });
+        mpris_button.tooltip_text = "Play/Pause";
 
         foreach (var player in mpris.players) {
             if (player.bus_name == "org.mpris.MediaPlayer2.mpd")
