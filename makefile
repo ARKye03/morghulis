@@ -1,6 +1,6 @@
 APP_NAME=com.github.ARKye03.zoore_layer
 BIN_DIR=build
-OUTPUT=$(BIN_DIR)/$(APP_NAME)
+OUTPUT=$(BIN_DIR)/src/$(APP_NAME)
 
 # Default target for development
 dev: 
