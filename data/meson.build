@@ -1,3 +1,5 @@
+subdir('scss')
+
 targets = files('ui/NavBar.blp')
 
 blueprints = custom_target(
@@ -16,5 +18,5 @@ blueprints = custom_target(
 project_resources = gnome.compile_resources(
     project_name + '-resources',
     project_name + '.gresource.xml',
-    dependencies: blueprints,
+    dependencies: [blueprints, scss],
 )

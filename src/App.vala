@@ -1,17 +1,17 @@
 using Gtk;
 using GtkLayerShell;
 
-public class Zoore : Gtk.Application {
+public class Morghulis : Gtk.Application {
     private List<LayerWindow> windows = new List<LayerWindow> ();
     private bool _cssLoaded = false;
 
     public static void main(string[] args) {
-        var app = new Zoore();
+        var app = new Morghulis();
         app.run(args);
     }
 
     construct {
-        application_id = "org.gtk.Example";
+        application_id = "com.github.arkye03.morghulis";
         flags = ApplicationFlags.FLAGS_NONE;
     }
 
@@ -34,24 +34,9 @@ public class Zoore : Gtk.Application {
     }
 
     void LoadCss() {
-        var input = "src/styles/main.scss";
-        var output = "/tmp/zoore/style.css";
-        string[] argv = { "sass", input, output };
-
-        try {
-            var dir = File.new_for_path("/tmp/zoore");
-            if (!dir.query_exists()) {
-                dir.make_directory_with_parents();
-            }
-            var subprocess = new GLib.Subprocess.newv(argv, GLib.SubprocessFlags.STDOUT_PIPE);
-            subprocess.wait();
-        } catch (GLib.Error e) {
-            stdout.printf("Error: %s\n", e.message);
-        }
-
-        var provider = new Gtk.CssProvider();
-        provider.load_from_path(output);
-
-        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk.CssProvider provider = new Gtk.CssProvider();
+        provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
+        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider,
+                                                  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 }

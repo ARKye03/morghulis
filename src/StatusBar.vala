@@ -1,7 +1,7 @@
 using AstalHyprland;
 using GtkLayerShell;
 
-[GtkTemplate(ui = "/org/gtk/com.github.ARKye03.zoore_layer/ui/NavBar.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Gtk.Window, LayerWindow {
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
     public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default();

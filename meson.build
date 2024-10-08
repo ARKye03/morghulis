@@ -1,5 +1,5 @@
 project(
-    'com.github.ARKye03.zoore_layer',
+    'morghulis',
     ['vala', 'c'],
     version: '0.1',
     meson_version: '>= 1.4.0',

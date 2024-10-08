@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-    <gresource prefix="/org/gtk/com.github.ARKye03.zoore_layer">
-        <!-- Interface -->
+    <gresource prefix="/com/github/ARKye03/morghulis">
+        <file>morghulis.css</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
     </gresource>
 </gresources>

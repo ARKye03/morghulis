@@ -1,4 +1,4 @@
-source_files = ['App.vala', 'ui/NavBarWidget.vala', 'Utils/Layer.vala']
+source_files = ['App.vala', 'StatusBar.vala', 'Utils/Layer.vala']
 
 executable(
     project_name,
@@ -9,9 +9,6 @@ executable(
         dependency('gtk4'),
         dependency('gtk4-layer-shell-0'),
         dependency('astal-wireplumber-0.1'),
-        # dependency('astal-0.1'),
-        # dependency('astal-network-0.1'),
-        # dependency('astal-tray-0.1'),
         dependency('astal-mpris-0.1'),
         dependency('astal-hyprland-0.1'),
     ],
