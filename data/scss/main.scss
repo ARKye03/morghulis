@@ -2,7 +2,7 @@
     border: 1px solid #363A4F;
     border-radius: 10px;
 }
-.NavBar_Master {
+.StatusBar_Master {
     @include MasterWidget;
     padding: 2px 5px;
 }
@@ -39,7 +39,7 @@
     @include MasterWidget();
     background-color: transparent;
 }
-.navbar_label{
+.StatusBar_label{
     @include MasterWidget;
     padding: 1px 10px; 
     font-size: 16px;

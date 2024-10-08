@@ -28,7 +28,7 @@ public class Morghulis : Gtk.Application {
             _cssLoaded = true;
         }
 
-        var nav_bar = new NavBar(this);
+        var nav_bar = new StatusBar(this);
         windows.append(nav_bar);
         nav_bar.present_layer();
     }

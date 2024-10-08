@@ -1,8 +1,8 @@
 using AstalHyprland;
 using GtkLayerShell;
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
-public class NavBar : Gtk.Window, LayerWindow {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
+public class StatusBar : Gtk.Window, LayerWindow {
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
     public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default();
     public List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
@@ -22,7 +22,7 @@ public class NavBar : Gtk.Window, LayerWindow {
     [GtkChild]
     public unowned Gtk.Label volume;
 
-    public NavBar(Gtk.Application app) {
+    public StatusBar(Gtk.Application app) {
         Object(application: app);
 
         init_layer_properties();

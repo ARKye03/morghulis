@@ -1,6 +1,6 @@
 subdir('scss')
 
-targets = files('ui/NavBar.blp')
+targets = files('ui/StatusBar.blp')
 
 blueprints = custom_target(
     'blueprints',
