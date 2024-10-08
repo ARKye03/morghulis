@@ -1,7 +1,9 @@
+source_files = ['App.vala', 'ui/NavBarWidget.vala', 'Utils/Layer.vala']
+
 executable(
     project_name,
     project_resources,
-    sources: ['main.vala', 'ui/NavBarWidget.vala'],
+    sources: source_files,
     vala_args: ['--gresourcesdir=data/'],
     dependencies: [
         dependency('gtk4'),
