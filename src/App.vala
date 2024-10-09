@@ -2,12 +2,13 @@ using Gtk;
 using GtkLayerShell;
 
 public class Morghulis : Gtk.Application {
+    public static Morghulis Instance { get; private set; }
     private List<LayerWindow> windows = new List<LayerWindow> ();
     private bool _cssLoaded = false;
 
     public static void main(string[] args) {
-        var app = new Morghulis();
-        app.run(args);
+        Instance = new Morghulis();
+        Instance.run(args);
     }
 
     construct {
@@ -16,21 +17,30 @@ public class Morghulis : Gtk.Application {
     }
 
     public override void activate() {
-        if (windows.length() > 0) {
-            foreach (var window in windows) {
-                window.present_layer();
-            }
-            return;
-        }
-
         if (!_cssLoaded) {
             LoadCss();
             _cssLoaded = true;
         }
+        windows.append(new StatusBar(this));
 
-        var nav_bar = new StatusBar(this);
-        windows.append(nav_bar);
-        nav_bar.present_layer();
+        foreach (var window in windows) {
+            window.present_layer();
+        }
+    }
+
+    public bool ToggleWindow(string name) {
+        LayerWindow? w = null;
+        foreach (var window in windows) {
+            if (window.name == name) {
+                w = window;
+                break;
+            }
+        }
+        if (w != null) {
+            w.visible = !w.visible;
+            return true;
+        }
+        return false;
     }
 
     void LoadCss() {

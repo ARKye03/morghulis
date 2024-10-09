@@ -6,6 +6,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
     public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default();
     public List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
+    public string namespace { get; set; }
 
     [GtkChild]
     public unowned Gtk.Label mpris_label;
@@ -17,6 +18,9 @@ public class StatusBar : Gtk.Window, LayerWindow {
     public unowned Gtk.Button mpris_button;
 
     [GtkChild]
+    public unowned Gtk.Button apps_button;
+
+    [GtkChild]
     public unowned Gtk.Label clock;
 
     [GtkChild]
@@ -24,8 +28,14 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
     public StatusBar(Gtk.Application app) {
         Object(application: app);
-
         init_layer_properties();
+        this.name = "StatusBar";
+        this.namespace = "StatusBar";
+
+        apps_button.clicked.connect(() => {
+            Morghulis.Instance.ToggleWindow("StatusBar");
+        });
+
         WorkspaceRenderer();
         MprisRenderer();
         ClockRenderer();
@@ -36,7 +46,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
         GtkLayerShell.auto_exclusive_zone_enable(this);
         GtkLayerShell.set_layer(this, GtkLayerShell.Layer.TOP);
 
-        GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.TOP, true);
+        GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.BOTTOM, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.RIGHT, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.LEFT, true);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.RIGHT, 10);
