@@ -33,7 +33,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
         this.namespace = "StatusBar";
 
         apps_button.clicked.connect(() => {
-            Morghulis.Instance.ToggleWindow("StatusBar");
+            Morghulis.Instance.ToggleWindow("VRunner");
         });
 
         WorkspaceRenderer();
@@ -49,9 +49,10 @@ public class StatusBar : Gtk.Window, LayerWindow {
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.BOTTOM, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.RIGHT, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.LEFT, true);
+
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.RIGHT, 10);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 10);
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 10);
+        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 15);
     }
 
     public void present_layer() {

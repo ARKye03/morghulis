@@ -1,49 +1,9 @@
-@mixin MasterWidget {
-    border: 1px solid #363A4F;
-    border-radius: 10px;
-}
-button {
-    all: unset;
-}
-.StatusBar_Master {
-    @include MasterWidget;
-    padding: 2px 5px;
-}
+@import "Colors";
+@import "StatusBar";
 
-.workspaces {
-    @include MasterWidget;
-    padding: 5px;
-}
-
-.workspaces button {
-    font-size: 14px;
-    padding: 4px;
-    padding-right: 8px;
-}
-
-.focused {
-    color: #DE73FF;
-}
-
-.has-windows {
-    color: #4AA5F0;
-}
-
-.empty {
+button{
     background-color: transparent;
-    &:hover {
-        background-color: #3D4156;
+    &:hover{
+        background-color: $dark_3;
     }
-    &:active {
-        color: #9575CD;
-    }
-}
-.mpris_button{
-    @include MasterWidget();
-    background-color: transparent;
-}
-.StatusBar_label{
-    @include MasterWidget;
-    padding: 1px 10px; 
-    font-size: 16px;
 }

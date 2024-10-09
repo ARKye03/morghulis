@@ -40,6 +40,7 @@ public class Morghulis : Gtk.Application {
             w.visible = !w.visible;
             return true;
         }
+        printerr(@"Window $name not found.\n");
         return false;
     }
 

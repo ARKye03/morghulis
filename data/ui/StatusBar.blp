@@ -12,32 +12,50 @@ template $StatusBar: Window {
       spacing: 10;
 
       Button apps_button {
-        label: "L";
+        label: "󰀻";
         name: "apps_button";
-        valign: center;
-      }
-
-      Box workspaces {
-        name: "workspaces";
-        spacing: 5;
 
         styles [
-          "workspaces"
+          "apps_button",
+          "statusbar_box"
         ]
+      }
+
+      Button mpris_button {
+        name: "mpris_button";
+        valign: fill;
+
+        styles [
+          "mpris_button",
+          "statusbar_box"
+        ]
+
+        child: Box mpris_box {
+          spacing: 5;
+
+          styles [
+            "mpris_box",
+          ]
+
+          Label mpris_box_label {
+            label: " ";
+          }
+
+          Label mpris_label {
+            label: "oooops";
+          }
+        };
       }
     };
 
-    center-widget: Button mpris_button {
-      name: "mpris_button";
-      valign: center;
+    center-widget: Box workspaces {
+      name: "workspaces";
+      spacing: 5;
 
       styles [
-        "mpris_button"
+        "workspaces",
+        "statusbar_box"
       ]
-
-      child: Label mpris_label {
-        label: "oooops";
-      };
     };
 
     end-widget: Box right_box {
@@ -51,7 +69,7 @@ template $StatusBar: Window {
         name: "volume";
 
         styles [
-          "statusbar_label"
+          "statusbar_label",
         ]
       }
 
@@ -59,16 +77,21 @@ template $StatusBar: Window {
         name: "clock";
 
         styles [
-          "statusbar_label"
+          "statusbar_label",
+          "statusbar_box"
         ]
       }
 
       Box systray {}
 
       Button power_button {
-        label: "Power";
+        label: "󰐥";
         name: "power_button";
-        valign: center;
+
+        styles [
+          "power_button",
+          "statusbar_box"
+        ]
       }
     };
   }

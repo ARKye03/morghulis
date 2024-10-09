@@ -1,0 +1,19 @@
+@import "adw";
+
+$master-border-color: #8839ef;
+
+// border: $borders_line-width $border_line_style $border_line_color;
+$borders_line-width: 1px;
+$border_line_style: groove;
+$border_line_color: $purple_1;
+
+@mixin MasterBorder {
+  border: $borders_line-width $border_line_style $border_line_color;
+}
+
+@mixin MasterWidget {
+    border: 1px solid #363A4F;
+    border-radius: 10px;
+}
+
+$master-border-radius: 5px;
