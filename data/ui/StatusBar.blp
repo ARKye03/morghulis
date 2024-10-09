@@ -44,6 +44,18 @@ template $StatusBar: Window {
           }
         };
       }
+
+      Label client_label {
+        label: "-----";
+        halign: start;
+        ellipsize: end;
+        max-width-chars: 20;
+
+        styles [
+          "client_label",
+          "statusbar_box"
+        ]
+      }
     };
 
     center-widget: Box workspaces {

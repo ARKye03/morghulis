@@ -5,11 +5,75 @@ using GtkLayerShell;
 public class Mpris : Gtk.Window, LayerWindow {
 
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
+    public AstalMpris.Player player { get; set; }
+    private Gtk.CssProvider cssProvider;
 
+    [GtkCallback]
+    public void next() {
+        this.player.next();
+    }
 
-    public Mpris(Gtk.Application app) {
-        Object(application: app);
+    [GtkCallback]
+    public void prev() {
+        this.player.previous();
+    }
+
+    [GtkCallback]
+    public void play_pause() {
+        this.player.play_pause();
+    }
+
+    [GtkCallback]
+    public string pause_icon(AstalMpris.PlaybackStatus status) {
+        switch (status) {
+        case AstalMpris.PlaybackStatus.PLAYING:
+            return "media-playback-pause-symbolic";
+        case AstalMpris.PlaybackStatus.PAUSED:
+        case AstalMpris.PlaybackStatus.STOPPED:
+        default:
+            return "media-playback-start-symbolic";
+        }
+    }
+
+    [GtkChild]
+    public unowned Gtk.Scale mpris_slider;
+
+    [GtkChild]
+    public unowned Gtk.Box image_box;
+
+    public Mpris() {
+        Object();
         init_layer_properties();
+        foreach (var item in mpris.players) {
+            if (item.bus_name == "org.mpris.MediaPlayer2.mpd") {
+                this.player = item;
+                break;
+            }
+        }
+        this.player.notify["art-url"].connect(() => {
+            UpdateArt();
+        });
+        this.cssProvider = new Gtk.CssProvider();
+        this.get_style_context()
+         .add_provider(this.cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        this.player.notify["position"].connect(() => {
+            mpris_slider.set_range(0, this.player.length);
+            mpris_slider.set_value(this.player.position);
+        });
+        UpdateArt();
+    }
+
+    public void UpdateArt() {
+        string style = "* { background-image: linear-gradient(rgba(0, 0, 0, 0), "
+            + "alpha(@view_bg_color, 0.9)),"
+            + "url(\"" + this.player.art_url + "\");"
+            + "background-size: cover; }";
+
+        try {
+            this.cssProvider.load_from_string(style);
+        } catch (Error err) {
+            warning(err.message);
+        }
     }
 
     public void init_layer_properties() {

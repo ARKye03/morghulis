@@ -1,6 +1,11 @@
 using Gtk 4.0;
+using AstalMpris 0.1;
 
 template $Mpris: Window {
+    styles [
+        "mpris_window"
+    ]
+
     Box master_box {
         orientation: vertical;
         spacing: 10;
@@ -11,6 +16,7 @@ template $Mpris: Window {
 
         Box upper_box {
             spacing: 10;
+            hexpand: true;
 
             styles [
                 "mpris_master_upper_box"
@@ -24,26 +30,60 @@ template $Mpris: Window {
 
             Box media_info {
                 orientation: vertical;
-                spacing: 5;
+                hexpand: true;
+                spacing: 10;
 
-                Label title {}
+                styles [
+                    "mpris_media_info"
+                ]
 
-                Label artist {}
+                Label title {
+                    label: bind template.player as <AstalMpris.Player>.title;
+                    halign: center;
+                    ellipsize: end;
+                    max-width-chars: 20;
+                }
+
+                Label artist {
+                    label: bind template.player as <AstalMpris.Player>.artist;
+                    halign: center;
+                    ellipsize: end;
+                    max-width-chars: 20;
+                }
             }
+        }
+
+        Scale mpris_slider {
+            hexpand: true;
+
+            styles [
+                "mpris_slider"
+            ]
         }
 
         Box lower_box {
             spacing: 10;
+            hexpand: true;
+            halign: center;
 
             styles [
                 "mpris_master_lower_box"
             ]
 
-            Button previous {}
+            Button {
+                icon-name: "media-skip-backward-symbolic";
+                clicked => $prev();
+            }
 
-            Button play_pause {}
+            Button playback_button {
+                icon-name: bind $pause_icon(template.player as <AstalMpris.Player>.playback-status) as <string>;
+                clicked => $play_pause();
+            }
 
-            Button next {}
+            Button {
+                icon-name: "media-skip-forward-symbolic";
+                clicked => $next();
+            }
         }
     }
 }

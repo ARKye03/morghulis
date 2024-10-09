@@ -23,6 +23,9 @@ public class StatusBar : Gtk.Window, LayerWindow {
     public unowned Gtk.Button apps_button;
 
     [GtkChild]
+    public unowned Gtk.Label client_label;
+
+    [GtkChild]
     public unowned Gtk.Label clock;
 
     [GtkChild]
@@ -37,16 +40,28 @@ public class StatusBar : Gtk.Window, LayerWindow {
         apps_button.clicked.connect(() => {
             Morghulis.Instance.ToggleWindow("VRunner");
         });
-        volume.label = "fnasjfh";
+        Volume();
+        FocusedClient();
+        Workspaces();
+        Mpris();
+        Clock();
+    }
+
+    public void Volume() {
         speaker.bind_property("volume", volume, "label", GLib.BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
             var p = Math.round(src.get_double() * 100);
             trgt.set_string(@"$p%");
             return true;
         });
+    }
 
-        WorkspaceRenderer();
-        MprisRenderer();
-        ClockRenderer();
+    public void FocusedClient() {
+        hyprland.notify["focused-client"].connect(() => {
+            client_label.label = hyprland.focused_client.title;
+        });
+        if (hyprland.focused_client != null) {
+            client_label.label = hyprland.focused_client.title;
+        }
     }
 
     public void init_layer_properties() {
@@ -73,7 +88,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
         clock.label = clockT.format("%I:%M %p %b %e");
     }
 
-    void ClockRenderer() {
+    void Clock() {
         UpdateClock();
         GLib.Timeout.add(30000, () => {
             UpdateClock();
@@ -81,7 +96,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
         });
     }
 
-    void WorkspaceRenderer() {
+    void Workspaces() {
         var wicons = new string[] {
             " ", " ", "󰨞 ",
             " ", " ", "󰭹 ",
@@ -133,7 +148,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
         return WindowCount > 0;
     }
 
-    void MprisRenderer() {
+    void Mpris() {
         AstalMpris.Player? mpd = null;
 
         mpris_button.clicked.connect(() => {

@@ -23,7 +23,7 @@ public class Morghulis : Gtk.Application {
         }
 
         windows.append(new StatusBar(this));
-        windows.append(new Mpris(this));
+        windows.append(new Mpris());
 
         foreach (var window in windows) {
             window.present_layer();
