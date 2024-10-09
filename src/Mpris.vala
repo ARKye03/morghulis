@@ -26,5 +26,6 @@ public class Mpris : Gtk.Window, LayerWindow {
 
     public void present_layer() {
         this.present();
+        this.set_visible(false);
     }
 }

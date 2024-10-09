@@ -49,9 +49,9 @@ public class StatusBar : Gtk.Window, LayerWindow {
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.RIGHT, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.LEFT, true);
 
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.RIGHT, 10);
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 10);
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 10);
+        // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.RIGHT, 5);
+        // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 5);
+        // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 5);
 
         GtkLayerShell.auto_exclusive_zone_enable(this);
     }
@@ -75,10 +75,10 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
     void WorkspaceRenderer() {
         var wicons = new string[] {
-            "  ", "  ", " 󰨞 ",
-            "  ", "  ", " 󰭹 ",
-            "  ", "  ", " 󰊖 ",
-            "  ",
+            " ", " ", "󰨞 ",
+            " ", " ", "󰭹 ",
+            " ", " ", "󰊖 ",
+            " ",
         };
 
         for (var i = 1; i <= 10; i++) {

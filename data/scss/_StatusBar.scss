@@ -1,34 +1,38 @@
 @import "Colors";
 
 .StatusBar_Master {
-    @include MasterWidget;
-     padding: 2px;
+    min-height: 50px;
+    border-radius: $master-border-radius;
+    padding: 0 5px;
 }
-.statusbar_box{
+
+.statusbar_box {
+    margin: 5px 0;
     background-color: $dark_4;
     border: 1px solid #363A4F;
     border-radius: $master-border-radius;
     padding: 0 10px;
 }
 
-.workspaces button{
-    font-size: 14px;
-    padding: 4px;
-    padding-right: 8px;
+.workspaces button {
+    font-size: 16px;
+    // text-align: center;
+    padding-right: 5px;
+    transition: ease-in-out color 200ms;
 }
-.focused  {
+
+.focused {
     color: $accent_color;
 }
 
 .has-windows {
-    color: $yellow_5;
+    color: $orange_1;
 }
 
 .empty {
     color: $dark_1;
 }
-.StatusBar_label{
-    @include MasterWidget;
-    padding: 1px 10px; 
+
+.StatusBar_label {
     font-size: 16px;
 }
