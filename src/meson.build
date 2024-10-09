@@ -1,4 +1,4 @@
-source_files = ['App.vala', 'StatusBar.vala', 'Utils/Layer.vala']
+source_files = ['App.vala', 'StatusBar.vala', 'Mpris.vala', 'Utils/Layer.vala']
 
 executable(
     project_name,

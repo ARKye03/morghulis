@@ -1,0 +1,49 @@
+using Gtk 4.0;
+
+template $Mpris: Window {
+    Box master_box {
+        orientation: vertical;
+        spacing: 10;
+
+        styles [
+            "mpris_master_box"
+        ]
+
+        Box upper_box {
+            spacing: 10;
+
+            styles [
+                "mpris_master_upper_box"
+            ]
+
+            Box image_box {
+                styles [
+                    "image_box"
+                ]
+            }
+
+            Box media_info {
+                orientation: vertical;
+                spacing: 5;
+
+                Label title {}
+
+                Label artist {}
+            }
+        }
+
+        Box lower_box {
+            spacing: 10;
+
+            styles [
+                "mpris_master_lower_box"
+            ]
+
+            Button previous {}
+
+            Button play_pause {}
+
+            Button next {}
+        }
+    }
+}

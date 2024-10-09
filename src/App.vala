@@ -21,7 +21,9 @@ public class Morghulis : Gtk.Application {
             LoadCss();
             _cssLoaded = true;
         }
+
         windows.append(new StatusBar(this));
+        windows.append(new Mpris(this));
 
         foreach (var window in windows) {
             window.present_layer();

@@ -43,7 +43,6 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
     public void init_layer_properties() {
         GtkLayerShell.init_for_window(this);
-        GtkLayerShell.auto_exclusive_zone_enable(this);
         GtkLayerShell.set_layer(this, GtkLayerShell.Layer.TOP);
 
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.BOTTOM, true);
@@ -52,7 +51,9 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.RIGHT, 10);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 10);
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 15);
+        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 10);
+
+        GtkLayerShell.auto_exclusive_zone_enable(this);
     }
 
     public void present_layer() {
@@ -128,7 +129,8 @@ public class StatusBar : Gtk.Window, LayerWindow {
         AstalMpris.Player? mpd = null;
 
         mpris_button.clicked.connect(() => {
-            mpd.play_pause();
+            // mpd.play_pause();
+            Morghulis.Instance.ToggleWindow("Mpris");
         });
         mpris_button.tooltip_text = "Play/Pause";
 
