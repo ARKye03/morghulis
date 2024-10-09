@@ -1,11 +1,13 @@
 using AstalHyprland;
 using GtkLayerShell;
+using AstalWp;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
 public class StatusBar : Gtk.Window, LayerWindow {
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
     public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default();
     public List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
+    private AstalWp.Endpoint speaker = AstalWp.get_default().audio.default_speaker;
     public string namespace { get; set; }
 
     [GtkChild]
@@ -34,6 +36,12 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
         apps_button.clicked.connect(() => {
             Morghulis.Instance.ToggleWindow("VRunner");
+        });
+        volume.label = "fnasjfh";
+        speaker.bind_property("volume", volume, "label", GLib.BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+            var p = Math.round(src.get_double() * 100);
+            trgt.set_string(@"$p%");
+            return true;
         });
 
         WorkspaceRenderer();

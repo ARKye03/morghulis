@@ -12,5 +12,6 @@ executable(
         dependency('astal-mpris-0.1'),
         dependency('astal-hyprland-0.1'),
     ],
+    link_args: ['-lm'],
     install: true,
 )
