@@ -56,6 +56,11 @@ template $Mpris: Window {
         Scale mpris_slider {
             hexpand: true;
 
+            adjustment: Adjustment media_len_adjust {
+                lower: 0;
+                upper: bind template.player as <AstalMpris.Player>.length;
+            };
+
             styles [
                 "mpris_slider"
             ]

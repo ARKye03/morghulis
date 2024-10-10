@@ -45,6 +45,9 @@ public class Mpris : Gtk.Window, LayerWindow {
     }
 
     [GtkChild]
+    public unowned Gtk.Adjustment media_len_adjust;
+
+    [GtkChild]
     public unowned Gtk.Scale mpris_slider;
 
     [GtkChild]
@@ -59,20 +62,16 @@ public class Mpris : Gtk.Window, LayerWindow {
                 break;
             }
         }
+
         this.player.notify["art-url"].connect(() => {
             UpdateArt();
         });
-
         this.cssProvider = new Gtk.CssProvider();
         this.get_style_context()
          .add_provider(this.cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
         UpdateArt();
 
-
-        this.player.notify["position"].connect(() => {
-            mpris_slider.set_range(0, this.player.length);
-            mpris_slider.set_value(this.player.position);
-        });
+        this.player.bind_property("position", media_len_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
     }
 
     public void UpdateArt() {
