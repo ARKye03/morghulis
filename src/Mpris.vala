@@ -2,11 +2,12 @@ using AstalMpris;
 using GtkLayerShell;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Mpris.ui")]
-public class Mpris : Gtk.Window, LayerWindow {
+public class Mpris : Gtk.Window, ILayerWindow {
 
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
     public AstalMpris.Player player { get; set; }
     private Gtk.CssProvider cssProvider;
+    public string namespace { get; set; }
 
     [GtkCallback]
     public void next() {
@@ -55,7 +56,9 @@ public class Mpris : Gtk.Window, LayerWindow {
 
     public Mpris() {
         Object();
+        this.namespace = "Mpris";
         init_layer_properties();
+
         foreach (var item in mpris.players) {
             if (item.bus_name == "org.mpris.MediaPlayer2.mpd") {
                 this.player = item;
@@ -97,6 +100,8 @@ public class Mpris : Gtk.Window, LayerWindow {
         // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 50);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 5);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 5);
+
+        GtkLayerShell.set_namespace(this, namespace);
     }
 
     public void present_layer() {
