@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using AstalWp 0.1;
+using AstalMpris 0.1;
 
 template $StatusBar: Window {
   styles [
@@ -41,7 +42,7 @@ template $StatusBar: Window {
           }
 
           Label mpris_label {
-            label: "oooops";
+            label: bind template.mpd as <AstalMpris.Player>.title;
           }
         };
       }

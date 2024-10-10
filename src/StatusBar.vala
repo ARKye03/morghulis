@@ -3,12 +3,15 @@ using GtkLayerShell;
 using AstalWp;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
-public class StatusBar : Gtk.Window, LayerWindow {
-    public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
-    public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default();
-    public List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
-    public AstalWp.Endpoint speaker  { get; set; }
-    public string namespace { get; set; }
+public class StatusBar : Gtk.Window, ILayerWindow {
+    private AstalMpris.Mpris mpris { get; set; }
+    private AstalHyprland.Hyprland hyprland { get; set; }
+    private List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
+
+    public AstalMpris.Player mpd { get; set; }
+    public AstalWp.Endpoint speaker { get; set; }
+
+    private string namespace { get; set; }
 
     [GtkChild]
     public unowned Gtk.Label mpris_label;
@@ -38,6 +41,8 @@ public class StatusBar : Gtk.Window, LayerWindow {
     public StatusBar(Gtk.Application app) {
         Object(application: app);
         speaker = AstalWp.get_default().audio.default_speaker;
+        mpris = AstalMpris.Mpris.get_default();
+        hyprland = AstalHyprland.Hyprland.get_default();
 
         init_layer_properties();
         this.name = "StatusBar";
@@ -167,7 +172,10 @@ public class StatusBar : Gtk.Window, LayerWindow {
     }
 
     void Mpris() {
-        AstalMpris.Player? mpd = null;
+        foreach (var player in mpris.players) {
+            if (player.bus_name == "org.mpris.MediaPlayer2.mpd")
+                mpd = player;
+        }
 
         mpris_button.clicked.connect(() => {
             Morghulis.Instance.ToggleWindow("Mpris");
@@ -182,17 +190,6 @@ public class StatusBar : Gtk.Window, LayerWindow {
         });
         mpris_button.add_controller(right_click);
 
-        mpris_button.tooltip_text = "Play/Pause";
-
-        foreach (var player in mpris.players) {
-            if (player.bus_name == "org.mpris.MediaPlayer2.mpd")
-                mpd = player;
-        }
-        if (mpd != null) {
-            mpris_label.label = mpd.title;
-            mpd.bind_property("title", mpris_label, "label", GLib.BindingFlags.DEFAULT);
-        } else {
-            mpris_label.label = "oops";
-        }
+        mpris_button.tooltip_text = mpd.identity;
     }
 }
