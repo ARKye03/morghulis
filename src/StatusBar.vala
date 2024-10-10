@@ -31,6 +31,10 @@ public class StatusBar : Gtk.Window, LayerWindow {
     [GtkChild]
     public unowned Gtk.Label volume;
 
+    [GtkChild]
+    public unowned Gtk.Button volume_button;
+
+
     public StatusBar(Gtk.Application app) {
         Object(application: app);
         speaker = AstalWp.get_default().audio.default_speaker;
@@ -56,6 +60,19 @@ public class StatusBar : Gtk.Window, LayerWindow {
             var p = Math.round(src.get_double() * 100);
             trgt.set_string(@"$p%");
             return true;
+        });
+        var scroll = new Gtk.EventControllerScroll(Gtk.EventControllerScrollFlags.BOTH_AXES);
+        scroll.scroll.connect((delta_x, delta_y) => {
+            if (delta_y < 0) {
+                speaker.volume += 0.05;
+            } else {
+                speaker.volume -= 0.05;
+            }
+            return true;
+        });
+        volume_button.add_controller(scroll);
+        volume_button.clicked.connect(() => {
+            speaker.mute = !speaker.mute;
         });
     }
 
@@ -153,9 +170,18 @@ public class StatusBar : Gtk.Window, LayerWindow {
         AstalMpris.Player? mpd = null;
 
         mpris_button.clicked.connect(() => {
-            // mpd.play_pause();
             Morghulis.Instance.ToggleWindow("Mpris");
         });
+
+        var right_click = new Gtk.GestureClick();
+        right_click.set_button(Gdk.BUTTON_SECONDARY);
+        right_click.pressed.connect(() => {
+            if (mpd != null) {
+                mpd.play_pause();
+            }
+        });
+        mpris_button.add_controller(right_click);
+
         mpris_button.tooltip_text = "Play/Pause";
 
         foreach (var player in mpris.players) {

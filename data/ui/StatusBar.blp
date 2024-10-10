@@ -76,23 +76,25 @@ template $StatusBar: Window {
         "right_box"
       ]
 
-      Box volume_box {
-        spacing: 10;
-
+      Button volume_button {
         styles [
           "statusbar_box"
         ]
 
-        Image volume_icon {
-          icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-        }
+        Box volume_box {
+          spacing: 10;
 
-        Label volume {
-          name: "volume";
+          Image volume_icon {
+            icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+          }
 
-          styles [
-            "statusbar_label",
-          ]
+          Label volume {
+            name: "volume";
+
+            styles [
+              "statusbar_label",
+            ]
+          }
         }
       }
 
