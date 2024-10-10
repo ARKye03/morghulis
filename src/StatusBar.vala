@@ -11,7 +11,7 @@ public class StatusBar : Gtk.Window, ILayerWindow {
     public AstalMpris.Player mpd { get; set; }
     public AstalWp.Endpoint speaker { get; set; }
 
-    private string namespace { get; set; }
+    public string namespace { get; set; }
 
     [GtkChild]
     public unowned Gtk.Label mpris_label;
