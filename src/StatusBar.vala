@@ -43,7 +43,9 @@ public class StatusBar : Gtk.Window, LayerWindow {
             Morghulis.Instance.ToggleWindow("VRunner");
         });
         Volume();
-        FocusedClient();
+        hyprland.notify["focused-client"].connect(() => {
+            FocusedClient();
+        });
         Workspaces();
         Mpris();
         Clock();
@@ -58,12 +60,9 @@ public class StatusBar : Gtk.Window, LayerWindow {
     }
 
     public void FocusedClient() {
-        hyprland.notify["focused-client"].connect(() => {
-            if (hyprland.focused_client != null) {
-                client_label.label = hyprland.focused_client.title;
-            } else {
-            }
-        });
+        if (hyprland.focused_client != null) {
+            client_label.label = hyprland.focused_client.title;
+        }
     }
 
     public void init_layer_properties() {
