@@ -1,7 +1,4 @@
-using Gtk;
-using GtkLayerShell;
-
-public class Morghulis : Gtk.Application {
+public class Morghulis : Adw.Application {
     public static Morghulis Instance { get; private set; }
     private List<ILayerWindow> windows = new List<ILayerWindow> ();
     private bool _cssLoaded = false;

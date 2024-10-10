@@ -11,6 +11,7 @@ executable(
         dependency('astal-wireplumber-0.1'),
         dependency('astal-mpris-0.1'),
         dependency('astal-hyprland-0.1'),
+        dependency('libadwaita-1'),
     ],
     link_args: ['-lm'],
     install: true,
