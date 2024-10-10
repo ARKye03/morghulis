@@ -3,7 +3,7 @@ using GtkLayerShell;
 
 public class Morghulis : Gtk.Application {
     public static Morghulis Instance { get; private set; }
-    private List<LayerWindow> windows = new List<LayerWindow> ();
+    private List<ILayerWindow> windows = new List<ILayerWindow> ();
     private bool _cssLoaded = false;
 
     public static void main(string[] args) {
@@ -31,7 +31,7 @@ public class Morghulis : Gtk.Application {
     }
 
     public bool ToggleWindow(string name) {
-        LayerWindow? w = null;
+        ILayerWindow? w = null;
         foreach (var window in windows) {
             if (window.name == name) {
                 w = window;
