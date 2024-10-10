@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using AstalWp 0.1;
 
 template $StatusBar: Window {
   styles [
@@ -75,13 +76,24 @@ template $StatusBar: Window {
         "right_box"
       ]
 
-      Label volume {
-        name: "volume";
+      Box volume_box {
+        spacing: 10;
 
         styles [
-          "statusbar_label",
           "statusbar_box"
         ]
+
+        Image volume_icon {
+          icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+        }
+
+        Label volume {
+          name: "volume";
+
+          styles [
+            "statusbar_label",
+          ]
+        }
       }
 
       Label clock {

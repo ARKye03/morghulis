@@ -23,6 +23,15 @@ public class Mpris : Gtk.Window, LayerWindow {
         this.player.play_pause();
     }
 
+    // [GtkCallback]
+    // public void open_player() {
+    // try {
+    // Process.spawn_command_line_async("ncmpcpp");
+    // } catch (GLib.SpawnError e) {
+    // warning("Failed to open player: %s", e.message);
+    // }
+    // }
+
     [GtkCallback]
     public string pause_icon(AstalMpris.PlaybackStatus status) {
         switch (status) {
@@ -53,14 +62,17 @@ public class Mpris : Gtk.Window, LayerWindow {
         this.player.notify["art-url"].connect(() => {
             UpdateArt();
         });
+
         this.cssProvider = new Gtk.CssProvider();
         this.get_style_context()
          .add_provider(this.cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        UpdateArt();
+
+
         this.player.notify["position"].connect(() => {
             mpris_slider.set_range(0, this.player.length);
             mpris_slider.set_value(this.player.position);
         });
-        UpdateArt();
     }
 
     public void UpdateArt() {
@@ -83,9 +95,9 @@ public class Mpris : Gtk.Window, LayerWindow {
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.BOTTOM, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.LEFT, true);
 
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 50);
+        // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 50);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 5);
-        // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 10);
+        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 5);
     }
 
     public void present_layer() {

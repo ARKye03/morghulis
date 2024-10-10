@@ -7,7 +7,7 @@ public class StatusBar : Gtk.Window, LayerWindow {
     public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
     public AstalHyprland.Hyprland hyprland = AstalHyprland.Hyprland.get_default();
     public List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
-    private AstalWp.Endpoint speaker = AstalWp.get_default().audio.default_speaker;
+    public AstalWp.Endpoint speaker  { get; set; }
     public string namespace { get; set; }
 
     [GtkChild]
@@ -33,6 +33,8 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
     public StatusBar(Gtk.Application app) {
         Object(application: app);
+        speaker = AstalWp.get_default().audio.default_speaker;
+
         init_layer_properties();
         this.name = "StatusBar";
         this.namespace = "StatusBar";
@@ -57,11 +59,11 @@ public class StatusBar : Gtk.Window, LayerWindow {
 
     public void FocusedClient() {
         hyprland.notify["focused-client"].connect(() => {
-            client_label.label = hyprland.focused_client.title;
+            if (hyprland.focused_client != null) {
+                client_label.label = hyprland.focused_client.title;
+            } else {
+            }
         });
-        if (hyprland.focused_client != null) {
-            client_label.label = hyprland.focused_client.title;
-        }
     }
 
     public void init_layer_properties() {
