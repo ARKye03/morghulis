@@ -56,10 +56,11 @@ public class Morghulis : Adw.Application {
 
     public string process_command(string command) {
         string[] args = command.split(" ");
-        string response;
+        string response = "";
 
         switch (args[0]) {
         case "-T" :
+        case "--toggle-window" :
             if (args.length > 1) {
                 string window_name = args[1];
                 bool result = ToggleWindow(window_name);
@@ -68,12 +69,32 @@ public class Morghulis : Adw.Application {
                 response = "Error: Window name not provided";
             }
             break;
+        case "-Q":
+        case "--quit":
+            this.quit();
+            break;
+        case "-I":
+        case "--inspector":
+            response = "Not implemented.";
+            break;
+        case "-h":
+        case "--help":
+            response = PrintHelp();
+            break;
         default:
-            response = "Unknown command. Use -T <window_name> to toggle a window.";
+            response = "Unknown command. Use -h to see help.";
             break;
         }
-
         return response;
+    }
+
+    private string PrintHelp() {
+        return "Usage: morghulis [options]\n"
+               + "Options:\n"
+               + "  \033[34m-T|--toggle-window\033[0m \033[32m<window>\033[0m  | Toggle visibility of the specified window\n"
+               + "  \033[34m-Q|--quit\033[0m                    | Quit the application\n"
+               + "  \033[34m-I|--inspector\033[0m               | Open the GTK inspector\n"
+               + "  \033[34m-h|--help\033[0m                    | Show this help message";
     }
 
     public override int command_line(ApplicationCommandLine command_line) {
