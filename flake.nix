@@ -15,14 +15,17 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           appName = "morghulis";
+          version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile ./version);
+          stdenv = pkgs.gcc14Stdenv;
+
           nix-utils = with pkgs; [
             nixd
             nixpkgs-fmt
           ];
-          morghulis = pkgs.stdenv.mkDerivation {
+          morghulis = stdenv.mkDerivation {
             name = appName;
             src = ./.;
-            version = builtins.readFile ./version;
+            version = version;
 
             buildInputs = with pkgs;  [
               pkg-config
@@ -57,6 +60,8 @@
             vala
             vala-language-server
             uncrustify
+            dart-sass
+            blueprint-compiler
           ];
           build-utils = with pkgs.buildPackages; [
             muon
@@ -71,33 +76,34 @@
             apps
             bluetooth
           ];
-          shell = pkgs.mkShell {
-            nativeBuildInputs = with pkgs.buildPackages; [
-              glfw-wayland
-              gobject-introspection
-              blueprint-compiler
-            ]
-            ++ nix-utils
-            ++ gtk-utils
-            ++ compiler-utils
-            ++ build-utils
-            ++ astal-libs;
-            buildInputs = with pkgs; [
-              pkg-config
-              networkmanager
-              glib
-              gdk-pixbuf
-              json-glib
-            ];
-            shellHook = /* shell */ ''
-              export LD_LIBRARY_PATH=
-              export GTK_THEME=adw-gtk3:dark
-              export XCURSOR_THEME="Catppuccin-Mocha-Dark"
-              # export PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
-            '';
-          };
+          shell = pkgs.mkShell.override
+            {
+              stdenv = stdenv;
+            }
+            {
+              nativeBuildInputs = with pkgs.buildPackages; [
+                glfw-wayland
+                gobject-introspection
+              ]
+              ++ nix-utils
+              ++ gtk-utils
+              ++ compiler-utils
+              ++ build-utils
+              ++ astal-libs;
+              buildInputs = with pkgs; [
+                pkg-config
+                networkmanager
+                glib
+                gdk-pixbuf
+                json-glib
+              ];
+              LD_LIBRARY_PATH = "";
+              GTK_THEME = "adw-gtk3:dark";
+              XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+            };
         in
         {
+          packages.default = morghulis;
           apps.default = {
             type = "app";
             program = "${morghulis}/bin/${appName}";
