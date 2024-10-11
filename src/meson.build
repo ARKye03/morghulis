@@ -1,4 +1,10 @@
-source_files = ['App.vala', 'StatusBar.vala', 'Mpris.vala', 'Utils/Layer.vala']
+source_files = [
+    'App.vala',
+    'Daemon.vala',
+    'StatusBar.vala',
+    'Mpris.vala',
+    'Utils/Layer.vala',
+]
 
 executable(
     project_name,
@@ -11,6 +17,7 @@ executable(
         dependency('astal-wireplumber-0.1'),
         dependency('astal-mpris-0.1'),
         dependency('astal-hyprland-0.1'),
+        dependency('gio-unix-2.0'),
         dependency('libadwaita-1'),
     ],
     link_args: ['-lm'],
