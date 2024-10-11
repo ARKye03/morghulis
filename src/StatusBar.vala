@@ -91,7 +91,7 @@ public class StatusBar : Gtk.Window, ILayerWindow {
         GtkLayerShell.init_for_window(this);
         GtkLayerShell.set_layer(this, GtkLayerShell.Layer.TOP);
 
-        GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.TOP, true);
+        GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.BOTTOM, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.RIGHT, true);
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.LEFT, true);
 
@@ -119,13 +119,13 @@ public class StatusBar : Gtk.Window, ILayerWindow {
         });
     }
 
-    void Workspaces() {
-        var wicons = new string[] {
-            " ", " ", "󰨞 ",
-            " ", " ", "󰭹 ",
-            " ", " ", "󰊖 ",
-            " ",
-        };
+    private static string[] wicons = {
+        " ", " ", "󰨞 ",
+        " ", " ", "󰭹 ",
+        " ", " ", "󰊖 ",
+        " ",
+    };
+    private void Workspaces() {
 
         for (var i = 1; i <= 10; i++) {
             var workspace_button = new Gtk.Button.with_label(wicons[i - 1]);
@@ -140,10 +140,19 @@ public class StatusBar : Gtk.Window, ILayerWindow {
         hyprland.client_added.connect(UpdateWorkspaces);
         hyprland.client_removed.connect(UpdateWorkspaces);
         hyprland.client_moved.connect(UpdateWorkspaces);
+
+        var scroll = new Gtk.EventControllerScroll(Gtk.EventControllerScrollFlags.VERTICAL);
+        scroll.scroll.connect((delta_x, delta_y) => {
+            string direction = delta_y > 0 ? "e-1" : "e+1";
+            hyprland.dispatch("workspace", direction);
+            return true;
+        });
+        workspaces.add_controller(scroll);
     }
 
+    private static int focused_workspace_id { get; private set; }
     void UpdateWorkspaces() {
-        var focused_workspace_id = hyprland.focused_workspace.id;
+        focused_workspace_id = hyprland.focused_workspace.id;
 
         int index = 0;
         workspace_buttons.foreach((button) => {
@@ -160,7 +169,7 @@ public class StatusBar : Gtk.Window, ILayerWindow {
         });
     }
 
-    void connect_button_to_workspace(Gtk.Button button, int workspaceNumber) {
+    private void connect_button_to_workspace(Gtk.Button button, int workspaceNumber) {
         button.clicked.connect(() => {
             hyprland.dispatch("workspace", workspaceNumber.to_string());
         });
@@ -171,7 +180,7 @@ public class StatusBar : Gtk.Window, ILayerWindow {
         return WindowCount > 0;
     }
 
-    void Mpris() {
+    private void Mpris() {
         foreach (var player in mpris.players) {
             if (player.bus_name == "org.mpris.MediaPlayer2.mpd")
                 mpd = player;
