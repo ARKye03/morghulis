@@ -37,6 +37,7 @@ make
 
 ```shell
 meson install -C build
+morghulis -h
 ```
 
 ## Features
@@ -46,6 +47,7 @@ meson install -C build
     - [x] Media Player
     - [x] Volume Controller
     - [x] Focused Client
+- [x] - Socket Service
 - [ ] Notifications
     - [ ] Center
     - [ ] Popup
