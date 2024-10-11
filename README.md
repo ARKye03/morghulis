@@ -6,6 +6,7 @@
     - [Development](#development)
     - [Installation](#installation)
   - [Features](#features)
+  - [Preview](#preview)
   - [License](#license)
 
 Desktop Shell, created with [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell).
@@ -47,7 +48,7 @@ morghulis -h
     - [x] Media Player
     - [x] Volume Controller
     - [x] Focused Client
-- [x] - Socket Service
+- [x] Socket Service
 - [ ] Notifications
     - [ ] Center
     - [ ] Popup
@@ -57,6 +58,9 @@ morghulis -h
 - [ ] Apps Runner
 - [ ] Quick Settings
 - [ ] Dynamic CSS
+
+## Preview
+![StatusBar](public/StatusBar.webp)
 
 ## License
 
