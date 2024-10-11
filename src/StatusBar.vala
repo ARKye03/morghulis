@@ -66,12 +66,12 @@ public class StatusBar : Gtk.Window, ILayerWindow {
             trgt.set_string(@"$p%");
             return true;
         });
-        var scroll = new Gtk.EventControllerScroll(Gtk.EventControllerScrollFlags.BOTH_AXES);
+        var scroll = new Gtk.EventControllerScroll(Gtk.EventControllerScrollFlags.VERTICAL);
         scroll.scroll.connect((delta_x, delta_y) => {
             if (delta_y < 0) {
-                speaker.volume += 0.05;
+                speaker.volume = double.min(speaker.volume + 0.05, 1.0);
             } else {
-                speaker.volume -= 0.05;
+                speaker.volume = double.max(speaker.volume - 0.05, 0.0);
             }
             return true;
         });
