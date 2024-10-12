@@ -83,6 +83,8 @@
             wireplumber
             mpris
             network
+            notifd
+            river
             apps
             bluetooth
           ];
