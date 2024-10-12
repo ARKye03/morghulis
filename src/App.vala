@@ -6,12 +6,17 @@ public class Morghulis : Adw.Application {
 
     public static void main(string[] args) {
         Instance = new Morghulis();
+        Instance.init_types();
         Instance.run(args);
     }
 
     construct {
         application_id = "com.github.arkye03.morghulis";
         flags = ApplicationFlags.HANDLES_COMMAND_LINE;
+    }
+    private void init_types() {
+        typeof (QuickSettings).ensure();
+        typeof (QuickSettingsButton).ensure();
     }
 
     public override void activate() {

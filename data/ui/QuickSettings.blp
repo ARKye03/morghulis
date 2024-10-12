@@ -1,6 +1,9 @@
 using Gtk 4.0;
 using Adw 1;
 using AstalWp 0.1;
+using AstalNetwork 0.1;
+using AstalBluetooth 0.1;
+using AstalNotifd 0.1;
 
 template $QuickSettings: Window {
     styles [
@@ -8,7 +11,7 @@ template $QuickSettings: Window {
     ]
 
     Revealer {
-        transition-duration: 200;
+        transition-duration: 300;
         transition-type: slide_up;
         reveal-child: bind template.visible;
 
@@ -19,8 +22,6 @@ template $QuickSettings: Window {
 
             column-spacing: 10;
             row-spacing: 10;
-            hexpand: true;
-            vexpand: true;
 
             Box {
                 hexpand: true;
@@ -106,21 +107,21 @@ template $QuickSettings: Window {
             }
 
             // MediaPlayer (1:2)
-            Adw.Carousel {
+            Adw.Carousel players {
                 layout {
                     row: 3;
                     column: 0;
                     column-span: 2;
                 }
 
-                hexpand: true;
-                vexpand: true;
-
                 styles [
                     "quick_settings_grid_box"
                 ]
             }
 
+            // Adw.CarouselIndicatorDots {
+            //     carousel: players;
+            // }
             // QuickSettings Buttons Grid (1:2)
             Gtk.Grid {
                 layout {
@@ -134,32 +135,56 @@ template $QuickSettings: Window {
                 column-spacing: 5;
                 row-spacing: 5;
 
-                Button {
+                $QuickSettingsButton {
+                    clicked => $network_clicked();
+                    icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
+                    active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+
                     layout {
                         row: 0;
                         column: 0;
                     }
                 }
 
-                Button {
+                $QuickSettingsButton {
+                    icon: bind $ActiveVPN(template.network) as <string>;
+                    clicked => $toggle_vpn();
+
                     layout {
                         row: 1;
                         column: 0;
                     }
                 }
 
-                Button {
+                $QuickSettingsButton {
+                    icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
+                    active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
+                    clicked => $bluetooth_clicked();
+                    clicked_extras => $bluetooth_clicked_extras();
+
                     layout {
                         row: 0;
                         column: 1;
                     }
                 }
 
-                Button {
+                $QuickSettingsButton {
                     layout {
                         row: 1;
                         column: 1;
                     }
+                }
+
+                $QuickSettingsButton {
+                    layout {
+                        row: 2;
+                        column: 0;
+                    }
+
+                    icon: bind $dont_disturb_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+                    inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
+                    clicked => $toggle_disturb();
+                    clicked_extras => $on_notif_arrow_clicked();
                 }
 
                 styles [

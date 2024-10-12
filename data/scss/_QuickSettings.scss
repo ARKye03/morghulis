@@ -6,12 +6,39 @@
 }
 
 .quick_settings_grid_box {
-    background-color: $window_bg_color;
+    background-color: transparentize(#282C34, 0.2);
     border-radius: $master-border-radius;
     border: 1px solid $dark_2;
     padding: 10px;
 }
 
-// .quick_settings_grid {
-//     background-color: #0f0;
-// }
+
+.quick_settings_button {
+    background-color: $dark_4;
+    border-radius: $master-border-radius;
+    border: 1px solid $dark_2;
+    min-height: 50px;
+    min-width: 100px;
+
+    & button {
+        border-radius: 0;
+    }
+}
+
+.quick_settings_button-active {
+    background-color: $accent_color;
+    border-radius: $master-border-radius;
+    border: 1px solid $dark_2;
+    min-height: 50px;
+    // min-width: 100px;
+    transition: background-color ease-in-out 300ms;
+
+    & button {
+        border-radius: 0;
+
+        &:hover {
+            border-radius: $master-border-radius;
+            background-color: #d78aee;
+        }
+    }
+}
