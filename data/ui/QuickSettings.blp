@@ -72,7 +72,7 @@ template $QuickSettings: Window {
                 layout {
                     row: 2;
                     column: 0;
-                    column-span: 1;
+                    row-span: 1;
                 }
 
                 hexpand: true;
@@ -109,92 +109,118 @@ template $QuickSettings: Window {
                 layout {
                     row: 0;
                     column: 1;
-                    row-span: 3;
+                    row-span: 3; // Increased to cover all rows
                 }
 
                 hexpand: true;
                 vexpand: true;
                 column-spacing: 5;
                 row-spacing: 5;
-
-                $QuickSettingsButton {
-                    clicked => $network_clicked();
-                    icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
-                    active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
-
+                // Grid for QuickSettingsButtons
+                Grid quick_settings_buttons {
                     layout {
                         row: 0;
                         column: 0;
+                        row-span: 3; // Covers the first 3 rows
+                    }
+
+                    hexpand: true;
+                    vexpand: true;
+                    column-spacing: 5;
+                    row-spacing: 5;
+
+                    styles [
+                        "quick_settings_grid_box"
+                    ]
+
+                    $QuickSettingsButton {
+                        clicked => $network_clicked();
+                        icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
+                        active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+
+                        layout {
+                            row: 0;
+                            column: 0;
+                        }
+                    }
+
+                    $QuickSettingsButton {
+                        icon: bind $ActiveVPN(template.network) as <string>;
+                        clicked => $toggle_vpn();
+
+                        layout {
+                            row: 1;
+                            column: 0;
+                        }
+                    }
+
+                    $QuickSettingsButton {
+                        icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
+                        active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
+                        clicked => $bluetooth_clicked();
+                        clicked_extras => $bluetooth_clicked_extras();
+
+                        layout {
+                            row: 0;
+                            column: 1;
+                        }
+                    }
+
+                    $QuickSettingsButton {
+                        layout {
+                            row: 1;
+                            column: 1;
+                        }
+                    }
+
+                    $QuickSettingsButton {
+                        layout {
+                            row: 2;
+                            column: 0;
+                        }
+
+                        icon: bind $dont_disturb_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+                        inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
+                        clicked => $toggle_disturb();
+                        clicked_extras => $on_notif_arrow_clicked();
                     }
                 }
 
-                $QuickSettingsButton {
-                    icon: bind $ActiveVPN(template.network) as <string>;
-                    clicked => $toggle_vpn();
-
-                    layout {
-                        row: 1;
-                        column: 0;
-                    }
-                }
-
-                $QuickSettingsButton {
-                    icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
-                    active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
-                    clicked => $bluetooth_clicked();
-                    clicked_extras => $bluetooth_clicked_extras();
-
-                    layout {
-                        row: 0;
-                        column: 1;
-                    }
-                }
-
-                $QuickSettingsButton {
-                    layout {
-                        row: 1;
-                        column: 1;
-                    }
-                }
-
-                $QuickSettingsButton {
-                    layout {
-                        row: 2;
-                        column: 0;
-                    }
-
-                    icon: bind $dont_disturb_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
-                    inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
-                    clicked => $toggle_disturb();
-                    clicked_extras => $on_notif_arrow_clicked();
-                }
-
-                Adw.Carousel players {
+                // Grid for Carousel
+                Grid carousel_grid {
                     layout {
                         row: 3;
                         column: 0;
-                        column-span: 2;
                     }
 
-                    orientation: vertical;
-                    spacing: 5;
                     hexpand: true;
                     vexpand: true;
-                }
 
-                Adw.CarouselIndicatorDots {
-                    carousel: players;
+                    styles [
+                        "quick_settings_grid_box"
+                    ]
 
-                    layout {
-                        row: 4;
-                        column: 0;
-                        column-span: 2;
+                    Adw.Carousel players {
+                        layout {
+                            row: 0;
+                            column: 0;
+                        }
+
+                        orientation: vertical;
+                        spacing: 5;
+                        hexpand: true;
+                        vexpand: true;
+                    }
+
+                    Adw.CarouselIndicatorDots {
+                        carousel: players;
+
+                        layout {
+                            row: 1;
+                            column: 0;
+                        }
                     }
                 }
-
-                styles [
-                    "quick_settings_grid_box"
-                ]
             }
 
             // Power Menu Info
