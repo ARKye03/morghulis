@@ -1,6 +1,7 @@
 @import "Colors";
 @import "StatusBar";
 @import "Mpris";
+@import "QuickSettings";
 
 button {
     background-color: transparent;
@@ -8,5 +9,23 @@ button {
 
     &:hover {
         background-color: $dark_2;
+    }
+}
+
+.morghulis_slider {
+    border-radius: 5px;
+    padding: 5px;
+
+    & trough {
+        padding: 0;
+        min-height: 10px;
+
+        & highlight {
+            background-color: $accent_color;
+        }
+
+        & slider {
+            all: unset;
+        }
     }
 }

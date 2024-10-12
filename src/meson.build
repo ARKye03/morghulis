@@ -2,6 +2,8 @@ source_files = [
     'App.vala',
     'Daemon.vala',
     'StatusBar.vala',
+    'QuickSettings.vala',
+    'QuickSettingsButton.vala',
     'Mpris.vala',
     'Utils/Layer.vala',
 ]

@@ -4,5 +4,7 @@
         <file>morghulis.css</file>
         <file preprocess="xml-stripblanks">ui/StatusBar.ui</file>
         <file preprocess="xml-stripblanks">ui/Mpris.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickSettingsButton.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickSettings.ui</file>
     </gresource>
 </gresources>

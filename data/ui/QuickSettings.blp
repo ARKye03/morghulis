@@ -1,0 +1,187 @@
+using Gtk 4.0;
+using Adw 1;
+using AstalWp 0.1;
+
+template $QuickSettings: Window {
+    styles [
+        "quick_settings_window"
+    ]
+
+    Revealer {
+        transition-duration: 200;
+        transition-type: slide_up;
+        reveal-child: bind template.visible;
+
+        Grid {
+            styles [
+                "quick_settings_grid"
+            ]
+
+            column-spacing: 10;
+            row-spacing: 10;
+            hexpand: true;
+            vexpand: true;
+
+            Box {
+                hexpand: true;
+                vexpand: true;
+                homogeneous: true;
+
+                layout {
+                    row: 0;
+                    column: 0;
+                }
+
+                styles [
+                    "quick_settings_grid_box"
+                ]
+
+                Image {
+                    file: "/home/archkye/backgrounds/SomeOne/wallp_14.jpg";
+                    halign: start;
+                    valign: center;
+                    hexpand: true;
+                    vexpand: true;
+                    pixel-size: 100;
+                }
+
+                Label {
+                    label: "archye";
+                }
+            }
+
+            // Calendar Grid (1:1)
+            Gtk.Calendar {
+                layout {
+                    row: 1;
+                    column: 0;
+                }
+
+                width-request: 100;
+                height-request: 100;
+                hexpand: true;
+                vexpand: true;
+
+                styles [
+                    "quick_settings_grid_box"
+                ]
+            }
+
+            // Volume Slider (Box)
+            Gtk.Box {
+                layout {
+                    row: 2;
+                    column: 0;
+                    column-span: 2;
+                }
+
+                hexpand: true;
+                vexpand: true;
+
+                Image {
+                    icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+                }
+
+                Scale {
+                    hexpand: true;
+
+                    adjustment: Adjustment vol_adjust {
+                        lower: 0;
+                        upper: 1;
+                    };
+
+                    styles [
+                        "morghulis_slider"
+                    ]
+                }
+
+                Label {
+                    label: bind $CurrentVolume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
+                    width-request: 50;
+                }
+
+                styles [
+                    "quick_settings_grid_box"
+                ]
+            }
+
+            // MediaPlayer (1:2)
+            Adw.Carousel {
+                layout {
+                    row: 3;
+                    column: 0;
+                    column-span: 2;
+                }
+
+                hexpand: true;
+                vexpand: true;
+
+                styles [
+                    "quick_settings_grid_box"
+                ]
+            }
+
+            // QuickSettings Buttons Grid (1:2)
+            Gtk.Grid {
+                layout {
+                    row: 0;
+                    column: 1;
+                    row-span: 2;
+                }
+
+                hexpand: true;
+                vexpand: true;
+                column-spacing: 5;
+                row-spacing: 5;
+
+                Button {
+                    layout {
+                        row: 0;
+                        column: 0;
+                    }
+                }
+
+                Button {
+                    layout {
+                        row: 1;
+                        column: 0;
+                    }
+                }
+
+                Button {
+                    layout {
+                        row: 0;
+                        column: 1;
+                    }
+                }
+
+                Button {
+                    layout {
+                        row: 1;
+                        column: 1;
+                    }
+                }
+
+                styles [
+                    "quick_settings_grid_box"
+                ]
+            }
+
+            // Power Menu Info
+            Gtk.Box {
+                layout {
+                    row: 4;
+                    column: 0;
+                    column-span: 2;
+                }
+
+                hexpand: true;
+                vexpand: true;
+
+                styles [
+                    "quick_settings_grid_box"
+                ]
+            }
+        }
+    }
+}

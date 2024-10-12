@@ -1,0 +1,17 @@
+@import "Colors";
+
+.quick_settings_window {
+    all: unset;
+    // background-color: #f0f;
+}
+
+.quick_settings_grid_box {
+    background-color: $window_bg_color;
+    border-radius: $master-border-radius;
+    border: 1px solid $dark_2;
+    padding: 10px;
+}
+
+// .quick_settings_grid {
+//     background-color: #0f0;
+// }
