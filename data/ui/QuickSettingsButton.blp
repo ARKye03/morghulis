@@ -1,0 +1,33 @@
+using Gtk 4.0;
+
+template $QuickSettingsButton: Gtk.Box {
+    styles [
+        "quick_settings_button"
+    ]
+
+    Button {
+        hexpand: true;
+
+        Image {
+            icon-name: bind template.icon;
+        }
+
+        clicked => $on_clicked();
+    }
+
+    Separator {
+        orientation: vertical;
+    }
+
+    Button {
+        styles [
+            "quick_settings_button_extras"
+        ]
+
+        Image {
+            icon-name: "pan-end-symbolic";
+        }
+
+        clicked => $on_clicked_extras();
+    }
+}
