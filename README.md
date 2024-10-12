@@ -5,6 +5,7 @@
   - [Usage](#usage)
     - [Development](#development)
     - [Installation](#installation)
+    - [Nix](#nix)
   - [Features](#features)
   - [Preview](#preview)
   - [License](#license)
@@ -27,9 +28,6 @@ meson setup build
 
 ### Development
 
-> [!WARNING]  
-> The flake.nix environment is not suitable for building this project, not anymore, for now.
-
 ```shell
 make
 ```
@@ -38,7 +36,17 @@ make
 
 ```shell
 meson install -C build
-morghulis -h
+morghulis --help
+```
+
+### Nix
+There is a `flake.nix` file, with a `devShell`, so you can use it to develop.
+```shell
+nix develop
+```
+or try the desktop shell with:
+```shell
+nix run github:ARKye03/morghulis -- --help
 ```
 
 ## Features
