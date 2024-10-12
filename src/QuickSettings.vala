@@ -5,7 +5,8 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
     public AstalWp.Endpoint speaker { get; set; }
     public AstalNetwork.Network network { get; set; }
     public AstalBluetooth.Bluetooth bluetooth { get; set; }
-        public AstalNotifd.Notifd notifd {get; private set;}
+    public AstalNotifd.Notifd notifd {get; private set;}
+    public AstalMpris.Mpris mpris {get; private set;}
 
 
     public QuickSettings () {
@@ -14,12 +15,18 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
             namespace: "QuickSettings"
         );
         init_layer_properties ();
-        speaker = AstalWp.get_default().audio.default_speaker;
-        network = AstalNetwork.get_default();
-        bluetooth = AstalBluetooth.get_default();
         
         speaker.bind_property("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
-
+        
+    }
+    construct {
+        speaker = AstalWp.get_default().audio.default_speaker;
+        network = AstalNetwork.get_default();
+        mpris = AstalMpris.get_default();
+        bluetooth = AstalBluetooth.get_default();
+        this.mpris.players.@foreach((p) => this.on_player_added(p));
+        this.mpris.player_added.connect((p) => this.on_player_added(p));
+        this.mpris.player_closed.connect((p) => this.on_player_removed(p));
     }
 
     [GtkChild]
@@ -78,6 +85,20 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
     [GtkCallback]
     public void on_notif_arrow_clicked() {
         //  nav_view.push_by_tag("notifications");
+    }  
+    [GtkChild]
+    private unowned Adw.Carousel players;
+
+    private void on_player_added(AstalMpris.Player player) {
+        this.players.append(new Mpris(player));
+    }
+
+    private void on_player_removed(AstalMpris.Player player) {
+      for(int i = 0; i < this.players.n_pages; i++) {
+        Mpris p = (Mpris) this.players.get_nth_page(i);
+        if (p.player == player)
+          this.players.remove(p);
+      }
     }
     public void init_layer_properties () {
         GtkLayerShell.init_for_window (this);

@@ -109,7 +109,7 @@ template $QuickSettings: Window {
                 layout {
                     row: 0;
                     column: 1;
-                    row-span: 2;
+                    row-span: 3;
                 }
 
                 hexpand: true;
@@ -167,6 +167,29 @@ template $QuickSettings: Window {
                     inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
                     clicked => $toggle_disturb();
                     clicked_extras => $on_notif_arrow_clicked();
+                }
+
+                Adw.Carousel players {
+                    layout {
+                        row: 3;
+                        column: 0;
+                        column-span: 2;
+                    }
+
+                    orientation: vertical;
+                    spacing: 5;
+                    hexpand: true;
+                    vexpand: true;
+                }
+
+                Adw.CarouselIndicatorDots {
+                    carousel: players;
+
+                    layout {
+                        row: 4;
+                        column: 0;
+                        column-span: 2;
+                    }
                 }
 
                 styles [

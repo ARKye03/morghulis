@@ -1,136 +1,130 @@
 using Gtk 4.0;
 using AstalMpris 0.1;
 
-template $Mpris: Window {
+template $Mpris: Box {
+    orientation: vertical;
+    spacing: 5;
+
     styles [
-        "mpris_window"
+        "mpris_master_box"
     ]
 
-    Box master_box {
-        orientation: vertical;
-        spacing: 5;
+    Box upper_box {
+        spacing: 10;
+        hexpand: true;
 
-        styles [
-            "mpris_master_box"
-        ]
-
-        Box upper_box {
-            spacing: 10;
-            hexpand: true;
-
-            Image art_image {
-                // So cool that this shit can't be rounded without messing with 200 lines of cairo code :)
-                // Fucking hilarious
-                pixel-size: 100;
-                file: bind $art_url(template.player as <AstalMpris.Player>.art-url) as <string>;
-
-                styles [
-                    "mpris_art_image"
-                ]
-            }
-
-            Box media_info {
-                orientation: vertical;
-                hexpand: true;
-                valign: center;
-                spacing: 10;
-
-                styles [
-                    "mpris_media_info"
-                ]
-
-                Label player_name {
-                    label: bind template.player as <AstalMpris.Player>.identity;
-                    halign: start;
-                    ellipsize: end;
-                    max-width-chars: 20;
-
-                    styles [
-                        "player_name_label"
-                    ]
-                }
-
-                Label title {
-                    label: bind template.player as <AstalMpris.Player>.title;
-                    halign: start;
-                    ellipsize: end;
-                    max-width-chars: 20;
-
-                    styles [
-                        "title_label"
-                    ]
-                }
-
-                Label artist {
-                    label: bind template.player as <AstalMpris.Player>.artist;
-                    halign: start;
-                    ellipsize: end;
-                    max-width-chars: 20;
-
-                    styles [
-                        "artist_label"
-                    ]
-                }
-            }
-        }
-
-        Box slider_box {
-            hexpand: true;
-
-            Label current_pos {
-                label: bind $current_pos(template.player as <AstalMpris.Player>.position) as <string>;
-
-                styles [
-                    "mpris_time_label"
-                ]
-            }
-
-            Scale mpris_slider {
-                hexpand: true;
-
-                adjustment: Adjustment media_len_adjust {
-                    lower: 0;
-                    upper: bind template.player as <AstalMpris.Player>.length;
-                };
-
-                styles [
-                    "mpris_slider"
-                ]
-            }
-
-            Label total_pos {
-                label: bind $total_pos(template.player as <AstalMpris.Player>.length) as <string>;
-
-                styles [
-                    "mpris_time_label"
-                ]
-            }
-        }
-
-        Box lower_box {
-            spacing: 10;
-            hexpand: true;
-            vexpand: true;
-            halign: center;
+        Image art_image {
+            // So cool that this shit can't be rounded without messing with 200 lines of cairo code :)
+            // Fucking hilarious
+            pixel-size: 100;
+            file: bind $art_url(template.player as <AstalMpris.Player>.art-url) as <string>;
 
             styles [
-                "mpris_master_lower_box"
+                "mpris_art_image"
+            ]
+        }
+
+        Box media_info {
+            orientation: vertical;
+            hexpand: true;
+            valign: center;
+            spacing: 10;
+
+            styles [
+                "mpris_media_info"
             ]
 
-            Button {
-                icon-name: "media-skip-backward-symbolic";
-                clicked => $prev();
+            Label player_name {
+                label: bind template.player as <AstalMpris.Player>.identity;
+                halign: start;
+                ellipsize: end;
+                max-width-chars: 20;
+
+                styles [
+                    "player_name_label"
+                ]
             }
 
-            Button playback_button {
-                icon-name: bind $pause_icon(template.player as <AstalMpris.Player>.playback-status) as <string>;
-                clicked => $play_pause();
+            Label title {
+                label: bind template.player as <AstalMpris.Player>.title;
+                halign: start;
+                ellipsize: end;
+                max-width-chars: 20;
+
+                styles [
+                    "title_label"
+                ]
             }
 
-            Button {
-                icon-name: "media-skip-forward-symbolic";
-                clicked => $next();
+            Label artist {
+                label: bind template.player as <AstalMpris.Player>.artist;
+                halign: start;
+                ellipsize: end;
+                max-width-chars: 20;
+
+                styles [
+                    "artist_label"
+                ]
             }
+        }
+    }
+
+    Box slider_box {
+        hexpand: true;
+
+        Label current_pos {
+            label: bind $current_pos(template.player as <AstalMpris.Player>.position) as <string>;
+
+            styles [
+                "mpris_time_label"
+            ]
+        }
+
+        Scale mpris_slider {
+            hexpand: true;
+
+            adjustment: Adjustment media_len_adjust {
+                lower: 0;
+                upper: bind template.player as <AstalMpris.Player>.length;
+            };
+
+            styles [
+                "mpris_slider"
+            ]
+        }
+
+        Label total_pos {
+            label: bind $total_pos(template.player as <AstalMpris.Player>.length) as <string>;
+
+            styles [
+                "mpris_time_label"
+            ]
+        }
+    }
+
+    Box lower_box {
+        spacing: 10;
+        hexpand: true;
+        vexpand: true;
+        halign: center;
+
+        styles [
+            "mpris_master_lower_box"
+        ]
+
+        Button {
+            icon-name: "media-skip-backward-symbolic";
+            clicked => $prev();
+        }
+
+        Button playback_button {
+            icon-name: bind $pause_icon(template.player as <AstalMpris.Player>.playback-status) as <string>;
+            clicked => $play_pause();
+        }
+
+        Button {
+            icon-name: "media-skip-forward-symbolic";
+            clicked => $next();
         }
     }
 }
