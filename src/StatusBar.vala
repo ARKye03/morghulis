@@ -1,6 +1,5 @@
 using AstalHyprland;
 using GtkLayerShell;
-using AstalWp;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
 public class StatusBar : Gtk.Window, ILayerWindow {
@@ -32,10 +31,7 @@ public class StatusBar : Gtk.Window, ILayerWindow {
     public unowned Gtk.Label clock;
 
     [GtkChild]
-    public unowned Gtk.Label volume;
-
-    [GtkChild]
-    public unowned Gtk.Button volume_button;
+    public unowned Gtk.Button power_button;
 
 
     public StatusBar(Gtk.Application app) {
@@ -48,37 +44,19 @@ public class StatusBar : Gtk.Window, ILayerWindow {
         this.name = "StatusBar";
         this.namespace = "StatusBar";
 
+        power_button.clicked.connect(() => {
+            Morghulis.Instance.ToggleWindow("QuickSettings");
+        });
+
         apps_button.clicked.connect(() => {
             Morghulis.Instance.ToggleWindow("VRunner");
         });
-        Volume();
         hyprland.notify["focused-client"].connect(() => {
             FocusedClient();
         });
         Workspaces();
         Mpris();
         Clock();
-    }
-
-    public void Volume() {
-        speaker.bind_property("volume", volume, "label", GLib.BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
-            var p = Math.round(src.get_double() * 100);
-            trgt.set_string(@"$p%");
-            return true;
-        });
-        var scroll = new Gtk.EventControllerScroll(Gtk.EventControllerScrollFlags.VERTICAL);
-        scroll.scroll.connect((delta_x, delta_y) => {
-            if (delta_y < 0) {
-                speaker.volume = double.min(speaker.volume + 0.05, 1.0);
-            } else {
-                speaker.volume = double.max(speaker.volume - 0.05, 0.0);
-            }
-            return true;
-        });
-        volume_button.add_controller(scroll);
-        volume_button.clicked.connect(() => {
-            speaker.mute = !speaker.mute;
-        });
     }
 
     public void FocusedClient() {
