@@ -29,7 +29,7 @@
 
             buildInputs = with pkgs;  [
               pkg-config
-            ] ++ nix-utils ++ gtk-utils ++ compiler-utils ++ build-utils ++ astal-libs;
+            ] ++ gtk-utils ++ compiler-utils ++ build-utils ++ astal-libs;
 
             buildPhase = ''
               mkdir -p $TMPDIR/buildNix
@@ -50,6 +50,16 @@
               homepage = "https://github.com/ARKye03/morghulis";
               maintainers = with maintainers; [ ARKye03 ];
             };
+          };
+          fhs-morghulis = morghulis.overrideAttrs {
+            installPhase = ''
+              mkdir -p $out/bin
+              cp -r $TMPDIR/buildNix/src/${appName} $out/bin/${appName}
+              ${pkgs.patchelf}/bin/patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 $out/bin/${appName}
+              ${pkgs.patchelf}/bin/patchelf --set-rpath /lib:/usr/lib $out/bin/${appName}
+              ${pkgs.patchelf}/bin/patchelf --shrink-rpath $out/bin/${appName}
+              chmod +x $out/bin/${appName}
+            '';
           };
           gtk-utils = with pkgs; [
             gtk4
@@ -103,10 +113,19 @@
             };
         in
         {
-          packages.default = morghulis;
-          apps.default = {
-            type = "app";
-            program = "${morghulis}/bin/${appName}";
+          packages = {
+            default = morghulis;
+            fhs = fhs-morghulis;
+          };
+          apps = {
+            default = {
+              type = "app";
+              program = "${morghulis}/bin/${appName}";
+            };
+            fhs = {
+              type = "app";
+              program = "${fhs-morghulis}/bin/${appName}";
+            };
           };
           devShells.default = shell;
         }
