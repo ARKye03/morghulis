@@ -93,30 +93,7 @@ public class Mpris : Gtk.Window, ILayerWindow {
             }
         }
 
-        //  this.player.notify["art-url"].connect(() => {
-        //      print("Art URL: %s", this.player.art_url.substring(7));
-        //      art_image.set_from_file(this.player.art_url.substring(7));
-        //  });
-        this.cssProvider = new Gtk.CssProvider();
-        this.get_style_context()
-         .add_provider(this.cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
-        UpdateArt();
-
         this.player.bind_property("position", media_len_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
-    }
-
-    public void UpdateArt() {
-        string style = "box { background-image: linear-gradient(rgba(0, 0, 0, 0), "
-            + "alpha(@view_bg_color, 0.9)),"
-            + "url(\"" + this.player.art_url + "\");"
-            + "background-size: cover; "
-            + "background-position: center; }";
-
-        try {
-            this.cssProvider.load_from_string(style);
-        } catch (Error err) {
-            warning(err.message);
-        }
     }
 
     public void init_layer_properties() {
