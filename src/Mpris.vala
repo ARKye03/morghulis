@@ -44,15 +44,42 @@ public class Mpris : Gtk.Window, ILayerWindow {
             return "media-playback-start-symbolic";
         }
     }
+    [GtkCallback]
+    public string art_url(string url) {
+        if (url == null) {
+            return "";
+        } else {
+            return url.substring(7);
+        }
+    }
+    [GtkCallback]
+    public string current_pos(double pos) {
+        int minutes =(int) (pos / 60);
+        int seconds =(int) (pos % 60);
+        if (seconds < 10) {
+            return @"$minutes:0$seconds";
+        } else {
+            return @"$minutes:$seconds";
+        }
+    }
+    [GtkCallback]
+    public string total_pos(double len) {
+        int minutes =(int) (len / 60);
+        int seconds =(int) (len % 60);
+        if (seconds < 10) {
+            return @"$minutes:0$seconds";
+        } else {
+            return @"$minutes:$seconds";
+        }
+    }
 
+    [GtkChild]
+    public unowned Gtk.Image art_image;
     [GtkChild]
     public unowned Gtk.Adjustment media_len_adjust;
 
     [GtkChild]
     public unowned Gtk.Scale mpris_slider;
-
-    [GtkChild]
-    public unowned Gtk.Box image_box;
 
     public Mpris() {
         Object();
@@ -66,9 +93,10 @@ public class Mpris : Gtk.Window, ILayerWindow {
             }
         }
 
-        this.player.notify["art-url"].connect(() => {
-            UpdateArt();
-        });
+        //  this.player.notify["art-url"].connect(() => {
+        //      print("Art URL: %s", this.player.art_url.substring(7));
+        //      art_image.set_from_file(this.player.art_url.substring(7));
+        //  });
         this.cssProvider = new Gtk.CssProvider();
         this.get_style_context()
          .add_provider(this.cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
@@ -78,10 +106,11 @@ public class Mpris : Gtk.Window, ILayerWindow {
     }
 
     public void UpdateArt() {
-        string style = "* { background-image: linear-gradient(rgba(0, 0, 0, 0), "
+        string style = "box { background-image: linear-gradient(rgba(0, 0, 0, 0), "
             + "alpha(@view_bg_color, 0.9)),"
             + "url(\"" + this.player.art_url + "\");"
-            + "background-size: cover; }";
+            + "background-size: cover; "
+            + "background-position: center; }";
 
         try {
             this.cssProvider.load_from_string(style);
@@ -98,7 +127,7 @@ public class Mpris : Gtk.Window, ILayerWindow {
         GtkLayerShell.set_anchor(this, GtkLayerShell.Edge.LEFT, true);
 
         // GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 50);
-        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.TOP, 5);
+        GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 5);
         GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 5);
 
         GtkLayerShell.set_namespace(this, namespace);

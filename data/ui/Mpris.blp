@@ -8,7 +8,7 @@ template $Mpris: Window {
 
     Box master_box {
         orientation: vertical;
-        spacing: 10;
+        spacing: 5;
 
         styles [
             "mpris_master_box"
@@ -18,52 +18,93 @@ template $Mpris: Window {
             spacing: 10;
             hexpand: true;
 
-            styles [
-                "mpris_master_upper_box"
-            ]
+            Image art_image {
+                // So cool that this shit can't be rounded without messing with 200 lines of cairo code :)
+                // Fucking hilarious
+                pixel-size: 100;
+                file: bind $art_url(template.player as <AstalMpris.Player>.art-url) as <string>;
 
-            Box image_box {
                 styles [
-                    "image_box"
+                    "mpris_art_image"
                 ]
             }
 
             Box media_info {
                 orientation: vertical;
                 hexpand: true;
+                valign: center;
                 spacing: 10;
 
                 styles [
                     "mpris_media_info"
                 ]
 
-                Label title {
-                    label: bind template.player as <AstalMpris.Player>.title;
-                    halign: center;
+                Label player_name {
+                    label: bind template.player as <AstalMpris.Player>.identity;
+                    halign: start;
                     ellipsize: end;
                     max-width-chars: 20;
+
+                    styles [
+                        "player_name_label"
+                    ]
+                }
+
+                Label title {
+                    label: bind template.player as <AstalMpris.Player>.title;
+                    halign: start;
+                    ellipsize: end;
+                    max-width-chars: 20;
+
+                    styles [
+                        "title_label"
+                    ]
                 }
 
                 Label artist {
                     label: bind template.player as <AstalMpris.Player>.artist;
-                    halign: center;
+                    halign: start;
                     ellipsize: end;
                     max-width-chars: 20;
+
+                    styles [
+                        "artist_label"
+                    ]
                 }
             }
         }
 
-        Scale mpris_slider {
+        Box slider_box {
             hexpand: true;
 
-            adjustment: Adjustment media_len_adjust {
-                lower: 0;
-                upper: bind template.player as <AstalMpris.Player>.length;
-            };
+            Label current_pos {
+                label: bind $current_pos(template.player as <AstalMpris.Player>.position) as <string>;
 
-            styles [
-                "mpris_slider"
-            ]
+                styles [
+                    "mpris_time_label"
+                ]
+            }
+
+            Scale mpris_slider {
+                hexpand: true;
+
+                adjustment: Adjustment media_len_adjust {
+                    lower: 0;
+                    upper: bind template.player as <AstalMpris.Player>.length;
+                };
+
+                styles [
+                    "mpris_slider"
+                ]
+            }
+
+            Label total_pos {
+                label: bind $total_pos(template.player as <AstalMpris.Player>.length) as <string>;
+
+                styles [
+                    "mpris_time_label"
+                ]
+            }
         }
 
         Box lower_box {

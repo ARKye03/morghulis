@@ -2,29 +2,45 @@
 
 .mpris_window {
     all: unset;
-    border-radius: $master-border-radius;
 }
 
 .mpris_master_box {
+    background-color: transparentize(#282C34, 0.2);
+    border-radius: $master-border-radius;
+    border: 1px solid #363A4F;
     min-width: 270px;
     min-height: 150px;
-    margin: 10px;
+    padding: 10px;
 }
 
-.mpris_media_info label {
-    border-radius: $master-border-radius;
-    background-color: $dark_3;
-    padding: 5px;
+.mpris_media_info {
+
+    & .player_name_label {
+        color: $light_3;
+        font-weight: bold;
+        font-size: 0.8em;
+    }
+
+    & .title_label {
+        color: $light_2;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    & .artist_label {
+        color: $light_3;
+        font-weight: bold;
+        font-size: 1.0em;
+    }
 }
 
 .mpris_slider {
-    background-color: $dark_3;
     border-radius: 5px;
     padding: 5px;
 
     & trough {
         padding: 0;
-        min-height: 8px;
+        min-height: 10px;
 
         & highlight {
             background-color: $accent_color;
@@ -34,5 +50,9 @@
             all: unset;
         }
     }
+}
 
+.mpris_time_label {
+    color: $light_3;
+    min-width: 2.5em;
 }

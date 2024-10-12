@@ -1,6 +1,7 @@
 @import "Colors";
 
 .StatusBar_Master {
+    background-color: transparentize(#282C34, 0.2);
     min-height: 50px;
     border-radius: $master-border-radius;
     padding: 0 5px;
@@ -16,9 +17,7 @@
 
 .workspaces button {
     font-size: 16px;
-    // text-align: center;
     padding-right: 5px;
-    transition: ease-in-out color 200ms;
 }
 
 .focused {

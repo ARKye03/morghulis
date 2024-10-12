@@ -2,9 +2,11 @@
 @import "StatusBar";
 @import "Mpris";
 
-button{
+button {
     background-color: transparent;
-    &:hover{
-        background-color: $dark_3;
+    transition: background-color 0.1s ease-in-out;
+
+    &:hover {
+        background-color: $dark_2;
     }
 }
