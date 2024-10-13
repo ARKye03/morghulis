@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2024-10-13
+## [0.1.1] - 2024-10-13
 
 ### 🚀 Features
 
@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - QuickSettings Menu WIP
 - Fixed PLAYING player in first position
 - Add uptime label and PowerMenu Buttons
+- WorkspacesButton on middle click movetoworksapcesilent active lcient
 
 ### 🐛 Bug Fixes
 
@@ -26,10 +27,8 @@ All notable changes to this project will be documented in this file.
 - Fixed volume scroll letting volume going  over 1
 - Response for null cases, and improve help msg
 - Fixed qsMenu visible by default
-- Ambiguity between tags and version
-- Some fiels not being added
-- Update script again
-- Update script again
+- Fixed ambiguity between tags and version
+- Fixed apps using incorrect name
 
 ### 🚜 Refactor
 
@@ -52,7 +51,7 @@ All notable changes to this project will be documented in this file.
 - Removed unused dependency
 - Increase icons pixel-size
 - Removed unused directive
-- Changed flake to gen versioned outputs, add script to generate version based on tag, update gitignore for nix builds
+- FHS morghulis as default
 
 ### 🎨 Styling
 
@@ -77,13 +76,14 @@ All notable changes to this project will be documented in this file.
 - Add protonvpn asset
 - Update readme
 - Improved code style
-- Add CHANGELOG, via git-cliff
+- Bump version to v0.1.0
+- Update readme
 
 ### CI
 
-- Test init
-- Setup build and release workflow
+- INIT
 - Update CI name, and results are versioned
+- Prerelease tru, more sensitive to errors
 
 ### Wip
 
