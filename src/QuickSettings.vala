@@ -209,5 +209,6 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
 
     public void present_layer () {
         this.present ();
+        this.visible = false;
     }
 }
