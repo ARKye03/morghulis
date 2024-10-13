@@ -125,11 +125,11 @@
           apps = {
             default = {
               type = "app";
-              program = "${morghulis}/bin/${buildName}";
+              program = "${morghulis}/bin/${appName}";
             };
             fhs = {
               type = "app";
-              program = "${fhs-morghulis}/bin/${buildName}";
+              program = "${fhs-morghulis}/bin/${appName}";
             };
           };
           devShells.default = shell;
