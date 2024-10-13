@@ -26,6 +26,10 @@ All notable changes to this project will be documented in this file.
 - Fixed volume scroll letting volume going  over 1
 - Response for null cases, and improve help msg
 - Fixed qsMenu visible by default
+- Ambiguity between tags and version
+- Some fiels not being added
+- Update script again
+- Update script again
 
 ### 🚜 Refactor
 
@@ -48,6 +52,7 @@ All notable changes to this project will be documented in this file.
 - Removed unused dependency
 - Increase icons pixel-size
 - Removed unused directive
+- Changed flake to gen versioned outputs, add script to generate version based on tag, update gitignore for nix builds
 
 ### 🎨 Styling
 
@@ -72,11 +77,13 @@ All notable changes to this project will be documented in this file.
 - Add protonvpn asset
 - Update readme
 - Improved code style
+- Add CHANGELOG, via git-cliff
 
 ### CI
 
 - Test init
 - Setup build and release workflow
+- Update CI name, and results are versioned
 
 ### Wip
 
