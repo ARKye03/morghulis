@@ -23,7 +23,7 @@
             nixd
             nixpkgs-fmt
           ];
-          morghulis = stdenv.mkDerivation {
+          nix-morghulis = stdenv.mkDerivation {
             name = buildName;
             src = ./.;
             version = version;
@@ -52,7 +52,7 @@
               maintainers = with maintainers; [ ARKye03 ];
             };
           };
-          fhs-morghulis = morghulis.overrideAttrs {
+          fhs-morghulis = nix-morghulis.overrideAttrs {
             installPhase = ''
               mkdir -p $out/bin
               cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
@@ -119,17 +119,17 @@
         in
         {
           packages = {
-            default = morghulis;
-            fhs = fhs-morghulis;
+            default = fhs-morghulis;
+            nix = nix-morghulis;
           };
           apps = {
             default = {
               type = "app";
-              program = "${morghulis}/bin/${appName}";
-            };
-            fhs = {
-              type = "app";
               program = "${fhs-morghulis}/bin/${appName}";
+            };
+            nix = {
+              type = "app";
+              program = "${nix-morghulis}/bin/${appName}";
             };
           };
           devShells.default = shell;
