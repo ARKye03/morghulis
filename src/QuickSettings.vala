@@ -203,10 +203,8 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
 
         GtkLayerShell.set_margin (this, GtkLayerShell.Edge.BOTTOM, 5);
         GtkLayerShell.set_margin (this, GtkLayerShell.Edge.RIGHT, 5);
-
         GtkLayerShell.set_namespace (this, namespace);
     }
-
     public void present_layer () {
         this.present ();
         this.visible = false;
