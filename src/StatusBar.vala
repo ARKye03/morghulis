@@ -66,9 +66,6 @@ public void init_layer_properties () {
 	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.RIGHT, true);
 	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.LEFT, true);
 
-	// GtkLayerShell.set_margin(this, GtkLayerShell.Edge.RIGHT, 5);
-	// GtkLayerShell.set_margin(this, GtkLayerShell.Edge.LEFT, 5);
-	// GtkLayerShell.set_margin(this, GtkLayerShell.Edge.BOTTOM, 5);
 	GtkLayerShell.set_namespace (this, "StatusBar");
 	GtkLayerShell.auto_exclusive_zone_enable (this);
 }

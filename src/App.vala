@@ -26,7 +26,6 @@ public override void activate () {
 	}
 
 	windows.append (new StatusBar (this));
-	// windows.append(new Mpris());
 	windows.append (new QuickSettings ());
 
 	foreach (var window in windows) {

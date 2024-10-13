@@ -1,4 +1,4 @@
-[GtkTemplate( ui = "/com/github/ARKye03/morghulis/ui/QuickSettingsButton.ui")]
+[GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/QuickSettingsButton.ui")]
 public class QuickSettingsButton : Gtk.Box {
 
 public AstalNetwork.Network network { get; set; }

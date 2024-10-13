@@ -77,6 +77,7 @@ public Mpris (AstalMpris.Player player) {
 	Object ();
 	this.player = player;
 
-	this.player.bind_property ("position", media_len_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
+	this.player.bind_property ("position", media_len_adjust, "value",
+				   GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
 }
 }

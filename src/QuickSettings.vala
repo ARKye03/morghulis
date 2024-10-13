@@ -197,13 +197,13 @@ public void lock () {
 public void init_layer_properties () {
 	GtkLayerShell.init_for_window (this);
 	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.TOP);
+	GtkLayerShell.set_namespace (this, "QuickSettings"); // Can't use namespace from ILayerWindow, the formatter goes crazy
 
 	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
 	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.RIGHT, true);
 
 	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.BOTTOM, 5);
 	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.RIGHT, 5);
-	//    GtkLayerShell.set_namespace (this, namespace); <- For some reason this breaks uncrustify HARD newlines_cleanup_braces(4995): Missing BRACE_OPEN after namespaceorig line is 206, orig col is 44
 }
 public void present_layer () {
 	this.present ();
