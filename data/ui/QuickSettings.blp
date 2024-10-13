@@ -40,15 +40,11 @@ template $QuickSettings: Window {
 
                 Image {
                     file: "/home/archkye/user.png";
-                    halign: start;
+                    halign: center;
                     valign: center;
                     hexpand: true;
                     vexpand: true;
                     pixel-size: 100;
-                }
-
-                Label {
-                    label: "archye";
                 }
             }
 
@@ -232,11 +228,48 @@ template $QuickSettings: Window {
                 }
 
                 hexpand: true;
-                vexpand: true;
 
                 styles [
                     "quick_settings_grid_box"
                 ]
+
+                Label uptime_label {}
+
+                Box {
+                    hexpand: true;
+                    spacing: 5;
+                    halign: end;
+
+                    Button {
+                        icon-name: "system-shutdown-symbolic";
+                        tooltip-text: "Shutdown";
+                        clicked => $shutdown();
+                    }
+
+                    Button {
+                        icon-name: "system-reboot-symbolic";
+                        tooltip-text: "Reboot";
+                        clicked => $reboot();
+                    }
+
+                    Button {
+                        icon-name: "system-suspend-symbolic";
+                        tooltip-text: "Suspend";
+                        clicked => $suspend();
+                    }
+
+                    Button {
+                        icon-name: "system-hibernate-symbolic";
+                        tooltip-text: "Hibernate";
+                        clicked => $hibernate();
+                    }
+
+                    Button {
+                        icon-name: "system-lock-screen-symbolic";
+                        tooltip-text: "Lock";
+                        clicked => $lock();
+                    }
+                }
             }
         }
     }

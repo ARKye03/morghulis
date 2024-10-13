@@ -7,6 +7,7 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
     public AstalBluetooth.Bluetooth bluetooth { get; set; }
     public AstalNotifd.Notifd notifd {get; private set;}
     public AstalMpris.Mpris mpris {get; private set;}
+    public string namespace { get; set; }
 
 
     public QuickSettings () {
@@ -27,8 +28,27 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
         this.mpris.players.@foreach((p) => this.on_player_added(p));
         this.mpris.player_added.connect((p) => this.on_player_added(p));
         this.mpris.player_closed.connect((p) => this.on_player_removed(p));
+
+        Uptime();
     }
 
+    private static string stdout;
+    private void Uptime() {
+        UpdateUptime();
+        GLib.Timeout.add(60000, () => {
+            UpdateUptime();
+            return true;
+        });
+    }
+    private void UpdateUptime() {
+        try {
+            Process.spawn_command_line_sync("uptime -p", out stdout);
+        } catch (Error e) {
+            warning("Failed to get uptime: %s", e.message);
+        }
+        uptime_label.label = stdout.strip();
+    }
+        
     [GtkChild]
     public unowned Gtk.Adjustment vol_adjust;
 
@@ -129,6 +149,50 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
             this.players.scroll_to(playing_widget, true);
         }
     }
+    [GtkChild]
+    public unowned Gtk.Label uptime_label;
+
+    [GtkCallback]
+    public void shutdown() {
+        try {
+            Process.spawn_command_line_async("systemctl poweroff");
+        } catch (Error e) {
+            warning("Failed to shutdown: %s", e.message);
+        }
+    }
+    [GtkCallback]
+    public void reboot() {
+        try {
+            Process.spawn_command_line_async("systemctl reboot");
+        } catch (Error e) {
+            warning("Failed to reboot: %s", e.message);
+        }
+    }
+    [GtkCallback]
+    public void suspend() {
+        try {
+            Process.spawn_command_line_async("systemctl suspend");
+        } catch (Error e) {
+            warning("Failed to suspend: %s", e.message);
+        }
+    }
+    [GtkCallback]
+    public void hibernate() {
+        try {
+            Process.spawn_command_line_async("systemctl hibernate");
+        } catch (Error e) {
+            warning("Failed to hibernate: %s", e.message);
+        }
+    }
+    [GtkCallback]
+    public void lock() {
+        try {
+            Process.spawn_command_line_async("loginctl lock-session");
+        } catch (Error e) {
+            warning("Failed to lock: %s", e.message);
+        }
+    }
+    
 
     public void init_layer_properties () {
         GtkLayerShell.init_for_window (this);
@@ -146,5 +210,4 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
     public void present_layer () {
         this.present ();
     }
-    public string namespace { get; set; }
 }
