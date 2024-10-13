@@ -1,4 +1,4 @@
-name: "Test"
+name: "Build and Release"
 on:
   pull_request:
   push:
@@ -18,10 +18,12 @@ jobs:
       with:
         name: nixarkye03
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix build
+    - name: Extract tag version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
     - run: nix build .#fhs
     - run: nix flake check
     - uses: ncipollo/release-action@v1.14.0
       with:
-        artifacts: "result/bin/*"
+        artifacts: "result/bin/morghulis-${{ steps.get_version.outputs.VERSION }}"
         bodyFile: "CHANGELOG.md"
