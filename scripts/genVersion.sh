@@ -21,7 +21,7 @@ echo $tag > version
 
 git cliff --tag $tag -o CHANGELOG.md
 git add version CHANGELOG.md
-git commit -m "Bump version to $tag"
+git commit -m "chore: bump version to $tag"
 git tag -s $tag -m "Release $tag"
 
 echo "Version bumped to $tag, CHANGELOG.md updated, and signed tag created."
