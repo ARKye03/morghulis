@@ -78,12 +78,14 @@ All notable changes to this project will be documented in this file.
 - Improved code style
 - Bump version to v0.1.0
 - Update readme
+- Bump version to v0.1.1
 
 ### CI
 
 - INIT
 - Update CI name, and results are versioned
 - Prerelease tru, more sensitive to errors
+- Using default build instead of fhs
 
 ### Wip
 
