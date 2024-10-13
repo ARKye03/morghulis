@@ -19,7 +19,7 @@ fi
 # Generate version file
 echo $tag > version
 
-git cliff --tag $tag -o CHANGELOG.md
+git cliff --unreleased --tag $tag -o CHANGELOG.md
 git add version CHANGELOG.md
 git commit -m "chore: bump version to $tag"
 git tag -s $tag -m "Release $tag"
