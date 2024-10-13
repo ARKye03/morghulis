@@ -14,8 +14,9 @@
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          appName = "morghulis";
           version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile ./version);
+          buildName = "morghulis";
+          appName = "${buildName}-${version}";
           stdenv = pkgs.gcc14Stdenv;
 
           nix-utils = with pkgs; [
@@ -23,7 +24,7 @@
             nixpkgs-fmt
           ];
           morghulis = stdenv.mkDerivation {
-            name = appName;
+            name = buildName;
             src = ./.;
             version = version;
 
@@ -40,7 +41,7 @@
 
             installPhase = ''
               mkdir -p $out/bin
-              cp -r $TMPDIR/buildNix/src/${appName} $out/bin/${appName}
+              cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
               chmod +x $out/bin/${appName}
             '';
 
@@ -54,7 +55,7 @@
           fhs-morghulis = morghulis.overrideAttrs {
             installPhase = ''
               mkdir -p $out/bin
-              cp -r $TMPDIR/buildNix/src/${appName} $out/bin/${appName}
+              cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
               ${pkgs.patchelf}/bin/patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 $out/bin/${appName}
               ${pkgs.patchelf}/bin/patchelf --set-rpath /lib:/usr/lib $out/bin/${appName}
               ${pkgs.patchelf}/bin/patchelf --shrink-rpath $out/bin/${appName}
@@ -124,11 +125,11 @@
           apps = {
             default = {
               type = "app";
-              program = "${morghulis}/bin/${appName}";
+              program = "${morghulis}/bin/${buildName}";
             };
             fhs = {
               type = "app";
-              program = "${fhs-morghulis}/bin/${appName}";
+              program = "${fhs-morghulis}/bin/${buildName}";
             };
           };
           devShells.default = shell;
