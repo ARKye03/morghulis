@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e  # Exit immediately if a command exits with a non-zero status.
+
 # Check if a tag argument is provided
 if [ $# -eq 0 ]; then
     echo "Please provide a version tag as an argument (e.g., v0.1.1)"
@@ -8,21 +10,20 @@ fi
 
 tag=$1
 
+# Check if the tag already exists
+if git rev-parse "$tag" >/dev/null 2>&1; then
+    echo "Error: Tag $tag already exists. Please choose a different tag."
+    exit 1
+fi
+
 # Generate version file
 echo $tag > version
 
-# Generate CHANGELOG.md
 git cliff --tag $tag -o CHANGELOG.md
-
-# Stage the changes
 git add version CHANGELOG.md
-
-# Commit the changes
 git commit -m "Bump version to $tag"
+git tag -s $tag -m "Release $tag"
 
-# Create an annotated tag
-git tag -a $tag -m "Release $tag"
-
-echo "Version bumped to $tag, CHANGELOG.md updated, and tag created."
+echo "Version bumped to $tag, CHANGELOG.md updated, and signed tag created."
 echo "Please review the changes and push with:"
 echo "git push origin main $tag"
