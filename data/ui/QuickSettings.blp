@@ -92,7 +92,7 @@ template $QuickSettings: Window {
                 }
 
                 Label {
-                    label: bind $CurrentVolume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
+                    label: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
                     width-request: 50;
                 }
 
@@ -141,7 +141,7 @@ template $QuickSettings: Window {
                     }
 
                     $QuickSettingsButton {
-                        icon: bind $ActiveVPN(template.network) as <string>;
+                        icon: bind $active_vpn(template.network) as <string>;
                         clicked => $toggle_vpn();
 
                         layout {

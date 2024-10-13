@@ -16,9 +16,9 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
             namespace: "QuickSettings"
         );
         init_layer_properties ();
-        
+
         speaker.bind_property("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
-        
+
     }
     construct {
         speaker = AstalWp.get_default().audio.default_speaker;
@@ -29,18 +29,18 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
         this.mpris.player_added.connect((p) => this.on_player_added(p));
         this.mpris.player_closed.connect((p) => this.on_player_removed(p));
 
-        Uptime();
+        uptime();
     }
 
     private static string stdout;
-    private void Uptime() {
-        UpdateUptime();
+    private void uptime() {
+        update_uptime();
         GLib.Timeout.add(60000, () => {
-            UpdateUptime();
+            update_uptime();
             return true;
         });
     }
-    private void UpdateUptime() {
+    private void update_uptime() {
         try {
             Process.spawn_command_line_sync("uptime -p", out stdout);
         } catch (Error e) {
@@ -48,12 +48,12 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
         }
         uptime_label.label = stdout.strip();
     }
-        
+
     [GtkChild]
     public unowned Gtk.Adjustment vol_adjust;
 
     [GtkCallback]
-    public string CurrentVolume(double volume) {
+    public string current_volume(double volume) {
         return @"$(Math.round(volume * 100))%";
     }
 
@@ -76,7 +76,7 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
             : "bluetooth-disabled-symbolic";
     }
     [GtkCallback]
-    public string ActiveVPN(AstalNetwork.Network network) {
+    public string active_vpn(AstalNetwork.Network network) {
         return network.wifi.active_connection.vpn ? "network-vpn-symbolic" : "network-vpn-disabled-symbolic";
     }
     [GtkCallback]
@@ -93,7 +93,7 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
 
     [GtkCallback]
     public string dont_disturb_icon(bool dnd) {
-      return dnd 
+      return dnd
         ? "notifications-disabled-symbolic"
         : "user-available-symbolic";
     }
@@ -105,14 +105,14 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
     [GtkCallback]
     public void on_notif_arrow_clicked() {
         //  nav_view.push_by_tag("notifications");
-    }  
+    }
     [GtkChild]
     private unowned Adw.Carousel players;
 
     private void on_player_added(AstalMpris.Player player) {
         var mpris_widget = new Mpris(player);
         this.players.append(mpris_widget);
-        
+
         player.notify["playback-status"].connect(() => {
             reorder_players();
         });
@@ -192,7 +192,7 @@ public class QuickSettings : Gtk.Window, ILayerWindow {
             warning("Failed to lock: %s", e.message);
         }
     }
-    
+
 
     public void init_layer_properties () {
         GtkLayerShell.init_for_window (this);
