@@ -69,9 +69,11 @@
           compiler-utils = with pkgs; [
             vala
             vala-language-server
+            vala-lint
             uncrustify
             dart-sass
             blueprint-compiler
+            git-cliff
           ];
           build-utils = with pkgs.buildPackages; [
             muon
