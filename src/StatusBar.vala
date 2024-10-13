@@ -13,13 +13,7 @@ public class StatusBar : Gtk.Window, ILayerWindow {
     public string namespace { get; set; }
 
     [GtkChild]
-    public unowned Gtk.Label mpris_label;
-
-    [GtkChild]
     public unowned Gtk.Box workspaces;
-
-    [GtkChild]
-    public unowned Gtk.Button mpris_button;
 
     [GtkChild]
     public unowned Gtk.Button apps_button;
@@ -55,7 +49,6 @@ public class StatusBar : Gtk.Window, ILayerWindow {
             FocusedClient();
         });
         Workspaces();
-        Mpris();
         Clock();
     }
 
@@ -156,27 +149,5 @@ public class StatusBar : Gtk.Window, ILayerWindow {
     bool workspace_has_windows(int workspaceNumber) {
         var WindowCount = hyprland.get_workspace(workspaceNumber).clients.length();
         return WindowCount > 0;
-    }
-
-    private void Mpris() {
-        foreach (var player in mpris.players) {
-            if (player.bus_name == "org.mpris.MediaPlayer2.mpd")
-                mpd = player;
-        }
-
-        mpris_button.clicked.connect(() => {
-            Morghulis.Instance.ToggleWindow("Mpris");
-        });
-
-        var right_click = new Gtk.GestureClick();
-        right_click.set_button(Gdk.BUTTON_SECONDARY);
-        right_click.pressed.connect(() => {
-            if (mpd != null) {
-                mpd.play_pause();
-            }
-        });
-        mpris_button.add_controller(right_click);
-
-        mpris_button.tooltip_text = mpd.identity;
     }
 }

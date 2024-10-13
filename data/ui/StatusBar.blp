@@ -20,32 +20,6 @@ template $StatusBar: Window {
         ]
       }
 
-      Button mpris_button {
-        name: "mpris_button";
-        valign: fill;
-
-        styles [
-          "mpris_button",
-          "statusbar_box"
-        ]
-
-        child: Box mpris_box {
-          spacing: 5;
-
-          styles [
-            "mpris_box",
-          ]
-
-          Label mpris_box_label {
-            label: " ";
-          }
-
-          Label mpris_label {
-            label: bind template.mpd as <AstalMpris.Player>.title;
-          }
-        };
-      }
-
       Label client_label {
         label: "-----";
         halign: start;
