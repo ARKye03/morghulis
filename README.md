@@ -29,6 +29,11 @@ cd morghulis
 meson setup build
 # arch-meson build # Opinionated option for Arch Linux, recommended.
 ```
+or use/install a binary from [releases](https://github.com/ARKye03/morghulis/releases).
+
+> [!WARNING]  
+> Still need the dynamic libraries installed in your system.
+
 
 ### Development
 
