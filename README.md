@@ -70,13 +70,14 @@ nix run github:ARKye03/morghulis -- --help
 - [x] Socket Service
 - [ ] [WIP] Quick Settings
     - [x] Media Player
+- [x] Apps Runner
+    - [ ] Handle Hyprland Clients
 - [ ] Notifications
     - [ ] Center
     - [ ] Popup
 - [ ] OnScreenDisplay
   - [ ] Audio
   - [ ] Brightness
-- [ ] Apps Runner
 - [ ] Dynamic CSS
 
 ## Preview
