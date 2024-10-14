@@ -1,0 +1,48 @@
+using Gtk 4.0;
+
+template $Runner: Window {
+    styles [
+        "runner_window"
+    ]
+
+    Revealer {
+        transition-duration: 300;
+        transition-type: slide_up;
+        reveal-child: bind template.visible;
+
+        Box {
+            orientation: vertical;
+            spacing: 5;
+
+            styles [
+                "runner_master_box"
+            ]
+
+            Entry entry {
+                primary-icon-name: "system-search-symbolic";
+                changed => $update_list();
+            }
+
+            ScrolledWindow {
+                max-content-height: 500;
+                height-request: 500;
+                propagate-natural-height: true;
+                overflow: hidden;
+
+                styles [
+                    "scroll-list"
+                ]
+
+                ListBox app_list {
+                    hexpand: true;
+                    valign: start;
+                    selection-mode: browse;
+
+                    styles [
+                        "boxed-list"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -4,6 +4,8 @@ targets = files(
     'ui/Mpris.blp',
     'ui/QuickSettings.blp',
     'ui/QuickSettingsButton.blp',
+    'ui/Runner.blp',
+    'ui/RunnerButton.blp',
     'ui/StatusBar.blp',
 )
 

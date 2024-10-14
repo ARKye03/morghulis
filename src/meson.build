@@ -4,6 +4,8 @@ source_files = [
     'StatusBar.vala',
     'QuickSettings.vala',
     'QuickSettingsButton.vala',
+    'Runner.vala',
+    'RunnerButton.vala',
     'Mpris.vala',
     'Utils/Layer.vala',
 ]
@@ -23,6 +25,7 @@ executable(
         dependency('astal-notifd-0.1'),
         dependency('astal-network-0.1'),
         dependency('astal-bluetooth-0.1'),
+        dependency('astal-apps-0.1'),
         dependency('gio-unix-2.0'),
         dependency('libadwaita-1'),
     ],

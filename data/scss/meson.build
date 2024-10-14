@@ -6,6 +6,7 @@ scss_deps = files(
     '_QuickSettings.scss',
     '_StatusBar.scss',
     '_adw.scss',
+    '_Runner.scss',
     'main.scss',
 )
 

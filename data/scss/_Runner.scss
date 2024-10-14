@@ -1,0 +1,26 @@
+@import "Colors";
+
+.runner_window {
+    all: unset;
+}
+
+.runner_master_box {
+    background-color: transparentize(#282C34, 0.2);
+    border-radius: $master-border-radius;
+    border: 1px solid $dark_2;
+    padding: 10px;
+    min-width: 555px;
+}
+
+.boxed-list {
+    background-color: transparent;
+    padding: 10px;
+}
+
+.runner_button {
+    padding: 10px;
+    background-color: $dark_3;
+    margin: 5px 0;
+    border-radius: $master-border-radius;
+
+}
