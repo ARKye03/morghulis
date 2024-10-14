@@ -9,11 +9,14 @@ private unowned Gtk.ListBox app_list;
 [GtkChild]
 private unowned Gtk.Entry entry;
 
+[GtkChild]
+private unowned Gtk.EventControllerKey key_controller;
+
 private int sort_func (Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
 	RunnerButton a = (RunnerButton) la;
 	RunnerButton b = (RunnerButton) lb;
 	if (a.score == b.score)return b.app.frequency - a.app.frequency;
-	return (int)((b.score - a.score)*100);
+	return (int)((b.score - a.score) * 100);
 }
 
 [GtkCallback]
@@ -51,6 +54,18 @@ construct {
 	this.apps.list.@foreach (app => {
 			this.app_list.append (new RunnerButton (app));
 		});
-}
 
+	this.key_controller.key_released.connect ((keyval, _) => {
+			if (keyval == Gdk.Key.Escape) {
+				this.visible = false;
+			}
+		});
+	this.notify["visible"].connect (() => {
+			if (!this.visible) {
+				this.entry.text = "";
+			} else {
+				this.entry.grab_focus ();
+			}
+		});
+}
 }
