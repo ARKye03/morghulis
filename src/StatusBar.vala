@@ -63,7 +63,7 @@ private void setup_event_handlers () {
 		});
 
 	apps_button.clicked.connect (() => {
-			Morghulis.instance.toggle_window ("VRunner");
+			Morghulis.instance.toggle_window ("Runner");
 		});
 
 	hyprland.notify["focused-client"].connect (() => {
