@@ -59,6 +59,12 @@ construct {
 			if (keyval == Gdk.Key.Escape) {
 				this.visible = false;
 			}
+			else if (keyval == Gdk.Key.Return) {
+				RunnerButton? app = (RunnerButton) this.app_list.get_row_at_index (0);
+				if (app != null) {
+					app.clicked ();
+				}
+			}
 		});
 	this.notify["visible"].connect (() => {
 			if (!this.visible) {
