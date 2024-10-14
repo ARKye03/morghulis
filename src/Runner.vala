@@ -63,6 +63,7 @@ construct {
 				RunnerButton? app = (RunnerButton) this.app_list.get_row_at_index (0);
 				if (app != null) {
 					app.clicked ();
+					this.visible = false;
 				}
 			}
 		});
