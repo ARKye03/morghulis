@@ -9,14 +9,16 @@ private unowned Gtk.ListBox app_list;
 [GtkChild]
 private unowned Gtk.Entry entry;
 
-[GtkChild]
-private unowned Gtk.EventControllerKey key_controller;
-
 private int sort_func (Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
 	RunnerButton a = (RunnerButton) la;
 	RunnerButton b = (RunnerButton) lb;
-	if (a.score == b.score)return b.app.frequency - a.app.frequency;
-	return (int)((b.score - a.score) * 100);
+	if (a.score == b.score) return b.app.frequency - a.app.frequency;
+	return (a.score > b.score) ? -1 : 1;
+}
+
+private bool filter_func (Gtk.ListBoxRow row) {
+	RunnerButton app = (RunnerButton) row;
+	return app.score >= 0;
 }
 
 [GtkCallback]
@@ -28,7 +30,24 @@ public void update_list () {
 		app = (RunnerButton) this.app_list.get_row_at_index (++i);
 	}
 	this.app_list.invalidate_sort ();
+	this.app_list.invalidate_filter ();
 }
+[GtkCallback]
+public void launch_first_runner_button () {
+	RunnerButton selectedButton = (RunnerButton)this.app_list.get_row_at_index(0);
+	if (selectedButton != null) {
+		selectedButton.activate();
+		this.visible = false;
+	}
+}
+
+[GtkCallback]
+public void key_released (uint keyval) {
+	if (keyval == Gdk.Key.Escape) {
+		this.visible = false;
+	}
+}
+
 public void init_layer_properties () {
 	GtkLayerShell.init_for_window (this);
 	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.OVERLAY);
@@ -38,10 +57,12 @@ public void init_layer_properties () {
 	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
 	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.BOTTOM, 10);
 }
+
 public void present_layer () {
 	this.present ();
 	this.visible = false;
 }
+
 public string namespace { get; set; }
 
 construct {
@@ -50,23 +71,12 @@ construct {
 	this.apps = new AstalApps.Apps ();
 
 	this.app_list.set_sort_func (sort_func);
+	this.app_list.set_filter_func (filter_func);
 
 	this.apps.list.@foreach (app => {
 			this.app_list.append (new RunnerButton (app));
 		});
 
-	this.key_controller.key_released.connect ((keyval, _) => {
-			if (keyval == Gdk.Key.Escape) {
-				this.visible = false;
-			}
-			else if (keyval == Gdk.Key.Return) {
-				RunnerButton? app = (RunnerButton) this.app_list.get_row_at_index (0);
-				if (app != null) {
-					app.clicked ();
-					this.visible = false;
-				}
-			}
-		});
 	this.notify["visible"].connect (() => {
 			if (!this.visible) {
 				this.entry.text = "";

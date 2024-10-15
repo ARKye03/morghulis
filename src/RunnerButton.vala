@@ -8,6 +8,10 @@ public double score { get; set;}
 public void clicked () {
 	app.launch ();
 }
+[GtkCallback]
+public void activated () {
+	app.launch ();
+}
 
 public RunnerButton (AstalApps.Application app) {
 	Object (app: app);

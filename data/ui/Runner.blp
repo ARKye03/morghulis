@@ -5,7 +5,9 @@ template $Runner: Window {
         "runner_window"
     ]
 
-    EventControllerKey key_controller {}
+    EventControllerKey {
+        key-released => $key_released();
+    }
 
     Revealer {
         transition-duration: 300;
@@ -23,6 +25,7 @@ template $Runner: Window {
             Entry entry {
                 primary-icon-name: "system-search-symbolic";
                 changed => $update_list();
+                activate => $launch_first_runner_button();
             }
 
             ScrolledWindow {
@@ -38,7 +41,7 @@ template $Runner: Window {
                 ListBox app_list {
                     hexpand: true;
                     valign: start;
-                    selection-mode: browse;
+                    selection-mode: none;
 
                     styles [
                         "boxed-list"

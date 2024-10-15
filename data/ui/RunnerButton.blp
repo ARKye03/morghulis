@@ -2,9 +2,9 @@ using Gtk 4.0;
 using AstalApps 0.1;
 
 template $RunnerButton: ListBoxRow {
-    selectable: true;
-    activatable: true;
-    activate => $clicked();
+    selectable: false;
+    activatable: false;
+    activate => $activated();
 
     styles [
         "runner_button"
