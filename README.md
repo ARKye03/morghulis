@@ -34,12 +34,13 @@ meson setup build
 or use/install a binary from [releases](https://github.com/ARKye03/morghulis/releases).
 
 > [!WARNING]  
-> Still need the dynamic libraries installed in your system.
+> Still need the runtime libraries installed in your system.
 
 ### Development
 
 ```shell
-make
+just init
+just
 ```
 
 ### Installation
@@ -55,12 +56,9 @@ There is a `flake.nix` file, with a `devShell`, so you can use it to develop.
 
 ```shell
 nix develop
-meson setup buildNix
-make nixbuild # Build the desktop shell.
-make nixdev # Build and run the desktop shell.
 ```
 
-or try the desktop shell with:
+or try it with:
 
 ```shell
 nix run github:ARKye03/morghulis -- --help
