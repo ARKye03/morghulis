@@ -37,6 +37,10 @@ public override void activate () {
 	daemon.setup_socket_service ();
 }
 
+public void show_inspector () {
+	Gtk.Window.set_interactive_debugging (true);
+}
+
 public bool toggle_window (string name) {
 	ILayerWindow? w = null;
 	foreach (var window in windows) {
@@ -81,7 +85,7 @@ public string process_command (string command) {
 		break;
 	case "-I":
 	case "--inspector":
-		response = "Not implemented.";
+		show_inspector ();
 		break;
 	case "-h":
 	case "--help":
