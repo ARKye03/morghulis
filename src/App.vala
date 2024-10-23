@@ -106,15 +106,7 @@ public string process_command (string command) {
 	return response;
 }
 private string get_app_version () {
-	File version_file =  File.new_for_path ("version");
-	try {
-		FileInputStream @is = version_file.read ();
-		DataInputStream dis = new DataInputStream (@is);
-		string version = dis.read_line ();
-		return version;
-	} catch (GLib.Error e) {
-		return "Error getting app version: %s\n".printf (e.message);
-	}
+	return "Not impremented yet";
 }
 private string print_help () {
 	return "Usage: morghulis [options]\n"
