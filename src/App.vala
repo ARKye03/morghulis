@@ -5,7 +5,11 @@ private bool css_loaded = false;
 private Daemon daemon;
 
 public static void main (string[] args) {
-	instance = new Morghulis ();
+	if (Morghulis.instance != null) {
+		instance = Morghulis.instance;
+	} else {
+		instance = new Morghulis ();
+	}
 	instance.init_types ();
 	instance.run (args);
 }
@@ -91,13 +95,27 @@ public string process_command (string command) {
 	case "--help":
 		response = print_help ();
 		break;
+	case "-V":
+	case "--version":
+		response = get_app_version ();
+		break;
 	default:
 		response = "Unknown command. Use -h to see help.";
 		break;
 	}
 	return response;
 }
-
+private string get_app_version () {
+	File version_file =  File.new_for_path ("version");
+	try {
+		FileInputStream @is = version_file.read ();
+		DataInputStream dis = new DataInputStream (@is);
+		string version = dis.read_line ();
+		return version;
+	} catch (GLib.Error e) {
+		return "Error getting app version: %s\n".printf (e.message);
+	}
+}
 private string print_help () {
 	return "Usage: morghulis [options]\n"
 	       + "Options:\n"
