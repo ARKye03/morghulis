@@ -1,0 +1,42 @@
+# Maintainer: ARKye03 <rafa03-dev@proton.me>
+
+pkgname=morghulis-git
+pkgver=r.
+pkgrel=1
+pkgdesc="GTK4 Desktop Shell"
+arch=(x86_64)
+license=(WTFPL)
+url="https://github.com/ARKye03/morghulis"
+depends=(
+  gtk4
+  gtk4-layer-shell
+  glib2
+  libnm
+  libastal-meta
+  libadwaita
+)
+makedepends=(
+  git
+  gobject-introspection
+  vala
+  meson
+  dart-sass
+  blueprint-compiler
+)
+source=("${pkgname}::git+https://github.com/ARKye03/morghulis")
+sha256sums=('SKIP')
+
+pkgver() {
+  printf "r%s.%s" "$(git describe --tags --abbrev=0)"
+}
+
+build() {
+  cd "$pkgname"
+  arch-meson build
+  meson compile -C build
+}
+
+package() {
+  cd "$pkgname"
+  meson install -C build --destdir "$pkgdir"
+}
