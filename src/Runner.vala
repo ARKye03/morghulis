@@ -37,9 +37,9 @@ public void update_list () {
 	string text = this.entry.text;
 	this.app_list.remove_all ();
 	var list = apps.fuzzy_query (text);
-	foreach (var app in list) {
-		this.app_list.append (new RunnerButton (app));
-	}
+	list.@foreach (app => {
+			this.app_list.append (new RunnerButton (app));
+		});
 }
 [GtkCallback]
 public void launch_first_runner_button () {
@@ -59,7 +59,7 @@ public void key_released (uint keyval) {
 
 public void init_layer_properties () {
 	GtkLayerShell.init_for_window (this);
-	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.OVERLAY);
+	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.TOP);
 	GtkLayerShell.set_keyboard_mode (this, GtkLayerShell.KeyboardMode.ON_DEMAND);
 
 	GtkLayerShell.set_namespace (this, "Runner");
