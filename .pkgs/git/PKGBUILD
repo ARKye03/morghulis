@@ -27,7 +27,7 @@ source=("${pkgname}::git+https://github.com/ARKye03/morghulis")
 sha256sums=('SKIP')
 
 pkgver() {
-  printf "r%s.%s" "$(git describe --tags --abbrev=0)"
+  printf "r%s.%s" "$(git rev-parse --short HEAD)"
 }
 
 build() {
