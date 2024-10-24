@@ -33,7 +33,7 @@ meson setup build
 
 or use/install a binary from [releases](https://github.com/ARKye03/morghulis/releases).
 
-> [!WARNING]  
+> [!WARNING]
 > Still need the runtime libraries installed in your system.
 
 ### Development
@@ -62,6 +62,8 @@ or try it with:
 
 ```shell
 nix run github:ARKye03/morghulis -- --help
+# or
+nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
 ```
 
 ## Features
@@ -87,7 +89,7 @@ nix run github:ARKye03/morghulis -- --help
 
 ![Morghulis](public/morghulis.webp)
 
-> [!NOTE]  
+> [!NOTE]
 > The preview was made with adw-gtk One-Dark theme.
 
 ## License
