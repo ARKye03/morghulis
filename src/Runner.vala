@@ -23,23 +23,14 @@ private bool filter_func (Gtk.ListBoxRow row) {
 
 [GtkCallback]
 public void update_list () {
-	//  int i = 0;
-	//  RunnerButton? app = (RunnerButton) this.app_list.get_row_at_index (0);
-	//  while (app != null) {
-	//  	//  app.score = app.app.fuzzy_match (this.entry.text).name;
-	//  	app = (RunnerButton) this.app_list.get_row_at_index (++i);
-	//  }
-	//  this.app_list.invalidate_sort ();
-	//  this.app_list.invalidate_filter ();
-
-	// THIS IMPLEMENTATION NEEDS TO BE IMPROVED STRONGLY
-
-	string text = this.entry.text;
-	this.app_list.remove_all ();
-	var list = apps.fuzzy_query (text);
-	list.@foreach (app => {
-			this.app_list.append (new RunnerButton (app));
-		});
+	int i = 0;
+	RunnerButton? app = (RunnerButton) this.app_list.get_row_at_index (0);
+	while (app != null) {
+		app.score = app.app.fuzzy_match (this.entry.text).name;
+		app = (RunnerButton) this.app_list.get_row_at_index (++i);
+	}
+	this.app_list.invalidate_sort ();
+	this.app_list.invalidate_filter ();
 }
 [GtkCallback]
 public void launch_first_runner_button () {
