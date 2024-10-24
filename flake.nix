@@ -112,24 +112,24 @@
                 gdk-pixbuf
                 json-glib
               ];
-              LD_LIBRARY_PATH = "";
               GTK_THEME = "adw-gtk3:dark";
-              XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+              XCURSOR_THEME = "Bibata-Modern-Classic";
+              XCURSOR_SIZE = "20";
             };
         in
         {
           packages = {
-            default = fhs-morghulis;
-            nix = nix-morghulis;
+            default = nix-morghulis;
+            fhs = fhs-morghulis;
           };
           apps = {
             default = {
               type = "app";
-              program = "${fhs-morghulis}/bin/${appName}";
-            };
-            nix = {
-              type = "app";
               program = "${nix-morghulis}/bin/${appName}";
+            };
+            fhs = {
+              type = "app";
+              program = "${fhs-morghulis}/bin/${appName}";
             };
           };
           devShells.default = shell;
