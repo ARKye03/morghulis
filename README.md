@@ -73,16 +73,23 @@ nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
   - [x] Volume Controller
   - [x] Focused Client
 - [x] Socket Service
-- [ ] [WIP] Quick Settings
+- [x] Quick Settings
   - [x] Media Player
+  - [x] Bluetooth
+  - [x] Network
+    - [ ] VPN
+  - [ ] Notifications
+  - [ ] Brightness?
+  - [x] Power Buttons
 - [x] Apps Runner
   - [ ] Handle Hyprland Clients
 - [ ] Notifications
   - [ ] Center
   - [ ] Popup
-- [ ] OnScreenDisplay
-  - [ ] Audio
-  - [ ] Brightness
+- [ ] Power Menu
+- [x] OnScreenDisplay
+  - [x] Audio
+  - [ ] Brightness?
 - [ ] Dynamic CSS
 
 ## Preview
