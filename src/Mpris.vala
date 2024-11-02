@@ -1,6 +1,3 @@
-using AstalMpris;
-using GtkLayerShell;
-
 [GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/Mpris.ui")]
 public class Mpris : Gtk.Box {
 
