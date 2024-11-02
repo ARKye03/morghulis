@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "tamasfe.even-better-toml",
+        "bierner.github-markdown-preview",
+        "bodil.blueprint-gtk",
+        "mesonbuild.mesonbuild",
+        "prince781.vala",
+        "nefrob.vscode-just-syntax"
+    ]
+}
