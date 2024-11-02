@@ -1,9 +1,17 @@
 public class Daemon : Object {
+private static Daemon instance;
 private SocketService service;
 public string socket_path { get; private set; }
 private Morghulis app;
 
-public Daemon (Morghulis app) {
+public static Daemon get_instance (Morghulis app) {
+	if (instance == null) {
+		instance = new Daemon (app);
+	}
+	return instance;
+}
+
+private Daemon (Morghulis app) {
 	this.app = app;
 }
 

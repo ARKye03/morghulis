@@ -5,11 +5,7 @@ private bool css_loaded = false;
 private Daemon daemon;
 
 public static void main (string[] args) {
-	if (Morghulis.instance != null) {
-		instance = Morghulis.instance;
-	} else {
-		instance = new Morghulis ();
-	}
+	instance = new Morghulis ();
 	instance.init_types ();
 	instance.run (args);
 }
@@ -17,7 +13,9 @@ public static void main (string[] args) {
 construct {
 	application_id = "com.github.arkye03.morghulis";
 	flags = ApplicationFlags.HANDLES_COMMAND_LINE;
+	instance = this; // Ensure the instance is set in the constructor
 }
+
 private void init_types () {
 	typeof (QuickSettings).ensure ();
 	typeof (QuickSettingsButton).ensure ();
@@ -38,7 +36,7 @@ public override void activate () {
 		window.present_layer ();
 	}
 
-	daemon = new Daemon (this);
+	daemon = Daemon.get_instance (this);
 	daemon.setup_socket_service ();
 }
 
@@ -106,9 +104,11 @@ public string process_command (string command) {
 	}
 	return response;
 }
+
 private string get_app_version () {
-	return "Not impremented yet";
+	return "Not implemented yet";
 }
+
 private string print_help () {
 	return "Usage: morghulis [options]\n"
 	       + "Options:\n"
