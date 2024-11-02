@@ -2,45 +2,49 @@ using Gtk 4.0;
 using AstalWp 0.1;
 
 template $OnScreenDisplay: Window {
-    Revealer {
-        reveal-child: bind template.visible;
-        transition-type: slide_right;
-        transition-duration: 300;
+    styles [
+        "OnScreenDisplay_Window"
+    ]
 
-        Stack { // Stack for volume and brightness
-            Box volume_osd { // Abstract this to a component... If needed(3 or more osds)
-                orientation: vertical;
-                spacing: 10;
+    // Revealer {
+    //     transition-duration: 300;
+    //     transition-type: crossfade;
+    //     reveal-child: bind template.visible;
+    Stack { // Stack for volume and brightness
+        Box volume_osd { // Abstract this to a component... If needed(3 or more osds)
+            orientation: vertical;
+            spacing: 10;
+            vexpand: true;
+
+            styles [
+                "OnScreenDisplay"
+            ]
+
+            Image {
+                icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+            }
+
+            Scale {
                 vexpand: true;
-                hexpand: true;
+                orientation: vertical;
+                inverted: true;
+
+                adjustment: Adjustment vol_adjust {
+                    lower: 0;
+                    upper: 1;
+                };
 
                 styles [
-                    "OnScreenDisplay"
+                    "morghulis_vertical_slider"
                 ]
+            }
 
-                Image {
-                    icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-                }
-
-                Scale {
-                    vexpand: true;
-                    orientation: vertical;
-                    inverted: true;
-
-                    adjustment: Adjustment vol_adjust {
-                        lower: 0;
-                        upper: 1;
-                    };
-
-                    styles [
-                        "morghulis_vertical_slider"
-                    ]
-                }
-
-                Label {
-                    label: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
-                }
+            Label {
+                label: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
+                width-request: 50;
             }
         }
     }
+
+    // }
 }

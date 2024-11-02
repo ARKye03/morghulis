@@ -1,5 +1,9 @@
 @import "Colors";
 
+.OnScreenDisplay_Window {
+    all: unset;
+}
+
 .OnScreenDisplay {
     background-color: transparentize(#282C34, 0.2);
     border-radius: $master-border-radius;
