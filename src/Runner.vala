@@ -1,3 +1,5 @@
+using GtkLayerShell;
+
 [GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Gtk.Window, ILayerWindow {
 
@@ -49,13 +51,13 @@ public void key_released (uint keyval) {
 }
 
 public void init_layer_properties () {
-	GtkLayerShell.init_for_window (this);
-	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.TOP);
-	GtkLayerShell.set_keyboard_mode (this, GtkLayerShell.KeyboardMode.ON_DEMAND);
+	init_for_window (this);
+	set_layer (this, Layer.TOP);
+	set_keyboard_mode (this, KeyboardMode.ON_DEMAND);
 
-	GtkLayerShell.set_namespace (this, "Runner");
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
-	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.BOTTOM, 10);
+	set_namespace (this, "Runner");
+	set_anchor (this, Edge.BOTTOM, true);
+	set_margin (this, Edge.BOTTOM, 10);
 }
 
 public void present_layer () {

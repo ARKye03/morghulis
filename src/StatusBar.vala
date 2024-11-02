@@ -73,15 +73,15 @@ private void setup_event_handlers () {
 
 // Layer Shell methods
 public void init_layer_properties () {
-	GtkLayerShell.init_for_window (this);
-	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.TOP);
+	init_for_window (this);
+	set_layer (this, Layer.TOP);
 
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.RIGHT, true);
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.LEFT, true);
+	set_anchor (this, Edge.BOTTOM, true);
+	set_anchor (this, Edge.RIGHT, true);
+	set_anchor (this, Edge.LEFT, true);
 
-	GtkLayerShell.set_namespace (this, "StatusBar");
-	GtkLayerShell.auto_exclusive_zone_enable (this);
+	set_namespace (this, "StatusBar");
+	auto_exclusive_zone_enable (this);
 }
 
 public void present_layer () {

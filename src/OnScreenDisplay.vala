@@ -1,3 +1,5 @@
+using GtkLayerShell;
+
 [GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
 public class OnScreenDisplay : Gtk.Window, ILayerWindow {
 public AstalWp.Endpoint speaker { get; set; }
@@ -13,11 +15,11 @@ public string current_volume (double volume) {
 }
 
 public void init_layer_properties () {
-	GtkLayerShell.init_for_window (this);
-	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.OVERLAY);
-	GtkLayerShell.set_namespace (this, "OnScreenDisplay");
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.LEFT, true);
-	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.LEFT, 5);
+	init_for_window (this);
+	set_layer (this, Layer.OVERLAY);
+	set_namespace (this, "OnScreenDisplay");
+	set_anchor (this, Edge.LEFT, true);
+	set_margin (this, Edge.LEFT, 5);
 }
 
 public void present_layer () {

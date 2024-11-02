@@ -195,15 +195,15 @@ public void lock () {
 
 
 public void init_layer_properties () {
-	GtkLayerShell.init_for_window (this);
-	GtkLayerShell.set_layer (this, GtkLayerShell.Layer.TOP);
-	GtkLayerShell.set_namespace (this, "QuickSettings"); // Can't use namespace from ILayerWindow, the formatter goes crazy
+	init_for_window (this);
+	set_layer (this, Layer.TOP);
+	set_namespace (this, "QuickSettings"); // Can't use namespace from ILayerWindow, the formatter goes crazy
 
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
-	GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.RIGHT, true);
+	set_anchor (this, Edge.BOTTOM, true);
+	set_anchor (this, Edge.RIGHT, true);
 
-	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.BOTTOM, 5);
-	GtkLayerShell.set_margin (this, GtkLayerShell.Edge.RIGHT, 5);
+	set_margin (this, Edge.BOTTOM, 5);
+	set_margin (this, Edge.RIGHT, 5);
 }
 public void present_layer () {
 	this.present ();
