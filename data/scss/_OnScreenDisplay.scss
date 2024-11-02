@@ -1,0 +1,9 @@
+@import "Colors";
+
+.OnScreenDisplay {
+    background-color: transparentize(#282C34, 0.2);
+    border-radius: $master-border-radius;
+    border: 1px solid $dark_2;
+    padding: 10px;
+    min-height: 200px;
+}

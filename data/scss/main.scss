@@ -3,6 +3,7 @@
 @import "Mpris";
 @import "QuickSettings";
 @import "Runner";
+@import "OnScreenDisplay";
 
 button {
     background-color: transparent;
@@ -20,6 +21,24 @@ button {
     & trough {
         padding: 0;
         min-height: 10px;
+
+        & highlight {
+            background-color: $accent_color;
+        }
+
+        & slider {
+            all: unset;
+        }
+    }
+}
+
+.morghulis_vertical_slider {
+    border-radius: 5px;
+    padding: 5px;
+
+    & trough {
+        padding: 0;
+        min-width: 10px;
 
         & highlight {
             background-color: $accent_color;

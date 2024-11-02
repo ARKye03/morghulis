@@ -8,5 +8,6 @@
         <file preprocess="xml-stripblanks">ui/QuickSettings.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner.ui</file>
         <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
+        <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>
     </gresource>
 </gresources>

@@ -32,6 +32,7 @@ public override void activate () {
 	windows.append (new StatusBar (this));
 	windows.append (new QuickSettings ());
 	windows.append (new Runner ());
+	windows.append (new OnScreenDisplay ());
 
 	foreach (var window in windows) {
 		window.present_layer ();

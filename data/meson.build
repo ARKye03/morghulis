@@ -2,6 +2,7 @@ subdir('scss')
 
 targets = files(
     'ui/Mpris.blp',
+    'ui/OnScreenDisplay.blp',
     'ui/QuickSettings.blp',
     'ui/QuickSettingsButton.blp',
     'ui/Runner.blp',

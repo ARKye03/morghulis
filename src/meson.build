@@ -7,6 +7,7 @@ source_files = [
     'Runner.vala',
     'RunnerButton.vala',
     'Mpris.vala',
+    'OnScreenDisplay.vala',
     'Utils/Layer.vala',
 ]
 
