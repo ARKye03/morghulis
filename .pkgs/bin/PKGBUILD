@@ -1,7 +1,7 @@
 # Maintainer: ARKye03 <rafa03-dev@proton.me>
 
 pkgname=morghulis
-pkgver=v0.3.0
+pkgver=v0.3.1
 pkgrel=1
 pkgdesc="GTK4 Desktop Shell"
 arch=(x86_64)
@@ -16,7 +16,7 @@ depends=(
 	libadwaita
 )
 source=("${pkgname}-${pkgver}::https://github.com/ARKye03/morghulis/releases/download/${pkgver}/morghulis-${pkgver}")
-sha256sums=('78e238057f1c6282de3cce00cf58d476e1317e69a1cc3e18e76e51d0a1d9128f')
+sha256sums=('51018472ef947bbe2fe5b76c752836c96b0d6e4a288fb2b53fdc0b3e0b5da2e2')
 
 package() {
 	install -Dm755 "${srcdir}/morghulis-${pkgver}" "${pkgdir}/usr/bin/morghulis"
