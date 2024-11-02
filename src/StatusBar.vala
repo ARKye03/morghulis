@@ -10,6 +10,7 @@ private List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
 
 public AstalMpris.Player mpd { get; set; }
 public AstalWp.Endpoint speaker { get; set; }
+public AstalBattery.Device battery { get; set; }
 
 public string namespace { get; set; }
 
@@ -28,6 +29,9 @@ public unowned Gtk.Label clock;
 
 [GtkChild]
 public unowned Gtk.Button power_button;
+
+[GtkChild]
+public unowned Gtk.Box battery_box;
 
 // Workspace icons
 private static string[] wicons = {
@@ -48,6 +52,10 @@ private void initialize_components () {
 	speaker = AstalWp.get_default ().audio.default_speaker;
 	mpris = AstalMpris.Mpris.get_default ();
 	hyprland = AstalHyprland.Hyprland.get_default ();
+	battery = AstalBattery.get_default ();
+	if (battery == null){
+		battery_box.visible = false;
+	}
 
 	init_layer_properties ();
 	this.name = "StatusBar";
@@ -55,6 +63,12 @@ private void initialize_components () {
 
 	init_workspaces ();
 	init_clock ();
+}
+
+[GtkCallback]
+public string current_battery_value (double value) {
+	//Round it from 0.xxxxxx to make it xxx% use math.round
+	return @"$(Math.round(value * 100))%";
 }
 
 private void setup_event_handlers () {

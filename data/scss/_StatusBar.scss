@@ -36,3 +36,21 @@
 .StatusBar_label {
     font-size: 16px;
 }
+
+.battery_levelbar {
+    & trough {
+        color: #f0f;
+        padding: 0;
+        min-height: 10px;
+
+        &.filled {
+            color: #f0f;
+            background-color: #f0f;
+        }
+
+        &.empty {
+            color: #f00;
+            background-color: #f00;
+        }
+    }
+}
