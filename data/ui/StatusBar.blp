@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using AstalBattery 0.1;
+using AstalPowerProfiles 0.1;
 
 template $StatusBar: Window {
   styles [
@@ -62,12 +63,20 @@ template $StatusBar: Window {
       Box systray {}
 
       Box battery_box {
-        spacing: 5;
+        spacing: 10;
 
         styles [
           "battery",
           "statusbar_box"
         ]
+
+        Button {
+          clicked => $toggle_pp();
+
+          Image {
+            icon-name: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
+          }
+        }
 
         Label {
           name: "battery_label";

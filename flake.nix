@@ -89,8 +89,9 @@
             notifd
             river
             apps
-            battery
             bluetooth
+            battery
+            powerprofiles
           ];
           shell = pkgs.mkShell.override
             {

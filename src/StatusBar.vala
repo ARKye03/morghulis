@@ -11,6 +11,7 @@ private List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
 public AstalMpris.Player mpd { get; set; }
 public AstalWp.Endpoint speaker { get; set; }
 public AstalBattery.Device battery { get; set; }
+public AstalPowerProfiles.PowerProfiles power_profiles {get; set;}
 
 public string namespace { get; set; }
 
@@ -53,10 +54,10 @@ private void initialize_components () {
 	mpris = AstalMpris.Mpris.get_default ();
 	hyprland = AstalHyprland.Hyprland.get_default ();
 	battery = AstalBattery.get_default ();
+	power_profiles = AstalPowerProfiles.get_default ();
 	if (battery == null){
 		battery_box.visible = false;
 	}
-
 	init_layer_properties ();
 	this.name = "StatusBar";
 	this.namespace = "StatusBar";
@@ -67,8 +68,11 @@ private void initialize_components () {
 
 [GtkCallback]
 public string current_battery_value (double value) {
-	//Round it from 0.xxxxxx to make it xxx% use math.round
 	return @"$(Math.round(value * 100))%";
+}
+[GtkCallback]
+public void toggle_pp (){
+//TODO
 }
 
 private void setup_event_handlers () {
