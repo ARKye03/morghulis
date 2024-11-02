@@ -38,13 +38,19 @@ template $QuickSettings: Window {
                     "quick_settings_grid_box"
                 ]
 
-                Image {
-                    file: "/home/archkye/user.png";
-                    halign: center;
-                    valign: center;
-                    hexpand: true;
-                    vexpand: true;
-                    pixel-size: 100;
+                $ImageFrame {
+                    styles [
+                        "quick_settings_frame_profile_image"
+                    ]
+
+                    halign: start;
+                    image-file: bind template.user_image;
+                    image-size: 100;
+                }
+
+                Label {
+                    label: bind template.user_name;
+                    halign: start;
                 }
             }
 

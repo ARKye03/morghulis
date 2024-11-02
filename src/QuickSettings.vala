@@ -8,7 +8,8 @@ public AstalBluetooth.Bluetooth bluetooth { get; set; }
 public AstalNotifd.Notifd notifd {get; private set;}
 public AstalMpris.Mpris mpris {get; private set;}
 public string namespace { get; set; }
-
+public string user_name { get; set; }
+public string user_image { get; set; }
 
 public QuickSettings () {
 	Object (
@@ -18,7 +19,8 @@ public QuickSettings () {
 	init_layer_properties ();
 
 	speaker.bind_property ("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
-
+	user_name = @"Hello there $(Environment.get_user_name ())";
+	user_image = Environment.get_home_dir () + "/user.png";
 }
 construct {
 	speaker = AstalWp.get_default ().audio.default_speaker;
