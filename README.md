@@ -78,7 +78,6 @@ nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
   - [x] Bluetooth
   - [x] Network
     - [ ] VPN
-  - [ ] Notifications
   - [ ] Brightness?
   - [x] Power Buttons
 - [x] Apps Runner
