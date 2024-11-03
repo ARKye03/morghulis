@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Morghulis
+Exec=morghulis
+Icon=com.github.ARKye03.morghulis
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true
