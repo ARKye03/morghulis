@@ -1,0 +1,5 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/com.github.ARKye03.morghulis.desktop.in
+data/com.github.ARKye03.morghulis.gschema.xml
+data/com.github.ARKye03.morghulis.metainfo.xml.in
