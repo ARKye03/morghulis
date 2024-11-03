@@ -13,5 +13,14 @@ rinit:
 build:
     ninja -C {{BIN_DIR}}
 
+install:
+    meson install -C {{BIN_DIR}}
+
+uninstall:
+    ninja uninstall -C {{BIN_DIR}}
+
 clean:
+    ninja clean -C {{BIN_DIR}}
+
+prune:
     rm -rf {{BIN_DIR}}
