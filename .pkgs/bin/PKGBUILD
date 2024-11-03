@@ -1,7 +1,7 @@
 # Maintainer: ARKye03 <rafa03-dev@proton.me>
 
 pkgname=morghulis
-pkgver=v0.4.0
+pkgver=v0.5.0
 pkgrel=1
 pkgdesc="GTK4 Desktop Shell"
 arch=(x86_64)
