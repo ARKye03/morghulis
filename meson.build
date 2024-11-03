@@ -8,6 +8,7 @@ project(
 gnome = import('gnome')
 
 project_name = meson.project_name()
+project_resources = []
 
 subdir('data')
 subdir('src')
