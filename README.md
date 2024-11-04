@@ -70,7 +70,6 @@ nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
 
 - [x] Status Bar
   - [x] Workspace Switcher
-  - [x] Volume Controller
   - [x] Focused Client
 - [x] Socket Service
 - [x] Quick Settings
