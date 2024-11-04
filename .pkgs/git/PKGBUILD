@@ -27,16 +27,17 @@ source=("${pkgname}::git+https://github.com/ARKye03/morghulis")
 sha256sums=('SKIP')
 
 pkgver() {
-  printf "r%s.%s" "$(git rev-parse --short HEAD)"
+  cd "$pkgname" || exit
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
 }
 
 build() {
-  cd "$pkgname"
+  cd "$pkgname" || exit
   arch-meson build
   meson compile -C build
 }
 
 package() {
-  cd "$pkgname"
+  cd "$pkgname" || exit
   meson install -C build --destdir "$pkgdir"
 }
