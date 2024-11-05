@@ -5,9 +5,9 @@
 }
 
 .mpris_master_box {
-    background-color: transparentize(#282C34, 0.2);
+    background-color: $accent_fg_color;
     border-radius: $master-border-radius;
-    border: 1px solid #363A4F;
+    @include MasterBorder;
     min-width: 270px;
     min-height: 150px;
     padding: 10px;

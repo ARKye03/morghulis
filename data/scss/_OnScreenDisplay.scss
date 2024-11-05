@@ -5,9 +5,9 @@
 }
 
 .OnScreenDisplay {
-    background-color: transparentize(#282C34, 0.2);
+    background-color: $window_bg_color;
     border-radius: $master-border-radius;
-    border: 1px solid $dark_2;
+    @include MasterBorder;
     padding: 10px 0;
     min-height: 200px;
 }

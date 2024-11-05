@@ -2,13 +2,12 @@
 
 .quick_settings_window {
     all: unset;
-    // background-color: #f0f;
 }
 
 .quick_settings_grid_box {
-    background-color: transparentize(#282C34, 0.2);
+    background-color: $window_bg_color;
     border-radius: $master-border-radius;
-    border: 1px solid $dark_2;
+    @include MasterBorder;
     padding: 10px;
 }
 
@@ -17,24 +16,33 @@
 }
 
 .quick_settings_button {
-    background-color: $dark_4;
+    background-color: $accent_fg_color;
+    @include MasterBorder;
     border-radius: $master-border-radius;
-    border: 1px solid $dark_2;
     min-height: 60px;
     min-width: 100px;
 
-    & button {
-        border-radius: 0;
+
+    & .quick_settings_button_main {
+        border-radius: unset;
+        border-top-left-radius: $master-border-radius;
+        border-bottom-left-radius: $master-border-radius;
+    }
+
+    & .quick_settings_button_extras {
+        border-radius: unset;
+        border-top-right-radius: $master-border-radius;
+        border-bottom-right-radius: $master-border-radius;
     }
 
     &-active {
-        background-color: $accent_color;
         transition: background-color ease-in-out 300ms;
 
         & button {
+            background-color: $accent_color;
+
             &:hover {
-                border-radius: $master-border-radius;
-                background-color: $purple_2;
+                background-color: $blue_1;
             }
         }
     }
