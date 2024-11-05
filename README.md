@@ -1,4 +1,3 @@
-
 # Morghulis
 
 - [Morghulis](#morghulis)
@@ -7,6 +6,7 @@
     - [Development](#development)
     - [Installation](#installation)
     - [Nix](#nix)
+    - [Arch Linux](#arch-linux)
   - [Features](#features)
   - [Preview](#preview)
   - [License](#license)
@@ -66,6 +66,16 @@ nix run github:ARKye03/morghulis -- --help
 nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
 ```
 
+### Arch Linux
+
+There is a `PKGBUILD` file, so you can use it to build and install the package.
+
+```shell
+mkdir morghulis_pkg && cd morghulis_pkg
+wget https://raw.githubusercontent.com/ARKye03/PKGBUILDS/refs/heads/main/morghulis/git/PKGBUILD
+makepkg -si
+```
+
 ## Features
 
 - [x] Status Bar
@@ -74,8 +84,8 @@ nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
 - [x] Socket Service
 - [x] Quick Settings
   - [x] Media Player
-  - [x] Bluetooth
-  - [x] Network
+  - [ ] WIP Bluetooth
+  - [ ] WIP Network
     - [ ] VPN
   - [ ] Brightness?
   - [x] Power Buttons
