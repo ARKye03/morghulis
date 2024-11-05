@@ -11,30 +11,28 @@
   - [Preview](#preview)
   - [License](#license)
 
-Desktop Shell, created with GTK4, Blueprint and Vala.
+Desktop Shell created with GTK4, Blueprint, and Vala.
 
 ## Requirements
 
-- [Hyprland](https://hyprland.org/).
-- [Vala](https://vala.dev/), [Meson](https://mesonbuild.com/), [Make](https://www.gnu.org/software/make/).
-- [Astal](https://github.com/Aylur/astal).
-- [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita).
-- [Blueprint-Compiler](https://jwestman.pages.gitlab.gnome.org/blueprint-compiler/).
-- [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell).
+- [Hyprland](https://hyprland.org/)
+- [Vala](https://vala.dev/), [Meson](https://mesonbuild.com/), [Just](https://github.com/casey/just)
+- [Astal](https://github.com/Aylur/astal)
+- [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita)
+- [Blueprint-Compiler](https://jwestman.pages.gitlab.gnome.org/blueprint-compiler/)
+- [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
 
 ## Usage
+
+Clone the repository and set up the build environment:
 
 ```shell
 git clone https://github.com/ARKye03/morghulis
 cd morghulis
 meson setup build
-# arch-meson build # Opinionated option for Arch Linux, recommended.
 ```
 
-or use/install a binary from [releases](https://github.com/ARKye03/morghulis/releases).
-
-> [!WARNING]
-> Still need the runtime libraries installed in your system.
+Alternatively, use a binary from [releases](https://github.com/ARKye03/morghulis/releases).
 
 ### Development
 
@@ -52,23 +50,23 @@ morghulis --help
 
 ### Nix
 
-There is a `flake.nix` file, with a `devShell`, so you can use it to develop.
+Use `flake.nix` for development:
 
 ```shell
 nix develop
 ```
 
-or try it with:
+Or run it with:
 
 ```shell
 nix run github:ARKye03/morghulis -- --help
-# or
-nix run github:ARKye03/morghulis#fhs -- --help # For non-NixOS distro
+# For non-NixOS distro
+nix run github:ARKye03/morghulis#fhs -- --help
 ```
 
 ### Arch Linux
 
-There is a `PKGBUILD` file, so you can use it to build and install the package.
+Build and install using the `PKGBUILD` file:
 
 ```shell
 mkdir morghulis_pkg && cd morghulis_pkg
@@ -78,35 +76,30 @@ makepkg -si
 
 ## Features
 
-- [x] Status Bar
-  - [x] Workspace Switcher
-  - [x] Focused Client
-- [x] Socket Service
-- [x] Quick Settings
-  - [x] Media Player
-  - [ ] WIP Bluetooth
-  - [ ] WIP Network
-    - [ ] VPN
-  - [ ] Brightness?
-  - [x] Power Buttons
-- [x] Apps Runner
-  - [ ] Handle Hyprland Clients
-- [ ] Notifications
-  - [ ] Center
-  - [ ] Popup
-- [ ] Power Menu
-- [x] OnScreenDisplay
-  - [x] Audio
-  - [ ] Brightness?
-- [ ] Dynamic CSS
+- Status Bar
+  - Workspace Switcher
+  - Focused Client
+- Socket Service
+- Quick Settings
+  - Media Player
+  - Power Buttons
+  - (WIP) Bluetooth, Network (VPN), Brightness
+- Apps Runner
+  - (WIP) Handle Hyprland Clients
+- Notifications
+  - (WIP) Center, Popup
+- Power Menu
+- OnScreenDisplay
+  - Audio
+  - (WIP) Brightness
+- Dynamic CSS (WIP)
 
 ## Preview
 
 ![Morghulis](public/morghulis.webp)
 
-> [!NOTE]
-> The preview was made with adw-gtk One-Dark theme.
+> Note: The preview uses the adw-gtk One-Dark theme.
 
 ## License
 
-This project is licensed under the WTFPL, see the [LICENSE](./LICENSE) file for more details.
+Licensed under the WTFPL. See the [LICENSE](./LICENSE) file for details.
