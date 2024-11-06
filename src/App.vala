@@ -19,6 +19,7 @@ construct {
 private void init_types () {
 	typeof (QuickSettings).ensure ();
 	typeof (QuickSettingsButton).ensure ();
+	typeof (ImageFrame).ensure ();
 }
 
 public override void activate () {

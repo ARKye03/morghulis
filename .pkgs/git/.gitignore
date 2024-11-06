@@ -1,5 +1,0 @@
-# Ignore everything in the current directory except for this file and the PKGBUILD
-*
-
-!PKGBUILD
-!.gitignore

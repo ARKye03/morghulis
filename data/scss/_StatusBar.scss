@@ -1,7 +1,7 @@
 @import "Colors";
 
 .StatusBar_Master {
-    background-color: transparentize(#282C34, 0.2);
+    background-color: $window_bg_color;
     min-height: 50px;
     border-radius: $master-border-radius;
     padding: 0 5px;
@@ -9,8 +9,8 @@
 
 .statusbar_box {
     margin: 5px 0;
-    background-color: $dark_4;
-    border: 1px solid #363A4F;
+    background-color: $accent_fg_color;
+    @include MasterBorder;
     border-radius: $master-border-radius;
     padding: 0 10px;
 }
@@ -26,7 +26,7 @@
 }
 
 .has-windows {
-    color: $orange_3;
+    color: $green_5;
 }
 
 .empty {

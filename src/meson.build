@@ -1,4 +1,4 @@
-source_files = [
+project_resources += [
     'App.vala',
     'Daemon.vala',
     'StatusBar.vala',
@@ -8,13 +8,13 @@ source_files = [
     'RunnerButton.vala',
     'Mpris.vala',
     'OnScreenDisplay.vala',
+    'ImageFrame.vala',
     'Utils/Layer.vala',
 ]
 
 executable(
     project_name,
     project_resources,
-    sources: source_files,
     vala_args: ['--gresourcesdir=data/'],
     dependencies: [
         dependency('gtk4'),

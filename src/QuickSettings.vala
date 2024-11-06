@@ -8,18 +8,9 @@ public AstalBluetooth.Bluetooth bluetooth { get; set; }
 public AstalNotifd.Notifd notifd {get; private set;}
 public AstalMpris.Mpris mpris {get; private set;}
 public string namespace { get; set; }
+public string user_name { get; set; }
+public string user_image { get; set; }
 
-
-public QuickSettings () {
-	Object (
-		name: "QuickSettings",
-		namespace : "QuickSettings"
-		);
-	init_layer_properties ();
-
-	speaker.bind_property ("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
-
-}
 construct {
 	speaker = AstalWp.get_default ().audio.default_speaker;
 	network = AstalNetwork.get_default ();
@@ -28,6 +19,12 @@ construct {
 	this.mpris.players.@foreach ((p) => this.on_player_added (p));
 	this.mpris.player_added.connect ((p) => this.on_player_added (p));
 	this.mpris.player_closed.connect ((p) => this.on_player_removed (p));
+
+	init_layer_properties ();
+
+	speaker.bind_property ("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
+	user_name = @"Hello there $(Environment.get_user_name ())";
+	user_image = Environment.get_home_dir () + "/user.png";
 
 	uptime ();
 }

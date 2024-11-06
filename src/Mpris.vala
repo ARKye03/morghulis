@@ -63,8 +63,6 @@ public string total_pos (double len) {
 }
 
 [GtkChild]
-public unowned Gtk.Image art_image;
-[GtkChild]
 public unowned Gtk.Adjustment media_len_adjust;
 
 [GtkChild]

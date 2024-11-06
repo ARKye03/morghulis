@@ -75,6 +75,7 @@
             dart-sass
             blueprint-compiler
             git-cliff
+            desktop-file-utils
           ];
           build-utils = with pkgs.buildPackages; [
             muon
