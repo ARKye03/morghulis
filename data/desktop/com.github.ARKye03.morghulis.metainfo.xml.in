@@ -5,22 +5,22 @@
   <project_license>WTFPL</project_license>
 
   <name>Morghulis</name>
-  <summary>Keep the summary shorter, between 10 and 35 characters</summary>
+  <summary>Desktop Shell created with GTK4, Blueprint, and Vala.</summary>
   <description>
     <p>No description</p>
   </description>
 
-  <developer id="tld.vendor">
-    <name>Developer name</name>
+  <developer id="com.github.ARKye03">
+    <name>ARKye03</name>
   </developer>
 
   <!-- Requered: Should be a link to the upstream homepage for the component -->
-  <url type="homepage">https://example.org/</url>
+  <url type="homepage">https://github.com/ARKye03/morghulis</url>
   <!-- Recommended: It is highly recommended for open-source projects to display the source code
   repository -->
-  <url type="vcs-browser">https://example.org/repository</url>
+  <url type="vcs-browser">https://github.com/ARKye03/morghulis</url>
   <!-- Should point to the software's bug tracking system, for users to report new bugs -->
-  <url type="bugtracker">https://example.org/issues</url>
+  <url type="bugtracker">https://github.com/ARKye03/morghulis/issues</url>
   <!-- Should link a FAQ page for this software, to answer some of the most-asked questions in
   detail -->
   <!-- URLs of this type should point to a webpage where users can submit or modify translations of
