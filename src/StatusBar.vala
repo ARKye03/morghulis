@@ -39,6 +39,7 @@ public StatusBar () {
 	Object (
 		anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 		);
+	present ();
 }
 
 construct {
@@ -49,7 +50,6 @@ construct {
 	init_workspaces ();
 	init_clock ();
 	setup_event_handlers ();
-	present ();
 }
 
 private void setup_event_handlers () {
