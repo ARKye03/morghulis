@@ -9,5 +9,6 @@ private void init_types () {
 	typeof(sdButton).ensure();
 	typeof(sdPowerBox).ensure();
 	typeof(sdSettings).ensure();
+	typeof(sdSliderBox).ensure();
 	typeof(OnScreenDisplay).ensure();
 }

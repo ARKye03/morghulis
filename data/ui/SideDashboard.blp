@@ -1,5 +1,4 @@
 using Gtk 4.0;
-using AstalWp 0.1;
 using Astal 4.0;
 
 template $SideDashboard: Astal.Window {
@@ -74,41 +73,12 @@ template $SideDashboard: Astal.Window {
             }
 
             // Volume Slider (Box)
-            Gtk.Box {
+            $sdSliderBox {
                 layout {
                     row: 2;
                     column: 0;
                     row-span: 1;
                 }
-
-                hexpand: true;
-                vexpand: true;
-
-                Image {
-                    icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-                }
-
-                Scale {
-                    hexpand: true;
-
-                    adjustment: Adjustment vol_adjust {
-                        lower: 0;
-                        upper: 1;
-                    };
-
-                    styles [
-                        "morghulis_slider"
-                    ]
-                }
-
-                Label {
-                    label: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
-                    width-request: 50;
-                }
-
-                styles [
-                    "quick_settings_grid_box"
-                ]
             }
 
             $sdSettings {

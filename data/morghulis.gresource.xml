@@ -8,6 +8,7 @@
         <file preprocess="xml-stripblanks">ui/sdButton.ui</file>
         <file preprocess="xml-stripblanks">ui/sdPowerBox.ui</file>
         <file preprocess="xml-stripblanks">ui/sdSettings.ui</file>
+        <file preprocess="xml-stripblanks">ui/sdSliderBox.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner.ui</file>
         <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>

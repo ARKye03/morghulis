@@ -5,8 +5,6 @@ public AstalNetwork.Network network { get; set; }
 public AstalBluetooth.Bluetooth bluetooth { get; set; }
 public AstalNotifd.Notifd notifd {get; private set;}
 public AstalMpris.Mpris mpris {get; private set;}
-public string user_name { get; set; }
-public string user_image { get; set; }
 
 construct {
 	network = AstalNetwork.get_default ();
@@ -15,9 +13,6 @@ construct {
 	this.mpris.players.@foreach ((p) => this.on_player_added (p));
 	this.mpris.player_added.connect ((p) => this.on_player_added (p));
 	this.mpris.player_closed.connect ((p) => this.on_player_removed (p));
-
-	user_name = @"Hello there $(Environment.get_user_name ())";
-	user_image = Environment.get_home_dir () + "/user.png";
 }
 
 [GtkCallback]
