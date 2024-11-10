@@ -90,6 +90,9 @@
             notifd
             river
             apps
+            tray
+            io
+            astal4
             battery
             bluetooth
           ];

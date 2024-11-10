@@ -1,10 +1,15 @@
 using Gtk 4.0;
+using Astal 4.0;
 
-template $StatusBar: Window {
+template $StatusBar: Astal.Window {
   styles [
     "StatusBar_Master"
   ]
 
+  title: "StatusBar";
+  namespace: "StatusBar";
+  exclusivity: exclusive;
+  // anchor: left | bottom | right; For some reason this is not working
   CenterBox {
     start-widget: Box {
       spacing: 10;

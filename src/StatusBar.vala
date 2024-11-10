@@ -2,7 +2,7 @@ using AstalHyprland;
 using GtkLayerShell;
 
 [GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
-public class StatusBar : Gtk.Window, ILayerWindow {
+public class StatusBar : Astal.Window {
 // Properties
 private AstalMpris.Mpris mpris { get; set; }
 private AstalHyprland.Hyprland hyprland { get; set; }
@@ -10,8 +10,6 @@ private List<Gtk.Button> workspace_buttons = new List<Gtk.Button> ();
 
 public AstalMpris.Player mpd { get; set; }
 public AstalWp.Endpoint speaker { get; set; }
-
-public string namespace { get; set; }
 
 // UI Elements
 [GtkChild]
@@ -37,55 +35,43 @@ private static string[] wicons = {
 	" ",
 };
 
-public StatusBar (Gtk.Application app) {
-	Object (application: app);
-	initialize_components ();
-	setup_event_handlers ();
+public StatusBar () {
+	Object (
+		anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
+		);
+	present ();
 }
 
-// Initialization methods
-private void initialize_components () {
+construct {
 	speaker = AstalWp.get_default ().audio.default_speaker;
 	mpris = AstalMpris.Mpris.get_default ();
 	hyprland = AstalHyprland.Hyprland.get_default ();
 
-	init_layer_properties ();
-	this.name = "StatusBar";
-	this.namespace = "StatusBar";
-
 	init_workspaces ();
 	init_clock ();
+	setup_event_handlers ();
 }
 
 private void setup_event_handlers () {
 	power_button.clicked.connect (() => {
-			Morghulis.instance.toggle_window ("QuickSettings");
+			try {
+				Morghulis.instance.toggle_window ("QuickSettings");
+			} catch (GLib.Error e) {
+				warning ("Failed to toggle window: %s", e.message);
+			}
 		});
 
 	apps_button.clicked.connect (() => {
-			Morghulis.instance.toggle_window ("Runner");
+			try {
+				Morghulis.instance.toggle_window("Runner");
+			} catch (GLib.Error e) {
+				warning ("Failed to toggle window: %s", e.message);
+			}
 		});
 
 	hyprland.notify["focused-client"].connect (() => {
 			focused_client ();
 		});
-}
-
-// Layer Shell methods
-public void init_layer_properties () {
-	init_for_window (this);
-	set_layer (this, Layer.TOP);
-
-	set_anchor (this, Edge.BOTTOM, true);
-	set_anchor (this, Edge.RIGHT, true);
-	set_anchor (this, Edge.LEFT, true);
-
-	set_namespace (this, "StatusBar");
-	auto_exclusive_zone_enable (this);
-}
-
-public void present_layer () {
-	this.present ();
 }
 
 // Client focus method
