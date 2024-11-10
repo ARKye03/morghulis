@@ -120,22 +120,12 @@ template $SideDashboard: Astal.Window {
             }
 
             // Power Menu Info
-            Gtk.Box {
+            $sdPowerBox {
                 layout {
                     row: 4;
                     column: 0;
                     column-span: 2;
                 }
-
-                hexpand: true;
-
-                styles [
-                    "quick_settings_grid_box"
-                ]
-
-                Label uptime_label {}
-
-                $sdPowerBox {}
             }
         }
     }
