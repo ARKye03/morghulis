@@ -59,11 +59,12 @@ private void initialize_components () {
 
 private void setup_event_handlers () {
 	power_button.clicked.connect (() => {
-			Morghulis.instance.toggle_window ("QuickSettings");
+			//  Morghulis.instance.toggle_window ("QuickSettings");
+			//  Morghulis.toggle_window ("QuickSettings");
 		});
 
 	apps_button.clicked.connect (() => {
-			Morghulis.instance.toggle_window ("Runner");
+			//  Morghulis.instance.toggle_window ("Runner");
 		});
 
 	hyprland.notify["focused-client"].connect (() => {
