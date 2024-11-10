@@ -7,5 +7,6 @@ public static void main (string[] args) {
 private void init_types () {
 	typeof(SideDashboard).ensure();
 	typeof(sdButton).ensure();
+	typeof(sdPowerBox).ensure();
 	typeof(OnScreenDisplay).ensure();
 }

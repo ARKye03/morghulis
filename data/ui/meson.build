@@ -1,13 +1,16 @@
 blueprints = custom_target(
     'blueprints',
     input: files(
-        'Mpris.blp',
+        'StatusBar.blp',
         'OnScreenDisplay.blp',
+        # SideDashboard components
         'SideDashboard.blp',
         'sdButton.blp',
+        'sdPowerBox.blp',
+        'Mpris.blp',
+        # Runner components
         'Runner.blp',
         'RunnerButton.blp',
-        'StatusBar.blp',
     ),
     output: '.',
     command: [

@@ -4,6 +4,7 @@ project_resources += [
     'StatusBar.vala',
     'SideDashboard.vala',
     'sdButton.vala',
+    'sdPowerBox.vala',
     'Runner.vala',
     'RunnerButton.vala',
     'Mpris.vala',
