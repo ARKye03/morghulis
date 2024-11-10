@@ -8,5 +8,6 @@ private void init_types () {
 	typeof(SideDashboard).ensure();
 	typeof(sdButton).ensure();
 	typeof(sdPowerBox).ensure();
+	typeof(sdSettings).ensure();
 	typeof(OnScreenDisplay).ensure();
 }

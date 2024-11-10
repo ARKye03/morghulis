@@ -1,9 +1,5 @@
 using Gtk 4.0;
-using Adw 1;
 using AstalWp 0.1;
-using AstalNetwork 0.1;
-using AstalBluetooth 0.1;
-using AstalNotifd 0.1;
 using Astal 4.0;
 
 template $SideDashboard: Astal.Window {
@@ -115,121 +111,11 @@ template $SideDashboard: Astal.Window {
                 ]
             }
 
-            Grid {
+            $sdSettings {
                 layout {
                     row: 0;
                     column: 1;
                     row-span: 3; // Increased to cover all rows
-                }
-
-                hexpand: true;
-                vexpand: true;
-                column-spacing: 5;
-                row-spacing: 5;
-                // Grid for sdButtons
-                Grid quick_settings_buttons {
-                    layout {
-                        row: 0;
-                        column: 0;
-                        row-span: 3; // Covers the first 3 rows
-                    }
-
-                    hexpand: true;
-                    vexpand: true;
-                    column-spacing: 5;
-                    row-spacing: 5;
-
-                    styles [
-                        "quick_settings_grid_box"
-                    ]
-
-                    $sdButton {
-                        clicked => $network_clicked();
-                        icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
-                        active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
-
-                        layout {
-                            row: 0;
-                            column: 0;
-                        }
-                    }
-
-                    $sdButton {
-                        icon: bind $active_vpn(template.network) as <string>;
-                        clicked => $toggle_vpn();
-
-                        layout {
-                            row: 1;
-                            column: 0;
-                        }
-                    }
-
-                    $sdButton {
-                        icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
-                        active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
-                        clicked => $bluetooth_clicked();
-                        clicked_extras => $bluetooth_clicked_extras();
-
-                        layout {
-                            row: 0;
-                            column: 1;
-                        }
-                    }
-
-                    $sdButton {
-                        layout {
-                            row: 1;
-                            column: 1;
-                        }
-                    }
-
-                    $sdButton {
-                        layout {
-                            row: 2;
-                            column: 0;
-                        }
-
-                        icon: bind $dont_disturb_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
-                        inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
-                        clicked => $toggle_disturb();
-                        clicked_extras => $on_notif_arrow_clicked();
-                    }
-                }
-
-                // Grid for Carousel
-                Grid carousel_grid {
-                    layout {
-                        row: 3;
-                        column: 0;
-                    }
-
-                    hexpand: true;
-                    vexpand: true;
-
-                    styles [
-                        "quick_settings_grid_box"
-                    ]
-
-                    Adw.Carousel players {
-                        layout {
-                            row: 0;
-                            column: 0;
-                        }
-
-                        orientation: horizontal;
-                        spacing: 5;
-                        hexpand: true;
-                        vexpand: true;
-                    }
-
-                    Adw.CarouselIndicatorDots {
-                        carousel: players;
-
-                        layout {
-                            row: 1;
-                            column: 0;
-                        }
-                    }
                 }
             }
 

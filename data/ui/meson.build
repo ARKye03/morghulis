@@ -7,6 +7,7 @@ blueprints = custom_target(
         'SideDashboard.blp',
         'sdButton.blp',
         'sdPowerBox.blp',
+        'sdSettings.blp',
         'Mpris.blp',
         # Runner components
         'Runner.blp',
