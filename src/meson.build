@@ -8,7 +8,6 @@ project_resources += [
     'RunnerButton.vala',
     'Mpris.vala',
     'OnScreenDisplay.vala',
-    'ImageFrame.vala',
 ]
 
 executable(

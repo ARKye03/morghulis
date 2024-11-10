@@ -13,6 +13,10 @@
     padding: 10px;
 }
 
+.mpris_art_image {
+    border-radius: $master-border-radius;
+}
+
 .mpris_media_info {
 
     & .player_name_label {

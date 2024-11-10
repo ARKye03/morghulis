@@ -1,7 +1,6 @@
 blueprints = custom_target(
     'blueprints',
     input: files(
-        'ImageFrame.blp',
         'Mpris.blp',
         'OnScreenDisplay.blp',
         'QuickSettings.blp',

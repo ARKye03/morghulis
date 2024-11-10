@@ -13,14 +13,15 @@ template $Mpris: Box {
         spacing: 10;
         hexpand: true;
 
-        $ImageFrame {
+        Image {
             styles [
                 "mpris_art_image"
             ]
 
+            overflow: hidden;
             halign: start;
-            image-file: bind $art_url(template.player as <AstalMpris.Player>.art-url) as <string>;
-            image-size: 100;
+            file: bind $art_url(template.player as <AstalMpris.Player>.art-url) as <string>;
+            pixel-size: 100;
         }
 
         Box media_info {
