@@ -1,16 +1,17 @@
-@import "Colors";
-@import "StatusBar";
-@import "Mpris";
-@import "QuickSettings";
-@import "Runner";
-@import "OnScreenDisplay";
+@use "Colors";
+@use "StatusBar";
+@use "Mpris";
+@use "QuickSettings";
+@use "Runner";
+@use "OnScreenDisplay";
+@use "adw";
 
 button {
     background-color: transparent;
     transition: background-color 0.1s ease-in-out;
 
     &:hover {
-        background-color: $dark_2;
+        background-color: adw.$dark_2;
     }
 }
 
@@ -23,7 +24,7 @@ button {
         min-height: 10px;
 
         & highlight {
-            background-color: $accent_color;
+            background-color: adw.$accent_color;
         }
 
         & slider {
@@ -41,7 +42,7 @@ button {
         min-width: 10px;
 
         & highlight {
-            background-color: $accent_color;
+            background-color: adw.$accent_color;
         }
 
         & slider {

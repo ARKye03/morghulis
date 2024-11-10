@@ -1,38 +1,39 @@
-@import "Colors";
+@use "Colors";
+@use "adw";
 
 .mpris_window {
     all: unset;
 }
 
 .mpris_master_box {
-    background-color: $accent_fg_color;
-    border-radius: $master-border-radius;
-    @include MasterBorder;
+    background-color: adw.$accent_fg_color;
+    border-radius: Colors.$master-border-radius;
+    @include Colors.MasterBorder;
     min-width: 270px;
     min-height: 150px;
     padding: 10px;
 }
 
 .mpris_art_image {
-    border-radius: $master-border-radius;
+    border-radius: Colors.$master-border-radius;
 }
 
 .mpris_media_info {
 
     & .player_name_label {
-        color: $light_3;
+        color: adw.$light_3;
         font-weight: bold;
         font-size: 0.8em;
     }
 
     & .title_label {
-        color: $light_2;
+        color: adw.$light_2;
         font-weight: bold;
         font-size: 1.2em;
     }
 
     & .artist_label {
-        color: $light_3;
+        color: adw.$light_3;
         font-weight: bold;
         font-size: 1.0em;
     }
@@ -47,7 +48,7 @@
         min-height: 10px;
 
         & highlight {
-            background-color: $accent_color;
+            background-color: adw.$accent_color;
         }
 
         & slider {
@@ -57,6 +58,6 @@
 }
 
 .mpris_time_label {
-    color: $light_3;
+    color: adw.$light_3;
     min-width: 2.5em;
 }

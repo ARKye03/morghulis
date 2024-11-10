@@ -1,13 +1,14 @@
-@import "Colors";
+@use "Colors";
+@use "adw";
 
 .runner_window {
     all: unset;
 }
 
 .runner_master_box {
-    background-color: $window_bg_color;
-    border-radius: $master-border-radius;
-    @include MasterBorder;
+    background-color: adw.$window_bg_color;
+    border-radius: Colors.$master-border-radius;
+    @include Colors.MasterBorder;
     padding: 10px;
     min-width: 555px;
 }
@@ -19,7 +20,7 @@
 
 .runner_button {
     padding: 10px;
-    background-color: $accent_fg_color;
+    background-color: adw.$accent_fg_color;
     margin: 5px 0;
-    border-radius: $master-border-radius;
+    border-radius: Colors.$master-border-radius;
 }

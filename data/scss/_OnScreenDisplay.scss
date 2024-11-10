@@ -1,13 +1,14 @@
-@import "Colors";
+@use "Colors";
+@use "adw";
 
 .OnScreenDisplay_Window {
     all: unset;
 }
 
 .OnScreenDisplay {
-    background-color: $window_bg_color;
-    border-radius: $master-border-radius;
-    @include MasterBorder;
+    background-color: adw.$window_bg_color;
+    border-radius: Colors.$master-border-radius;
+    @include Colors.MasterBorder;
     padding: 10px 0;
     min-height: 200px;
 }

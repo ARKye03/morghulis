@@ -1,17 +1,18 @@
-@import "Colors";
+@use "Colors";
+@use "adw";
 
 .StatusBar_Master {
-    background-color: $window_bg_color;
+    background-color: adw.$window_bg_color;
     min-height: 50px;
-    border-radius: $master-border-radius;
+    border-radius: Colors.$master-border-radius;
     padding: 0 5px;
 }
 
 .statusbar_box {
     margin: 5px 0;
-    background-color: $accent_fg_color;
-    @include MasterBorder;
-    border-radius: $master-border-radius;
+    background-color: adw.$accent_fg_color;
+    @include Colors.MasterBorder;
+    border-radius: Colors.$master-border-radius;
     padding: 0 10px;
 }
 
@@ -22,15 +23,15 @@
 }
 
 .focused {
-    color: $accent_color;
+    color: adw.$accent_color;
 }
 
 .has-windows {
-    color: $green_5;
+    color: adw.$green_5;
 }
 
 .empty {
-    color: $dark_1;
+    color: adw.$dark_1;
 }
 
 .StatusBar_label {
