@@ -1,15 +1,20 @@
 using GtkLayerShell;
 
 [GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/QuickSettings.ui")]
-public class QuickSettings : Gtk.Window, ILayerWindow {
+public class QuickSettings : Astal.Window {
 public AstalWp.Endpoint speaker { get; set; }
 public AstalNetwork.Network network { get; set; }
 public AstalBluetooth.Bluetooth bluetooth { get; set; }
 public AstalNotifd.Notifd notifd {get; private set;}
 public AstalMpris.Mpris mpris {get; private set;}
-public string namespace { get; set; }
 public string user_name { get; set; }
 public string user_image { get; set; }
+
+public QuickSettings () {
+	Object (
+		anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
+		);
+}
 
 construct {
 	speaker = AstalWp.get_default ().audio.default_speaker;
@@ -20,7 +25,6 @@ construct {
 	this.mpris.player_added.connect ((p) => this.on_player_added (p));
 	this.mpris.player_closed.connect ((p) => this.on_player_removed (p));
 
-	init_layer_properties ();
 
 	speaker.bind_property ("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
 	user_name = @"Hello there $(Environment.get_user_name ())";
@@ -188,22 +192,5 @@ public void lock () {
 	} catch (Error e) {
 		warning ("Failed to lock: %s", e.message);
 	}
-}
-
-
-public void init_layer_properties () {
-	init_for_window (this);
-	set_layer (this, Layer.TOP);
-	set_namespace (this, "QuickSettings"); // Can't use namespace from ILayerWindow, the formatter goes crazy
-
-	set_anchor (this, Edge.BOTTOM, true);
-	set_anchor (this, Edge.RIGHT, true);
-
-	set_margin (this, Edge.BOTTOM, 5);
-	set_margin (this, Edge.RIGHT, 5);
-}
-public void present_layer () {
-	this.present ();
-	this.visible = false;
 }
 }

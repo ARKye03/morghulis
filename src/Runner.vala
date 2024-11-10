@@ -1,7 +1,7 @@
 using GtkLayerShell;
 
 [GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
-public class Runner : Gtk.Window, ILayerWindow {
+public class Runner : Astal.Window {
 
 public AstalApps.Apps apps {get; construct set;}
 
@@ -50,26 +50,7 @@ public void key_released (uint keyval) {
 	}
 }
 
-public void init_layer_properties () {
-	init_for_window (this);
-	set_layer (this, Layer.TOP);
-	set_keyboard_mode (this, KeyboardMode.ON_DEMAND);
-
-	set_namespace (this, "Runner");
-	set_anchor (this, Edge.BOTTOM, true);
-	set_margin (this, Edge.BOTTOM, 10);
-}
-
-public void present_layer () {
-	this.present ();
-	this.visible = false;
-}
-
-public string namespace { get; set; }
-
 construct {
-	init_layer_properties ();
-
 	this.apps = new AstalApps.Apps ();
 
 	this.app_list.set_sort_func (sort_func);

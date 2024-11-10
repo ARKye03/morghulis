@@ -7,5 +7,6 @@ public static void main (string[] args) {
 private void init_types () {
 	typeof(QuickSettings).ensure();
 	typeof(QuickSettingsButton).ensure();
+	typeof(OnScreenDisplay).ensure();
 	typeof(ImageFrame).ensure();
 }

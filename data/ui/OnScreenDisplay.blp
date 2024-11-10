@@ -1,15 +1,19 @@
 using Gtk 4.0;
 using AstalWp 0.1;
+using Astal 4.0;
 
-template $OnScreenDisplay: Window {
+template $OnScreenDisplay: Astal.Window {
     styles [
         "OnScreenDisplay_Window"
     ]
 
-    // Revealer {
-    //     transition-duration: 300;
-    //     transition-type: crossfade;
-    //     reveal-child: bind template.visible;
+    title: "OnScreenDisplay";
+    namespace: "OnScreenDisplay";
+    anchor: left;
+    margin-left: 5;
+    layer: overlay;
+    exclusivity: ignore;
+
     Stack { // Stack for volume and brightness
         Box volume_osd { // Abstract this to a component... If needed(3 or more osds)
             orientation: vertical;
@@ -45,6 +49,4 @@ template $OnScreenDisplay: Window {
             }
         }
     }
-
-    // }
 }

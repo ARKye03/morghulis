@@ -4,11 +4,18 @@ using AstalWp 0.1;
 using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 using AstalNotifd 0.1;
+using Astal 4.0;
 
-template $QuickSettings: Window {
+template $QuickSettings: Astal.Window {
     styles [
         "quick_settings_window"
     ]
+
+    title: "QuickSettings";
+    namespace: "QuickSettings";
+    anchor: right | bottom;
+    margin-right: 5;
+    margin-bottom: 5;
 
     Revealer {
         transition-duration: 300;
