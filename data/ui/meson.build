@@ -3,8 +3,8 @@ blueprints = custom_target(
     input: files(
         'Mpris.blp',
         'OnScreenDisplay.blp',
-        'QuickSettings.blp',
-        'QuickSettingsButton.blp',
+        'SideDashboard.blp',
+        'sdButton.blp',
         'Runner.blp',
         'RunnerButton.blp',
         'StatusBar.blp',

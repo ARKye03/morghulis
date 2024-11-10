@@ -1,5 +1,5 @@
-[GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/QuickSettingsButton.ui")]
-public class QuickSettingsButton : Gtk.Box {
+[GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/sdButton.ui")]
+public class sdButton : Gtk.Box {
 
 public AstalNetwork.Network network { get; set; }
 
@@ -44,9 +44,9 @@ public void on_clicked_extras () {
 static construct {
 	set_css_name ("quick_settings_button");
 }
-QuickSettingsButton () {
+sdButton () {
 	Object (
-		name: "QuickSettingsButton"
+		name: "sdButton"
 		);
 	network = AstalNetwork.get_default ();
 }

@@ -55,7 +55,7 @@ construct {
 private void setup_event_handlers () {
 	power_button.clicked.connect (() => {
 			try {
-				Morghulis.instance.toggle_window ("QuickSettings");
+				Morghulis.instance.toggle_window ("SideDashboard");
 			} catch (GLib.Error e) {
 				warning ("Failed to toggle window: %s", e.message);
 			}

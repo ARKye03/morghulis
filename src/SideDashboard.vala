@@ -1,7 +1,7 @@
 using GtkLayerShell;
 
-[GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/QuickSettings.ui")]
-public class QuickSettings : Astal.Window {
+[GtkTemplate (ui = "/com/github/ARKye03/morghulis/ui/SideDashboard.ui")]
+public class SideDashboard : Astal.Window {
 public AstalWp.Endpoint speaker { get; set; }
 public AstalNetwork.Network network { get; set; }
 public AstalBluetooth.Bluetooth bluetooth { get; set; }
@@ -10,7 +10,7 @@ public AstalMpris.Mpris mpris {get; private set;}
 public string user_name { get; set; }
 public string user_image { get; set; }
 
-public QuickSettings () {
+public SideDashboard () {
 	Object (
 		anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 		);
