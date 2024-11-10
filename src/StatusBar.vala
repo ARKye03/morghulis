@@ -54,19 +54,19 @@ construct {
 
 private void setup_event_handlers () {
 	power_button.clicked.connect (() => {
-			//  try {
-			//  	AstalIO.toggle_window_by_name ("morghulis", "QuickSettings");
-			//  } catch (GLib.Error e) {
-			//  	warning ("Failed to toggle window: %s", e.message);
-			//  } This right now does kaboom
+			try {
+				Morghulis.instance.toggle_window ("QuickSettings");
+			} catch (GLib.Error e) {
+				warning ("Failed to toggle window: %s", e.message);
+			}
 		});
 
 	apps_button.clicked.connect (() => {
-			//  try {
-			//  	AstalIO.toggle_window_by_name ("morghulis", "Runner");
-			//  } catch (GLib.Error e) {
-			//  	warning ("Failed to toggle window: %s", e.message);
-			//  } This right now does kaboom
+			try {
+				Morghulis.instance.toggle_window("Runner");
+			} catch (GLib.Error e) {
+				warning ("Failed to toggle window: %s", e.message);
+			}
 		});
 
 	hyprland.notify["focused-client"].connect (() => {

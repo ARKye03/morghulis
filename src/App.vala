@@ -2,7 +2,7 @@ public class Morghulis : Astal.Application {
 private string socket_path { get; private set; }
 private bool css_loaded = false;
 
-public static Gtk.Application instance;
+public static Astal.Application instance;
 
 public override void request (string msg, SocketConnection conn) {
 	AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
