@@ -44,6 +44,6 @@ public class Morghulis : Astal.Application {
 		Gtk.CssProvider provider = new Gtk.CssProvider();
 		provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
 		Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider,
-																Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+							  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
 }

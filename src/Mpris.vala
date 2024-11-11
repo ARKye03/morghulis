@@ -78,6 +78,6 @@ public class Mpris : Gtk.Box {
 		this.player = player;
 
 		this.player.bind_property("position", media_len_adjust, "value",
-										  GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
+					  GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
 	}
 }
