@@ -15,7 +15,7 @@ template $StatusBar: Astal.Window {
       spacing: 10;
 
       Button apps_button {
-        label: "󰀻";
+        icon-name: "view-grid-symbolic";
         name: "apps_button";
 
         styles [
@@ -25,7 +25,6 @@ template $StatusBar: Astal.Window {
       }
 
       Label client_label {
-        label: "-----";
         halign: start;
         ellipsize: end;
         max-width-chars: 20;
@@ -66,7 +65,7 @@ template $StatusBar: Astal.Window {
       Box systray {}
 
       Button power_button {
-        label: "󰐥";
+        icon-name: "system-shutdown-symbolic";
         name: "power_button";
 
         styles [
