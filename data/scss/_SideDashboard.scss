@@ -40,10 +40,10 @@
         transition: background-color ease-in-out 300ms;
 
         & button {
-            background-color: adw.$accent_color;
+            background-color: adw.$accent_bg_color;
 
             &:hover {
-                background-color: adw.$blue_1;
+                background-color: adw.$accent_color;
             }
         }
     }
