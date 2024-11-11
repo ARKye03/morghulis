@@ -137,7 +137,7 @@ private void update_workspaces () {
 			if (button != null) {
 				if (index + 1 == focused_workspace_id) {
 					button.set_css_classes (new string[] { "focused" });
-				} else if (workspace_has_windows (index + 1)) {
+				} else if (workspace_exists (index + 1)) {
 					button.set_css_classes (new string[] { "has-windows" });
 				} else {
 					button.set_css_classes (new string[] { "empty" });
@@ -159,8 +159,8 @@ private void connect_button_to_workspace (Gtk.Button button, int workspace_numbe
 		});
 }
 
-private bool workspace_has_windows (int workspace_number) {
-	var window_count = hyprland.get_workspace (workspace_number).clients.length ();
-	return window_count > 0;
+private bool workspace_exists (int workspace_number) {
+	var workspace = hyprland.get_workspace (workspace_number);
+	return workspace != null && workspace.clients != null && workspace.clients.length () > 0;
 }
 }
