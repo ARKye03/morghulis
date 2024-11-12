@@ -32,7 +32,7 @@ public class Runner : Astal.Window {
 		RunnerButton ?app = (RunnerButton)this.app_list.get_row_at_index(0);
 
 		while (app != null) {
-			app.score = app.app.fuzzy_match(this.entry.text).name;
+			app.score = apps.fuzzy_score(this.entry.text, app.app);
 			app = (RunnerButton)this.app_list.get_row_at_index(++i);
 		}
 		this.app_list.invalidate_sort();
