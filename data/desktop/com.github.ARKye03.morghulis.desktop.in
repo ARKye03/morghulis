@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Morghulis
-Exec=morghulis
+Exec=/usr/bin/morghulis
 Icon=com.github.ARKye03.morghulis
 Terminal=false
 Type=Application
