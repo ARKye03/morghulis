@@ -34,7 +34,7 @@ public class OnScreenDisplay : Astal.Window {
 		// Set a new timeout
 		hide_timeout_id = GLib.Timeout.add(3000, () => {
 			this.visible = false;
-			hide_timeout_id = 0;                // Clear the timeout ID
+			hide_timeout_id = 0;
 			return false;
 		});
 	}

@@ -32,8 +32,8 @@ public class sdSettings : Gtk.Grid {
 	[GtkCallback]
 	public string bluetooth_icon_name(bool connected) {
 		return connected
-				? "bluetooth-active-symbolic"
-				: "bluetooth-disabled-symbolic";
+			   ? "bluetooth-active-symbolic"
+			   : "bluetooth-disabled-symbolic";
 	}
 
 	[GtkCallback]
@@ -58,8 +58,8 @@ public class sdSettings : Gtk.Grid {
 	[GtkCallback]
 	public string dont_disturb_icon(bool dnd) {
 		return dnd
-		  ? "notifications-disabled-symbolic"
-		  : "user-available-symbolic";
+			   ? "notifications-disabled-symbolic"
+			   : "user-available-symbolic";
 	}
 
 	[GtkCallback]
