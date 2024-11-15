@@ -8,6 +8,7 @@ scss_deps = files(
     '_SideDashboard.scss',
     '_StatusBar.scss',
     '_adw.scss',
+    '_Notif.scss',
     'main.scss',
 )
 

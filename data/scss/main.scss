@@ -1,10 +1,11 @@
 @use "Colors";
+@use "adw";
 @use "StatusBar";
 @use "Mpris";
 @use "SideDashboard";
 @use "Runner";
 @use "OnScreenDisplay";
-@use "adw";
+@use "Notif";
 
 button {
     background-color: transparent;

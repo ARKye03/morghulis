@@ -36,6 +36,7 @@ public class Morghulis : Astal.Application {
 		add_window(new Runner());
 		add_window(new OnScreenDisplay());
 		add_window(new StatusBar());
+		add_window(new NotifWindow());
 
 		this.hold();
 	}

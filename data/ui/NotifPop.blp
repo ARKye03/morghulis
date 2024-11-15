@@ -1,0 +1,57 @@
+using Gtk 4.0;
+using AstalNotifd 0.1;
+
+template $NotifPop: ListBoxRow {
+    styles [
+        "notification-badge"
+    ]
+
+    Box {
+        orientation: vertical;
+        spacing: 5;
+
+        Image notif_urgency_image {
+            icon-name: "notifications-symbolic";
+        }
+
+        Label app_name {
+            label: bind template.notification as <AstalNotifd.Notification>.app-name;
+            halign: center;
+            margin-bottom: 10;
+            margin-top: 10;
+            hexpand: true;
+        }
+
+        Box {
+            orientation: horizontal;
+            spacing: 5;
+
+            Image app_image {
+                overflow: hidden;
+                file: bind template.notification as <AstalNotifd.Notification>.app-icon;
+                halign: center;
+                valign: center;
+
+                styles [
+                    "notification-image"
+                ]
+            }
+
+            Box {
+                orientation: vertical;
+
+                Label {
+                    label: bind template.notification as <AstalNotifd.Notification>.summary;
+                }
+
+                Label {
+                    label: bind template.notification as <AstalNotifd.Notification>.body;
+                    wrap: true;
+                    hexpand: true;
+                }
+
+                Box actions_box {}
+            }
+        }
+    }
+}

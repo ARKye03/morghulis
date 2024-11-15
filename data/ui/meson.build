@@ -13,6 +13,8 @@ blueprints = custom_target(
         # Runner components
         'Runner.blp',
         'RunnerButton.blp',
+        # Notification components
+        'NotifPop.blp',
     ),
     output: '.',
     command: [
