@@ -19,15 +19,29 @@ public class NotifPop : ListBoxRow {
 		});
 	}
 
-	//  [GtkCallback]
-	//  public string current_time(int64 t) {
-	//  	DateTime dt = new DateTime.from_unix_local(t);
+	[GtkCallback]
+	public string current_time(int64 t) {
+		DateTime dt = new DateTime.from_unix_local(t);
 
-	//  	return dt.format("%T");
-	//  }
+		return dt.format("%I:%M %p");
+	}
+
+	[GtkCallback]
+	public void dismiss_notif() {
+		this.notification.dismiss();
+	}
 
 	public NotifPop(AstalNotifd.Notification notification) {
 		Object(notification: notification);
 		this.init_actions();
+		if (notification.urgency == AstalNotifd.Urgency.CRITICAL) {
+			this.add_css_class("critical");
+		}
+		else if (notification.urgency == AstalNotifd.Urgency.LOW) {
+			this.add_css_class("low");
+		}
+		else {
+			this.add_css_class("normal");
+		}
 	}
 }

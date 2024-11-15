@@ -27,6 +27,14 @@ public class StatusBar : Astal.Window {
 	[GtkChild]
 	public unowned Gtk.Button power_button;
 
+	[GtkChild]
+	public unowned Gtk.Popover notif_popover;
+
+	[GtkCallback]
+	public void notif_popover_popup() {
+		notif_popover.popup();
+	}
+
 // Workspace icons
 	private static string[] wicons = {
 		" ", " ", "󰨞 ",

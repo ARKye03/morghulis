@@ -1,26 +1,19 @@
-using GLib;
-
-public class NotifWindow : Astal.Window {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotifWindow.ui")]
+public class NotifWindow : Gtk.Box {
 	private AstalNotifd.Notifd notifd;
-	private Gtk.ListBox notifications;
-	private int DEFAULT_EXPIRE_TIMEOUT = 3000;
 
-	public NotifWindow() {
-		Object(
-			title: "Notifications",
-			name: "notifications",
-			anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM,
-			exclusivity: Astal.Exclusivity.IGNORE
-			);
-		present();
+	[GtkChild]
+	private unowned Gtk.ListBox notifications;
+	[GtkCallback]
+	public void clear_notifications() {
+		this.notifd.notifications.@foreach(n => n.dismiss());
 	}
 
 	construct {
 		notifd = AstalNotifd.get_default();
-		notifications = new Gtk.ListBox();
-		this.set_child(notifications);
-
+		this.notifd.notifications.@foreach(n => this.on_notification_added(n.id, false, this.notifications));
 		this.notifd.notified.connect((id, replace) => this.on_notification_added(id, replace, this.notifications));
+		this.notifd.resolved.connect((id) => this.remove_notification(id, this.notifications));
 	}
 
 	private void on_notification_added(uint notification_id, bool is_replaced, Gtk.ListBox notif_list_box) {
@@ -29,19 +22,7 @@ public class NotifWindow : Astal.Window {
 		}
 
 		var notification = notifd.get_notification(notification_id);
-		var notif_pop = new NotifPop(notification);
-		notif_list_box.prepend(notif_pop);
-
-		int timeout = get_notification_timeout(notification);
-		Timeout.add(timeout, () => {
-			notif_list_box.remove(notif_pop);
-			print("removing notif\n");
-			return true;
-		});
-	}
-
-	private int get_notification_timeout(AstalNotifd.Notification notification) {
-		return notification.expire_timeout != 0 ? notification.expire_timeout : DEFAULT_EXPIRE_TIMEOUT;
+		notif_list_box.prepend(new NotifPop(notification));
 	}
 
 	private void remove_notification(uint notificationId, Gtk.ListBox notifListBox) {

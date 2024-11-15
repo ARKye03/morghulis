@@ -3,55 +3,71 @@ using AstalNotifd 0.1;
 
 template $NotifPop: ListBoxRow {
     styles [
-        "notification-badge"
+        "notification_badge"
     ]
+
+    focusable: false;
 
     Box {
         orientation: vertical;
-        spacing: 5;
 
-        Image notif_urgency_image {
-            icon-name: "notifications-symbolic";
-        }
+        CenterBox {
+            styles [
+                "notif_header_box"
+            ]
 
-        Label app_name {
-            label: bind template.notification as <AstalNotifd.Notification>.app-name;
-            halign: center;
-            margin-bottom: 10;
-            margin-top: 10;
-            hexpand: true;
-        }
-
-        Box {
-            orientation: horizontal;
-            spacing: 5;
-
-            Image app_image {
+            start-widget: Image app_image {
                 overflow: hidden;
                 file: bind template.notification as <AstalNotifd.Notification>.app-icon;
-                halign: center;
-                valign: center;
+                tooltip-text: "App Icon";
 
                 styles [
-                    "notification-image"
+                    "notification_image"
                 ]
-            }
+            };
 
-            Box {
-                orientation: vertical;
+            center-widget: Label app_name {
+                label: bind template.notification as <AstalNotifd.Notification>.app-name;
+                tooltip-text: "App Name";
+                margin-bottom: 10;
+                margin-top: 10;
+                hexpand: true;
+            };
 
+            end-widget: Box {
                 Label {
-                    label: bind template.notification as <AstalNotifd.Notification>.summary;
+                    label: bind $current_time(template.notification as <AstalNotifd.Notification>.time) as <string>;
+                    tooltip-text: "Time";
                 }
 
-                Label {
-                    label: bind template.notification as <AstalNotifd.Notification>.body;
-                    wrap: true;
-                    hexpand: true;
+                Button {
+                    valign: center;
+                    icon-name: "close-symbolic";
+                    clicked => $dismiss_notif();
                 }
+            };
+        }
 
-                Box actions_box {}
+        Separator {}
+
+        Box {
+            styles [
+                "notif_body_box"
+            ]
+
+            orientation: vertical;
+
+            Label {
+                label: bind template.notification as <AstalNotifd.Notification>.summary;
             }
+
+            Label {
+                label: bind template.notification as <AstalNotifd.Notification>.body;
+                wrap: true;
+                hexpand: true;
+            }
+
+            Box actions_box {}
         }
     }
 }
