@@ -53,6 +53,29 @@ template $StatusBar: Astal.Window {
         "right_box"
       ]
 
+      Button {
+        clicked => $notif_popover_popup();
+
+        styles [
+          "statusbar_box"
+        ]
+
+        Box {
+          Image {
+            icon-name: "empty-notif-symbolic";
+          }
+
+          Popover notif_popover {
+            position: top;
+            width-request: 400;
+            height-request: 450;
+            autohide: true;
+
+            $NotifWindow notif_window {}
+          }
+        }
+      }
+
       Label clock {
         name: "clock";
 

@@ -1,0 +1,21 @@
+using Gtk 4.0;
+
+template $NotifWindow: Box {
+    orientation: vertical;
+
+    ScrolledWindow {
+        overflow: hidden;
+        vexpand: true;
+
+        styles [
+            "notifications_scrolled_window"
+        ]
+
+        ListBox notifications {}
+    }
+
+    Button {
+        icon-name: "user-trash-symbolic";
+        clicked => $clear_notifications();
+    }
+}

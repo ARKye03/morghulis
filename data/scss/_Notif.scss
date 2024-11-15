@@ -1,0 +1,30 @@
+@use "Colors";
+@use "adw";
+
+.notification_badge {
+    background-color: adw.$accent_fg_color;
+    border-radius: Colors.$master-border-radius;
+    margin-bottom: 10px;
+
+    &.critical {
+        border: 1px solid adw.$red_5;
+    }
+
+    &.normal {
+        border: 1px solid adw.$blue_5;
+    }
+
+    &.low {
+        border: 1px solid adw.$green_5;
+    }
+}
+
+.notif_header_box {
+    border-top-left-radius: Colors.$master-border-radius;
+    border-top-right-radius: Colors.$master-border-radius;
+    padding: 0 0 0 10px;
+}
+
+.notif_body_box {
+    padding: 10px;
+}

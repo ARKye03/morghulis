@@ -12,4 +12,6 @@ private void init_types() {
 	typeof(sdSettings).ensure();
 	typeof(sdSliderBox).ensure();
 	typeof(OnScreenDisplay).ensure();
+	typeof(NotifPop).ensure();
+	typeof(NotifWindow).ensure();
 }
