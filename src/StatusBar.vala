@@ -6,6 +6,7 @@ public class StatusBar : Astal.Window {
 // Properties
 	private AstalMpris.Mpris mpris { get; set; }
 	private AstalHyprland.Hyprland hyprland { get; set; }
+	private AstalNotifd.Notifd notifd { get; set; }
 	private List <Gtk.Button> workspace_buttons = new List <Gtk.Button> ();
 
 	public AstalMpris.Player mpd { get; set; }
@@ -29,6 +30,9 @@ public class StatusBar : Astal.Window {
 
 	[GtkChild]
 	public unowned Gtk.Popover notif_popover;
+
+	[GtkChild]
+	public unowned Gtk.Overlay notif_overlay;
 
 	[GtkCallback]
 	public void notif_popover_popup() {
@@ -54,10 +58,29 @@ public class StatusBar : Astal.Window {
 		speaker = AstalWp.get_default().audio.default_speaker;
 		mpris = AstalMpris.Mpris.get_default();
 		hyprland = AstalHyprland.Hyprland.get_default();
+		notifd = AstalNotifd.Notifd.get_default();
 
+		init_notif_label_count();
 		init_workspaces();
 		init_clock();
 		setup_event_handlers();
+	}
+	private void init_notif_label_count() {
+		var notif_count_label = new Gtk.Label(@"$(notifd.notifications.length())");
+
+		notif_count_label.halign = Gtk.Align.END;
+		notif_count_label.valign = Gtk.Align.START;
+		notif_count_label.xalign = 0.5f;
+		notif_count_label.justify = Gtk.Justification.CENTER;
+		notif_count_label.add_css_class("notif_count_label");
+		notif_overlay.add_overlay(notif_count_label);
+
+		notifd.notified.connect(() => {
+			notif_count_label.label = @"$(notifd.notifications.length())";
+		});
+		notifd.resolved.connect(() => {
+			notif_count_label.label = @"$(notifd.notifications.length())";
+		});
 	}
 
 	private void setup_event_handlers() {

@@ -53,25 +53,29 @@ template $StatusBar: Astal.Window {
         "right_box"
       ]
 
-      Button {
-        clicked => $notif_popover_popup();
+      Overlay notif_overlay {
+        Button {
+          clicked => $notif_popover_popup();
 
-        styles [
-          "statusbar_box"
-        ]
+          styles [
+            "statusbar_box"
+          ]
 
-        Box {
-          Image {
-            icon-name: "empty-notif-symbolic";
-          }
+          Box {
+            Image notif_popover_icon {
+              icon-name: "empty-notif-symbolic";
+            }
 
-          Popover notif_popover {
-            position: top;
-            width-request: 400;
-            height-request: 450;
-            autohide: true;
+            Popover notif_popover {
+              position: top;
+              width-request: 400;
+              height-request: 450;
+              autohide: true;
+              has-arrow: false;
+              margin-bottom: 10;
 
-            $NotifWindow notif_window {}
+              $NotifWindow notif_window {}
+            }
           }
         }
       }

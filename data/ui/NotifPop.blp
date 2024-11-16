@@ -60,11 +60,16 @@ template $NotifPop: ListBoxRow {
 
             Label {
                 label: bind template.notification as <AstalNotifd.Notification>.summary;
+                justify: center;
+                ellipsize: end;
             }
 
             Label {
                 label: bind template.notification as <AstalNotifd.Notification>.body;
                 wrap: true;
+                justify: left;
+                lines: 3;
+                ellipsize: end;
                 hexpand: true;
             }
 
