@@ -5,12 +5,11 @@ public class MorghulCTL {
 
 	public static int main(string[] args) {
 		var options = new OptionEntry[] {
-			{ "help", 0, OptionFlags.NONE, OptionArg.NONE, ref show_help, "Show help options", null },
-			{ "start", 0, OptionFlags.NONE, OptionArg.NONE, ref start, "Start the application", null },
-			{ "toggle-window", 't', OptionFlags.NONE, OptionArg.STRING_ARRAY, ref toggle_windows, "Toggle window(s)", "WINDOW" },
-			{ "show-inspector", 'i', OptionFlags.NONE, OptionArg.NONE, ref show_inspector, "Show inspector", null },
-			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, ref quit, "Quit the application", null },
-			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref show_version, "Show version", null },
+			{ "start", 0, OptionFlags.NONE, OptionArg.NONE, out start, "Start the application", null },
+			{ "toggle-window", 't', OptionFlags.NONE, OptionArg.STRING, out toggle_window, "Toggle window(s)", "WINDOW" },
+			{ "show-inspector", 'i', OptionFlags.NONE, OptionArg.NONE, out show_inspector, "Show inspector", null },
+			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, out quit, "Quit the application", null },
+			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, out show_version, "Show version", null },
 			{ null }
 		};
 
@@ -24,23 +23,27 @@ public class MorghulCTL {
 			stderr.printf("Option parsing failed: %s\n", e.message);
 			return 1;
 		}
+
 		if (show_version) {
-			stdout.printf(@"Morghulis version $version\n");
+			stdout.printf("Morghulis version %s\n", version);
 			return 0;
 		}
+
 		if (start) {
-			start_morghulis();
+			return start_morghulis();
 		}
-		if (toggle_windows != null) {
-			toggle_window();
+
+		if (toggle_window != null) {
+			return toggle_window_func(toggle_window);
 		}
+
 		if (show_inspector) {
-			toggle_inspector();
+			return toggle_inspector();
 		}
+
 		if (quit) {
-			exit_morghulis();
+			return exit_morghulis();
 		}
-		// If no valid options were provided
 		stderr.printf("No valid options provided. Use --help for usage information.\n");
 		return 1;
 	}
@@ -65,14 +68,12 @@ public class MorghulCTL {
 		return 0;
 	}
 
-	private static int toggle_window() {
-		foreach (var window in toggle_windows) {
-			try {
-				GLib.Process.spawn_command_line_async(@"astal -i morghulis -t $window");
-			} catch (GLib.Error e) {
-				stderr.printf("Failed to toggle window: %s\n", e.message);
-				return 1;
-			}
+	private static int toggle_window_func(string window) {
+		try {
+			GLib.Process.spawn_command_line_async(@"astal -i morghulis -t $window");
+		} catch (GLib.Error e) {
+			stderr.printf("Failed to toggle window: %s\n", e.message);
+			return 1;
 		}
 		return 0;
 	}
@@ -114,9 +115,8 @@ public class MorghulCTL {
 		}
 	}
 
-	private static bool show_help = false;
 	private static bool start = false;
-	private static string[]? toggle_windows = null;
+	private static string ?toggle_window = null;
 	private static bool show_inspector = false;
 	private static bool quit = false;
 	private static bool show_version = false;
