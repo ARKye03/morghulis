@@ -15,6 +15,7 @@ project_resources = []
 
 subdir('data')
 subdir('src')
+subdir('cli')
 
 gnome.post_install(
   glib_compile_schemas: true,
