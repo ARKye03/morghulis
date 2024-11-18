@@ -5,10 +5,26 @@
     all: unset;
 }
 
-.OnScreenDisplay {
-    background-color: adw.$window_bg_color;
-    border-radius: Colors.$master-border-radius;
-    @include Colors.MasterBorder;
-    padding: 10px 0;
-    min-height: 200px;
+.osd_slider {
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 250px;
+
+    & trough {
+        background-color: adw.$window_bg_color;
+        color: adw.$window_fg_color;
+        padding: 0;
+        min-height: 30px;
+
+        & progress {
+            background-color: adw.$accent_color;
+            min-height: 30px;
+            transition: all 1s ease-in-out;
+        }
+
+    }
+}
+
+.osd_icon {
+    color: #000;
 }

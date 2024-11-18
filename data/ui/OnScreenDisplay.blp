@@ -1,6 +1,6 @@
 using Gtk 4.0;
-using AstalWp 0.1;
 using Astal 4.0;
+using AstalWp 0.1;
 
 template $OnScreenDisplay: Astal.Window {
     styles [
@@ -9,50 +9,46 @@ template $OnScreenDisplay: Astal.Window {
 
     title: "OnScreenDisplay";
     namespace: "OnScreenDisplay";
-    anchor: left;
+    anchor: bottom;
     margin-left: 5;
     layer: overlay;
-    exclusivity: ignore;
 
-    Revealer {
-        transition-duration: 300;
-        transition-type: slide_right;
-        reveal-child: bind template.visible;
+    Stack stack_osd { // Stack for volume and brightness
+        Gtk.StackPage {
+            name: "volume_osd";
 
-        Stack { // Stack for volume and brightness
-            Box volume_osd { // Abstract this to a component... If needed(3 or more osds)
-                orientation: vertical;
-                spacing: 10;
+            child: Overlay volume_osd {
+                hexpand: true;
                 vexpand: true;
+                width-request: 300;
 
                 styles [
                     "OnScreenDisplay"
                 ]
 
-                Image {
-                    icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-                }
-
-                Scale {
+                ProgressBar {
+                    hexpand: true;
+                    orientation: horizontal;
+                    fraction: bind template.speaker as <AstalWp.Endpoint>.volume;
                     vexpand: true;
-                    orientation: vertical;
-                    inverted: true;
-
-                    adjustment: Adjustment vol_adjust {
-                        lower: 0;
-                        upper: 1;
-                    };
 
                     styles [
-                        "morghulis_vertical_slider"
+                        "osd_slider"
                     ]
                 }
 
-                Label {
-                    label: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
-                    width-request: 50;
+                [overlay]
+                Image {
+                    halign: start;
+                    valign: center;
+                    margin-start: 10;
+                    icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+
+                    styles [
+                        "osd_icon"
+                    ]
                 }
-            }
+            };
         }
     }
 }
