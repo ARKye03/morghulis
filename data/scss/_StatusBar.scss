@@ -10,7 +10,8 @@
 
 .statusbar_box {
     margin: 5px 0;
-    background-color: adw.$accent_fg_color;
+    background-color: adw.$view_bg_color;
+    ;
     @include Colors.MasterBorder;
     border-radius: Colors.$master-border-radius;
     padding: 0 10px;
@@ -43,6 +44,7 @@
     min-width: 1em;
     margin-right: -5px;
     padding: 1px;
-    background-color: adw.$accent_fg_color;
+    background-color: adw.$view_bg_color;
+    ;
     border-radius: 25px;
 }

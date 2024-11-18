@@ -17,7 +17,8 @@
 }
 
 .quick_settings_button {
-    background-color: adw.$accent_fg_color;
+    background-color: adw.$view_bg_color;
+    ;
     @include Colors.MasterBorder;
     border-radius: Colors.$master-border-radius;
     min-height: 60px;
