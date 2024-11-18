@@ -82,6 +82,19 @@ template $StatusBar: Astal.Window {
             }
           }
         }
+
+        [overlay]
+        Label notif_count_label {
+          styles [
+            "notif_count_label",
+            "view"
+          ]
+
+          halign: end;
+          valign: start;
+          xalign: 0.5;
+          justify: center;
+        }
       }
 
       Label clock {
