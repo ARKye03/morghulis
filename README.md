@@ -55,7 +55,7 @@ morghulctl --help
 ```
 
 > [!NOTE]
->  The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
+> The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
 
 ## Development
 
