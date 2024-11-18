@@ -106,8 +106,8 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 ![Morghulis](public/morghulis.webp)
 
-> [!NOTE] The preview uses the adwaita-dark theme and
-> - [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
+> [!NOTE]
+> The preview uses the adwaita-dark theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
 
 ## License
 
