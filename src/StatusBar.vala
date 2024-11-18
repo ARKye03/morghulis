@@ -5,10 +5,10 @@ using GtkLayerShell;
 public class StatusBar : Astal.Window {
 // Properties
 	private AstalMpris.Mpris mpris { get; set; }
-	private AstalHyprland.Hyprland hyprland { get; set; }
 	private AstalNotifd.Notifd notifd { get; set; }
 	private List <Gtk.Button> workspace_buttons = new List <Gtk.Button> ();
 
+	public AstalHyprland.Hyprland hyprland { get; set; }
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
 
@@ -33,9 +33,28 @@ public class StatusBar : Astal.Window {
 
 	[GtkChild]
 	public unowned Gtk.Label notif_count_label;
+
 	[GtkCallback]
 	public void notif_popover_popup() {
 		notif_popover.popup();
+	}
+
+	[GtkCallback]
+	public void toggle_SideDashboard() {
+		try {
+			Morghulis.instance.toggle_window("SideDashboard");
+		} catch (GLib.Error e) {
+			warning("Failed to toggle window: %s", e.message);
+		}
+	}
+
+	[GtkCallback]
+	public void toggle_Runner() {
+		try {
+			Morghulis.instance.toggle_window("Runner");
+		} catch (GLib.Error e) {
+			warning("Failed to toggle window: %s", e.message);
+		}
 	}
 
 // Workspace icons
@@ -62,7 +81,6 @@ public class StatusBar : Astal.Window {
 		init_notif_label_count();
 		init_workspaces();
 		init_clock();
-		setup_event_handlers();
 	}
 
 	private void init_notif_label_count() {
@@ -73,35 +91,6 @@ public class StatusBar : Astal.Window {
 			notif_count_label.label = @"$(notifd.notifications.length())";
 		});
 		notif_count_label.label = @"$(notifd.notifications.length())";
-	}
-
-	private void setup_event_handlers() {
-		power_button.clicked.connect(() => {
-			try {
-				Morghulis.instance.toggle_window("SideDashboard");
-			} catch (GLib.Error e) {
-				warning("Failed to toggle window: %s", e.message);
-			}
-		});
-
-		apps_button.clicked.connect(() => {
-			try {
-				Morghulis.instance.toggle_window("Runner");
-			} catch (GLib.Error e) {
-				warning("Failed to toggle window: %s", e.message);
-			}
-		});
-
-		hyprland.notify["focused-client"].connect(() => {
-			focused_client();
-		});
-	}
-
-// Client focus method
-	private void focused_client() {
-		if (hyprland.focused_client != null) {
-			client_label.label = hyprland.focused_client.title;
-		}
 	}
 
 // Clock methods

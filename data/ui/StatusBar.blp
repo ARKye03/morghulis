@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using AstalHyprland 0.1;
 
 template $StatusBar: Astal.Window {
   styles [
@@ -17,6 +18,7 @@ template $StatusBar: Astal.Window {
       Button apps_button {
         icon-name: "view-grid-symbolic";
         name: "apps_button";
+        clicked => $toggle_Runner();
 
         styles [
           "apps_button",
@@ -29,6 +31,7 @@ template $StatusBar: Astal.Window {
         halign: start;
         ellipsize: end;
         max-width-chars: 20;
+        label: bind template.hyprland as <AstalHyprland.Hyprland>.focused-client as <AstalHyprland.Client>.title;
 
         styles [
           "client_label",
@@ -112,6 +115,7 @@ template $StatusBar: Astal.Window {
       Button power_button {
         icon-name: "system-shutdown-symbolic";
         name: "power_button";
+        clicked => $toggle_SideDashboard();
 
         styles [
           "power_button",
