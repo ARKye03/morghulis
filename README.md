@@ -2,16 +2,17 @@
 
 - [Morghulis](#morghulis)
   - [Requirements](#requirements)
-  - [Usage](#usage)
-    - [Development](#development)
-    - [Installation](#installation)
-    - [Nix](#nix)
+  - [Installation](#installation)
+    - [From source](#from-source)
     - [Arch Linux](#arch-linux)
+  - [Usage](#usage)
+  - [Development](#development)
+    - [Nix](#nix)
   - [Features](#features)
   - [Preview](#preview)
   - [License](#license)
 
-Desktop Shell created with GTK4, Blueprint, and Vala.
+Desktop Shell created with GTK4, Libadwaita, and Astal.
 
 ## Requirements
 
@@ -22,30 +23,44 @@ Desktop Shell created with GTK4, Blueprint, and Vala.
 - [Blueprint-Compiler](https://jwestman.pages.gitlab.gnome.org/blueprint-compiler/)
 - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
 
-## Usage
+## Installation
 
-Clone the repository and set up the build environment:
+### From source
 
 ```shell
 git clone https://github.com/ARKye03/morghulis
 cd morghulis
-meson setup build
+just init
+just install
+```
+
+### Arch Linux
+
+Build and install using my `PKGBUILD` file:
+
+```sh
+mkdir /tmp/morghulis && cd /tmp/morghulis 
+wget https://raw.githubusercontent.com/ARKye03/PKGBUILDS/refs/heads/main/morghulis-git/PKGBUILD
+makepkg -si
 ```
 
 Alternatively, use a binary from [releases](https://github.com/ARKye03/morghulis/releases).
 
-### Development
+## Usage
+
+Morghulis is a desktop shell that uses Astal under the hood, so the astal cli is available to use, via `astal -i morghulis <command>`, nevertheless, the `morghulis-cli` called `morghulctl` is dedicated to this project itself.
+
+```shell
+morghulctl --help
+```
+
+> [!NOTE] The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
+
+## Development
 
 ```shell
 just init
 just
-```
-
-### Installation
-
-```shell
-meson install -C build
-morghulis --help
 ```
 
 ### Nix
@@ -64,41 +79,35 @@ nix run github:ARKye03/morghulis -- --help
 nix run github:ARKye03/morghulis#fhs -- --help
 ```
 
-### Arch Linux
-
-Build and install using the `PKGBUILD` file:
-
-```shell
-mkdir morghulis_pkg && cd morghulis_pkg
-wget https://raw.githubusercontent.com/ARKye03/PKGBUILDS/refs/heads/main/morghulis/git/PKGBUILD
-makepkg -si
-```
-
 ## Features
 
-- Status Bar
-  - Workspace Switcher
-  - Focused Client
-- Socket Service
-- Quick Settings
-  - Media Player
-  - Power Buttons
-  - (WIP) Bluetooth, Network (VPN), Brightness
-- Apps Runner
-  - (WIP) Handle Hyprland Clients
-- Notifications
-  - (WIP) Center, Popup
-- Power Menu
-- OnScreenDisplay
-  - Audio
-  - (WIP) Brightness
-- Dynamic CSS (WIP)
+- [x] Status Bar
+  - [x] Workspace Switcher
+  - [x] Focused Client
+- [x] Quick Settings
+  - [x] Mpris Media Player
+  - [x] Power Buttons
+  - [ ] (WIP) Bluetooth
+  - [ ] (WIP) Network
+  - [ ] (WIP) Brightness
+- [x] Apps Runner
+  - [x] (WIP) Handle Hyprland Clients
+- [x] Notifications
+  - [x] Center
+  - [ ] (WIP) Popup
+- [x] Power Menu (WIP)
+- [x] OnScreenDisplay
+  - [x] Audio
+  - [x] (WIP) Brightness
+- [x] Dynamic CSS (WIP)
 
 ## Preview
 
 ![Morghulis](public/morghulis.webp)
 
-> Note: The preview uses the adw-gtk One-Dark theme.
+> [!NOTE] The preview uses the adwaita-dark theme and
+>
+> - [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
 
 ## License
 
