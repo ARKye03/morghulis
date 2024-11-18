@@ -12,10 +12,6 @@
     padding: 10px;
 }
 
-.quick_settings_frame_profile_image {
-    border-radius: Colors.$master-border-radius;
-}
-
 .quick_settings_button {
     @include Colors.MasterBorder;
     border-radius: Colors.$master-border-radius;

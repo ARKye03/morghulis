@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using Adw 1;
 
 template $SideDashboard: Astal.Window {
     styles [
@@ -40,15 +41,11 @@ template $SideDashboard: Astal.Window {
                     "quick_settings_grid_box"
                 ]
 
-                Image {
-                    styles [
-                        "quick_settings_frame_profile_image"
-                    ]
-
-                    overflow: hidden;
-                    halign: start;
-                    file: bind template.user_image;
-                    pixel-size: 100;
+                Adw.Avatar {
+                    text: bind template.user_name;
+                    custom-image: bind template.user_image_paintable;
+                    show-initials: true;
+                    size: 100;
                 }
 
                 Label {
