@@ -54,7 +54,8 @@ Morghulis is a desktop shell that uses Astal under the hood, so the astal cli is
 morghulctl --help
 ```
 
-> [!NOTE] The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
+> [!NOTE]
+>  The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
 
 ## Development
 
@@ -106,7 +107,6 @@ nix run github:ARKye03/morghulis#fhs -- --help
 ![Morghulis](public/morghulis.webp)
 
 > [!NOTE] The preview uses the adwaita-dark theme and
->
 > - [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
 
 ## License
