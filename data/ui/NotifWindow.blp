@@ -15,6 +15,10 @@ template $NotifWindow: Box {
     }
 
     Button {
+        styles [
+            "destructive-action"
+        ]
+
         icon-name: "user-trash-symbolic";
         clicked => $clear_notifications();
     }

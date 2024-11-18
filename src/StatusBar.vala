@@ -72,7 +72,7 @@ public class StatusBar : Astal.Window {
 		notif_count_label.valign = Gtk.Align.START;
 		notif_count_label.xalign = 0.5f;
 		notif_count_label.justify = Gtk.Justification.CENTER;
-		notif_count_label.add_css_class("notif_count_label");
+		notif_count_label.set_css_classes(new string[] { "notif_count_label", "view" });
 		notif_overlay.add_overlay(notif_count_label);
 
 		notifd.notified.connect(() => {

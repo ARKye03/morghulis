@@ -6,7 +6,6 @@
 }
 
 .mpris_master_box {
-    background-color: adw.$view_bg_color;
     border-radius: Colors.$master-border-radius;
     @include Colors.MasterBorder;
     min-width: 270px;

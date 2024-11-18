@@ -1,9 +1,11 @@
 @use "Colors";
 @use "adw";
 
+.notifications_scrolled_window {
+    border-radius: Colors.$master-border-radius;
+}
+
 .notification_badge {
-    background-color: adw.$view_bg_color;
-    ;
     border-radius: Colors.$master-border-radius;
     margin-bottom: 10px;
 
