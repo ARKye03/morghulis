@@ -6,8 +6,8 @@
 }
 
 .notification_badge {
-    border-radius: Colors.$master-border-radius;
-    margin-bottom: 10px;
+    background-color: adw.$view_bg_color;
+    color: adw.$view_fg_color;
 
     &.critical {
         border: 1px solid adw.$red_5;

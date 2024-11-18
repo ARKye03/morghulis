@@ -11,7 +11,13 @@ template $NotifWindow: Box {
             "notifications_scrolled_window"
         ]
 
-        ListBox notifications {}
+        ListBox notifications {
+            selection-mode: none;
+
+            styles [
+                "boxed-list-separate"
+            ]
+        }
     }
 
     Button {
