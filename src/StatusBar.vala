@@ -3,6 +3,7 @@ using GtkLayerShell;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
 public class StatusBar : Astal.Window {
+	public static StatusBar instance { get; private set; }
 // Properties
 	private AstalMpris.Mpris mpris { get; set; }
 	private AstalNotifd.Notifd notifd { get; set; }
@@ -81,6 +82,7 @@ public class StatusBar : Astal.Window {
 		init_notif_label_count();
 		init_workspaces();
 		init_clock();
+		instance = this;
 	}
 
 	private void init_notif_label_count() {
