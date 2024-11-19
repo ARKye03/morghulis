@@ -13,7 +13,8 @@ template $StatusBar: Astal.Window {
   exclusivity: exclusive;
   // anchor: left | bottom | right; For some reason this is not working
   CenterBox {
-    start-widget: Box {
+    [start]
+    Box {
       spacing: 10;
 
       Button apps_button {
@@ -40,9 +41,10 @@ template $StatusBar: Astal.Window {
           "view"
         ]
       }
-    };
+    }
 
-    center-widget: Box workspaces {
+    [center]
+    Box workspaces {
       name: "workspaces";
       spacing: 5;
 
@@ -51,9 +53,10 @@ template $StatusBar: Astal.Window {
         "statusbar_box",
         "view"
       ]
-    };
+    }
 
-    end-widget: Box right_box {
+    [end]
+    Box right_box {
       spacing: 10;
 
       styles [
@@ -141,6 +144,6 @@ template $StatusBar: Astal.Window {
           "view"
         ]
       }
-    };
+    }
   }
 }
