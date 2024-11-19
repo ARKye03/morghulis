@@ -19,7 +19,7 @@ template $NotifPop: ListBoxRow {
 
             start-widget: Image app_image {
                 overflow: hidden;
-                file: bind template.notification as <AstalNotifd.Notification>.app-icon;
+                icon-name: bind template.notification as <AstalNotifd.Notification>.app-icon;
                 tooltip-text: "App Icon";
 
                 styles [
@@ -43,7 +43,7 @@ template $NotifPop: ListBoxRow {
 
                 Button {
                     valign: center;
-                    icon-name: "close-symbolic";
+                    icon-name: "window-close-symbolic";
                     clicked => $dismiss_notif();
                 }
             };
