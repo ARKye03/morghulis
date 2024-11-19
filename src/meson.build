@@ -13,6 +13,7 @@ project_resources += [
     'RunnerButton.vala',
     'Mpris.vala',
     'OnScreenDisplay.vala',
+    'CircularProgress.vala'
 ]
 
 executable(

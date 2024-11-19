@@ -15,33 +15,33 @@ template $sdPowerBox: Box {
         halign: end;
 
         Button {
-            icon-name: "system-shutdown-symbolic";
-            tooltip-text: "Shutdown";
-            clicked => $shutdown();
-        }
-
-        Button {
-            icon-name: "system-reboot-symbolic";
-            tooltip-text: "Reboot";
-            clicked => $reboot();
-        }
-
-        Button {
-            icon-name: "system-suspend-symbolic";
+            icon-name: "colloid-morghulis-system-suspend-symbolic";
             tooltip-text: "Suspend";
             clicked => $suspend();
         }
 
         Button {
-            icon-name: "system-hibernate-symbolic";
+            icon-name: "colloid-morghulis-system-hibernate-symbolic";
             tooltip-text: "Hibernate";
             clicked => $hibernate();
         }
 
         Button {
-            icon-name: "system-lock-screen-symbolic";
+            icon-name: "colloid-morghulis-system-lock-screen-symbolic";
             tooltip-text: "Lock";
             clicked => $lock();
+        }
+
+        Button {
+            icon-name: "colloid-morghulis-system-reboot-symbolic";
+            tooltip-text: "Reboot";
+            clicked => $reboot();
+        }
+
+        Button {
+            icon-name: "colloid-morghulis-system-shutdown-symbolic";
+            tooltip-text: "Shutdown";
+            clicked => $shutdown();
         }
     }
 }
