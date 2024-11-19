@@ -12,6 +12,7 @@ public class StatusBar : Astal.Window {
 	public AstalHyprland.Hyprland hyprland { get; set; }
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
+	public AstalBattery.Device battery { get; set; }
 
 // UI Elements
 	[GtkChild]
@@ -58,6 +59,11 @@ public class StatusBar : Astal.Window {
 		}
 	}
 
+	[GtkCallback]
+	public string current_battery(double percentage) {
+		return @"$(Math.round(percentage * 100))%";
+	}
+
 // Workspace icons
 	private static string[] wicons = {
 		" ", " ", "󰨞 ",
@@ -78,6 +84,7 @@ public class StatusBar : Astal.Window {
 		mpris = AstalMpris.Mpris.get_default();
 		hyprland = AstalHyprland.Hyprland.get_default();
 		notifd = AstalNotifd.Notifd.get_default();
+		battery = AstalBattery.Device.get_default();
 
 		init_notif_label_count();
 		init_workspaces();

@@ -14,4 +14,5 @@ private void init_types() {
 	typeof(OnScreenDisplay).ensure();
 	typeof(NotifPop).ensure();
 	typeof(NotifWindow).ensure();
+	typeof(CircularProgressBar).ensure();
 }

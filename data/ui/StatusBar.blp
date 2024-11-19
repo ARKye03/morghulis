@@ -1,6 +1,7 @@
 using Gtk 4.0;
 using Astal 4.0;
 using AstalHyprland 0.1;
+using AstalBattery 0.1;
 
 template $StatusBar: Astal.Window {
   styles [
@@ -97,6 +98,23 @@ template $StatusBar: Astal.Window {
           valign: start;
           xalign: 0.5;
           justify: center;
+        }
+      }
+
+      Box {
+        styles [
+          "statusbar_box",
+          "view"
+        ]
+
+        spacing: 10;
+
+        Label {
+          label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
+        }
+
+        Image {
+          icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
         }
       }
 

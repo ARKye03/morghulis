@@ -13,7 +13,7 @@ project_resources += [
     'RunnerButton.vala',
     'Mpris.vala',
     'OnScreenDisplay.vala',
-    'CircularProgress.vala'
+    'CircularProgressBar.vala'
 ]
 
 executable(
@@ -29,6 +29,7 @@ executable(
         dependency('astal-wireplumber-0.1'),
         dependency('astal-mpris-0.1'),
         dependency('astal-hyprland-0.1'),
+        dependency('astal-battery-0.1'),
         # dependency('astal-tray-0.1'),
         dependency('astal-notifd-0.1'),
         dependency('astal-network-0.1'),
