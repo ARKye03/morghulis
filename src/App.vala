@@ -2,7 +2,7 @@ public class Morghulis : Astal.Application {
 	private string socket_path { get; private set; }
 	private bool css_loaded = false;
 
-	public static Astal.Application instance;
+	public static Morghulis instance;
 
 	public override void request(string msg, SocketConnection conn) {
 		if (msg == "notif_window") {
@@ -21,13 +21,6 @@ public class Morghulis : Astal.Application {
 			printerr("%s", e.message);
 		}
 		instance = this;
-	}
-
-	public Morghulis() {
-		Object(
-			application_id: "io.Astal.arkye03.morghulis",
-			flags: ApplicationFlags.DEFAULT_FLAGS
-			);
 	}
 
 	[DBus(visible = false)]
