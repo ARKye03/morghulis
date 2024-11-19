@@ -94,7 +94,7 @@ public class MorghulCTL {
 				null,
 				out child_pid
 				);
-			stdout.printf("Starting the application...\n");
+			stdout.printf("Starting the application…\n");
 		} catch (SpawnError e) {
 			stderr.printf("Failed to start the application: %s\n", e.message);
 			return 1;

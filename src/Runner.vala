@@ -41,10 +41,10 @@ public class Runner : Astal.Window {
 
 	[GtkCallback]
 	public void launch_first_runner_button() {
-		RunnerButton selectedButton = (RunnerButton)this.app_list.get_row_at_index(0);
+		RunnerButton selected_button = (RunnerButton)this.app_list.get_row_at_index(0);
 
-		if (selectedButton != null) {
-			selectedButton.activate();
+		if (selected_button != null) {
+			selected_button.activate();
 			this.visible = false;
 		}
 	}

@@ -25,17 +25,17 @@ public class NotifWindow : Gtk.Box {
 		notif_list_box.prepend(new NotifPop(notification));
 	}
 
-	private void remove_notification(uint notificationId, Gtk.ListBox notifListBox) {
+	private void remove_notification(uint notification_id, Gtk.ListBox notif_list_box) {
 		int i = 0;
 
-		NotifPop ?notifPopup = (NotifPop)notifListBox.get_row_at_index(0);
+		NotifPop ?notif_popup = (NotifPop)notif_list_box.get_row_at_index(0);
 
-		while (notifPopup != null) {
-			if (notifPopup.notification.id == notificationId) {
-				notifListBox.remove(notifPopup);
+		while (notif_popup != null) {
+			if (notif_popup.notification.id == notification_id) {
+				notif_list_box.remove(notif_popup);
 				break;
 			}
-			notifPopup = (NotifPop)notifListBox.get_row_at_index(++i);
+			notif_popup = (NotifPop)notif_list_box.get_row_at_index(++i);
 		}
 	}
 }

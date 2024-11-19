@@ -15,7 +15,7 @@ public class sdButton : Gtk.Box {
 			if (value) {
 				this.add_css_class("quick_settings_button-active");
 			}
-			else{
+			else {
 				this.remove_css_class("quick_settings_button-active");
 			}
 		}
@@ -28,7 +28,7 @@ public class sdButton : Gtk.Box {
 			if (!value) {
 				this.add_css_class("quick_settings_button-active");
 			}
-			else{
+			else {
 				this.remove_css_class("quick_settings_button-active");
 			}
 		}

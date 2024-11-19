@@ -41,7 +41,7 @@ public class StatusBar : Astal.Window {
 	}
 
 	[GtkCallback]
-	public void toggle_SideDashboard() {
+	public void toggle_side_dashboard() {
 		try {
 			Morghulis.instance.toggle_window("SideDashboard");
 		} catch (GLib.Error e) {
@@ -50,7 +50,7 @@ public class StatusBar : Astal.Window {
 	}
 
 	[GtkCallback]
-	public void toggle_Runner() {
+	public void toggle_runner() {
 		try {
 			Morghulis.instance.toggle_window("Runner");
 		} catch (GLib.Error e) {
@@ -87,12 +87,12 @@ public class StatusBar : Astal.Window {
 
 	private void init_notif_label_count() {
 		notifd.notified.connect(() => {
-			notif_count_label.label = @"$(notifd.notifications.length())";
+			notif_count_label.label = (notifd.notifications.length()).to_string();
 		});
 		notifd.resolved.connect(() => {
-			notif_count_label.label = @"$(notifd.notifications.length())";
+			notif_count_label.label = (notifd.notifications.length()).to_string();
 		});
-		notif_count_label.label = @"$(notifd.notifications.length())";
+		notif_count_label.label = notifd.notifications.length().to_string();
 	}
 
 // Clock methods

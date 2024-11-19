@@ -65,7 +65,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 	[Description(nick = "Progress fill color", blurb = "Progress line color (Check GdkRGBA parse method)")]
 	public string progress_fill_color {
 		get {
-			return _progress_fill_color;;
+			return _progress_fill_color;
 		}
 		set {
 			var color = Gdk.RGBA();
@@ -128,7 +128,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 	}
 
 	private int calculate_radius() {
-		return int.min(get_allocated_width() / 2, get_allocated_height() / 2) - 1;
+		return int.min(get_width() / 2, get_height() / 2) - 1;
 	}
 
 	public override Gtk.SizeRequestMode get_request_mode() {
@@ -146,8 +146,8 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 		color = Gdk.RGBA();
 
-		var center_x = get_allocated_width() / 2;
-		var center_y = get_allocated_height() / 2;
+		var center_x = get_width() / 2;
+		var center_y = get_height() / 2;
 		var radius = calculate_radius();
 
 		if (radius - line_width < 0) {

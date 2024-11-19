@@ -47,7 +47,7 @@ public class sdSettings : Gtk.Grid {
 			if (network.wifi.active_connection.vpn) {
 				Process.spawn_command_line_async("protonvpn-cli d");
 			}
-			else{
+			else {
 				Process.spawn_command_line_async("protonvpn-cli c --cc US -p udp");
 			}
 		} catch (GLib.Error e) {
