@@ -111,7 +111,7 @@ public class StatusBar : Astal.Window {
 
 	private void init_clock() {
 		update_clock();
-		GLib.Timeout.add(30000, () => {
+		GLib.Timeout.add(60000, () => {
 			update_clock();
 			return true;
 		});

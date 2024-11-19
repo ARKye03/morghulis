@@ -105,6 +105,8 @@ template $StatusBar: Astal.Window {
       }
 
       Box {
+        visible: bind template.battery as <AstalBattery.Device>.is-present;
+
         styles [
           "statusbar_box",
           "view"
