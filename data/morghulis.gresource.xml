@@ -2,6 +2,7 @@
 <gresources>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
+        <file preprocess="xml-stripblanks">ui/CircularProgress.ui</file>
         <file preprocess="xml-stripblanks">ui/StatusBar.ui</file>
         <file preprocess="xml-stripblanks">ui/Mpris.ui</file>
         <file preprocess="xml-stripblanks">ui/SideDashboard.ui</file>

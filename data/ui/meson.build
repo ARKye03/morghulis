@@ -3,6 +3,7 @@ blueprints = custom_target(
     input: files(
         'StatusBar.blp',
         'OnScreenDisplay.blp',
+        'CircularProgressBar.blp',
         # SideDashboard components
         'SideDashboard.blp',
         'sdButton.blp',
