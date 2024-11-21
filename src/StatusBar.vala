@@ -13,6 +13,7 @@ public class StatusBar : Astal.Window {
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
 	public AstalBattery.Device battery { get; set; }
+	public AstalPowerProfiles.PowerProfiles power_profiles { get; set; }
 
 // UI Elements
 	[GtkChild]
@@ -64,6 +65,26 @@ public class StatusBar : Astal.Window {
 		return @"$(Math.round(percentage * 100))%";
 	}
 
+	[GtkCallback]
+	public void change_power_profile() {
+		var active_profile = power_profiles.active_profile;
+
+		switch (active_profile) {
+		case "performance":
+			power_profiles.active_profile = "power-saver";
+			break;
+
+		case "power-saver":
+			power_profiles.active_profile = "balanced";
+			break;
+
+		case "balanced":
+		default:
+			power_profiles.active_profile = "performance";
+			break;
+		}
+	}
+
 // Workspace icons
 	private static string[] wicons = {
 		" ", " ", "󰨞 ",
@@ -85,6 +106,7 @@ public class StatusBar : Astal.Window {
 		hyprland = AstalHyprland.Hyprland.get_default();
 		notifd = AstalNotifd.Notifd.get_default();
 		battery = AstalBattery.Device.get_default();
+		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 
 		init_notif_label_count();
 		init_workspaces();

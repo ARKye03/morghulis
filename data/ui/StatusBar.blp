@@ -2,6 +2,7 @@ using Gtk 4.0;
 using Astal 4.0;
 using AstalHyprland 0.1;
 using AstalBattery 0.1;
+using AstalPowerProfiles 0.1;
 
 template $StatusBar: Astal.Window {
   styles [
@@ -120,6 +121,14 @@ template $StatusBar: Astal.Window {
 
         Image {
           icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+        }
+
+        Button {
+          clicked => $change_power_profile();
+
+          Image {
+            icon-name: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
+          }
         }
       }
 
