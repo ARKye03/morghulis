@@ -21,13 +21,13 @@ public class Mpris : Gtk.Box {
 	[GtkCallback]
 	public string pause_icon(AstalMpris.PlaybackStatus status) {
 		switch (status) {
-		case AstalMpris.PlaybackStatus.PLAYING:
-			return "media-playback-pause-symbolic";
+			case AstalMpris.PlaybackStatus.PLAYING:
+				return "media-playback-pause-symbolic";
 
-		case AstalMpris.PlaybackStatus.PAUSED:
-		case AstalMpris.PlaybackStatus.STOPPED:
-		default:
-			return "media-playback-start-symbolic";
+			case AstalMpris.PlaybackStatus.PAUSED:
+			case AstalMpris.PlaybackStatus.STOPPED:
+			default:
+				return "media-playback-start-symbolic";
 		}
 	}
 

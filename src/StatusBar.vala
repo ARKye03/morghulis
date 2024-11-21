@@ -70,18 +70,18 @@ public class StatusBar : Astal.Window {
 		var active_profile = power_profiles.active_profile;
 
 		switch (active_profile) {
-		case "performance":
-			power_profiles.active_profile = "power-saver";
-			break;
+			case "performance":
+				power_profiles.active_profile = "power-saver";
+				break;
 
-		case "power-saver":
-			power_profiles.active_profile = "balanced";
-			break;
+			case "power-saver":
+				power_profiles.active_profile = "balanced";
+				break;
 
-		case "balanced":
-		default:
-			power_profiles.active_profile = "performance";
-			break;
+			case "balanced":
+			default:
+				power_profiles.active_profile = "performance";
+				break;
 		}
 	}
 
