@@ -5,12 +5,12 @@ public class MorghulCTL {
 
 	public static int main(string[] args) {
 		var options = new OptionEntry[] {
+			{ "request", 'r', OptionFlags.NONE, OptionArg.STRING, out request, "Send request to the application", "REQUEST" },
 			{ "start", 0, OptionFlags.NONE, OptionArg.NONE, out start, "Start the application", null },
 			{ "toggle-window", 't', OptionFlags.NONE, OptionArg.STRING, out toggle_window, "Toggle window(s)", "WINDOW" },
 			{ "show-inspector", 'i', OptionFlags.NONE, OptionArg.NONE, out show_inspector, "Show inspector", null },
 			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, out quit, "Quit the application", null },
 			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, out show_version, "Show version", null },
-			{ null }
 		};
 
 		var context = new OptionContext(null);
@@ -29,23 +29,34 @@ public class MorghulCTL {
 			return 0;
 		}
 
-		if (start) {
+		else if (start) {
 			return start_morghulis();
 		}
 
-		if (toggle_window != null) {
+		else if (toggle_window != null) {
 			return toggle_window_func(toggle_window);
 		}
 
-		if (show_inspector) {
+		else if (show_inspector) {
 			return toggle_inspector();
 		}
 
-		if (quit) {
+		else if (quit) {
 			return exit_morghulis();
 		}
-		stderr.printf("No valid options provided. Use --help for usage information.\n");
-		return 1;
+		else {
+			return send_request(request);
+		}
+	}
+
+	private static int send_request(string req) {
+		try {
+			GLib.Process.spawn_command_line_async(@"astal -i morghulis $req");
+		} catch (GLib.Error e) {
+			stderr.printf("Failed to send request: %s\n", e.message);
+			return 1;
+		}
+		return 0;
 	}
 
 	private static int exit_morghulis() {
@@ -115,6 +126,7 @@ public class MorghulCTL {
 		}
 	}
 
+	private static string request = "";
 	private static bool start = false;
 	private static string ?toggle_window = null;
 	private static bool show_inspector = false;
