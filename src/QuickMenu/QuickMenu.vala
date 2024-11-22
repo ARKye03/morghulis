@@ -1,13 +1,13 @@
 using GtkLayerShell;
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/SideDashboard.ui")]
-public class SideDashboard : Astal.Window {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu.ui")]
+public class QuickMenu : Astal.Window {
 	public AstalWp.Endpoint speaker { get; set; }
 	public string user_name { get; set; }
 	public string user_image { get; set; }
 	public Gdk.Paintable user_image_paintable { get; set; }
 
-	public SideDashboard() {
+	public QuickMenu() {
 		Object(
 			anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 			);

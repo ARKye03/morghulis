@@ -45,7 +45,7 @@ public class NavBar : Astal.Window {
 	[GtkCallback]
 	public void toggle_side_dashboard() {
 		try {
-			Morghulis.instance.toggle_window("SideDashboard");
+			Morghulis.instance.toggle_window("QuickMenu");
 		} catch (GLib.Error e) {
 			warning("Failed to toggle window: %s", e.message);
 		}

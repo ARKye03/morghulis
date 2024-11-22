@@ -1,8 +1,8 @@
 project_resources += files(
-    'SideDashboard.vala',
+    'QuickMenu.vala',
     'Mpris.vala',
-    'sdButton.vala',
-    'sdPowerBox.vala',
-    'sdSettings.vala',
-    'sdSliderBox.vala',
+    'QButton.vala',
+    'PowerBox.vala',
+    'Settings.vala',
+    'SliderBox.vala',
 )

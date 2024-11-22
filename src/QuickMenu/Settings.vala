@@ -1,5 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/sdSettings.ui")]
-public class sdSettings : Gtk.Grid {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
+public class Settings : Gtk.Grid {
 	public AstalNetwork.Network network { get; set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; set; }
 	public AstalNotifd.Notifd notifd { get; private set; }

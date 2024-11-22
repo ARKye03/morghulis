@@ -1,5 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/sdButton.ui")]
-public class sdButton : Gtk.Box {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QButton.ui")]
+public class QButton : Gtk.Box {
 	public AstalNetwork.Network network { get; set; }
 
 	public signal void clicked();
@@ -47,9 +47,9 @@ public class sdButton : Gtk.Box {
 	static construct {
 		set_css_name("quick_settings_button");
 	}
-	sdButton() {
+	QButton() {
 		Object(
-			name: "sdButton"
+			name: "Button"
 			);
 		network = AstalNetwork.get_default();
 	}

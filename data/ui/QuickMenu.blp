@@ -2,13 +2,13 @@ using Gtk 4.0;
 using Astal 4.0;
 using Adw 1;
 
-template $SideDashboard: Astal.Window {
+template $QuickMenu: Astal.Window {
     styles [
         "quick_settings_window"
     ]
 
-    title: "SideDashboard";
-    namespace: "SideDashboard";
+    title: "QuickMenu";
+    namespace: "QuickMenu";
     anchor: right | bottom;
     margin-right: 5;
     margin-bottom: 5;
@@ -70,7 +70,7 @@ template $SideDashboard: Astal.Window {
             }
 
             // Volume Slider (Box)
-            $sdSliderBox {
+            $SliderBox {
                 layout {
                     row: 2;
                     column: 0;
@@ -78,7 +78,7 @@ template $SideDashboard: Astal.Window {
                 }
             }
 
-            $sdSettings {
+            $Settings {
                 layout {
                     row: 0;
                     column: 1;
@@ -87,7 +87,7 @@ template $SideDashboard: Astal.Window {
             }
 
             // Power Menu Info
-            $sdPowerBox {
+            $PowerBox {
                 layout {
                     row: 4;
                     column: 0;

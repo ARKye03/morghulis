@@ -30,7 +30,7 @@ public class Morghulis : Astal.Application {
 			load_css();
 			css_loaded = true;
 		}
-		add_window(new SideDashboard());
+		add_window(new QuickMenu());
 		add_window(new Runner());
 		add_window(new OnScreenDisplay());
 		add_window(new NavBar());

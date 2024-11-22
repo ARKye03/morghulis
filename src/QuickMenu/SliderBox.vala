@@ -1,5 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/sdSliderBox.ui")]
-public class sdSliderBox : Gtk.Box {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/SliderBox.ui")]
+public class SliderBox : Gtk.Box {
 	public AstalWp.Endpoint speaker { get; set; }
 
 	[GtkChild]
