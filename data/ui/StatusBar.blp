@@ -24,9 +24,9 @@ template $StatusBar: Astal.Window {
         clicked => $toggle_runner();
 
         styles [
-          "apps_button",
           "statusbar_box",
-          "view"
+          "view",
+          "statusbar_button"
         ]
       }
 
@@ -70,7 +70,8 @@ template $StatusBar: Astal.Window {
 
           styles [
             "statusbar_box",
-            "view"
+            "view",
+            "statusbar_button"
           ]
 
           Box {
@@ -150,9 +151,9 @@ template $StatusBar: Astal.Window {
         clicked => $toggle_side_dashboard();
 
         styles [
-          "power_button",
           "statusbar_box",
-          "view"
+          "view",
+          "statusbar_button"
         ]
       }
     }

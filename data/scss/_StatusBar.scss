@@ -15,6 +15,11 @@
     padding: 0 10px;
 }
 
+.statusbar_button {
+    background-color: adw.$view_bg_color;
+    color: adw.$view_fg_color;
+}
+
 .workspaces button {
     font-size: 16px;
     padding-right: 5px;
