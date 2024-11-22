@@ -20,16 +20,7 @@ public class NavBar : Astal.Window {
 	public unowned Gtk.Box workspaces;
 
 	[GtkChild]
-	public unowned Gtk.Button apps_button;
-
-	[GtkChild]
-	public unowned Gtk.Label client_label;
-
-	[GtkChild]
 	public unowned Gtk.Label clock;
-
-	[GtkChild]
-	public unowned Gtk.Button power_button;
 
 	[GtkChild]
 	public unowned Gtk.Popover notif_popover;
@@ -184,7 +175,7 @@ public class NavBar : Astal.Window {
 					button.set_css_classes(new string[] { "focused" });
 				}
 				else if (workspace_exists(index + 1)) {
-					button.set_css_classes(new string[] { "has-windows" });
+					button.set_css_classes(new string[] { "has_windows" });
 				}
 				else {
 					button.set_css_classes(new string[] { "empty" });
