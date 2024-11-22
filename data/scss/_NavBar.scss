@@ -1,21 +1,21 @@
 @use "Colors";
 @use "adw";
 
-.StatusBar_Master {
+.NavBar_Master {
     background-color: adw.$window_bg_color;
     min-height: 50px;
     border-radius: Colors.$master-border-radius;
     padding: 0 5px;
 }
 
-.statusbar_box {
+.NavBar_box {
     margin: 5px 0;
     @include Colors.MasterBorder;
     border-radius: Colors.$master-border-radius;
     padding: 0 10px;
 }
 
-.statusbar_button {
+.NavBar_button {
     background-color: adw.$view_bg_color;
     color: adw.$view_fg_color;
 }
@@ -38,7 +38,7 @@
     color: adw.$dark_1;
 }
 
-.StatusBar_label {
+.NavBar_label {
     font-size: 16px;
 }
 

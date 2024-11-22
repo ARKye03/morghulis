@@ -1,7 +1,7 @@
 blueprints = custom_target(
     'blueprints',
     input: files(
-        'StatusBar.blp',
+        'NavBar.blp',
         'OnScreenDisplay.blp',
         'CircularProgressBar.blp',
         # SideDashboard components

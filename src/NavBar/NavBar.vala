@@ -1,9 +1,9 @@
 using AstalHyprland;
 using GtkLayerShell;
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
-public class StatusBar : Astal.Window {
-	public static StatusBar instance { get; private set; }
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
+public class NavBar : Astal.Window {
+	public static NavBar instance { get; private set; }
 // Properties
 	private AstalMpris.Mpris mpris { get; set; }
 	private AstalNotifd.Notifd notifd { get; set; }
@@ -93,8 +93,9 @@ public class StatusBar : Astal.Window {
 		" ",
 	};
 
-	public StatusBar() {
+	public NavBar() {
 		Object(
+			namespace : "NavBar",
 			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 			);
 		present();

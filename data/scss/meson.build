@@ -6,7 +6,7 @@ scss_deps = files(
     '_OnScreenDisplay.scss',
     '_Runner.scss',
     '_SideDashboard.scss',
-    '_StatusBar.scss',
+    '_NavBar.scss',
     '_adw.scss',
     '_Notif.scss',
     'main.scss',
