@@ -28,19 +28,15 @@ public class MorghulCTL {
 			stdout.printf("Morghulis version %s\n", version);
 			return 0;
 		}
-
 		else if (start) {
 			return start_morghulis();
 		}
-
 		else if (toggle_window != null) {
 			return toggle_window_func(toggle_window);
 		}
-
 		else if (show_inspector) {
 			return toggle_inspector();
 		}
-
 		else if (quit) {
 			return exit_morghulis();
 		}
@@ -89,28 +85,22 @@ public class MorghulCTL {
 		return 0;
 	}
 
-	private static int start_morghulis() {
-		if (is_process_running("morghulis")) {
-			stdout.printf("Process already running\n");
-			return 0;
-		}
-
+	private static string ? find_morghulis_binary() {
 		try {
-			GLib.Pid child_pid;
-			Process.spawn_async(
-				null,
-				new string[] { "/usr/bin/morghulis" },
-				null,
-				SpawnFlags.DO_NOT_REAP_CHILD,
-				null,
-				out child_pid
-				);
-			stdout.printf("Starting the application…\n");
+			string output;
+			string error;
+			int exit_status;
+			Process.spawn_command_line_sync("which morghulis", out output, out error, out exit_status);
+			if (exit_status == 0 && output.strip() != "") {
+				return output.strip();
+			}
+			else {
+				return null;
+			}
 		} catch (SpawnError e) {
-			stderr.printf("Failed to start the application: %s\n", e.message);
-			return 1;
+			stderr.printf("Failed to find morghulis binary: %s\n", e.message);
+			return null;
 		}
-		return 0;
 	}
 
 	private static bool is_process_running(string process_name) {
@@ -124,6 +114,36 @@ public class MorghulCTL {
 			stderr.printf("Failed to check if process is running: %s\n", e.message);
 			return false;
 		}
+	}
+
+	private static int start_morghulis() {
+		if (is_process_running("morghulis")) {
+			stdout.printf("Morghulis process is already running.\n");
+			return 0;
+		}
+
+		string ?morghulis_path = find_morghulis_binary();
+		if (morghulis_path == null) {
+			stderr.printf("Morghulis binary not found in PATH.\n");
+			return 1;
+		}
+
+		try {
+			GLib.Pid child_pid;
+			Process.spawn_async(
+				null,
+				new string[] { morghulis_path },
+				null,
+				SpawnFlags.DO_NOT_REAP_CHILD,
+				null,
+				out child_pid
+				);
+			stdout.printf("Starting the application...\n");
+		} catch (SpawnError e) {
+			stderr.printf("Failed to start the application: %s\n", e.message);
+			return 1;
+		}
+		return 0;
 	}
 
 	private static string request = "";
