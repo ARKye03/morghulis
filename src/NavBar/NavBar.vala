@@ -28,6 +28,9 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	public unowned Gtk.Label notif_count_label;
 
+	[GtkChild]
+	public unowned Gtk.Label active_submap;
+
 	[GtkCallback]
 	public void notif_popover_popup() {
 		notif_popover.popup();
@@ -99,6 +102,15 @@ public class NavBar : Astal.Window {
 		notifd = AstalNotifd.Notifd.get_default();
 		battery = AstalBattery.Device.get_default();
 		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
+		hyprland.submap.connect((_, value) => {
+			if (value != null && value != "") {
+				active_submap.label = value;
+				active_submap.set_visible(true);
+			}
+			else {
+				active_submap.set_visible(false);
+			}
+		});
 
 		init_notif_label_count();
 		init_workspaces();

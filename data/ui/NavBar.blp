@@ -42,6 +42,20 @@ template $NavBar: Astal.Window {
           "view"
         ]
       }
+
+      Label active_submap {
+        halign: start;
+        ellipsize: end;
+        max-width-chars: 20;
+        visible: false;
+        tooltip-text: "Active submap";
+
+        styles [
+          "active_submap",
+          "NavBar_box",
+          "view"
+        ]
+      }
     }
 
     [center]
