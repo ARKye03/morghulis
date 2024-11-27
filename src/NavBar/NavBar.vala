@@ -80,7 +80,7 @@ public class NavBar : Astal.Window {
 	}
 
 	[GtkCallback]
-	public bool focused_client_exists(AstalHyprland.Client focused_client) {
+	public bool focused_client_exists(AstalHyprland.Client ?focused_client) {
 		return focused_client != null;
 	}
 
