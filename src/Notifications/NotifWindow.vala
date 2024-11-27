@@ -15,6 +15,7 @@ public class NotifWindow : Gtk.Box {
 		this.notifd.notifications.@foreach(n => this.on_notification_added(n.id, false, this.notifications));
 		this.notifd.notified.connect((id, replace) => {
 			this.on_notification_added(id, replace, this.notifications);
+			this.notif_sound.play();
 		});
 		this.notifd.resolved.connect((id) => this.remove_notification(id, this.notifications));
 		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
@@ -26,9 +27,6 @@ public class NotifWindow : Gtk.Box {
 		}
 
 		var notification = notifd.get_notification(notification_id);
-		if (notification.sound_file == null) {
-			this.notif_sound.play();
-		}
 		notif_list_box.prepend(new NotifPop(notification));
 	}
 
