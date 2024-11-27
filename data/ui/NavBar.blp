@@ -35,6 +35,8 @@ template $NavBar: Astal.Window {
         ellipsize: end;
         max-width-chars: 20;
         label: bind template.hyprland as <AstalHyprland.Hyprland>.focused-client as <AstalHyprland.Client>.title;
+        visible: bind $focused_client_exists(template.hyprland as <AstalHyprland.Hyprland>.focused-client) as <bool>;
+        tooltip-text: "Active client";
 
         styles [
           "client_label",
