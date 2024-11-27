@@ -2,6 +2,7 @@
 <gresources>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
+        <file>assets/colloid-notif-sound.opus</file>
         <file preprocess="xml-stripblanks">ui/CircularProgressBar.ui</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
         <file preprocess="xml-stripblanks">ui/Mpris.ui</file>

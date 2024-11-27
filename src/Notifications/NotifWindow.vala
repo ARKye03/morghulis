@@ -1,6 +1,7 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotifWindow.ui")]
 public class NotifWindow : Gtk.Box {
 	private AstalNotifd.Notifd notifd;
+	Gtk.MediaFile notif_sound;
 
 	[GtkChild]
 	private unowned Gtk.ListBox notifications;
@@ -12,8 +13,12 @@ public class NotifWindow : Gtk.Box {
 	construct {
 		notifd = AstalNotifd.get_default();
 		this.notifd.notifications.@foreach(n => this.on_notification_added(n.id, false, this.notifications));
-		this.notifd.notified.connect((id, replace) => this.on_notification_added(id, replace, this.notifications));
+		this.notifd.notified.connect((id, replace) => {
+			this.on_notification_added(id, replace, this.notifications);
+			this.notif_sound.play();
+		});
 		this.notifd.resolved.connect((id) => this.remove_notification(id, this.notifications));
+		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
 	}
 
 	private void on_notification_added(uint notification_id, bool is_replaced, Gtk.ListBox notif_list_box) {
