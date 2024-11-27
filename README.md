@@ -60,7 +60,7 @@ morghulctl --help
 
 ### Style
 
-You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. *Hot Reload* is supported.
+You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. *Hot Reload* is supported. As previously mentioned, Adwaita theme is needed.
 
 ## Development
 
