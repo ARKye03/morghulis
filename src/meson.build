@@ -1,19 +1,13 @@
+subdir('Modules')
+subdir('NavBar')
+subdir('Notifications')
+subdir('OnScreenDisplay')
+subdir('QuickMenu')
+subdir('Runner')
+
 project_resources += [
     'Main.vala',
-    'App.vala',
-    'StatusBar.vala',
-    'SideDashboard.vala',
-    'sdButton.vala',
-    'sdPowerBox.vala',
-    'sdSettings.vala',
-    'sdSliderBox.vala',
-    'NotifPop.vala',
-    'NotifWindow.vala',
-    'Runner.vala',
-    'RunnerButton.vala',
-    'Mpris.vala',
-    'OnScreenDisplay.vala',
-    'CircularProgressBar.vala'
+    'App.vala'
 ]
 
 executable(

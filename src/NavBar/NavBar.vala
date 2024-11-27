@@ -1,9 +1,9 @@
 using AstalHyprland;
 using GtkLayerShell;
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/StatusBar.ui")]
-public class StatusBar : Astal.Window {
-	public static StatusBar instance { get; private set; }
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
+public class NavBar : Astal.Window {
+	public static NavBar instance { get; private set; }
 // Properties
 	private AstalMpris.Mpris mpris { get; set; }
 	private AstalNotifd.Notifd notifd { get; set; }
@@ -20,16 +20,7 @@ public class StatusBar : Astal.Window {
 	public unowned Gtk.Box workspaces;
 
 	[GtkChild]
-	public unowned Gtk.Button apps_button;
-
-	[GtkChild]
-	public unowned Gtk.Label client_label;
-
-	[GtkChild]
 	public unowned Gtk.Label clock;
-
-	[GtkChild]
-	public unowned Gtk.Button power_button;
 
 	[GtkChild]
 	public unowned Gtk.Popover notif_popover;
@@ -45,7 +36,7 @@ public class StatusBar : Astal.Window {
 	[GtkCallback]
 	public void toggle_side_dashboard() {
 		try {
-			Morghulis.instance.toggle_window("SideDashboard");
+			Morghulis.instance.toggle_window("QuickMenu");
 		} catch (GLib.Error e) {
 			warning("Failed to toggle window: %s", e.message);
 		}
@@ -93,8 +84,9 @@ public class StatusBar : Astal.Window {
 		" ",
 	};
 
-	public StatusBar() {
+	public NavBar() {
 		Object(
+			namespace : "NavBar",
 			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 			);
 		present();
@@ -183,7 +175,7 @@ public class StatusBar : Astal.Window {
 					button.set_css_classes(new string[] { "focused" });
 				}
 				else if (workspace_exists(index + 1)) {
-					button.set_css_classes(new string[] { "has-windows" });
+					button.set_css_classes(new string[] { "has_windows" });
 				}
 				else {
 					button.set_css_classes(new string[] { "empty" });

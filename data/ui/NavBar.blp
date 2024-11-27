@@ -4,13 +4,13 @@ using AstalHyprland 0.1;
 using AstalBattery 0.1;
 using AstalPowerProfiles 0.1;
 
-template $StatusBar: Astal.Window {
+template $NavBar: Astal.Window {
   styles [
-    "StatusBar_Master"
+    "NavBar_Master"
   ]
 
-  title: "StatusBar";
-  namespace: "StatusBar";
+  title: "NavBar";
+  namespace: "NavBar";
   exclusivity: exclusive;
   // anchor: left | bottom | right; For some reason this is not working
   CenterBox {
@@ -24,9 +24,9 @@ template $StatusBar: Astal.Window {
         clicked => $toggle_runner();
 
         styles [
-          "statusbar_box",
+          "NavBar_box",
           "view",
-          "statusbar_button"
+          "NavBar_button"
         ]
       }
 
@@ -38,7 +38,7 @@ template $StatusBar: Astal.Window {
 
         styles [
           "client_label",
-          "statusbar_box",
+          "NavBar_box",
           "view"
         ]
       }
@@ -51,7 +51,7 @@ template $StatusBar: Astal.Window {
 
       styles [
         "workspaces",
-        "statusbar_box",
+        "NavBar_box",
         "view"
       ]
     }
@@ -69,9 +69,9 @@ template $StatusBar: Astal.Window {
           clicked => $notif_popover_popup();
 
           styles [
-            "statusbar_box",
+            "NavBar_box",
             "view",
-            "statusbar_button"
+            "NavBar_button"
           ]
 
           Box {
@@ -110,7 +110,7 @@ template $StatusBar: Astal.Window {
         visible: bind template.battery as <AstalBattery.Device>.is-present;
 
         styles [
-          "statusbar_box",
+          "NavBar_box",
           "view"
         ]
 
@@ -137,8 +137,8 @@ template $StatusBar: Astal.Window {
         name: "clock";
 
         styles [
-          "statusbar_label",
-          "statusbar_box",
+          "NavBar_label",
+          "NavBar_box",
           "view"
         ]
       }
@@ -151,9 +151,9 @@ template $StatusBar: Astal.Window {
         clicked => $toggle_side_dashboard();
 
         styles [
-          "statusbar_box",
+          "NavBar_box",
           "view",
-          "statusbar_button"
+          "NavBar_button"
         ]
       }
     }

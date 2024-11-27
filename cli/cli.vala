@@ -5,12 +5,12 @@ public class MorghulCTL {
 
 	public static int main(string[] args) {
 		var options = new OptionEntry[] {
+			{ "request", 'r', OptionFlags.NONE, OptionArg.STRING, out request, "Send request to the application", "REQUEST" },
 			{ "start", 0, OptionFlags.NONE, OptionArg.NONE, out start, "Start the application", null },
 			{ "toggle-window", 't', OptionFlags.NONE, OptionArg.STRING, out toggle_window, "Toggle window(s)", "WINDOW" },
 			{ "show-inspector", 'i', OptionFlags.NONE, OptionArg.NONE, out show_inspector, "Show inspector", null },
 			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, out quit, "Quit the application", null },
 			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, out show_version, "Show version", null },
-			{ null }
 		};
 
 		var context = new OptionContext(null);
@@ -28,24 +28,31 @@ public class MorghulCTL {
 			stdout.printf("Morghulis version %s\n", version);
 			return 0;
 		}
-
-		if (start) {
+		else if (start) {
 			return start_morghulis();
 		}
-
-		if (toggle_window != null) {
+		else if (toggle_window != null) {
 			return toggle_window_func(toggle_window);
 		}
-
-		if (show_inspector) {
+		else if (show_inspector) {
 			return toggle_inspector();
 		}
-
-		if (quit) {
+		else if (quit) {
 			return exit_morghulis();
 		}
-		stderr.printf("No valid options provided. Use --help for usage information.\n");
-		return 1;
+		else {
+			return send_request(request);
+		}
+	}
+
+	private static int send_request(string req) {
+		try {
+			GLib.Process.spawn_command_line_async(@"astal -i morghulis $req");
+		} catch (GLib.Error e) {
+			stderr.printf("Failed to send request: %s\n", e.message);
+			return 1;
+		}
+		return 0;
 	}
 
 	private static int exit_morghulis() {
@@ -78,28 +85,22 @@ public class MorghulCTL {
 		return 0;
 	}
 
-	private static int start_morghulis() {
-		if (is_process_running("morghulis")) {
-			stdout.printf("Process already running\n");
-			return 0;
-		}
-
+	private static string ? find_morghulis_binary() {
 		try {
-			GLib.Pid child_pid;
-			Process.spawn_async(
-				null,
-				new string[] { "/usr/bin/morghulis" },
-				null,
-				SpawnFlags.DO_NOT_REAP_CHILD,
-				null,
-				out child_pid
-				);
-			stdout.printf("Starting the application…\n");
+			string output;
+			string error;
+			int exit_status;
+			Process.spawn_command_line_sync("which morghulis", out output, out error, out exit_status);
+			if (exit_status == 0 && output.strip() != "") {
+				return output.strip();
+			}
+			else {
+				return null;
+			}
 		} catch (SpawnError e) {
-			stderr.printf("Failed to start the application: %s\n", e.message);
-			return 1;
+			stderr.printf("Failed to find morghulis binary: %s\n", e.message);
+			return null;
 		}
-		return 0;
 	}
 
 	private static bool is_process_running(string process_name) {
@@ -115,6 +116,37 @@ public class MorghulCTL {
 		}
 	}
 
+	private static int start_morghulis() {
+		if (is_process_running("morghulis")) {
+			stdout.printf("Morghulis process is already running.\n");
+			return 0;
+		}
+
+		string ?morghulis_path = find_morghulis_binary();
+		if (morghulis_path == null) {
+			stderr.printf("Morghulis binary not found in PATH.\n");
+			return 1;
+		}
+
+		try {
+			GLib.Pid child_pid;
+			Process.spawn_async(
+				null,
+				new string[] { morghulis_path },
+				null,
+				SpawnFlags.DO_NOT_REAP_CHILD,
+				null,
+				out child_pid
+				);
+			stdout.printf("Starting the application…\n");
+		} catch (SpawnError e) {
+			stderr.printf("Failed to start the application: %s\n", e.message);
+			return 1;
+		}
+		return 0;
+	}
+
+	private static string request = "";
 	private static bool start = false;
 	private static string ?toggle_window = null;
 	private static bool show_inspector = false;

@@ -3,13 +3,13 @@
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
         <file preprocess="xml-stripblanks">ui/CircularProgressBar.ui</file>
-        <file preprocess="xml-stripblanks">ui/StatusBar.ui</file>
+        <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
         <file preprocess="xml-stripblanks">ui/Mpris.ui</file>
-        <file preprocess="xml-stripblanks">ui/SideDashboard.ui</file>
-        <file preprocess="xml-stripblanks">ui/sdButton.ui</file>
-        <file preprocess="xml-stripblanks">ui/sdPowerBox.ui</file>
-        <file preprocess="xml-stripblanks">ui/sdSettings.ui</file>
-        <file preprocess="xml-stripblanks">ui/sdSliderBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>
+        <file preprocess="xml-stripblanks">ui/QButton.ui</file>
+        <file preprocess="xml-stripblanks">ui/PowerBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/Settings.ui</file>
+        <file preprocess="xml-stripblanks">ui/SliderBox.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner.ui</file>
         <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>

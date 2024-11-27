@@ -6,11 +6,11 @@ public static void main(string[] args) {
 }
 
 private void init_types() {
-	typeof(SideDashboard).ensure();
-	typeof(sdButton).ensure();
-	typeof(sdPowerBox).ensure();
-	typeof(sdSettings).ensure();
-	typeof(sdSliderBox).ensure();
+	typeof(QuickMenu).ensure();
+	typeof(QButton).ensure();
+	typeof(PowerBox).ensure();
+	typeof(Settings).ensure();
+	typeof(SliderBox).ensure();
 	typeof(OnScreenDisplay).ensure();
 	typeof(NotifPop).ensure();
 	typeof(NotifWindow).ensure();

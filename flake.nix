@@ -94,6 +94,7 @@
             io
             astal4
             battery
+            powerprofiles
             bluetooth
           ];
           shell = pkgs.mkShell.override

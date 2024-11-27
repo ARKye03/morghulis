@@ -6,6 +6,7 @@
     - [From source](#from-source)
     - [Arch Linux](#arch-linux)
   - [Usage](#usage)
+    - [Style](#style)
   - [Development](#development)
     - [Nix](#nix)
   - [Features](#features)
@@ -56,6 +57,10 @@ morghulctl --help
 
 > [!NOTE]
 > The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
+
+### Style
+
+You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. *Hot Reload* is supported.
 
 ## Development
 

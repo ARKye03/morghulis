@@ -4,12 +4,12 @@ using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 using AstalNotifd 0.1;
 
-template $sdSettings: Grid {
+template $Settings: Grid {
     hexpand: true;
     vexpand: true;
     column-spacing: 5;
     row-spacing: 5;
-    // Grid for sdButtons
+    // Grid for QButtons
     Grid quick_settings_buttons {
         layout {
             row: 0;
@@ -26,7 +26,7 @@ template $sdSettings: Grid {
             "quick_settings_grid_box"
         ]
 
-        $sdButton {
+        $QButton {
             clicked => $network_clicked();
             icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
             active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
@@ -37,7 +37,7 @@ template $sdSettings: Grid {
             }
         }
 
-        $sdButton {
+        $QButton {
             icon: bind $active_vpn(template.network) as <string>;
             clicked => $toggle_vpn();
 
@@ -47,7 +47,7 @@ template $sdSettings: Grid {
             }
         }
 
-        $sdButton {
+        $QButton {
             icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
             active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
             clicked => $bluetooth_clicked();
@@ -59,14 +59,14 @@ template $sdSettings: Grid {
             }
         }
 
-        $sdButton {
+        $QButton {
             layout {
                 row: 1;
                 column: 1;
             }
         }
 
-        $sdButton {
+        $QButton {
             layout {
                 row: 2;
                 column: 0;

@@ -1,8 +1,12 @@
 APP_NAME := "morghulis"
 BIN_DIR := "build"
+CLI_APP_NAME := "morghulctl"
 
 run: build
     ./{{BIN_DIR}}/src/{{APP_NAME}}
+
+cli: build
+    ./{{BIN_DIR}}/cli/{{CLI_APP_NAME}}
 
 init:
     meson setup build

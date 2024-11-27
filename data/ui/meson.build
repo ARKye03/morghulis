@@ -1,15 +1,15 @@
 blueprints = custom_target(
     'blueprints',
     input: files(
-        'StatusBar.blp',
+        'NavBar.blp',
         'OnScreenDisplay.blp',
         'CircularProgressBar.blp',
-        # SideDashboard components
-        'SideDashboard.blp',
-        'sdButton.blp',
-        'sdPowerBox.blp',
-        'sdSettings.blp',
-        'sdSliderBox.blp',
+        # QuickMenu components
+        'QuickMenu.blp',
+        'QButton.blp',
+        'PowerBox.blp',
+        'Settings.blp',
+        'SliderBox.blp',
         'Mpris.blp',
         # Runner components
         'Runner.blp',

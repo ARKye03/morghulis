@@ -1,0 +1,1 @@
+project_resources += files('OnScreenDisplay.vala')

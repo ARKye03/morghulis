@@ -1,5 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/sdPowerBox.ui")]
-public class sdPowerBox : Gtk.Box {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
+public class PowerBox : Gtk.Box {
 	construct {
 		uptime();
 	}
