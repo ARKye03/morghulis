@@ -17,6 +17,8 @@
           version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile ./version);
           buildName = "morghulis";
           appName = "${buildName}-${version}";
+          cliBuildName = "morghulctl";
+          cliAppName = "morghulctl-${version}";
           stdenv = pkgs.gcc14Stdenv;
 
           nix-utils = with pkgs; [
@@ -42,7 +44,8 @@
             installPhase = ''
               mkdir -p $out/bin
               cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
-              chmod +x $out/bin/${appName}
+              cp -r $TMPDIR/buildNix/cli/${cliBuildName} $out/bin/${cliAppName}
+              chmod +x $out/bin/${appName} $out/bin/${cliAppName}
             '';
 
             meta = with pkgs.lib; {
@@ -56,12 +59,29 @@
             installPhase = ''
               mkdir -p $out/bin
               cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
+              cp -r $TMPDIR/buildNix/cli/${cliBuildName} $out/bin/${cliAppName}
+              
+              # Patch the binary
               ${pkgs.patchelf}/bin/patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 $out/bin/${appName}
               ${pkgs.patchelf}/bin/patchelf --set-rpath /lib:/usr/lib $out/bin/${appName}
               ${pkgs.patchelf}/bin/patchelf --shrink-rpath $out/bin/${appName}
-              chmod +x $out/bin/${appName}
+              
+              # Patch the cli binary
+              ${pkgs.patchelf}/bin/patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 $out/bin/${cliAppName}
+              ${pkgs.patchelf}/bin/patchelf --set-rpath /lib:/usr/lib $out/bin/${cliAppName}
+              ${pkgs.patchelf}/bin/patchelf --shrink-rpath $out/bin/${cliAppName}
+              chmod +x $out/bin/${appName} $out/bin/${cliAppName}
             '';
           };
+          pkg-tarball = pkgs.runCommand "morghulis-tarball"
+            {
+              buildInputs = [ pkgs.gnutar pkgs.xz ];
+            } ''
+            mkdir -p $out
+            cp ${fhs-morghulis}/bin/${appName} $out/
+            cp ${fhs-morghulis}/bin/${cliAppName} $out/
+            tar -cJf $out/morghulis-${version}.tar.xz -C $out ${appName} ${cliAppName}
+          '';
           gtk-utils = with pkgs; [
             gtk4
             gtk4-layer-shell
@@ -127,6 +147,7 @@
           packages = {
             default = nix-morghulis;
             fhs = fhs-morghulis;
+            tarball = pkg-tarball;
           };
           apps = {
             default = {
