@@ -3,8 +3,8 @@
 
 .NavBar_Master {
     background-color: adw.$window_bg_color;
-    min-height: 50px;
-    border-radius: Colors.$master-border-radius;
+    border-top-left-radius: Colors.$master-border-radius;
+    border-top-right-radius: Colors.$master-border-radius;
     padding: 0 5px;
 }
 

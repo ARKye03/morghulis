@@ -2,18 +2,10 @@
 
 $master-border-color: #8839ef;
 
-// border: $borders_line-width $border_line_style $border_line_color;
-$borders_line-width: 1px;
-$border_line_style: groove;
-$border_line_color: adw.$dark_3;
 
 @mixin MasterBorder {
-  border: $borders_line-width $border_line_style adw.$borders_color;
+  // border: 1px solid adw.$borders_color;
+  border: unset;
 }
 
-@mixin MasterWidget {
-  @include MasterBorder;
-  border-radius: 10px;
-}
-
-$master-border-radius: 5px;
+$master-border-radius: 10px;
