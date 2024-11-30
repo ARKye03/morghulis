@@ -17,6 +17,9 @@ rinit:
 build:
     ninja -C {{BIN_DIR}}
 
+dist:
+    meson -C {{BIN_DIR}} --no-tests dist
+
 install:
     meson install -C {{BIN_DIR}}
 
