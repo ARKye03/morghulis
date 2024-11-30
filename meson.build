@@ -1,7 +1,7 @@
 project(
   'morghulis',
   ['vala', 'c'],
-  version: '0.1',
+  version: run_command('cat', 'version').stdout().strip(),
   meson_version: '>= 1.4.0',
 )
 
