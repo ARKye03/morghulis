@@ -16,44 +16,38 @@ template $Runner: Astal.Window {
         key-released => $key_released();
     }
 
-    Revealer {
-        transition-duration: 300;
-        transition-type: slide_up;
-        reveal-child: bind template.visible;
+    Box {
+        orientation: vertical;
+        spacing: 5;
 
-        Box {
-            orientation: vertical;
-            spacing: 5;
+        styles [
+            "runner_master_box"
+        ]
+
+        Entry entry {
+            primary-icon-name: "system-search-symbolic";
+            changed => $update_list();
+            activate => $launch_first_runner_button();
+        }
+
+        ScrolledWindow {
+            max-content-height: 500;
+            height-request: 500;
+            propagate-natural-height: true;
+            overflow: hidden;
 
             styles [
-                "runner_master_box"
+                "scroll-list"
             ]
 
-            Entry entry {
-                primary-icon-name: "system-search-symbolic";
-                changed => $update_list();
-                activate => $launch_first_runner_button();
-            }
-
-            ScrolledWindow {
-                max-content-height: 500;
-                height-request: 500;
-                propagate-natural-height: true;
-                overflow: hidden;
+            ListBox app_list {
+                hexpand: true;
+                valign: start;
+                selection-mode: none;
 
                 styles [
-                    "scroll-list"
+                    "boxed-list"
                 ]
-
-                ListBox app_list {
-                    hexpand: true;
-                    valign: start;
-                    selection-mode: none;
-
-                    styles [
-                        "boxed-list"
-                    ]
-                }
             }
         }
     }
