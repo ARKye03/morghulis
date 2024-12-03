@@ -1,23 +1,22 @@
+targets = files(
+    'CircularProgressBar.blp',
+    'Mpris.blp',
+    'NavBar.blp',
+    'NotifPop.blp',
+    'NotifWindow.blp',
+    'OnScreenDisplay.blp',
+    'PowerBox.blp',
+    'QButton.blp',
+    'QuickMenu.blp',
+    'Runner.blp',
+    'RunnerButton.blp',
+    'Settings.blp',
+    'SliderBox.blp',
+)
+
 blueprints = custom_target(
     'blueprints',
-    input: files(
-        'NavBar.blp',
-        'OnScreenDisplay.blp',
-        'CircularProgressBar.blp',
-        # QuickMenu components
-        'QuickMenu.blp',
-        'QButton.blp',
-        'PowerBox.blp',
-        'Settings.blp',
-        'SliderBox.blp',
-        'Mpris.blp',
-        # Runner components
-        'Runner.blp',
-        'RunnerButton.blp',
-        # Notification components
-        'NotifWindow.blp',
-        'NotifPop.blp',
-    ),
+    input: targets,
     output: '.',
     command: [
         find_program('blueprint-compiler'),
