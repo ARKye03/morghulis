@@ -13,86 +13,80 @@ template $QuickMenu: Astal.Window {
     margin-right: 5;
     margin-bottom: 5;
 
-    Revealer {
-        transition-duration: 300;
-        transition-type: slide_up;
-        reveal-child: bind template.visible;
+    Grid {
+        styles [
+            "quick_settings_grid"
+        ]
 
-        Grid {
+        column-homogeneous: true;
+        column-spacing: 10;
+        row-spacing: 10;
+
+        Box {
+            hexpand: true;
+            vexpand: true;
+            homogeneous: true;
+
+            layout {
+                row: 0;
+                column: 0;
+            }
+
             styles [
-                "quick_settings_grid"
+                "quick_settings_grid_box"
             ]
 
-            column-homogeneous: true;
-            column-spacing: 10;
-            row-spacing: 10;
-
-            Box {
-                hexpand: true;
-                vexpand: true;
-                homogeneous: true;
-
-                layout {
-                    row: 0;
-                    column: 0;
-                }
-
-                styles [
-                    "quick_settings_grid_box"
-                ]
-
-                Adw.Avatar {
-                    text: bind template.user_name;
-                    custom-image: bind template.user_image_paintable;
-                    show-initials: true;
-                    size: 100;
-                }
-
-                Label {
-                    label: bind template.user_name;
-                    halign: start;
-                }
+            Adw.Avatar {
+                text: bind template.user_name;
+                custom-image: bind template.user_image_paintable;
+                show-initials: true;
+                size: 100;
             }
 
-            // Calendar Grid (1:1)
-            Gtk.Calendar {
-                layout {
-                    row: 1;
-                    column: 0;
-                }
+            Label {
+                label: bind template.user_name;
+                halign: start;
+            }
+        }
 
-                hexpand: true;
-                vexpand: true;
-
-                styles [
-                    "quick_settings_grid_box"
-                ]
+        // Calendar Grid (1:1)
+        Gtk.Calendar {
+            layout {
+                row: 1;
+                column: 0;
             }
 
-            // Volume Slider (Box)
-            $SliderBox {
-                layout {
-                    row: 2;
-                    column: 0;
-                    row-span: 1;
-                }
-            }
+            hexpand: true;
+            vexpand: true;
 
-            $Settings {
-                layout {
-                    row: 0;
-                    column: 1;
-                    row-span: 3; // Increased to cover all rows
-                }
-            }
+            styles [
+                "quick_settings_grid_box"
+            ]
+        }
 
-            // Power Menu Info
-            $PowerBox {
-                layout {
-                    row: 4;
-                    column: 0;
-                    column-span: 2;
-                }
+        // Volume Slider (Box)
+        $SliderBox {
+            layout {
+                row: 2;
+                column: 0;
+                row-span: 1;
+            }
+        }
+
+        $Settings {
+            layout {
+                row: 0;
+                column: 1;
+                row-span: 3; // Increased to cover all rows
+            }
+        }
+
+        // Power Menu Info
+        $PowerBox {
+            layout {
+                row: 4;
+                column: 0;
+                column-span: 2;
             }
         }
     }

@@ -2,21 +2,37 @@
 public class Settings : Gtk.Grid {
 	public AstalNetwork.Network network { get; set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; set; }
-	public AstalNotifd.Notifd notifd { get; private set; }
 	public AstalMpris.Mpris mpris { get; private set; }
 
 	construct {
 		network = AstalNetwork.get_default();
 		mpris = AstalMpris.get_default();
 		bluetooth = AstalBluetooth.get_default();
-		this.mpris.players.@foreach((p) => this.on_player_added(p));
-		this.mpris.player_added.connect((p) => this.on_player_added(p));
-		this.mpris.player_closed.connect((p) => this.on_player_removed(p));
+		mpris.players.@foreach((p) => on_player_added(p));
+		mpris.player_added.connect((p) => on_player_added(p));
+		mpris.player_closed.connect((p) => on_player_removed(p));
 	}
 
 	[GtkCallback]
 	public void network_clicked() {
 		this.network.wifi.enabled = !this.network.wifi.enabled;
+	}
+
+	[GtkCallback]
+	public string network_connected(bool connected) {
+		return connected
+			   ? "Connected"
+			   : "Off";
+	}
+
+	[GtkCallback]
+	public string network_ssid(string identity) {
+		if (identity != "") {
+			return identity;
+		}
+		else {
+			return "Wifi";
+		}
 	}
 
 	[GtkCallback]
@@ -37,39 +53,13 @@ public class Settings : Gtk.Grid {
 	}
 
 	[GtkCallback]
-	public string active_vpn(AstalNetwork.Network network) {
-		return network.wifi.active_connection.vpn ? "network-vpn-symbolic" : "network-vpn-disabled-symbolic";
-	}
-
-	[GtkCallback]
-	public void toggle_vpn() {
-		try {
-			if (network.wifi.active_connection.vpn) {
-				Process.spawn_command_line_async("protonvpn-cli d");
-			}
-			else {
-				Process.spawn_command_line_async("protonvpn-cli c --cc US -p udp");
-			}
-		} catch (GLib.Error e) {
-			print("Error executing command: %s\n", e.message);
+	public string bluetooth_identity(string identity) {
+		if (identity != "") {
+			return identity;
 		}
-	}
-
-	[GtkCallback]
-	public string dont_disturb_icon(bool dnd) {
-		return dnd
-			   ? "notifications-disabled-symbolic"
-			   : "user-available-symbolic";
-	}
-
-	[GtkCallback]
-	public void toggle_disturb() {
-		this.notifd.dont_disturb = !this.notifd.dont_disturb;
-	}
-
-	[GtkCallback]
-	public void on_notif_arrow_clicked() {
-		//  nav_view.push_by_tag("notifications");
+		else {
+			return "Bluetooth";
+		}
 	}
 
 	[GtkChild]
@@ -115,5 +105,10 @@ public class Settings : Gtk.Grid {
 			this.players.insert(playing_widget, 0);
 			this.players.scroll_to(playing_widget, true);
 		}
+	}
+
+	[GtkCallback]
+	public void TODO() {
+		stdout.printf("TODO!\n");
 	}
 }

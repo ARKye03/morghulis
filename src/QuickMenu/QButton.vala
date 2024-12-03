@@ -1,11 +1,11 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QButton.ui")]
 public class QButton : Gtk.Box {
-	public AstalNetwork.Network network { get; set; }
-
 	public signal void clicked();
 	public signal void clicked_extras();
 
 	public string icon { get; set; }
+	public string identity { get; set; }
+	public string status { get; set; }
 
 	public bool active {
 		get {
@@ -44,6 +44,19 @@ public class QButton : Gtk.Box {
 		clicked_extras();
 	}
 
+	[GtkChild]
+	private unowned Gtk.Revealer extras_revealer;
+
+	[GtkCallback]
+	void motion_enter() {
+		extras_revealer.reveal_child = true;
+	}
+
+	[GtkCallback]
+	void motion_leave() {
+		extras_revealer.reveal_child = false;
+	}
+
 	static construct {
 		set_css_name("quick_settings_button");
 	}
@@ -51,6 +64,5 @@ public class QButton : Gtk.Box {
 		Object(
 			name: "Button"
 			);
-		network = AstalNetwork.get_default();
 	}
 }
