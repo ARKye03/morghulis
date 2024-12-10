@@ -34,6 +34,8 @@ template $QButton: Box {
 
                     Label qbutton_name {
                         label: bind template.identity;
+                        max-width-chars: 12;
+                        ellipsize: end;
 
                         styles [
                             "quick_settings_button_name"
@@ -42,6 +44,8 @@ template $QButton: Box {
 
                     Label qbutton_status {
                         label: bind template.status;
+                        max-width-chars: 12;
+                        ellipsize: end;
 
                         styles [
                             "quick_settings_button_status"
