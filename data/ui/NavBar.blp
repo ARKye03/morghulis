@@ -6,7 +6,7 @@ using AstalPowerProfiles 0.1;
 
 template $NavBar: Astal.Window {
   styles [
-    "NavBar_Master"
+    "nav_bar_master"
   ]
 
   title: "NavBar";
@@ -24,9 +24,9 @@ template $NavBar: Astal.Window {
         clicked => $toggle_runner();
 
         styles [
-          "NavBar_box",
+          "nav_bar_box",
           "view",
-          "NavBar_button"
+          "nav_bar_button"
         ]
       }
 
@@ -40,7 +40,7 @@ template $NavBar: Astal.Window {
 
         styles [
           "client_label",
-          "NavBar_box",
+          "nav_bar_box",
           "view"
         ]
       }
@@ -54,7 +54,7 @@ template $NavBar: Astal.Window {
 
         styles [
           "active_submap",
-          "NavBar_box",
+          "nav_bar_box",
           "view"
         ]
       }
@@ -67,7 +67,7 @@ template $NavBar: Astal.Window {
 
       styles [
         "workspaces",
-        "NavBar_box",
+        "nav_bar_box",
         "view"
       ]
     }
@@ -85,9 +85,9 @@ template $NavBar: Astal.Window {
           clicked => $notif_popover_popup();
 
           styles [
-            "NavBar_box",
+            "nav_bar_box",
             "view",
-            "NavBar_button"
+            "nav_bar_button"
           ]
 
           Box {
@@ -126,7 +126,7 @@ template $NavBar: Astal.Window {
         visible: bind template.battery as <AstalBattery.Device>.is-present;
 
         styles [
-          "NavBar_box",
+          "nav_bar_box",
           "view"
         ]
 
@@ -153,8 +153,8 @@ template $NavBar: Astal.Window {
         name: "clock";
 
         styles [
-          "NavBar_label",
-          "NavBar_box",
+          "nav_bar_label",
+          "nav_bar_box",
           "view"
         ]
       }
@@ -167,9 +167,9 @@ template $NavBar: Astal.Window {
         clicked => $toggle_side_dashboard();
 
         styles [
-          "NavBar_box",
+          "nav_bar_box",
           "view",
-          "NavBar_button"
+          "nav_bar_button"
         ]
       }
     }

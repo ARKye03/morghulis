@@ -1,21 +1,21 @@
 @use "Colors";
 @use "adw";
 
-.NavBar_Master {
+.nav_bar_master {
     background-color: adw.$window_bg_color;
     border-top-left-radius: Colors.$master-border-radius;
     border-top-right-radius: Colors.$master-border-radius;
     padding: 0 5px;
 }
 
-.NavBar_box {
+.nav_bar_box {
     margin: 5px 0;
     @include Colors.MasterBorder;
     border-radius: Colors.$master-border-radius;
     padding: 0 10px;
 }
 
-.NavBar_button {
+.nav_bar_button {
     background-color: adw.$view_bg_color;
     color: adw.$view_fg_color;
 }
@@ -38,7 +38,7 @@
     color: adw.$dark_1;
 }
 
-.NavBar_label {
+.nav_bar_label {
     font-size: 16px;
 }
 
