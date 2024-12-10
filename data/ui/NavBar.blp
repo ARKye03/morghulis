@@ -122,6 +122,33 @@ template $NavBar: Astal.Window {
         }
       }
 
+      Button {
+        clicked => $tray_popover_popup();
+
+        styles [
+          "nav_bar_box",
+          "view",
+          "nav_bar_button"
+        ]
+
+        Box {
+          Image tray_popover_icon {
+            icon-name: "go-up-symbolic";
+          }
+
+          Popover tray_popover {
+            position: top;
+            width-request: 100;
+            height-request: 50;
+            autohide: true;
+            has-arrow: false;
+            margin-bottom: 10;
+
+            $Tray tray {}
+          }
+        }
+      }
+
       Box {
         visible: bind template.battery as <AstalBattery.Device>.is-present;
 
@@ -158,8 +185,6 @@ template $NavBar: Astal.Window {
           "view"
         ]
       }
-
-      Box systray {}
 
       Button power_button {
         icon-name: "system-shutdown-symbolic";

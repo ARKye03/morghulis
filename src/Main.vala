@@ -15,4 +15,5 @@ private void init_types() {
 	typeof(NotifPop).ensure();
 	typeof(NotifWindow).ensure();
 	typeof(CircularProgressBar).ensure();
+	typeof(Tray).ensure();
 }

@@ -29,11 +29,19 @@ public class NavBar : Astal.Window {
 	public unowned Gtk.Label notif_count_label;
 
 	[GtkChild]
+	public unowned Gtk.Popover tray_popover;
+
+	[GtkChild]
 	public unowned Gtk.Label active_submap;
 
 	[GtkCallback]
 	public void notif_popover_popup() {
 		notif_popover.popup();
+	}
+
+	[GtkCallback]
+	public void tray_popover_popup() {
+		tray_popover.popup();
 	}
 
 	[GtkCallback]
