@@ -90,6 +90,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] Status Bar
   - [x] Workspace Switcher
   - [x] Focused Client
+  - [x] Systray
 - [x] Quick Settings
   - [x] Mpris Media Player
   - [x] Power Buttons
