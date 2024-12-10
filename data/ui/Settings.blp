@@ -33,8 +33,8 @@ template $Settings: Grid {
             }
 
             name: "Network";
-            identity: bind $network_ssid(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
-            status: bind $network_connected(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
+            identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
+            status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
             clicked => $network_clicked();
             icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
             active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
@@ -62,7 +62,7 @@ template $Settings: Grid {
 
             name: "Bluetooth";
             identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
-            status: bind $network_connected(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
+            status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
             icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
             active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
             clicked => $bluetooth_clicked();

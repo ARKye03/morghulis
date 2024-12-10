@@ -19,15 +19,15 @@ public class Settings : Gtk.Grid {
 	}
 
 	[GtkCallback]
-	public string network_connected(bool connected) {
+	public string conn_status(bool connected) {
 		return connected
 			   ? "Connected"
 			   : "Off";
 	}
 
 	[GtkCallback]
-	public string network_ssid(string identity) {
-		if (identity != "") {
+	public string network_identity(string ?identity) {
+		if (identity != null && identity != "") {
 			return identity;
 		}
 		else {
@@ -53,8 +53,8 @@ public class Settings : Gtk.Grid {
 	}
 
 	[GtkCallback]
-	public string bluetooth_identity(string identity) {
-		if (identity != "") {
+	public string bluetooth_identity(string ?identity) {
+		if (identity != null && identity != "") {
 			return identity;
 		}
 		else {
