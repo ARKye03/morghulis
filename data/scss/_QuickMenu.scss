@@ -18,6 +18,20 @@
     min-height: 60px;
     min-width: 70px;
 
+    & button {
+        border-radius: unset;
+    }
+
+    & .quick_settings_button_main {
+        border-top-left-radius: Colors.$master-border-radius;
+        border-bottom-left-radius: Colors.$master-border-radius;
+    }
+
+    & .quick_settings_button_extras {
+        border-top-right-radius: Colors.$master-border-radius;
+        border-bottom-right-radius: Colors.$master-border-radius;
+    }
+
     & .quick_settings_button_name {
         font-size: 12px;
         font-weight: bold;

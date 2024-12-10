@@ -44,19 +44,6 @@ public class QButton : Gtk.Box {
 		clicked_extras();
 	}
 
-	[GtkChild]
-	private unowned Gtk.Revealer extras_revealer;
-
-	[GtkCallback]
-	void motion_enter() {
-		extras_revealer.reveal_child = true;
-	}
-
-	[GtkCallback]
-	void motion_leave() {
-		extras_revealer.reveal_child = false;
-	}
-
 	static construct {
 		set_css_name("quick_settings_button");
 	}

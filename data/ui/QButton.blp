@@ -6,80 +6,64 @@ template $QButton: Box {
         "view"
     ]
 
-    Overlay {
-        Button {
-            clicked => $on_clicked();
+    Button {
+        clicked => $on_clicked();
+        hexpand: true;
+
+        styles [
+            "quick_settings_button_main"
+        ]
+
+        Box {
+            orientation: horizontal;
+            spacing: 10;
             hexpand: true;
 
-            styles [
-                "quick_settings_button_main"
-            ]
-
-            Box {
-                orientation: horizontal;
-                spacing: 10;
-                hexpand: true;
-
-                Image {
-                    icon-name: bind template.icon;
-                    pixel-size: 25;
-                }
-
-                Box {
-                    orientation: vertical;
-                    halign: center;
-                    valign: center;
-                    hexpand: true;
-                    spacing: 5;
-
-                    Label qbutton_name {
-                        label: bind template.identity;
-                        max-width-chars: 12;
-                        ellipsize: end;
-
-                        styles [
-                            "quick_settings_button_name"
-                        ]
-                    }
-
-                    Label qbutton_status {
-                        label: bind template.status;
-                        max-width-chars: 12;
-                        ellipsize: end;
-
-                        styles [
-                            "quick_settings_button_status"
-                        ]
-                    }
-                }
+            Image {
+                icon-name: bind template.icon;
+                pixel-size: 25;
             }
-        }
-
-        [overlay]
-        Revealer extras_revealer {
-            transition-type: slide_left;
-            transition-duration: 200;
-            reveal-child: false;
-            halign: end;
 
             Box {
-                Button {
+                orientation: vertical;
+                halign: center;
+                valign: center;
+                hexpand: true;
+                spacing: 5;
+
+                Label qbutton_name {
+                    label: bind template.identity;
+                    max-width-chars: 12;
+                    ellipsize: end;
+
                     styles [
-                        "quick_settings_button_extras"
+                        "quick_settings_button_name"
                     ]
+                }
 
-                    Image {
-                        icon-name: "pan-end-symbolic";
-                    }
+                Label qbutton_status {
+                    label: bind template.status;
+                    max-width-chars: 12;
+                    ellipsize: end;
 
-                    clicked => $on_clicked_extras();
+                    styles [
+                        "quick_settings_button_status"
+                    ]
                 }
             }
         }
     }
 
-    EventControllerMotion {
-        enter => $motion_enter();
-        leave => $motion_leave();
+    Separator {
+        orientation: vertical;
+    }
+
+    Button {
+        styles [
+            "quick_settings_button_extras"
+        ]
+
+        icon-name: "pan-end-symbolic";
+        clicked => $on_clicked_extras();
     }
 }
