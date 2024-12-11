@@ -110,7 +110,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 ## Preview
 
-![Morghulis](public/Morghulis.webm)
+![Morghulis](public/morghulis.webp)
 
 > [!NOTE]
 > The preview uses the adwaita-black theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
