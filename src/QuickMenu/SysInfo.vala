@@ -32,7 +32,6 @@ private class CpuMonitorBar : Gtk.Box {
 	private float load;
 
 	construct {
-		GTop.get_cpu(out cpu);
 		cpu_bar = new CircularProgressBar();
 		cpu_label = new Gtk.Label("CPU");
 		last_used = 0;
@@ -54,12 +53,11 @@ private class CpuMonitorBar : Gtk.Box {
 
 	public void update_cpu() {
 		// Get new CPU stats
-		GTop.Cpu new_cpu;
-		GTop.get_cpu(out new_cpu);
+		GTop.get_cpu(out cpu);
 
 		// Calculate deltas using unsigned 64-bit arithmetic
-		uint64 used = new_cpu.user + new_cpu.sys + new_cpu.nice + new_cpu.irq + new_cpu.softirq;
-		uint64 total = used + new_cpu.idle + new_cpu.iowait;
+		uint64 used = cpu.user + cpu.sys + cpu.nice + cpu.irq + cpu.softirq;
+		uint64 total = used + cpu.idle + cpu.iowait;
 
 		uint64 diff_used = used - last_used;
 		uint64 diff_total = total - last_total;
@@ -86,11 +84,10 @@ private class MemMonitorBar : Gtk.Box {
 	private CircularProgressBar mem_bar;
 	private Gtk.Label mem_label;
 
-	private double total = 0;
-	private double used = 0;
+	private uint64 available = 0;
+	private uint64 real_used = 0;
 
 	construct {
-		GTop.get_mem(out mem);
 		mem_bar = new CircularProgressBar();
 		mem_label = new Gtk.Label("Memory");
 
@@ -109,9 +106,10 @@ private class MemMonitorBar : Gtk.Box {
 	}
 
 	public void update_mem() {
-		used = mem.used;
-		total = mem.total;
-		double percentage = used / total;
-		mem_bar.percentage = percentage;
+		GTop.get_mem(out mem);
+
+		available = mem.free + mem.buffer + mem.cached;
+		real_used = mem.total - available;
+		mem_bar.percentage = (double)real_used / mem.total;
 	}
 }
