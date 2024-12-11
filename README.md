@@ -90,7 +90,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] Status Bar
   - [x] Workspace Switcher
   - [x] Focused Client
-  - [x] Systray
+  - [x] Systray[?](public/tray.md)
 - [x] Quick Settings
   - [x] Mpris Media Player
   - [x] Power Buttons
@@ -110,10 +110,10 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 ## Preview
 
-![Morghulis](public/morghulis.webp)
+![Morghulis](public/Morghulis.webm)
 
 > [!NOTE]
-> The preview uses the adwaita-dark theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
+> The preview uses the adwaita-black theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
 
 ## License
 

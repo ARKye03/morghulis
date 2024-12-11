@@ -1,0 +1,1 @@
+This [patch](public/tray-gtk4.patch) needs to be applied to [astal](https://github.com/Aylur/astal), and build [astal-tray](https://github.com/Aylur/astal/tree/main/lib/tray) with it, taken from [here](https://github.com/Aylur/astal/pull/68)
