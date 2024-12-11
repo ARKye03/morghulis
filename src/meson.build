@@ -1,4 +1,5 @@
 subdir('Modules')
+subdir('Tray')
 subdir('NavBar')
 subdir('Notifications')
 subdir('OnScreenDisplay')
@@ -10,10 +11,16 @@ project_resources += [
     'App.vala'
 ]
 
+vapidir = meson.current_source_dir() + '/vapi/'
+
 executable(
     project_name,
     project_resources,
-    vala_args: ['--gresourcesdir=data/'],
+    vala_args: [
+        '--gresourcesdir=data/',
+        '--vapidir=' + vapidir,
+    ],
+
     dependencies: [
         dependency('gtk4'),
         dependency('gtk4-layer-shell-0'),
@@ -25,13 +32,14 @@ executable(
         dependency('astal-hyprland-0.1'),
         dependency('astal-battery-0.1'),
         dependency('astal-power-profiles-0.1'),
-        # dependency('astal-tray-0.1'),
+        dependency('astal-tray-0.1'),
         dependency('astal-notifd-0.1'),
         dependency('astal-network-0.1'),
         dependency('astal-bluetooth-0.1'),
         dependency('astal-apps-0.1'),
         dependency('gio-unix-2.0'),
         dependency('libadwaita-1'),
+        dependency('libgtop-2.0'),
     ],
     link_args: ['-lm'], # Link math library
     install: true,

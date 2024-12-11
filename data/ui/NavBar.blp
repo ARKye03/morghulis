@@ -61,7 +61,7 @@ template $NavBar: Astal.Window {
     }
 
     [center]
-    Box workspaces {
+    $HyprWorkspaces {
       name: "workspaces";
       spacing: 5;
 
@@ -122,6 +122,32 @@ template $NavBar: Astal.Window {
         }
       }
 
+      Button {
+        clicked => $tray_popover_popup();
+
+        styles [
+          "nav_bar_box",
+          "view",
+          "nav_bar_button"
+        ]
+
+        Box {
+          Image tray_popover_icon {
+            icon-name: "go-up-symbolic";
+          }
+
+          Popover tray_popover {
+            position: top;
+            height-request: 50;
+            autohide: true;
+            has-arrow: false;
+            margin-bottom: 10;
+
+            $Tray tray {}
+          }
+        }
+      }
+
       Box {
         visible: bind template.battery as <AstalBattery.Device>.is-present;
 
@@ -149,17 +175,32 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Label clock {
-        name: "clock";
+      Button {
+        clicked => $clock_popover_popup();
 
         styles [
           "nav_bar_label",
           "nav_bar_box",
-          "view"
+          "nav_bar_button"
         ]
-      }
 
-      Box systray {}
+        Box {
+          Popover clock_popover {
+            position: top;
+            width-request: 350;
+            height-request: 250;
+            autohide: true;
+            has-arrow: false;
+            margin-bottom: 10;
+
+            Calendar {}
+          }
+
+          Label clock {
+            name: "clock";
+          }
+        }
+      }
 
       Button power_button {
         icon-name: "system-shutdown-symbolic";

@@ -3,9 +3,7 @@ using GtkLayerShell;
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu.ui")]
 public class QuickMenu : Astal.Window {
 	public AstalWp.Endpoint speaker { get; set; }
-	public string user_name { get; set; }
-	public string user_image { get; set; }
-	public Gdk.Paintable user_image_paintable { get; set; }
+	public AstalMpris.Mpris mpris { get; private set; }
 
 	public QuickMenu() {
 		Object(
@@ -14,15 +12,28 @@ public class QuickMenu : Astal.Window {
 	}
 
 	construct {
-		user_name = @"Hello there $(Environment.get_user_name ())";
-		user_image = Environment.get_home_dir() + "/user.png";
-		try {
-			var pixbuf = new Gdk.Pixbuf.from_file(user_image);
-			if (pixbuf != null) {
-				user_image_paintable = Gdk.Texture.for_pixbuf(pixbuf);
+		mpris = AstalMpris.get_default();
+		mpris.players.@foreach((p) => on_player_added(p));
+		mpris.player_added.connect((p) => on_player_added(p));
+		mpris.player_closed.connect((p) => on_player_removed(p));
+	}
+
+	[GtkChild]
+	private unowned Adw.Carousel players;
+
+	private void on_player_added(AstalMpris.Player player) {
+		var mpris_widget = new Mpris(player);
+
+		this.players.append(mpris_widget);
+	}
+
+	private void on_player_removed(AstalMpris.Player player) {
+		for (int i = 0; i < this.players.n_pages; i++) {
+			Mpris p = (Mpris)this.players.get_nth_page(i);
+			if (p.player == player) {
+				this.players.remove(p);
+				break;
 			}
-		} catch (Error e) {
-			stderr.printf("Error loading image: %s\n", e.message);
 		}
 	}
 }

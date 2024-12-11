@@ -16,7 +16,6 @@
 
 using Gtk;
 using Cairo;
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/CircularProgressBar.ui")]
 public class CircularProgressBar : Gtk.DrawingArea {
 	private int _line_width;
 	private double _percentage;
@@ -77,19 +76,15 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 	[Description(nick = "Circle width", blurb = "The circle radius line width")]
 	public int line_width {
-		get {
-			return _line_width;
-		}
+		get { return _line_width; }
 		set {
 			if (value < 0) {
 				_line_width = 0;
 			}
-			else if (value > calculate_radius()) {
-				_line_width = calculate_radius();
-			}
 			else {
 				_line_width = value;
 			}
+			queue_draw();
 		}
 	}
 
@@ -127,9 +122,12 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		});
 	}
 
-	private int calculate_radius() {
-		return int.min(get_width() / 2, get_height() / 2) - 1;
-	}
+	//  private int calculate_radius() {
+	//  	int w = get_width() / 2;
+	//  	int h = get_height() / 2;
+	//  	int min_dim = int.min(w, h);
+	//  	return int.max(0, min_dim - 1);
+	//  }
 
 	public override Gtk.SizeRequestMode get_request_mode() {
 		return Gtk.SizeRequestMode.CONSTANT_SIZE;
@@ -146,21 +144,25 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 		color = Gdk.RGBA();
 
-		var center_x = get_width() / 2;
-		var center_y = get_height() / 2;
-		var radius = calculate_radius();
+		int center_x = width / 2;
+		int center_y = height / 2;
+		int radius = int.min(width / 2, height / 2) - 1;
 
-		if (radius - line_width < 0) {
+		int actual_line_width = line_width;
+		if (actual_line_width > radius) {
+			actual_line_width = radius;
+		}
+
+		if (radius - actual_line_width < 0) {
 			delta = 0;
-			line_width = radius;
+			actual_line_width = radius;
 		}
 		else {
-			delta = radius - (line_width / 2);
+			delta = radius - (actual_line_width / 2);
 		}
 
-		color = Gdk.RGBA();
 		cr.set_line_cap(line_cap);
-		cr.set_line_width(line_width);
+		cr.set_line_width(actual_line_width);
 
 		// Center Fill
 		if (center_filled == true) {
@@ -217,18 +219,18 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		layout.set_font_description(desc);
 		Pango.cairo_update_layout(cr, layout);
 		layout.get_size(out w, out h);
-		cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - 27);
+		cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - ((h / Pango.SCALE) / 2));
 		Pango.cairo_show_layout(cr, layout);
 
 		// Units indicator (percentage)
-		layout.set_text("PERCENT", -1);
-		desc = Pango.FontDescription.from_string(font + " 8");
-		layout.set_font_description(desc);
-		Pango.cairo_update_layout(cr, layout);
-		layout.get_size(out w, out h);
-		cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y + 13);
-		Pango.cairo_show_layout(cr, layout);
-		context.restore();
-		cr.restore();
+		//  layout.set_text("PERCENT", -1);
+		//  desc = Pango.FontDescription.from_string(font + " 8");
+		//  layout.set_font_description(desc);
+		//  Pango.cairo_update_layout(cr, layout);
+		//  layout.get_size(out w, out h);
+		//  cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y + 13);
+		//  Pango.cairo_show_layout(cr, layout);
+		//  context.restore();
+		//  cr.restore();
 	}
 }

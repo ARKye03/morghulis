@@ -1,5 +1,4 @@
 targets = files(
-    'CircularProgressBar.blp',
     'Mpris.blp',
     'NavBar.blp',
     'NotifPop.blp',

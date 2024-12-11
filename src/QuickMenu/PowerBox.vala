@@ -1,27 +1,20 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
 public class PowerBox : Gtk.Box {
+	public string user_name { get; set; }
+	public string user_image { get; set; }
+	public Gdk.Paintable user_image_paintable { get; set; }
+
 	construct {
-		uptime();
-	}
-	[GtkChild]
-	public unowned Gtk.Label uptime_label;
-
-	private static string stdout;
-	private void uptime() {
-		update_uptime();
-		GLib.Timeout.add(60000, () => {
-			update_uptime();
-			return true;
-		});
-	}
-
-	private void update_uptime() {
+		user_name = @"Hello there $(Environment.get_user_name())!";
+		user_image = Environment.get_home_dir() + "/user.png";
 		try {
-			Process.spawn_command_line_sync("uptime -p", out stdout);
+			var pixbuf = new Gdk.Pixbuf.from_file(user_image);
+			if (pixbuf != null) {
+				user_image_paintable = Gdk.Texture.for_pixbuf(pixbuf);
+			}
 		} catch (Error e) {
-			warning("Failed to get uptime: %s", e.message);
+			stderr.printf("Error loading image: %s\n", e.message);
 		}
-		uptime_label.label = stdout.strip();
 	}
 
 	[GtkCallback]

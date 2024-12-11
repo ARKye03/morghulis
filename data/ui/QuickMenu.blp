@@ -13,81 +13,44 @@ template $QuickMenu: Astal.Window {
     margin-right: 5;
     margin-bottom: 5;
 
-    Grid {
-        styles [
-            "quick_settings_grid"
-        ]
+    Box {
+        orientation: vertical;
+        spacing: 10;
 
-        column-homogeneous: true;
-        column-spacing: 10;
-        row-spacing: 10;
+        $Settings {
+            hexpand: true;
+            vexpand: false;
+        }
 
         Box {
             hexpand: true;
             vexpand: true;
-            homogeneous: true;
-
-            layout {
-                row: 0;
-                column: 0;
-            }
+            orientation: vertical;
 
             styles [
                 "quick_settings_grid_box"
             ]
 
-            Adw.Avatar {
-                text: bind template.user_name;
-                custom-image: bind template.user_image_paintable;
-                show-initials: true;
-                size: 100;
+            Adw.Carousel players {
+                orientation: horizontal;
+                spacing: 5;
+                hexpand: true;
+                vexpand: true;
             }
 
-            Label {
-                label: bind template.user_name;
-                halign: start;
+            Adw.CarouselIndicatorDots {
+                carousel: players;
             }
         }
 
-        // Calendar Grid (1:1)
-        Gtk.Calendar {
-            layout {
-                row: 1;
-                column: 0;
-            }
-
-            hexpand: true;
-            vexpand: true;
-
-            styles [
-                "quick_settings_grid_box"
-            ]
-        }
-
-        // Volume Slider (Box)
         $SliderBox {
-            layout {
-                row: 2;
-                column: 0;
-                row-span: 1;
-            }
+            hexpand: true;
+            vexpand: false;
         }
 
-        $Settings {
-            layout {
-                row: 0;
-                column: 1;
-                row-span: 3; // Increased to cover all rows
-            }
-        }
-
-        // Power Menu Info
         $PowerBox {
-            layout {
-                row: 4;
-                column: 0;
-                column-span: 2;
-            }
+            hexpand: true;
+            vexpand: false;
         }
     }
 }
