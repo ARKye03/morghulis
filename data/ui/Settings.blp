@@ -1,5 +1,4 @@
 using Gtk 4.0;
-using Adw 1;
 using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 
@@ -8,7 +7,7 @@ template $Settings: Grid {
     vexpand: true;
     column-spacing: 5;
     row-spacing: 5;
-    // Grid for QButtons
+
     Grid quick_settings_buttons {
         layout {
             row: 0;
@@ -92,42 +91,6 @@ template $Settings: Grid {
             clicked => $TODO();
             clicked_extras => $TODO();
             icon: "computer-fail";
-        }
-    }
-
-    // Grid for Carousel
-    Grid carousel_grid {
-        layout {
-            row: 3;
-            column: 0;
-        }
-
-        hexpand: true;
-        vexpand: true;
-
-        styles [
-            "quick_settings_grid_box"
-        ]
-
-        Adw.Carousel players {
-            layout {
-                row: 0;
-                column: 0;
-            }
-
-            orientation: horizontal;
-            spacing: 5;
-            hexpand: true;
-            vexpand: true;
-        }
-
-        Adw.CarouselIndicatorDots {
-            carousel: players;
-
-            layout {
-                row: 1;
-                column: 0;
-            }
         }
     }
 }
