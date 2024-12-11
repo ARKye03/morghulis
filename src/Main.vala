@@ -8,6 +8,7 @@ public static void main(string[] args) {
 private void init_types() {
 	typeof(HyprWorkspaces).ensure();
 	typeof(QuickMenu).ensure();
+	typeof(SysInfo).ensure();
 	typeof(QButton).ensure();
 	typeof(PowerBox).ensure();
 	typeof(Settings).ensure();

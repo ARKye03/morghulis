@@ -5,4 +5,5 @@ project_resources += files(
     'PowerBox.vala',
     'Settings.vala',
     'SliderBox.vala',
+    'SysInfo.vala',
 )

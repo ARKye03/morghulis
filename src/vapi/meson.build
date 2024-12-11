@@ -1,0 +1,1 @@
+project_resources += files('libgtop-2.0.vapi')
