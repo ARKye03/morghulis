@@ -16,7 +16,6 @@
 
 using Gtk;
 using Cairo;
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/CircularProgressBar.ui")]
 public class CircularProgressBar : Gtk.DrawingArea {
 	private int _line_width;
 	private double _percentage;

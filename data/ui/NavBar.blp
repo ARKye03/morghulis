@@ -138,7 +138,6 @@ template $NavBar: Astal.Window {
 
           Popover tray_popover {
             position: top;
-            width-request: 100;
             height-request: 50;
             autohide: true;
             has-arrow: false;
@@ -176,14 +175,31 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Label clock {
-        name: "clock";
+      Button {
+        clicked => $clock_popover_popup();
 
         styles [
           "nav_bar_label",
           "nav_bar_box",
-          "view"
+          "nav_bar_button"
         ]
+
+        Box {
+          Popover clock_popover {
+            position: top;
+            width-request: 350;
+            height-request: 250;
+            autohide: true;
+            has-arrow: false;
+            margin-bottom: 10;
+
+            Calendar {}
+          }
+
+          Label clock {
+            name: "clock";
+          }
+        }
       }
 
       Button power_button {

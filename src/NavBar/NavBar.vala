@@ -32,6 +32,9 @@ public class NavBar : Astal.Window {
 	public unowned Gtk.Popover tray_popover;
 
 	[GtkChild]
+	public unowned Gtk.Popover clock_popover;
+
+	[GtkChild]
 	public unowned Gtk.Label active_submap;
 
 	[GtkCallback]
@@ -42,6 +45,11 @@ public class NavBar : Astal.Window {
 	[GtkCallback]
 	public void tray_popover_popup() {
 		tray_popover.popup();
+	}
+
+	[GtkCallback]
+	public void clock_popover_popup() {
+		clock_popover.popup();
 	}
 
 	[GtkCallback]
