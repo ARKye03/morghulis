@@ -3,7 +3,6 @@ using GTop;
 public class SysInfo : Gtk.Box {
 	private AstalWp.Endpoint speaker { get; set; }
 
-
 	construct {
 		speaker = AstalWp.get_default().audio.default_speaker;
 
