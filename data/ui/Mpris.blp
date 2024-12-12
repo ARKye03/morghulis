@@ -40,10 +40,11 @@ template $Mpris: Box {
                 label: bind template.player as <AstalMpris.Player>.identity;
                 halign: start;
                 ellipsize: end;
-                max-width-chars: 15;
+                max-width-chars: 25;
 
                 styles [
-                    "player_name_label"
+                    "player_name_label",
+                    "dim-label"
                 ]
             }
 
@@ -51,7 +52,7 @@ template $Mpris: Box {
                 label: bind template.player as <AstalMpris.Player>.title;
                 halign: start;
                 ellipsize: end;
-                max-width-chars: 15;
+                max-width-chars: 18;
 
                 styles [
                     "title_label"
@@ -62,7 +63,7 @@ template $Mpris: Box {
                 label: bind template.player as <AstalMpris.Player>.artist;
                 halign: start;
                 ellipsize: end;
-                max-width-chars: 15;
+                max-width-chars: 20;
 
                 styles [
                     "artist_label"
