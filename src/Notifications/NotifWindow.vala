@@ -33,7 +33,7 @@ public class NotifWindow : Gtk.Box {
 	private void remove_notification(uint notification_id, Gtk.ListBox notif_list_box) {
 		int i = 0;
 
-		NotifPop ?notif_popup = (NotifPop)notif_list_box.get_row_at_index(0);
+		NotifPop? notif_popup = (NotifPop)notif_list_box.get_row_at_index(0);
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {

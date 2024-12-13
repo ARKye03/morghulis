@@ -22,7 +22,7 @@ public class SysInfo : Gtk.Box {
 }
 
 private class CpuMonitorBar : Gtk.Box {
-	private GTop.Cpu ?cpu;
+	private GTop.Cpu? cpu;
 	private CircularProgressBar cpu_bar;
 	private Gtk.Label cpu_label;
 
@@ -79,7 +79,7 @@ private class CpuMonitorBar : Gtk.Box {
 }
 
 private class MemMonitorBar : Gtk.Box {
-	private GTop.Memory ?mem;
+	private GTop.Memory? mem;
 	private CircularProgressBar mem_bar;
 	private Gtk.Label mem_label;
 

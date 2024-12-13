@@ -1,10 +1,10 @@
 public class Tray : Gtk.Box {
 	public AstalTray.Tray tray { get; private set; }
-	private HashTable <string, Gtk.Widget> items;
+	private HashTable<string, Gtk.Widget> items;
 
 	construct {
 		this.visible = false;
-		this.items = new HashTable <string, Gtk.Widget>(str_hash, str_equal);
+		this.items = new HashTable<string, Gtk.Widget>(str_hash, str_equal);
 		this.tray = AstalTray.get_default();
 		this.tray.item_added.connect((obj, item_id) => {
 			if (this.items.contains(item_id)) {

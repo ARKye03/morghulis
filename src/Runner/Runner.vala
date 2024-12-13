@@ -29,7 +29,7 @@ public class Runner : Astal.Window {
 	[GtkCallback]
 	public void update_list() {
 		int i = 0;
-		RunnerButton ?app = (RunnerButton)this.app_list.get_row_at_index(0);
+		RunnerButton? app = (RunnerButton)this.app_list.get_row_at_index(0);
 
 		while (app != null) {
 			app.score = apps.fuzzy_score(this.entry.text, app.app);

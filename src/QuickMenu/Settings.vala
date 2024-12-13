@@ -21,7 +21,7 @@ public class Settings : Gtk.Grid {
 	}
 
 	[GtkCallback]
-	public string network_identity(string ?identity) {
+	public string network_identity(string? identity) {
 		if (identity != null && identity != "") {
 			return identity;
 		}
@@ -48,7 +48,7 @@ public class Settings : Gtk.Grid {
 	}
 
 	[GtkCallback]
-	public string bluetooth_identity(string ?identity) {
+	public string bluetooth_identity(string? identity) {
 		if (identity != null && identity != "") {
 			return identity;
 		}

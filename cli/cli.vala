@@ -85,7 +85,7 @@ public class MorghulCTL {
 		return 0;
 	}
 
-	private static string ? find_morghulis_binary() {
+	private static string? find_morghulis_binary() {
 		try {
 			string output;
 			string error;
@@ -122,7 +122,7 @@ public class MorghulCTL {
 			return 0;
 		}
 
-		string ?morghulis_path = find_morghulis_binary();
+		string? morghulis_path = find_morghulis_binary();
 		if (morghulis_path == null) {
 			stderr.printf("Morghulis binary not found in PATH.\n");
 			return 1;
@@ -148,7 +148,7 @@ public class MorghulCTL {
 
 	private static string request = "";
 	private static bool start = false;
-	private static string ?toggle_window = null;
+	private static string? toggle_window = null;
 	private static bool show_inspector = false;
 	private static bool quit = false;
 	private static bool show_version = false;

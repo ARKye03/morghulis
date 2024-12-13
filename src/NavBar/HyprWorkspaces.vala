@@ -1,6 +1,6 @@
 using AstalHyprland;
 public class HyprWorkspaces : Gtk.Box {
-	private List <Gtk.Button> workspace_buttons;
+	private List<Gtk.Button> workspace_buttons;
 	public AstalHyprland.Hyprland hyprland { get; set; }
 	public int focused_workspace_id { get; set; }
 
@@ -14,7 +14,7 @@ public class HyprWorkspaces : Gtk.Box {
 
 	construct {
 		hyprland = AstalHyprland.Hyprland.get_default();
-		workspace_buttons = new List <Gtk.Button>();
+		workspace_buttons = new List<Gtk.Button>();
 		this.hyprland.bind_property("focused-workspace", this, "focused-workspace-id", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
 			var workspace = src as AstalHyprland.Workspace;
 			if (workspace != null) {
@@ -35,7 +35,6 @@ public class HyprWorkspaces : Gtk.Box {
 		setup_workspace_event_handlers();
 		setup_workspace_scroll();
 	}
-
 
 	private void setup_workspace_event_handlers() {
 		hyprland.notify["focused-workspace"].connect(update_workspaces);
