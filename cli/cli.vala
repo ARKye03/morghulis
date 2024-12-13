@@ -27,20 +27,15 @@ public class MorghulCTL {
 		if (show_version) {
 			stdout.printf("Morghulis version %s\n", version);
 			return 0;
-		}
-		else if (start) {
+		} else if (start) {
 			return start_morghulis();
-		}
-		else if (toggle_window != null) {
+		} else if (toggle_window != null) {
 			return toggle_window_func(toggle_window);
-		}
-		else if (show_inspector) {
+		} else if (show_inspector) {
 			return toggle_inspector();
-		}
-		else if (quit) {
+		} else if (quit) {
 			return exit_morghulis();
-		}
-		else {
+		} else {
 			return send_request(request);
 		}
 	}
@@ -93,8 +88,7 @@ public class MorghulCTL {
 			Process.spawn_command_line_sync("which morghulis", out output, out error, out exit_status);
 			if (exit_status == 0 && output.strip() != "") {
 				return output.strip();
-			}
-			else {
+			} else {
 				return null;
 			}
 		} catch (SpawnError e) {

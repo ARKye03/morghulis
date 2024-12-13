@@ -24,8 +24,7 @@ public class Settings : Gtk.Grid {
 	public string network_identity(string? identity) {
 		if (identity != null && identity != "") {
 			return identity;
-		}
-		else {
+		} else {
 			return "Wifi";
 		}
 	}
@@ -51,8 +50,7 @@ public class Settings : Gtk.Grid {
 	public string bluetooth_identity(string? identity) {
 		if (identity != null && identity != "") {
 			return identity;
-		}
-		else {
+		} else {
 			return "Bluetooth";
 		}
 	}

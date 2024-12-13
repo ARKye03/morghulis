@@ -64,8 +64,7 @@ private class CpuMonitorBar : Gtk.Box {
 		// Avoid division by zero and calculate load
 		if (diff_total > 0) {
 			load = (float)diff_used / (float)diff_total;
-		}
-		else {
+		} else {
 			load = 0.0f;
 		}
 

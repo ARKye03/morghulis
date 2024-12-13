@@ -36,11 +36,9 @@ public class NotifPop : ListBoxRow {
 		this.init_actions();
 		if (notification.urgency == AstalNotifd.Urgency.CRITICAL) {
 			this.add_css_class("critical");
-		}
-		else if (notification.urgency == AstalNotifd.Urgency.LOW) {
+		} else if (notification.urgency == AstalNotifd.Urgency.LOW) {
 			this.add_css_class("low");
-		}
-		else {
+		} else {
 			this.add_css_class("normal");
 		}
 	}

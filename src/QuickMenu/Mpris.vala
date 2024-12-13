@@ -35,8 +35,7 @@ public class Mpris : Gtk.Box {
 	public string art_url(string url) {
 		if (url == null) {
 			return "";
-		}
-		else {
+		} else {
 			return url.substring(7);
 		}
 	}
@@ -48,8 +47,7 @@ public class Mpris : Gtk.Box {
 
 		if (seconds < 10) {
 			return @"$minutes:0$seconds";
-		}
-		else {
+		} else {
 			return @"$minutes:$seconds";
 		}
 	}
@@ -61,8 +59,7 @@ public class Mpris : Gtk.Box {
 
 		if (seconds < 10) {
 			return @"$minutes:0$seconds";
-		}
-		else {
+		} else {
 			return @"$minutes:$seconds";
 		}
 	}

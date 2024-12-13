@@ -80,8 +80,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		set {
 			if (value < 0) {
 				_line_width = 0;
-			}
-			else {
+			} else {
 				_line_width = value;
 			}
 			queue_draw();
@@ -96,11 +95,9 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		set {
 			if (value > 1.0) {
 				_percentage = 1.0;
-			}
-			else if (value < 0.0) {
+			} else if (value < 0.0) {
 				_percentage = 0.0;
-			}
-			else {
+			} else {
 				_percentage = value;
 			}
 		}
@@ -156,8 +153,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		if (radius - actual_line_width < 0) {
 			delta = 0;
 			actual_line_width = radius;
-		}
-		else {
+		} else {
 			delta = radius - (actual_line_width / 2);
 		}
 
@@ -193,8 +189,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 					   1.5 * Math.PI,
 					   (1.5 + percentage * 2) * Math.PI);
 				cr.fill();
-			}
-			else {
+			} else {
 				cr.arc(center_x,
 					   center_y,
 					   delta,

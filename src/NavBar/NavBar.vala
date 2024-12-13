@@ -117,8 +117,7 @@ public class NavBar : Astal.Window {
 			if (value != null && value != "") {
 				active_submap.label = value;
 				active_submap.set_visible(true);
-			}
-			else {
+			} else {
 				active_submap.set_visible(false);
 			}
 		});

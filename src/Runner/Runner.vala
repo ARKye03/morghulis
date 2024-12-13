@@ -69,8 +69,7 @@ public class Runner : Astal.Window {
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				this.entry.text = "";
-			}
-			else {
+			} else {
 				this.entry.grab_focus();
 			}
 		});
