@@ -20,7 +20,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 - [Hyprland](https://hyprland.org/)
 - [Vala](https://vala.dev/), [Meson](https://mesonbuild.com/), [Just](https://github.com/casey/just)
 - [Astal](https://github.com/Aylur/astal)
-- [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita)
+- [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita) & Adwaita Theme.
 - [Blueprint-Compiler](https://jwestman.pages.gitlab.gnome.org/blueprint-compiler/)
 - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
 
@@ -40,7 +40,7 @@ just install
 Build and install using my `PKGBUILD` file:
 
 ```sh
-mkdir /tmp/morghulis && cd /tmp/morghulis 
+mkdir /tmp/morghulis && cd /tmp/morghulis
 wget https://raw.githubusercontent.com/ARKye03/PKGBUILDS/refs/heads/main/morghulis-git/PKGBUILD
 makepkg -si
 ```
@@ -60,7 +60,7 @@ morghulctl --help
 
 ### Style
 
-You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. *Hot Reload* is supported. As previously mentioned, Adwaita theme is needed.
+You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. _Hot Reload_ is supported. As previously mentioned, Adwaita theme is needed.
 
 ## Development
 
@@ -71,8 +71,8 @@ just
 
 ### Nix
 
- > [!CAUTION]
- > Currently not working. Tray won't work with the nix version.
+> [!CAUTION]
+> Currently not working. Tray won't work with the nix version.
 
 Use `flake.nix` for development:
 
@@ -116,7 +116,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 ![Morghulis](public/morghulis.webp)
 
 > [!NOTE]
-> The preview uses the adwaita-black theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
+> The preview uses the adwaita-one-dark theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
 
 ## License
 
