@@ -32,11 +32,11 @@ template $QNetwork: Box {
     ScrolledWindow {
         vexpand: true;
 
-        ListBox items_list {
-            selection-mode: none;
+        ListView wifi_list {
+            show-separators: true;
 
             styles [
-                "boxed-list"
+                "navigation-sidebar"
             ]
         }
     }
