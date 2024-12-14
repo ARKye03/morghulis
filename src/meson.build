@@ -6,10 +6,7 @@ subdir('OnScreenDisplay')
 subdir('QuickMenu')
 subdir('Runner')
 
-project_resources += [
-    'Main.vala',
-    'App.vala'
-]
+project_resources += ['Main.vala', 'App.vala']
 
 vapidir = meson.current_source_dir() + '/vapi/'
 
