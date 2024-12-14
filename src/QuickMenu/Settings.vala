@@ -8,9 +8,17 @@ public class Settings : Gtk.Grid {
 		bluetooth = AstalBluetooth.get_default();
 	}
 
+	[GtkChild]
+	public unowned Adw.NavigationView quick_settings_navigation_view;
+
 	[GtkCallback]
 	public void network_clicked() {
 		this.network.wifi.enabled = !this.network.wifi.enabled;
+	}
+
+	[GtkCallback]
+	public void network_clicked_extras() {
+		quick_settings_navigation_view.push_by_tag("network");
 	}
 
 	[GtkCallback]

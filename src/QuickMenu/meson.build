@@ -1,5 +1,6 @@
 project_resources += files(
     'QuickMenu.vala',
+    'QNetwork.vala',
     'Mpris.vala',
     'QButton.vala',
     'PowerBox.vala',

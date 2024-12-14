@@ -1,0 +1,23 @@
+using Gtk 4.0;
+
+template $QNetwork: Box {
+    orientation: vertical;
+
+    styles [
+        "view"
+    ]
+
+    ScrolledWindow {
+        ListBox items_list {
+            selection-mode: none;
+
+            styles [
+                "boxed-list"
+            ]
+        }
+    }
+
+    Label {
+        label: "Network";
+    }
+}

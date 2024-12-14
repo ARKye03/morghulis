@@ -14,17 +14,18 @@ template $QuickMenu: Astal.Window {
     margin-bottom: 5;
 
     Box {
+        vexpand: true;
         orientation: vertical;
         spacing: 10;
+        width-request: 375;
 
         $Settings {
             hexpand: true;
-            vexpand: false;
+            vexpand: true;
         }
 
         Box {
             hexpand: true;
-            vexpand: true;
             orientation: vertical;
 
             styles [
@@ -35,7 +36,6 @@ template $QuickMenu: Astal.Window {
                 orientation: horizontal;
                 spacing: 5;
                 hexpand: true;
-                vexpand: true;
             }
 
             Adw.CarouselIndicatorDots {

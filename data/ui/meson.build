@@ -6,6 +6,7 @@ targets = files(
     'OnScreenDisplay.blp',
     'PowerBox.blp',
     'QButton.blp',
+    'QNetwork.blp',
     'QuickMenu.blp',
     'Runner.blp',
     'RunnerButton.blp',
