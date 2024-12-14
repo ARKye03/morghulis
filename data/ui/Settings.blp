@@ -3,16 +3,16 @@ using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 using Adw 1;
 
-template $Settings: Grid {
-    column-spacing: 5;
-    row-spacing: 5;
+template $Settings: Adw.Bin {
+    styles [
+        "quick_settings_grid_box"
+    ]
 
     Adw.NavigationView quick_settings_navigation_view {
         height-request: 210;
 
         styles [
-            "quick_settings_grid_box",
-            "quick_settings_nav_view"
+            "rounded"
         ]
 
         Adw.NavigationPage {
@@ -20,17 +20,12 @@ template $Settings: Grid {
             title: "Quick settings";
 
             Grid quick_settings_buttons {
-                layout {
-                    row: 0;
-                    column: 0;
-                    row-span: 3; // Covers the first 3 rows
-                }
-
                 column-homogeneous: true;
+                row-homogeneous: true;
                 hexpand: true;
                 vexpand: true;
-                column-spacing: 5;
-                row-spacing: 5;
+                column-spacing: 10;
+                row-spacing: 10;
 
                 $QButton {
                     layout {

@@ -12,17 +12,6 @@
     padding: 10px;
 }
 
-.quick_settings_nav_view {
-    & headerbar {
-        border-top-left-radius: Colors.$master-border-radius;
-        border-top-right-radius: Colors.$master-border-radius;
-    }
-
-    & box {
-        border-radius: Colors.$master-border-radius;
-    }
-}
-
 .quick_settings_button {
     @include Colors.MasterBorder;
     border-radius: Colors.$master-border-radius;
