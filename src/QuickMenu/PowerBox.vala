@@ -4,6 +4,11 @@ public class PowerBox : Gtk.Box {
 	public string user_image { get; set; }
 	public Gdk.Paintable user_image_paintable { get; set; }
 
+	[GtkChild]
+	private unowned Gtk.Stack main_stack;
+
+	private string? pending_action = null;
+
 	construct {
 		user_name = @"Hello there $(Environment.get_user_name())!";
 		user_image = Environment.get_home_dir() + "/user.png";
@@ -17,7 +22,41 @@ public class PowerBox : Gtk.Box {
 		}
 	}
 
+	/// I honestly think this can be done better
+
 	[GtkCallback]
+	private void show_shutdown_confirm() {
+		pending_action = "shutdown";
+		main_stack.visible_child_name = "confirm";
+	}
+
+	[GtkCallback]
+	private void show_reboot_confirm() {
+		pending_action = "reboot";
+		main_stack.visible_child_name = "confirm";
+	}
+
+	[GtkCallback]
+	private void cancel_action() {
+		pending_action = null;
+		main_stack.visible_child_name = "main";
+	}
+
+	[GtkCallback]
+	private void confirm_action() {
+		switch (pending_action) {
+			case "shutdown":
+				shutdown();
+				break;
+
+			case "reboot":
+				reboot();
+				break;
+		}
+		pending_action = null;
+		main_stack.visible_child_name = "main";
+	}
+
 	public void shutdown() {
 		try {
 			Process.spawn_command_line_async("systemctl poweroff");
@@ -26,7 +65,6 @@ public class PowerBox : Gtk.Box {
 		}
 	}
 
-	[GtkCallback]
 	public void reboot() {
 		try {
 			Process.spawn_command_line_async("systemctl reboot");

@@ -25,41 +25,77 @@ template $PowerBox: Box {
         }
     }
 
-    Box {
-        hexpand: true;
-        spacing: 5;
-        halign: end;
+    Stack main_stack {
+        transition-type: slide_up_down;
 
-        Button {
-            visible: false;
-            icon-name: "colloid-morghulis-system-suspend-symbolic";
-            tooltip-text: "Suspend";
-            clicked => $suspend();
+        StackPage {
+            name: "main";
+
+            child: Box {
+                hexpand: true;
+                spacing: 5;
+                halign: end;
+
+                Button suspend_btn {
+                    visible: false;
+                    icon-name: "colloid-morghulis-system-suspend-symbolic";
+                    tooltip-text: "Suspend";
+                    clicked => $suspend();
+                }
+
+                Button hibernate_btn {
+                    visible: false;
+                    icon-name: "colloid-morghulis-system-hibernate-symbolic";
+                    tooltip-text: "Hibernate";
+                    clicked => $hibernate();
+                }
+
+                Button lock_btn {
+                    icon-name: "colloid-morghulis-system-lock-screen-symbolic";
+                    tooltip-text: "Lock";
+                    clicked => $lock();
+                }
+
+                Button reboot_btn {
+                    icon-name: "colloid-morghulis-system-reboot-symbolic";
+                    tooltip-text: "Reboot";
+                    clicked => $show_reboot_confirm();
+                }
+
+                Button shutdown_btn {
+                    icon-name: "colloid-morghulis-system-shutdown-symbolic";
+                    tooltip-text: "Shutdown";
+                    clicked => $show_shutdown_confirm();
+                }
+            };
         }
 
-        Button {
-            visible: false;
-            icon-name: "colloid-morghulis-system-hibernate-symbolic";
-            tooltip-text: "Hibernate";
-            clicked => $hibernate();
-        }
+        StackPage {
+            name: "confirm";
 
-        Button {
-            icon-name: "colloid-morghulis-system-lock-screen-symbolic";
-            tooltip-text: "Lock";
-            clicked => $lock();
-        }
+            child: Box {
+                hexpand: true;
+                spacing: 5;
+                halign: end;
 
-        Button {
-            icon-name: "colloid-morghulis-system-reboot-symbolic";
-            tooltip-text: "Reboot";
-            clicked => $reboot();
-        }
+                Button {
+                    icon-name: "window-close-symbolic";
+                    clicked => $cancel_action();
 
-        Button {
-            icon-name: "colloid-morghulis-system-shutdown-symbolic";
-            tooltip-text: "Shutdown";
-            clicked => $shutdown();
+                    styles [
+                        "destructive-action"
+                    ]
+                }
+
+                Button confirm_button {
+                    icon-name: "emblem-ok-symbolic";
+                    clicked => $confirm_action();
+
+                    styles [
+                        "suggested-action"
+                    ]
+                }
+            };
         }
     }
 }
