@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
-public class Settings : Gtk.Grid {
+public class Settings : Adw.Bin {
 	public AstalNetwork.Network network { get; set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; set; }
 
@@ -8,9 +8,17 @@ public class Settings : Gtk.Grid {
 		bluetooth = AstalBluetooth.get_default();
 	}
 
+	[GtkChild]
+	public unowned Adw.NavigationView quick_settings_navigation_view;
+
 	[GtkCallback]
 	public void network_clicked() {
 		this.network.wifi.enabled = !this.network.wifi.enabled;
+	}
+
+	[GtkCallback]
+	public void network_clicked_extras() {
+		quick_settings_navigation_view.push_by_tag("network");
 	}
 
 	[GtkCallback]
@@ -36,7 +44,7 @@ public class Settings : Gtk.Grid {
 
 	[GtkCallback]
 	public void bluetooth_clicked_extras() {
-		//TODO
+		quick_settings_navigation_view.push_by_tag("bluetooth");
 	}
 
 	[GtkCallback]

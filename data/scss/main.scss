@@ -15,6 +15,10 @@ button {
     }
 }
 
+.rounded {
+    border-radius: Colors.$master-border-radius;
+}
+
 .morghulis_slider {
     border-radius: 5px;
     padding: 5px;

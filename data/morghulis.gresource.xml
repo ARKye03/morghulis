@@ -7,6 +7,9 @@
         <file preprocess="xml-stripblanks">ui/Mpris.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>
         <file preprocess="xml-stripblanks">ui/QButton.ui</file>
+        <file preprocess="xml-stripblanks">ui/QNetwork.ui</file>
+        <file preprocess="xml-stripblanks">ui/QBluetooth.ui</file>
+        <file preprocess="xml-stripblanks">ui/QBluetoothItem.ui</file>
         <file preprocess="xml-stripblanks">ui/PowerBox.ui</file>
         <file preprocess="xml-stripblanks">ui/Settings.ui</file>
         <file preprocess="xml-stripblanks">ui/SliderBox.ui</file>

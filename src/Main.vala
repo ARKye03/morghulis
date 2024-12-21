@@ -10,6 +10,8 @@ private void init_types() {
 	typeof(QuickMenu).ensure();
 	typeof(SysInfo).ensure();
 	typeof(QButton).ensure();
+	typeof(QNetwork).ensure();
+	typeof(QBluetooth).ensure();
 	typeof(PowerBox).ensure();
 	typeof(Settings).ensure();
 	typeof(SliderBox).ensure();

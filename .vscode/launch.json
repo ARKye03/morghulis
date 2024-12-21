@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/build/src/com.github.ARKye03.zoore_layer",
+            "program": "${workspaceFolder}/build/src/morghulis",
             "args": [],
             "cwd": "${workspaceFolder}"
         }

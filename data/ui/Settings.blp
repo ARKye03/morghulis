@@ -1,96 +1,126 @@
 using Gtk 4.0;
 using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
+using Adw 1;
 
-template $Settings: Grid {
-    hexpand: true;
-    vexpand: true;
-    column-spacing: 5;
-    row-spacing: 5;
+template $Settings: Adw.Bin {
+    styles [
+        "quick_settings_grid_box"
+    ]
 
-    Grid quick_settings_buttons {
-        layout {
-            row: 0;
-            column: 0;
-            row-span: 3; // Covers the first 3 rows
-        }
-
-        column-homogeneous: true;
-        hexpand: true;
+    Adw.NavigationView quick_settings_navigation_view {
+        height-request: 210;
         vexpand: true;
-        column-spacing: 5;
-        row-spacing: 5;
 
         styles [
-            "quick_settings_grid_box"
+            "rounded"
         ]
 
-        $QButton {
-            layout {
-                row: 0;
-                column: 0;
-            }
+        Adw.NavigationPage {
+            tag: "quick_settings";
+            title: "Quick settings";
 
-            name: "Network";
-            identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
-            status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
-            clicked => $network_clicked();
-            icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
-            active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+            Grid quick_settings_buttons {
+                column-homogeneous: true;
+                row-homogeneous: true;
+                hexpand: true;
+                vexpand: true;
+                column-spacing: 10;
+                row-spacing: 10;
+
+                $QButton {
+                    layout {
+                        row: 0;
+                        column: 0;
+                    }
+
+                    name: "Network";
+                    identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
+                    status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
+                    clicked => $network_clicked();
+                    clicked_extras => $network_clicked_extras();
+                    icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
+                    active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+                }
+
+                $QButton {
+                    layout {
+                        row: 1;
+                        column: 0;
+                    }
+
+                    name: "VPN";
+                    identity: "VPN";
+                    status: "Disconnected";
+                    icon: "network-vpn-disconnected-symbolic";
+                    clicked => $TODO();
+                    clicked_extras => $TODO();
+                }
+
+                $QButton {
+                    layout {
+                        row: 0;
+                        column: 1;
+                    }
+
+                    name: "Bluetooth";
+                    identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
+                    status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
+                    icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
+                    active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
+                    clicked => $bluetooth_clicked();
+                    clicked_extras => $bluetooth_clicked_extras();
+                }
+
+                $QButton {
+                    layout {
+                        row: 1;
+                        column: 1;
+                    }
+
+                    name: "Don't disturb";
+                    identity: "Don't disturb";
+                    status: "Disabled";
+                    icon: "notifications-disabled-symbolic";
+                    clicked => $TODO();
+                    clicked_extras => $TODO();
+                }
+
+                $QButton {
+                    layout {
+                        row: 2;
+                        column: 0;
+                    }
+
+                    clicked => $TODO();
+                    clicked_extras => $TODO();
+                    icon: "computer-fail";
+                }
+            }
         }
 
-        $QButton {
-            layout {
-                row: 1;
-                column: 0;
-            }
+        Adw.NavigationPage {
+            tag: "network";
+            title: "Network";
 
-            name: "VPN";
-            identity: "VPN";
-            status: "Disconnected";
-            icon: "network-vpn-disconnected-symbolic";
-            clicked => $TODO();
-            clicked_extras => $TODO();
+            $QNetwork {}
         }
 
-        $QButton {
-            layout {
-                row: 0;
-                column: 1;
-            }
+        Adw.NavigationPage {
+            tag: "bluetooth";
+            title: "Bluetooth";
 
-            name: "Bluetooth";
-            identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
-            status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
-            icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
-            active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
-            clicked => $bluetooth_clicked();
-            clicked_extras => $bluetooth_clicked_extras();
+            $QBluetooth {}
         }
 
-        $QButton {
-            layout {
-                row: 1;
-                column: 1;
-            }
-
-            name: "Don't disturb";
-            identity: "Don't disturb";
-            status: "Disabled";
-            icon: "notifications-disabled-symbolic";
-            clicked => $TODO();
-            clicked_extras => $TODO();
+        Adw.NavigationPage {
+            tag: "power_profiles";
+            title: "Power Profiles";
         }
 
-        $QButton {
-            layout {
-                row: 2;
-                column: 0;
-            }
-
-            clicked => $TODO();
-            clicked_extras => $TODO();
-            icon: "computer-fail";
+        Adw.NavigationPage {
+            tag: "idle";
+            title: "Idle";
         }
     }
 }
