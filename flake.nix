@@ -125,8 +125,8 @@
           uncrustify
           dart-sass
           blueprint-compiler
-          git-cliff
           desktop-file-utils
+          libgtop
         ];
         build-utils = with pkgs.buildPackages; [
           muon
@@ -147,6 +147,10 @@
           battery
           powerprofiles
           bluetooth
+        ];
+        gstPlugins = with pkgs.gst_all_1; [
+          gstreamer
+          gst-plugins-base
         ];
         shell =
           pkgs.mkShell.override
@@ -171,7 +175,7 @@
                 glib
                 gdk-pixbuf
                 json-glib
-              ];
+              ] ++ gstPlugins;
               GTK_THEME = "adw-gtk3:dark";
               XCURSOR_THEME = "Bibata-Modern-Classic";
               XCURSOR_SIZE = "20";
