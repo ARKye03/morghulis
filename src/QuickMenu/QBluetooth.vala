@@ -26,6 +26,8 @@ public class QBluetooth : Gtk.Box {
 		factory.setup.connect((factory, obj) => {
 			var list_item = (Gtk.ListItem)obj;
 			var button = new QBluetoothItem(null);
+			list_item.activatable = false;
+			list_item.selectable = false;
 			list_item.set_child(button);
 		});
 

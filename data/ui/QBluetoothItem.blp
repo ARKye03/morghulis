@@ -2,45 +2,57 @@ using Gtk 4.0;
 using AstalBluetooth 0.1;
 using Adw 1;
 
-template $QBluetoothItem: Gtk.Box {
-    spacing: 10;
-    hexpand: true;
+template $QBluetoothItem: Gtk.Button {
+    clicked => $switch_connection();
 
-    GestureClick {
-        released => $switch_connection();
-    }
-
-    Image {
-        icon-size: large;
-        icon-name: bind $device_icon(template.device as <AstalBluetooth.Device>.icon) as <string>;
-    }
-
-    Box {
-        orientation: vertical;
+    Gtk.Box {
+        spacing: 10;
         hexpand: true;
-        spacing: 5;
 
-        Label {
-            halign: start;
-            label: bind template.device as <AstalBluetooth.Device>.name;
+        Image {
+            icon-size: large;
+            icon-name: bind $device_icon(template.device as <AstalBluetooth.Device>.icon) as <string>;
         }
 
-        Label {
-            halign: start;
-            label: bind template.device as <AstalBluetooth.Device>.address;
+        Box {
+            orientation: vertical;
+            hexpand: true;
+            spacing: 5;
 
-            styles [
-                "dim-label"
-            ]
+            Label {
+                halign: start;
+                label: bind template.device as <AstalBluetooth.Device>.name;
+            }
+
+            Label {
+                halign: start;
+                label: bind template.device as <AstalBluetooth.Device>.address;
+
+                styles [
+                    "dim-label"
+                ]
+            }
         }
-    }
 
-    Revealer {
-        halign: end;
-        transition-duration: 200;
-        transition-type: slide_left;
-        reveal-child: bind template.device as <AstalBluetooth.Device>.connecting;
+        Revealer {
+            halign: end;
+            transition-duration: 200;
+            transition-type: slide_left;
+            reveal-child: bind template.device as <AstalBluetooth.Device>.connecting;
 
-        Adw.Spinner {}
+            Adw.Spinner {}
+        }
+
+        Revealer {
+            halign: end;
+            transition-duration: 200;
+            transition-type: slide_left;
+            reveal-child: bind template.device as <AstalBluetooth.Device>.connected;
+
+            Label {
+                halign: end;
+                label: "Connected";
+            }
+        }
     }
 }
