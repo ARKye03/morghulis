@@ -44,7 +44,7 @@ public class Settings : Adw.Bin {
 
 	[GtkCallback]
 	public void bluetooth_clicked_extras() {
-		//TODO
+		quick_settings_navigation_view.push_by_tag("bluetooth");
 	}
 
 	[GtkCallback]

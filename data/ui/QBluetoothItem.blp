@@ -1,0 +1,46 @@
+using Gtk 4.0;
+using AstalBluetooth 0.1;
+using Adw 1;
+
+template $QBluetoothItem: Gtk.Box {
+    spacing: 10;
+    hexpand: true;
+
+    GestureClick {
+        released => $switch_connection();
+    }
+
+    Image {
+        icon-size: large;
+        icon-name: bind $device_icon(template.device as <AstalBluetooth.Device>.icon) as <string>;
+    }
+
+    Box {
+        orientation: vertical;
+        hexpand: true;
+        spacing: 5;
+
+        Label {
+            halign: start;
+            label: bind template.device as <AstalBluetooth.Device>.name;
+        }
+
+        Label {
+            halign: start;
+            label: bind template.device as <AstalBluetooth.Device>.address;
+
+            styles [
+                "dim-label"
+            ]
+        }
+    }
+
+    Revealer {
+        halign: end;
+        transition-duration: 200;
+        transition-type: slide_left;
+        reveal-child: bind template.device as <AstalBluetooth.Device>.connecting;
+
+        Adw.Spinner {}
+    }
+}

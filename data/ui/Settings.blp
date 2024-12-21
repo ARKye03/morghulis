@@ -10,6 +10,7 @@ template $Settings: Adw.Bin {
 
     Adw.NavigationView quick_settings_navigation_view {
         height-request: 210;
+        vexpand: true;
 
         styles [
             "rounded"
@@ -102,14 +103,14 @@ template $Settings: Adw.Bin {
             tag: "network";
             title: "Network";
 
-            $QNetwork {
-                vexpand: true;
-            }
+            $QNetwork {}
         }
 
         Adw.NavigationPage {
             tag: "bluetooth";
             title: "Bluetooth";
+
+            $QBluetooth {}
         }
 
         Adw.NavigationPage {

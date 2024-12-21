@@ -7,6 +7,8 @@ targets = files(
     'PowerBox.blp',
     'QButton.blp',
     'QNetwork.blp',
+    'QBluetooth.blp',
+    'QBluetoothItem.blp',
     'QuickMenu.blp',
     'Runner.blp',
     'RunnerButton.blp',

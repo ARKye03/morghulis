@@ -1,2 +1,43 @@
 using Gtk 4.0;
 using Adw 1;
+using AstalBluetooth 0.1;
+
+template $QBluetooth: Box {
+    orientation: vertical;
+
+    Adw.HeaderBar {
+        [end]
+        Box {
+            spacing: 10;
+
+            Revealer {
+                transition-duration: 200;
+                transition-type: slide_left;
+                reveal-child: bind template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.discovering;
+
+                Adw.Spinner spinner {}
+            }
+
+            Button {
+                icon-name: "view-refresh-symbolic";
+                clicked => $refresh();
+            }
+        }
+    }
+
+    styles [
+        "view"
+    ]
+
+    ScrolledWindow {
+        vexpand: true;
+
+        ListView blue_list {
+            show-separators: true;
+
+            styles [
+                "navigation-sidebar"
+            ]
+        }
+    }
+}
