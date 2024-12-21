@@ -71,9 +71,6 @@ just
 
 ### Nix
 
-> [!CAUTION]
-> Currently not working. Tray won't work with the nix version.
-
 Use `flake.nix` for development:
 
 ```shell
