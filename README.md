@@ -92,14 +92,13 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 - [x] Status Bar
   - [x] Workspace Switcher
-  - [x] Focused Client
-  - [x] Systray[?](public/tray.md)
-- [x] Quick Settings
+  - [x] Focused Client  
+- [x] Systray
+- [x] Quick Menu
   - [x] Mpris Media Player
   - [x] Power Buttons
-  - [ ] (WIP) Bluetooth
-  - [ ] (WIP) Network
-  - [ ] (WIP) Brightness
+  - [x] (WIP) Bluetooth
+  - [x] (WIP) Network
 - [x] Apps Runner
   - [x] (WIP) Handle Hyprland Clients
 - [x] Notifications
@@ -108,8 +107,8 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] Power Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
-  - [x] (WIP) Brightness
-- [x] Dynamic CSS (WIP)
+  - [ ] Brightness
+- [x] Dynamic CSS
 
 ## Preview
 
