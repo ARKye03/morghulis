@@ -129,10 +129,10 @@ public class NavBar : Astal.Window {
 
 	private void init_notif_label_count() {
 		notifd.notified.connect(() => {
-			notif_count_label.label = (notifd.notifications.length()).to_string();
+			notif_count_label.label = notifd.notifications.length().to_string();
 		});
 		notifd.resolved.connect(() => {
-			notif_count_label.label = (notifd.notifications.length()).to_string();
+			notif_count_label.label = notifd.notifications.length().to_string();
 		});
 		notif_count_label.label = notifd.notifications.length().to_string();
 	}
