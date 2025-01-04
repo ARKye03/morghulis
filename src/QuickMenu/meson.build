@@ -3,6 +3,7 @@ project_resources += files(
     'QNetwork.vala',
     'QBluetooth.vala',
     'QBluetoothItem.vala',
+    'QPowerProfiles.vala',
     'Mpris.vala',
     'QButton.vala',
     'PowerBox.vala',

@@ -1,0 +1,24 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $QPowerProfiles: Box {
+    orientation: vertical;
+    spacing: 10;
+
+    Adw.HeaderBar {
+        show-end-title-buttons: false;
+    }
+
+    Box ppd_list {
+        orientation: vertical;
+        spacing: 10;
+        homogeneous: true;
+        vexpand: true;
+
+        styles [
+            "linked",
+            "view",
+            "rounded"
+        ]
+    }
+}

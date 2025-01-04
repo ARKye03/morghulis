@@ -2,10 +2,12 @@
 public class Settings : Adw.Bin {
 	public AstalNetwork.Network network { get; set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; set; }
+	public AstalPowerProfiles.PowerProfiles power_profiles { get; set; }
 
 	construct {
 		network = AstalNetwork.get_default();
 		bluetooth = AstalBluetooth.get_default();
+		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 	}
 
 	[GtkChild]
@@ -61,6 +63,16 @@ public class Settings : Adw.Bin {
 		} else {
 			return "Bluetooth";
 		}
+	}
+
+	[GtkCallback]
+	public void power_profiles_clicked() {
+		TODO();
+	}
+
+	[GtkCallback]
+	public void power_profiles_clicked_extras() {
+		quick_settings_navigation_view.push_by_tag("power_profiles");
 	}
 
 	[GtkCallback]

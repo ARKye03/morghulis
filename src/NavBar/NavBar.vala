@@ -13,7 +13,6 @@ public class NavBar : Astal.Window {
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
 	public AstalBattery.Device battery { get; set; }
-	public AstalPowerProfiles.PowerProfiles power_profiles { get; set; }
 
 	[GtkChild]
 	public unowned Gtk.Label clock;
@@ -73,26 +72,6 @@ public class NavBar : Astal.Window {
 	}
 
 	[GtkCallback]
-	public void change_power_profile() {
-		var active_profile = power_profiles.active_profile;
-
-		switch (active_profile) {
-			case "performance":
-				power_profiles.active_profile = "power-saver";
-				break;
-
-			case "power-saver":
-				power_profiles.active_profile = "balanced";
-				break;
-
-			case "balanced":
-			default:
-				power_profiles.active_profile = "performance";
-				break;
-		}
-	}
-
-	[GtkCallback]
 	public bool focused_client_exists(AstalHyprland.Client? focused_client) {
 		return focused_client != null;
 	}
@@ -112,7 +91,6 @@ public class NavBar : Astal.Window {
 		hyprland = AstalHyprland.Hyprland.get_default();
 		notifd = AstalNotifd.Notifd.get_default();
 		battery = AstalBattery.Device.get_default();
-		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 		hyprland.submap.connect((_, value) => {
 			if (value != null && value != "") {
 				active_submap.label = value;

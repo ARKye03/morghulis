@@ -1,6 +1,7 @@
 using Gtk 4.0;
 using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
+using AstalPowerProfiles 0.1;
 using Adw 1;
 
 template $Settings: Adw.Bin {
@@ -92,9 +93,12 @@ template $Settings: Adw.Bin {
                         column: 0;
                     }
 
-                    clicked => $TODO();
-                    clicked_extras => $TODO();
-                    icon: "computer-fail";
+                    name: "Power profiles";
+                    identity: "Power profiles";
+                    status: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.active-profile;
+                    icon: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
+                    clicked => $power_profiles_clicked();
+                    clicked_extras => $power_profiles_clicked_extras();
                 }
             }
         }
@@ -116,6 +120,8 @@ template $Settings: Adw.Bin {
         Adw.NavigationPage {
             tag: "power_profiles";
             title: "Power Profiles";
+
+            $QPowerProfiles {}
         }
 
         Adw.NavigationPage {

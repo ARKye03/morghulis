@@ -9,6 +9,7 @@ targets = files(
     'QNetwork.blp',
     'QBluetooth.blp',
     'QBluetoothItem.blp',
+    'QPowerProfiles.blp',
     'QuickMenu.blp',
     'Runner.blp',
     'RunnerButton.blp',

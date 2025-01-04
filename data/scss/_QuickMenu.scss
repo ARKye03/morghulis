@@ -59,3 +59,9 @@
 .qnetwork_item {
     padding: 0 10px;
 }
+
+.active_profile_button {
+    & label {
+        color: adw.$accent_color;
+    }
+}
