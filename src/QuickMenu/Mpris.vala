@@ -32,7 +32,7 @@ public class Mpris : Gtk.Box {
 	}
 
 	[GtkCallback]
-	public string art_url(string url) {
+	public string art_url(string? url) {
 		if (url == null) {
 			return "";
 		} else {

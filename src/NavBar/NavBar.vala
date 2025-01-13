@@ -31,12 +31,6 @@ public class NavBar : Astal.Window {
 	public unowned Gtk.Popover clock_popover;
 
 	[GtkChild]
-	public unowned Gtk.Label active_submap;
-
-	[GtkChild]
-	public unowned Gtk.Label client_label;
-
-	[GtkChild]
 	public unowned Adw.Bin workspaces;
 
 	// Callback Methods
@@ -78,19 +72,13 @@ public class NavBar : Astal.Window {
 		return @"$(Math.round(percentage * 100))%";
 	}
 
-	[GtkCallback]
-	public bool focused_client_exists(AstalHyprland.Client? focused_client) {
-		return focused_client != null;
-	}
-
 	// Constructor
 	public NavBar() {
 		Object(
-			namespace: "NavBar",
+			namespace : "NavBar",
 			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 			);
 		present();
-		client_label.set_visible(false);
 	}
 
 	construct {
@@ -99,14 +87,13 @@ public class NavBar : Astal.Window {
 		notifd = AstalNotifd.Notifd.get_default();
 		battery = AstalBattery.Device.get_default();
 
-		hyprland = AstalHyprland.Hyprland.get_default();
-		river = AstalRiver.River.get_default();
-		if (hyprland != null) {
+		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
+		if (current_session == "Hyprland") {
+			hyprland = AstalHyprland.Hyprland.get_default();
 			setup_hyprland();
-			river.dispose();
-		} else if (river != null) {
+		} else if (current_session == "river") {
+			river = AstalRiver.River.get_default();
 			setup_river();
-			hyprland.dispose();
 		} else {
 			warning("No Hyprland or River detected");
 		}
@@ -116,18 +103,51 @@ public class NavBar : Astal.Window {
 		instance = this;
 	}
 
+	// Hyprland modules
+	[GtkChild]
+	public unowned Adw.Bin active_submap;
+
+	[GtkChild]
+	public unowned Adw.Bin active_client;
+
 	private void setup_hyprland() {
 		message("Setting up Hyprland");
 		workspaces.set_child(new HyprWorkspaces());
 
-		hyprland.submap.connect((_, value) => {
+		Gtk.Label submap_label = new Gtk.Label("default");
+		submap_label.set_visible(false);
+		submap_label.halign = Gtk.Align.START;
+		submap_label.ellipsize = Pango.EllipsizeMode.END;
+		submap_label.max_width_chars = 20;
+		submap_label.tooltip_text = "Active submap";
+		active_submap.set_child(submap_label);
+		hyprland.submap.connect((value) => {
 			if (value != null && value != "") {
-				active_submap.label = value;
+				submap_label.label = value;
 				active_submap.set_visible(true);
 			} else {
 				active_submap.set_visible(false);
 			}
 		});
+
+		Gtk.Label client_label = new Gtk.Label("default");
+		client_label.set_visible(false);
+		client_label.halign = Gtk.Align.START;
+		client_label.ellipsize = Pango.EllipsizeMode.END;
+		client_label.max_width_chars = 20;
+		client_label.tooltip_text = "Active client";
+		hyprland.notify["focused_client"].connect((value) => {
+			var client = (AstalHyprland.Client)value;
+			if (client.title != null && client.title != "") {
+				client_label.label = client.title;
+				active_client.set_visible(true);
+			} else {
+				active_client.set_visible(false);
+			}
+		});
+
+		active_client.set_child(client_label);
+		hyprland.bind_property("focused-client", client_label, "label", BindingFlags.SYNC_CREATE);
 	}
 
 	private void setup_river() {

@@ -1,7 +1,6 @@
 using Gtk 4.0;
 using Adw 1;
 using Astal 4.0;
-using AstalHyprland 0.1;
 using AstalBattery 0.1;
 
 template $NavBar: Astal.Window {
@@ -30,30 +29,19 @@ template $NavBar: Astal.Window {
         ]
       }
 
-      Label client_label {
-        halign: start;
-        ellipsize: end;
-        max-width-chars: 20;
-        label: bind template.hyprland as <AstalHyprland.Hyprland>.focused-client as <AstalHyprland.Client>.title;
-        visible: bind $focused_client_exists(template.hyprland as <AstalHyprland.Hyprland>.focused-client) as <bool>;
-        tooltip-text: "Active client";
+      Adw.Bin active_client {
+        visible: false;
 
         styles [
-          "client_label",
           "nav_bar_box",
           "view"
         ]
       }
 
-      Label active_submap {
-        halign: start;
-        ellipsize: end;
-        max-width-chars: 20;
+      Adw.Bin active_submap {
         visible: false;
-        tooltip-text: "Active submap";
 
         styles [
-          "active_submap",
           "nav_bar_box",
           "view"
         ]
