@@ -1,4 +1,3 @@
-using AstalHyprland;
 using GtkLayerShell;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
