@@ -30,7 +30,8 @@
     color: adw.$accent_color;
 }
 
-.has_windows {
+.has_windows,
+.occupied {
     color: adw.$green_5;
 }
 

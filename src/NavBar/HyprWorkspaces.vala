@@ -15,6 +15,7 @@ public class HyprWorkspaces : Gtk.Box {
 	construct {
 		hyprland = AstalHyprland.Hyprland.get_default();
 		workspace_buttons = new List<Gtk.Button>();
+		spacing = 5;
 		this.hyprland.bind_property("focused-workspace", this, "focused-workspace-id", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
 			var workspace = src as AstalHyprland.Workspace;
 			if (workspace != null) {

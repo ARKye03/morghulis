@@ -10,6 +10,7 @@ public class NavBar : Astal.Window {
 	private AstalNotifd.Notifd notifd { get; set; }
 
 	public AstalHyprland.Hyprland hyprland { get; set; }
+	public AstalRiver.River river { get; set; }
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
 	public AstalBattery.Device battery { get; set; }
@@ -31,6 +32,12 @@ public class NavBar : Astal.Window {
 
 	[GtkChild]
 	public unowned Gtk.Label active_submap;
+
+	[GtkChild]
+	public unowned Gtk.Label client_label;
+
+	[GtkChild]
+	public unowned Adw.Bin workspaces;
 
 	// Callback Methods
 	[GtkCallback]
@@ -83,14 +90,36 @@ public class NavBar : Astal.Window {
 			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 			);
 		present();
+		client_label.set_visible(false);
 	}
 
 	construct {
 		speaker = AstalWp.get_default().audio.default_speaker;
 		mpris = AstalMpris.Mpris.get_default();
-		hyprland = AstalHyprland.Hyprland.get_default();
 		notifd = AstalNotifd.Notifd.get_default();
 		battery = AstalBattery.Device.get_default();
+
+		hyprland = AstalHyprland.Hyprland.get_default();
+		river = AstalRiver.River.get_default();
+		if (hyprland != null) {
+			setup_hyprland();
+			river.dispose();
+		} else if (river != null) {
+			setup_river();
+			hyprland.dispose();
+		} else {
+			warning("No Hyprland or River detected");
+		}
+
+		init_notif_label_count();
+		init_clock();
+		instance = this;
+	}
+
+	private void setup_hyprland() {
+		message("Setting up Hyprland");
+		workspaces.set_child(new HyprWorkspaces());
+
 		hyprland.submap.connect((_, value) => {
 			if (value != null && value != "") {
 				active_submap.label = value;
@@ -99,10 +128,10 @@ public class NavBar : Astal.Window {
 				active_submap.set_visible(false);
 			}
 		});
+	}
 
-		init_notif_label_count();
-		init_clock();
-		instance = this;
+	private void setup_river() {
+		workspaces.set_child(new RiverTags());
 	}
 
 	private void init_notif_label_count() {

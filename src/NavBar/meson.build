@@ -1,2 +1,2 @@
 
-project_resources += files('NavBar.vala', 'HyprWorkspaces.vala')
+project_resources += files('NavBar.vala', 'HyprWorkspaces.vala', 'RiverTags.vala')
