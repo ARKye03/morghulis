@@ -23,7 +23,6 @@ template $Settings: Adw.Bin {
 
             Grid quick_settings_buttons {
                 column-homogeneous: true;
-                row-homogeneous: true;
                 hexpand: true;
                 vexpand: true;
                 column-spacing: 10;
@@ -99,6 +98,7 @@ template $Settings: Adw.Bin {
                     icon: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
                     clicked => $power_profiles_clicked();
                     clicked_extras => $power_profiles_clicked_extras();
+                    visible: bind $ppd_present(template.power_profiles) as <bool>;
                 }
             }
         }

@@ -66,6 +66,11 @@ public class Settings : Adw.Bin {
 	}
 
 	[GtkCallback]
+	public bool ppd_present(AstalPowerProfiles.PowerProfiles? power_profiles) {
+		return power_profiles == null;
+	}
+
+	[GtkCallback]
 	public void power_profiles_clicked() {
 		TODO();
 	}
