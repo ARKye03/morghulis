@@ -36,7 +36,7 @@ executable(
         dependency('astal-bluetooth-0.1'),
         dependency('astal-apps-0.1'),
         dependency('gio-unix-2.0'),
-        dependency('libadwaita-1'),
+        dependency('libadwaita-1', version: '>= 1.6.0'),
         dependency('libgtop-2.0'),
     ],
     link_args: ['-lm'], # Link math library

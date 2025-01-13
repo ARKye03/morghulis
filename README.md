@@ -17,7 +17,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 
 ## Requirements
 
-- [Hyprland](https://hyprland.org/)
+- [River](https://codeberg.org/river/river/), or [Hyprland](https://hyprland.org/)
 - [Vala](https://vala.dev/), [Meson](https://mesonbuild.com/), [Just](https://github.com/casey/just)
 - [Astal](https://github.com/Aylur/astal)
 - [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita) & Adwaita Theme.
