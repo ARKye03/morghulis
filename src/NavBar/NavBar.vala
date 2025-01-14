@@ -23,6 +23,9 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	public unowned Adw.Bin workspaces;
 
+	[GtkChild]
+	public unowned Adw.Bin active_client;
+
 	// Callback Methods
 	[GtkCallback]
 	public void tray_popover_popup() {
@@ -74,20 +77,17 @@ public class NavBar : Astal.Window {
 		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
 #if hyprland
 		if (current_session == "Hyprland") {
-			var hyprland = AstalHyprland.Hyprland.get_default();
-			setup_hyprland(hyprland);
+			setup_hyprland();
 		}
 #if river
 		else if (current_session == "river") {
-			var river = AstalRiver.River.get_default();
-			setup_river(river);
+			setup_river();
 		}
 #endif
 #else
 #if river
 		if (current_session == "river") {
-			var river = AstalRiver.River.get_default();
-			setup_river(river);
+			setup_river();
 		}
 #endif
 #endif
@@ -100,14 +100,14 @@ public class NavBar : Astal.Window {
 	}
 
 #if hyprland
+	private AstalHyprland.Hyprland hyprland { get; set; }
+
 	[GtkChild]
 	public unowned Adw.Bin active_submap;
 
-	[GtkChild]
-	public unowned Adw.Bin active_client;
-
-	private void setup_hyprland(AstalHyprland.Hyprland hyprland) {
+	private void setup_hyprland() {
 		message("Setting up Hyprland");
+		hyprland = AstalHyprland.Hyprland.get_default();
 		workspaces.set_child(new HyprWorkspaces());
 
 		Gtk.Label submap_label = new Gtk.Label("default");
@@ -148,8 +148,30 @@ public class NavBar : Astal.Window {
 #endif
 
 #if river
-	private void setup_river(AstalRiver.River river) {
+	private Gtk.Label view_label = new Gtk.Label("default");
+	private AstalRiver.River river { get; set; }
+
+	private void setup_river() {
+		river = AstalRiver.River.get_default();
+
 		workspaces.set_child(new RiverTags());
+
+		view_label.halign = Gtk.Align.START;
+		view_label.ellipsize = Pango.EllipsizeMode.END;
+		view_label.max_width_chars = 20;
+		view_label.tooltip_text = "Active View";
+		active_client.set_child(view_label);
+		river.notify["focused-view"].connect(active_view);
+		active_view();
+	}
+
+	private void active_view() {
+		if (river.focused_view != null && river.focused_view != "") {
+			view_label.label = river.focused_view;
+			active_client.visible = true;
+		} else {
+			active_client.visible = false;
+		}
 	}
 #endif
 
