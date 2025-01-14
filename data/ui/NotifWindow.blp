@@ -1,7 +1,22 @@
 using Gtk 4.0;
+using Adw 1;
 
 template $NotifWindow: Box {
     orientation: vertical;
+
+    Adw.HeaderBar {
+        show-end-title-buttons: false;
+
+        [end]
+        Button {
+            icon-name: "user-trash-symbolic";
+            clicked => $clear_notifications();
+        }
+    }
+
+    styles [
+        "view"
+    ]
 
     ScrolledWindow {
         overflow: hidden;
@@ -18,14 +33,5 @@ template $NotifWindow: Box {
                 "boxed-list-separate"
             ]
         }
-    }
-
-    Button {
-        styles [
-            "destructive-action"
-        ]
-
-        icon-name: "user-trash-symbolic";
-        clicked => $clear_notifications();
     }
 }

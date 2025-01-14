@@ -6,7 +6,6 @@ public class NavBar : Astal.Window {
 
 	// Properties
 	private AstalMpris.Mpris mpris { get; set; }
-	private AstalNotifd.Notifd notifd { get; set; }
 
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
@@ -14,12 +13,6 @@ public class NavBar : Astal.Window {
 
 	[GtkChild]
 	public unowned Gtk.Label clock;
-
-	[GtkChild]
-	public unowned Gtk.Popover notif_popover;
-
-	[GtkChild]
-	public unowned Gtk.Label notif_count_label;
 
 	[GtkChild]
 	public unowned Gtk.Popover tray_popover;
@@ -31,11 +24,6 @@ public class NavBar : Astal.Window {
 	public unowned Adw.Bin workspaces;
 
 	// Callback Methods
-	[GtkCallback]
-	public void notif_popover_popup() {
-		notif_popover.popup();
-	}
-
 	[GtkCallback]
 	public void tray_popover_popup() {
 		tray_popover.popup();
@@ -81,7 +69,6 @@ public class NavBar : Astal.Window {
 	construct {
 		speaker = AstalWp.get_default().audio.default_speaker;
 		mpris = AstalMpris.Mpris.get_default();
-		notifd = AstalNotifd.Notifd.get_default();
 		battery = AstalBattery.Device.get_default();
 
 		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
@@ -108,7 +95,6 @@ public class NavBar : Astal.Window {
 			warning("No Hyprland or River detected");
 		}
 
-		init_notif_label_count();
 		init_clock();
 		instance = this;
 	}
@@ -166,16 +152,6 @@ public class NavBar : Astal.Window {
 		workspaces.set_child(new RiverTags());
 	}
 #endif
-
-	private void init_notif_label_count() {
-		notifd.notified.connect(() => {
-			notif_count_label.label = notifd.notifications.length().to_string();
-		});
-		notifd.resolved.connect(() => {
-			notif_count_label.label = notifd.notifications.length().to_string();
-		});
-		notif_count_label.label = notifd.notifications.length().to_string();
-	}
 
 	// Clock Methods
 	private void update_clock() {

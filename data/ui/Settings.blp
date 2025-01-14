@@ -3,6 +3,7 @@ using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 using AstalPowerProfiles 0.1;
 using Adw 1;
+using AstalNotifd 0.1;
 
 template $Settings: Adw.Bin {
     Adw.NavigationView quick_settings_navigation_view {
@@ -84,10 +85,11 @@ template $Settings: Adw.Bin {
 
                         name: "Don't disturb";
                         identity: "Don't disturb";
-                        status: "Disabled";
-                        icon: "notifications-disabled-symbolic";
-                        clicked => $TODO();
-                        clicked_extras => $TODO();
+                        status: bind $notifications_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+                        icon: bind $notifications_icon_name(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+                        active: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
+                        clicked => $notifications_clicked();
+                        clicked_extras => $notifications_clicked_extras();
                     }
 
                     $QButton {
@@ -149,8 +151,10 @@ template $Settings: Adw.Bin {
         }
 
         Adw.NavigationPage {
-            tag: "idle";
-            title: "Idle";
+            tag: "notifications";
+            title: "Notifications";
+
+            $NotifWindow {}
         }
     }
 }

@@ -7,11 +7,7 @@ public class Morghulis : Astal.Application {
 	public static Morghulis instance;
 
 	public override void request(string msg, SocketConnection conn) {
-		if (msg == "notif_window") {
-			NavBar.instance.notif_popover_popup();
-		} else {
-			AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
-		}
+		AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
 	}
 
 	construct {

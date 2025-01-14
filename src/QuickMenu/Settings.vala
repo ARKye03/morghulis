@@ -1,14 +1,16 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
 public class Settings : Adw.Bin {
-	public AstalNetwork.Network network { get; set; }
-	public AstalBluetooth.Bluetooth bluetooth { get; set; }
-	public AstalPowerProfiles.PowerProfiles power_profiles { get; set; }
+	public AstalNetwork.Network network { get; private set; }
+	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
+	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
 	public AstalMpris.Mpris mpris { get; private set; }
+	public AstalNotifd.Notifd notifd { get; private set; }
 
 	construct {
 		network = AstalNetwork.get_default();
 		bluetooth = AstalBluetooth.get_default();
 		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
+		notifd = AstalNotifd.get_default();
 
 		mpris = AstalMpris.get_default();
 		mpris.players.@foreach((p) => on_player_added(p));
@@ -69,6 +71,32 @@ public class Settings : Adw.Bin {
 		} else {
 			return "Bluetooth";
 		}
+	}
+
+	[GtkCallback]
+	public void notifications_clicked() {
+		notifd.dont_disturb = !notifd.dont_disturb;
+	}
+
+	[GtkCallback]
+	public void notifications_clicked_extras() {
+		quick_settings_navigation_view.push_by_tag("notifications");
+	}
+
+	[GtkCallback]
+	public string notifications_status(bool dont_disturb) {
+		if (dont_disturb) {
+			return "Enabled";
+		} else {
+			return "Disabled";
+		}
+	}
+
+	[GtkCallback]
+	public string notifications_icon_name(bool dont_disturb) {
+		return dont_disturb
+			   ? "notifications-disabled-symbolic"
+			   : "preferences-system-notifications-symbolic";
 	}
 
 	[GtkCallback]

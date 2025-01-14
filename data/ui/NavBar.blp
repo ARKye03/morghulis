@@ -65,48 +65,6 @@ template $NavBar: Astal.Window {
         "right_box"
       ]
 
-      Overlay notif_overlay {
-        Button {
-          clicked => $notif_popover_popup();
-
-          styles [
-            "nav_bar_box",
-            "view",
-            "nav_bar_button"
-          ]
-
-          Box {
-            Image notif_popover_icon {
-              icon-name: "preferences-system-notifications-symbolic";
-            }
-
-            Popover notif_popover {
-              position: top;
-              width-request: 400;
-              height-request: 450;
-              autohide: true;
-              has-arrow: false;
-              margin-bottom: 10;
-
-              $NotifWindow notif_window {}
-            }
-          }
-        }
-
-        [overlay]
-        Label notif_count_label {
-          styles [
-            "notif_count_label",
-            "view"
-          ]
-
-          halign: end;
-          valign: start;
-          xalign: 0.5;
-          justify: center;
-        }
-      }
-
       Button {
         clicked => $tray_popover_popup();
 
