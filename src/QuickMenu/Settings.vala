@@ -11,11 +11,25 @@ public class Settings : Adw.Bin {
 		bluetooth = AstalBluetooth.get_default();
 		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 		notifd = AstalNotifd.get_default();
+		notifd.notify["dont-disturb"].connect(dnd);
+		dnd();
 
 		mpris = AstalMpris.get_default();
 		mpris.players.@foreach((p) => on_player_added(p));
 		mpris.player_added.connect((p) => on_player_added(p));
 		mpris.player_closed.connect((p) => on_player_removed(p));
+	}
+
+	private void dnd() {
+		if (notifd.dont_disturb) {
+			notif_button.active = false;
+			notif_button.status = "Don't disturb";
+			notif_button.icon = "notifications-disabled-symbolic";
+		} else {
+			notif_button.active = true;
+			notif_button.status = "Enabled";
+			notif_button.icon = "preferences-system-notifications-symbolic";
+		}
 	}
 
 	[GtkChild]
@@ -73,6 +87,9 @@ public class Settings : Adw.Bin {
 		}
 	}
 
+	[GtkChild]
+	public unowned QButton notif_button;
+
 	[GtkCallback]
 	public void notifications_clicked() {
 		notifd.dont_disturb = !notifd.dont_disturb;
@@ -81,22 +98,6 @@ public class Settings : Adw.Bin {
 	[GtkCallback]
 	public void notifications_clicked_extras() {
 		quick_settings_navigation_view.push_by_tag("notifications");
-	}
-
-	[GtkCallback]
-	public string notifications_status(bool dont_disturb) {
-		if (dont_disturb) {
-			return "Enabled";
-		} else {
-			return "Disabled";
-		}
-	}
-
-	[GtkCallback]
-	public string notifications_icon_name(bool dont_disturb) {
-		return dont_disturb
-			   ? "notifications-disabled-symbolic"
-			   : "preferences-system-notifications-symbolic";
 	}
 
 	[GtkCallback]
