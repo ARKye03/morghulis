@@ -1,6 +1,5 @@
 using Gtk 4.0;
 using Astal 4.0;
-using Adw 1;
 
 template $QuickMenu: Astal.Window {
     styles [
@@ -22,25 +21,6 @@ template $QuickMenu: Astal.Window {
         $Settings {
             hexpand: true;
             vexpand: true;
-        }
-
-        Box {
-            hexpand: true;
-            orientation: vertical;
-
-            styles [
-                "quick_settings_grid_box"
-            ]
-
-            Adw.Carousel players {
-                orientation: horizontal;
-                spacing: 5;
-                hexpand: true;
-            }
-
-            Adw.CarouselIndicatorDots {
-                carousel: players;
-            }
         }
 
         $SliderBox {

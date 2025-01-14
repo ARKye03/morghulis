@@ -5,12 +5,8 @@ using AstalPowerProfiles 0.1;
 using Adw 1;
 
 template $Settings: Adw.Bin {
-    styles [
-        "quick_settings_grid_box"
-    ]
-
     Adw.NavigationView quick_settings_navigation_view {
-        height-request: 210;
+        height-request: 385;
         vexpand: true;
 
         styles [
@@ -21,84 +17,112 @@ template $Settings: Adw.Bin {
             tag: "quick_settings";
             title: "Quick settings";
 
-            Grid quick_settings_buttons {
-                column-homogeneous: true;
-                hexpand: true;
-                vexpand: true;
-                column-spacing: 10;
-                row-spacing: 10;
+            Box {
+                orientation: vertical;
+                spacing: 10;
 
-                $QButton {
-                    layout {
-                        row: 0;
-                        column: 0;
+                Grid quick_settings_buttons {
+                    column-homogeneous: true;
+                    hexpand: true;
+                    vexpand: true;
+                    column-spacing: 10;
+                    row-spacing: 10;
+
+                    styles [
+                        "quick_settings_grid_box"
+                    ]
+
+                    $QButton {
+                        layout {
+                            row: 0;
+                            column: 0;
+                        }
+
+                        name: "Network";
+                        identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
+                        status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
+                        icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
+                        active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+                        clicked => $network_clicked();
+                        clicked_extras => $network_clicked_extras();
                     }
 
-                    name: "Network";
-                    identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
-                    status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
-                    icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
-                    active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
-                    clicked => $network_clicked();
-                    clicked_extras => $network_clicked_extras();
+                    $QButton {
+                        layout {
+                            row: 0;
+                            column: 1;
+                        }
+
+                        name: "Bluetooth";
+                        identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
+                        status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
+                        icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
+                        active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
+                        clicked => $bluetooth_clicked();
+                        clicked_extras => $bluetooth_clicked_extras();
+                    }
+
+                    $QButton {
+                        layout {
+                            row: 1;
+                            column: 0;
+                        }
+
+                        name: "Audio";
+                        identity: "Audio";
+                        status: "Coming soon";
+                        icon: "audio-volume-high-symbolic";
+                        clicked => $TODO();
+                        clicked_extras => $TODO();
+                    }
+
+                    $QButton {
+                        layout {
+                            row: 1;
+                            column: 1;
+                        }
+
+                        name: "Don't disturb";
+                        identity: "Don't disturb";
+                        status: "Disabled";
+                        icon: "notifications-disabled-symbolic";
+                        clicked => $TODO();
+                        clicked_extras => $TODO();
+                    }
+
+                    $QButton {
+                        layout {
+                            row: 2;
+                            column: 0;
+                        }
+
+                        name: "Power profiles";
+                        identity: "Power profiles";
+                        status: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.active-profile;
+                        icon: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
+                        clicked => $power_profiles_clicked();
+                        clicked_extras => $power_profiles_clicked_extras();
+                        visible: bind $ppd_present(template.power_profiles) as <bool>;
+                    }
                 }
 
-                $QButton {
-                    layout {
-                        row: 0;
-                        column: 1;
+                Box {
+                    hexpand: true;
+                    orientation: vertical;
+
+                    styles [
+                        "quick_settings_grid_box"
+                    ]
+
+                    Adw.Carousel players {
+                        orientation: horizontal;
+                        spacing: 5;
+                        hexpand: true;
                     }
 
-                    name: "Bluetooth";
-                    identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
-                    status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
-                    icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
-                    active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
-                    clicked => $bluetooth_clicked();
-                    clicked_extras => $bluetooth_clicked_extras();
-                }
-
-                $QButton {
-                    layout {
-                        row: 1;
-                        column: 0;
+                    Adw.CarouselIndicatorDots {
+                        carousel: players;
                     }
-
-                    name: "Audio";
-                    identity: "Audio";
-                    status: "Coming soon";
-                    icon: "audio-volume-high-symbolic";
-                    clicked => $TODO();
-                    clicked_extras => $TODO();
-                }
-
-                $QButton {
-                    layout {
-                        row: 1;
-                        column: 1;
-                    }
-
-                    name: "Don't disturb";
-                    identity: "Don't disturb";
-                    status: "Disabled";
-                    icon: "notifications-disabled-symbolic";
-                    clicked => $TODO();
-                    clicked_extras => $TODO();
-                }
-
-                $QButton {
-                    layout {
-                        row: 2;
-                        column: 0;
-                    }
-
-                    name: "Power profiles";
-                    identity: "Power profiles";
-                    status: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.active-profile;
-                    icon: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
-                    clicked => $power_profiles_clicked();
-                    clicked_extras => $power_profiles_clicked_extras();
-                    visible: bind $ppd_present(template.power_profiles) as <bool>;
                 }
             }
         }
