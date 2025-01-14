@@ -8,8 +8,6 @@ public class NavBar : Astal.Window {
 	private AstalMpris.Mpris mpris { get; set; }
 	private AstalNotifd.Notifd notifd { get; set; }
 
-	public AstalHyprland.Hyprland hyprland { get; set; }
-	public AstalRiver.River river { get; set; }
 	public AstalMpris.Player mpd { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
 	public AstalBattery.Device battery { get; set; }
@@ -87,13 +85,26 @@ public class NavBar : Astal.Window {
 		battery = AstalBattery.Device.get_default();
 
 		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
+#if hyprland
 		if (current_session == "Hyprland") {
-			hyprland = AstalHyprland.Hyprland.get_default();
-			setup_hyprland();
-		} else if (current_session == "river") {
-			river = AstalRiver.River.get_default();
-			setup_river();
-		} else {
+			var hyprland = AstalHyprland.Hyprland.get_default();
+			setup_hyprland(hyprland);
+		}
+#if river
+		else if (current_session == "river") {
+			var river = AstalRiver.River.get_default();
+			setup_river(river);
+		}
+#endif
+#else
+#if river
+		if (current_session == "river") {
+			var river = AstalRiver.River.get_default();
+			setup_river(river);
+		}
+#endif
+#endif
+		if (current_session != "Hyprland" && current_session != "river") {
 			warning("No Hyprland or River detected");
 		}
 
@@ -102,14 +113,14 @@ public class NavBar : Astal.Window {
 		instance = this;
 	}
 
-	// Hyprland modules
+#if hyprland
 	[GtkChild]
 	public unowned Adw.Bin active_submap;
 
 	[GtkChild]
 	public unowned Adw.Bin active_client;
 
-	private void setup_hyprland() {
+	private void setup_hyprland(AstalHyprland.Hyprland hyprland) {
 		message("Setting up Hyprland");
 		workspaces.set_child(new HyprWorkspaces());
 
@@ -148,10 +159,13 @@ public class NavBar : Astal.Window {
 		active_client.set_child(client_label);
 		hyprland.bind_property("focused-client", client_label, "label", BindingFlags.SYNC_CREATE);
 	}
+#endif
 
-	private void setup_river() {
+#if river
+	private void setup_river(AstalRiver.River river) {
 		workspaces.set_child(new RiverTags());
 	}
+#endif
 
 	private void init_notif_label_count() {
 		notifd.notified.connect(() => {

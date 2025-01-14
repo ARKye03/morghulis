@@ -6,7 +6,12 @@ public static void main(string[] args) {
 }
 
 private void init_types() {
+#if river
+	typeof(RiverTags).ensure();
+#endif
+#if hyprland
 	typeof(HyprWorkspaces).ensure();
+#endif
 	typeof(QuickMenu).ensure();
 	typeof(SysInfo).ensure();
 	typeof(QButton).ensure();

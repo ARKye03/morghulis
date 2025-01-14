@@ -14,8 +14,8 @@ project_name = meson.project_name()
 project_resources = []
 
 subdir('data')
-subdir('src')
 subdir('cli')
+subdir('src')
 
 gnome.post_install(
   glib_compile_schemas: true,
