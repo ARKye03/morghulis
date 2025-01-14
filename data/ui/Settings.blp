@@ -37,24 +37,10 @@ template $Settings: Adw.Bin {
                     name: "Network";
                     identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
                     status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
-                    clicked => $network_clicked();
-                    clicked_extras => $network_clicked_extras();
                     icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
                     active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
-                }
-
-                $QButton {
-                    layout {
-                        row: 1;
-                        column: 0;
-                    }
-
-                    name: "VPN";
-                    identity: "VPN";
-                    status: "Disconnected";
-                    icon: "network-vpn-disconnected-symbolic";
-                    clicked => $TODO();
-                    clicked_extras => $TODO();
+                    clicked => $network_clicked();
+                    clicked_extras => $network_clicked_extras();
                 }
 
                 $QButton {
@@ -70,6 +56,20 @@ template $Settings: Adw.Bin {
                     active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
                     clicked => $bluetooth_clicked();
                     clicked_extras => $bluetooth_clicked_extras();
+                }
+
+                $QButton {
+                    layout {
+                        row: 1;
+                        column: 0;
+                    }
+
+                    name: "Audio";
+                    identity: "Audio";
+                    status: "Coming soon";
+                    icon: "audio-volume-high-symbolic";
+                    clicked => $TODO();
+                    clicked_extras => $TODO();
                 }
 
                 $QButton {

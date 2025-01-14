@@ -11,3 +11,11 @@ project_resources += files(
     'SliderBox.vala',
     'SysInfo.vala',
 )
+
+if astal_battery_dep.found()
+    project_args += ['--define=battery']
+endif
+
+if astal_power_profiles_dep.found()
+    project_args += ['--define=power-profiles']
+endif
