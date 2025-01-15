@@ -26,9 +26,6 @@
     transition: all .2s ease-in-out;
 }
 
-.focused {
-    color: adw.$accent_color;
-}
 
 .has_windows,
 .occupied {
@@ -37,6 +34,10 @@
 
 .empty {
     color: adw.$dark_1;
+}
+
+.focused {
+    color: adw.$accent_color;
 }
 
 .nav_bar_label {
