@@ -11,7 +11,6 @@
 .nav_bar_box {
     margin: 5px 0;
     @include Colors.MasterBorder;
-    border-radius: Colors.$master-border-radius;
     padding: 0 10px;
 }
 

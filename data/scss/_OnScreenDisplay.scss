@@ -6,7 +6,6 @@
 }
 
 .osd_slider {
-    border-radius: Colors.$master-border-radius;
     @include Colors.MasterBorder;
     min-width: 250px;
 

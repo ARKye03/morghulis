@@ -6,15 +6,10 @@
 }
 
 .mpris_master_box {
-    border-radius: Colors.$master-border-radius;
     @include Colors.MasterBorder;
     min-width: 270px;
     min-height: 150px;
     padding: 10px;
-}
-
-.mpris_art_image {
-    border-radius: Colors.$master-border-radius;
 }
 
 .mpris_media_info {

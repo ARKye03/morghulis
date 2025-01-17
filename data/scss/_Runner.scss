@@ -7,7 +7,6 @@
 
 .runner_master_box {
     background-color: adw.$window_bg_color;
-    border-radius: Colors.$master-border-radius;
     @include Colors.MasterBorder;
     padding: 10px;
     min-width: 555px;
@@ -21,5 +20,4 @@
 .runner_button {
     padding: 10px;
     margin: 5px 0;
-    border-radius: Colors.$master-border-radius;
 }
