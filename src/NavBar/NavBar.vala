@@ -159,7 +159,7 @@ public class NavBar : Astal.Window {
 		view_label.halign = Gtk.Align.START;
 		view_label.ellipsize = Pango.EllipsizeMode.END;
 		view_label.max_width_chars = 20;
-		view_label.tooltip_text = "Active View";
+		active_client.tooltip_text = "Active View";
 		active_client.set_child(view_label);
 		river.notify["focused-view"].connect(active_view);
 		active_view();
