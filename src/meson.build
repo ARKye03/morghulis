@@ -8,6 +8,7 @@ astal_hyprland_dep = dependency('astal-hyprland-0.1', required: false)
 astal_river_dep = dependency('astal-river-0.1', required: false)
 astal_battery_dep = dependency('astal-battery-0.1', required: false)
 astal_power_profiles_dep = dependency('astal-power-profiles-0.1', required: false)
+libgtop_dep = dependency('libgtop-2.0', required: false)
 
 
 deps = [
@@ -25,7 +26,6 @@ deps = [
         dependency('astal-apps-0.1'),
         dependency('gio-unix-2.0'),
         dependency('libadwaita-1', version: '>= 1.6.0'),
-        dependency('libgtop-2.0'),
     ]
 
 
@@ -44,6 +44,10 @@ endif
 
 if astal_power_profiles_dep.found()
     deps += astal_power_profiles_dep
+endif
+
+if libgtop_dep.found()
+    deps += libgtop_dep
 endif
 
 subdir('Modules')

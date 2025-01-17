@@ -19,10 +19,30 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 
 - [River](https://codeberg.org/river/river/), or [Hyprland](https://hyprland.org/)
 - [Vala](https://vala.dev/), [Meson](https://mesonbuild.com/), [Just](https://github.com/casey/just)
-- [Astal](https://github.com/Aylur/astal)
 - [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita) & Adwaita Theme.
 - [Blueprint-Compiler](https://jwestman.pages.gitlab.gnome.org/blueprint-compiler/)
-- [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
+- [libgtop](https://gitlab.gnome.org/GNOME/libgtop) (Optional)
+- [GTK](https://www.gtk.org/)
+  - [gtk4](https://docs.gtk.org/gtk4/)
+  - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
+- [Astal](https://github.com/Aylur/astal)
+  - 4
+  - Tray
+  - IO
+  - Wireplumber
+  - Mpris
+  - NotifD
+  - Network
+  - Bluetooth
+  - Apps
+  - River (Optional)
+  - Hyprland (Optional)
+  - <details> <summary>Battery</summary>
+      While it might not be used, its mandatory to install it (For now).
+    </details>
+  - <details> <summary>Power Profiles</summary>
+      While it might not be used, its mandatory to install it (For now).
+    </details>
 
 ## Installation
 
