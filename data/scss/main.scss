@@ -19,6 +19,22 @@ button {
     border-radius: Colors.$master-border-radius;
 }
 
+.bg_transparent {
+    background-color: transparent;
+}
+
+.top_left_right_corner_borders {
+    border-radius: unset;
+    border-top-left-radius: Colors.$master-border-radius;
+    border-top-right-radius: Colors.$master-border-radius;
+}
+
+.bottom_left_right_corner_borders {
+    border-radius: unset;
+    border-bottom-left-radius: Colors.$master-border-radius;
+    border-bottom-right-radius: Colors.$master-border-radius;
+}
+
 .morghulis_slider {
     border-radius: 5px;
     padding: 5px;

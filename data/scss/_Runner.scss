@@ -5,19 +5,6 @@
     all: unset;
 }
 
-.runner_master_box {
-    background-color: adw.$window_bg_color;
-    @include Colors.MasterBorder;
-    padding: 10px;
-    min-width: 555px;
-}
-
-.boxed-list {
-    background-color: transparent;
-    padding: 10px;
-}
-
 .runner_button {
     padding: 10px;
-    margin: 5px 0;
 }

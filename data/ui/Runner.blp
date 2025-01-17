@@ -8,8 +8,7 @@ template $Runner: Astal.Window {
 
     title: "Runner";
     namespace: "Runner";
-    anchor: bottom;
-    margin-bottom: 10;
+    anchor: none;
     keymode: on_demand;
 
     EventControllerKey {
@@ -18,36 +17,36 @@ template $Runner: Astal.Window {
 
     Box {
         orientation: vertical;
-        spacing: 5;
+        width-request: 500;
+        overflow: hidden;
 
         styles [
-            "runner_master_box",
-            "rounded"
+            "bottom_left_right_corner_borders"
         ]
 
         Entry entry {
             primary-icon-name: "system-search-symbolic";
             changed => $update_list();
             activate => $launch_first_runner_button();
+            placeholder-text: "Search...";
+
+            styles [
+                "background",
+                "top_left_right_corner_borders"
+            ]
         }
 
         ScrolledWindow {
-            max-content-height: 500;
-            height-request: 500;
+            max-content-height: 400;
             propagate-natural-height: true;
-            overflow: hidden;
-
-            styles [
-                "scroll-list"
-            ]
 
             ListBox app_list {
-                hexpand: true;
-                valign: start;
                 selection-mode: none;
+                overflow: hidden;
 
                 styles [
-                    "boxed-list"
+                    "bg_transparent",
+                    "bottom_left_right_corner_borders"
                 ]
             }
         }
