@@ -110,7 +110,6 @@
               for filename in "''${filenames[@]}"; do
                 cp -r $src/$filename $out/
               done
-              echo "Taring"
               tar -cJf $out/morghulis-${version}.tar.xz -C $out .
             '';
         gtk-utils = with pkgs; [
