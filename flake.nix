@@ -95,6 +95,11 @@
               ];
             }
             ''
+              # Create staging directory
+              staging="$TMPDIR/staging"
+              mkdir -p "$staging"
+
+              # Define asset files
               filenames=(
                 "data/assets/colloid-morghulis-system-hibernate-symbolic.svg"
                 "data/assets/colloid-morghulis-system-lock-screen-symbolic.svg"
@@ -104,13 +109,26 @@
                 "data/desktop/com.github.ARKye03.morghulis.desktop.in"
                 "data/desktop/com.github.ARKye03.morghulis.png"
               )
-              mkdir -p $out
-              cp ${fhs-morghulis}/bin/${appName} $out/
-              cp ${fhs-morghulis}/bin/${cliAppName} $out/
+
+              # Copy binaries to staging
+              cp ${fhs-morghulis}/bin/${appName} "$staging/"
+              cp ${fhs-morghulis}/bin/${cliAppName} "$staging/"
+
+              # Copy assets to staging with directory structure
               for filename in "''${filenames[@]}"; do
-                cp -r $src/$filename $out/
+                mkdir -p "$staging/$(dirname "$filename")"
+                cp "$src/$filename" "$staging/$filename"
               done
-              tar -cJf $out/morghulis-${version}.tar.xz -C $out .
+
+              # Create output directory
+              mkdir -p $out
+
+              # Create tarball from staging directory
+              cd "$staging"
+              tar --sort=name \
+                  --owner=0 --group=0 \
+                  --mtime='1970-01-01 00:00:00' \
+                  -cJf "$out/morghulis-${version}.tar.xz" .
             '';
         gtk-utils = with pkgs; [
           gtk4
@@ -168,13 +186,16 @@
                 ++ compiler-utils
                 ++ build-utils
                 ++ astal-libs;
-              buildInputs = with pkgs; [
-                pkg-config
-                networkmanager
-                glib
-                gdk-pixbuf
-                json-glib
-              ] ++ gstPlugins;
+              buildInputs =
+                with pkgs;
+                [
+                  pkg-config
+                  networkmanager
+                  glib
+                  gdk-pixbuf
+                  json-glib
+                ]
+                ++ gstPlugins;
               GTK_THEME = "adw-gtk3:dark";
               XCURSOR_THEME = "Bibata-Modern-Classic";
               XCURSOR_SIZE = "20";
