@@ -21,7 +21,6 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 - [Vala](https://vala.dev/), [Meson](https://mesonbuild.com/), [Just](https://github.com/casey/just)
 - [Libadwaita](https://gitlab.gnome.org/GNOME/libadwaita) & Adwaita Theme.
 - [Blueprint-Compiler](https://jwestman.pages.gitlab.gnome.org/blueprint-compiler/)
-- [libgtop](https://gitlab.gnome.org/GNOME/libgtop) (Optional)
 - [GTK](https://www.gtk.org/)
   - [gtk4](https://docs.gtk.org/gtk4/)
   - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
@@ -43,6 +42,10 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
   - <details> <summary>Power Profiles</summary>
       While it might not be used, its mandatory to install it (For now).
     </details>
+- [libgtop](https://gitlab.gnome.org/GNOME/libgtop) (Optional)
+
+> [!NOTE]
+> Optional dependencies are not required only if built from source, the binary release requires all.
 
 ## Installation
 
@@ -108,20 +111,25 @@ nix run github:ARKye03/morghulis#fhs -- --help
 ## Features
 
 - [x] Status Bar
-  - [x] Workspace Switcher
-  - [x] Focused Client  
-- [x] Systray
+  - [x] Tags/Workspaces Module
+  - [x] Focused View/Client
+  - [x] Systray
+  - [x] Battery
 - [x] Quick Menu
   - [x] Mpris Media Player
   - [x] Power Buttons
-  - [x] (WIP) Bluetooth
+  - [x] Power Profiles
+  - [x] Bluetooth
   - [x] (WIP) Network
+  - [ ] (WIP) Audio
 - [x] Apps Runner
   - [x] (WIP) Handle Hyprland Clients
+  - [ ] Handle River views?
 - [x] Notifications
   - [x] Center
   - [ ] (WIP) Popup
-- [x] Power Menu (WIP)
+  - [ ] Don't Disturb logic
+- [ ] Power Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
   - [ ] Brightness
@@ -132,7 +140,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 ![Morghulis](public/morghulis.webp)
 
 > [!NOTE]
-> The preview uses the adwaita-one-dark theme and [adw-gtk3](https://github.com/lassekongo83/adw-gtk3)
+> The preview uses the Adwaita-black theme, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
 
 ## License
 
