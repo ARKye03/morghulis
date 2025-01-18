@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QBluetoothItem.ui")]
-public class QBluetoothItem : Gtk.Button {
+public class QBluetoothItem : Gtk.ListBoxRow {
 	public AstalBluetooth.Device device { get; construct set; }
 
 	public QBluetoothItem(AstalBluetooth.Device? device) {

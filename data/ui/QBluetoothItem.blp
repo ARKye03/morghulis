@@ -2,12 +2,20 @@ using Gtk 4.0;
 using AstalBluetooth 0.1;
 using Adw 1;
 
-template $QBluetoothItem: Gtk.Button {
-    clicked => $switch_connection();
+template $QBluetoothItem: Gtk.ListBoxRow {
+    GestureClick {
+        pressed => $switch_connection();
+    }
+
+    selectable: false;
 
     Gtk.Box {
         spacing: 10;
         hexpand: true;
+
+        styles [
+            "x_padding_10"
+        ]
 
         Image {
             icon-size: large;
