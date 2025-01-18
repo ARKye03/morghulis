@@ -25,6 +25,7 @@ template $Runner: Astal.Window {
         ]
 
         Entry entry {
+            height-request: 50;
             primary-icon-name: "system-search-symbolic";
             changed => $update_list();
             activate => $launch_first_runner_button();
@@ -32,6 +33,7 @@ template $Runner: Astal.Window {
 
             styles [
                 "background",
+                "title-4",
                 "top_left_right_corner_borders"
             ]
         }
