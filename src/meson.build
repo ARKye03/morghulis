@@ -57,6 +57,7 @@ subdir('Notifications')
 subdir('OnScreenDisplay')
 subdir('QuickMenu')
 subdir('Runner')
+subdir('lib')
 
 executable(
     project_name,
