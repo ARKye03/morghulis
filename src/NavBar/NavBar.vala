@@ -1,4 +1,5 @@
 using GtkLayerShell;
+using Mpars;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Astal.Window {
@@ -183,10 +184,10 @@ public class NavBar : Astal.Window {
 	}
 
 	private void init_clock() {
-		update_clock();
-		GLib.Timeout.add(60000, () => {
-			update_clock();
-			return true;
-		});
+		//  update_clock();
+		//  GLib.Timeout.add(60000, () => {
+		//  	update_clock();
+		//  	return true;
+		//  });
 	}
 }

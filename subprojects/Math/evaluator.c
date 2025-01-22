@@ -1,7 +1,33 @@
 #include "evaluator.h"
+#include "parser.h"
 #include <stddef.h>
 
-static EvalResult evaluate_node(ASTNode* node) {
+EvalResult evaluate_expression(const char* input) {
+	if (!input) {
+		return create_error("Null input");
+	}
+
+	Parser* parser = parser_create(input);
+	if (!parser) {
+		return create_error("Failed to create parser");
+	}
+
+	ParseResult parse_result = parser_parse(parser);
+
+	if (parse_result.error) {
+		parser_destroy(parser);
+		return create_error(parse_result.error);
+	}
+
+	EvalResult result = evaluate_node(parse_result.node);
+
+	free_ast_node(parse_result.node);
+	parser_destroy(parser);
+
+	return result;
+}
+
+EvalResult evaluate_node(ASTNode* node) {
 	switch (node->type) {
 		case NODE_NUMBER:
 			return create_result(node->data.number);
@@ -35,13 +61,13 @@ static EvalResult evaluate_node(ASTNode* node) {
 	return create_error("Unknown node type");
 }
 
-static EvalResult create_result(double value) {
+EvalResult create_result(double value) {
 	EvalResult result = { .value = value, .error = NULL };
 
 	return result;
 }
 
-static EvalResult create_error(const char* error) {
+EvalResult create_error(const char* error) {
 	EvalResult result = { .value = 0, .error = error };
 
 	return result;
