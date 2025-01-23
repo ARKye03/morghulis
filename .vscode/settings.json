@@ -1,5 +1,5 @@
 {
     "mesonbuild.configureOnOpen": false,
-    "C_Cpp.default.compileCommands": "/home/archkye/arch_progs/vala_layer/builddir/compile_commands.json",
-    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild"
+    "C_Cpp.default.compileCommands": "/home/archkye/arch_progs/morghulis/build/compile_commands.json",
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
 }

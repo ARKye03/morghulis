@@ -1,15 +1,23 @@
 using GtkLayerShell;
 
+[CCode(cname = "mpars_evaluate")]
+public extern double mpars_evaluate(string expression, out string? error);
+
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
 	public AstalApps.Apps apps { get; construct set; }
 
 	[GtkChild]
-	private unowned Gtk.ListBox app_list;
-
-	[GtkChild]
 	private unowned Gtk.Entry entry;
 
+	[GtkChild]
+	private unowned Adw.Bin math_bin;
+
+	[GtkChild]
+	private unowned Gtk.Label math_label;
+
+	[GtkChild]
+	private unowned Gtk.ListBox app_list;
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
 		RunnerButton a = (RunnerButton)la;
 		RunnerButton b = (RunnerButton)lb;
@@ -26,15 +34,48 @@ public class Runner : Astal.Window {
 		return app.score >= 0;
 	}
 
+	private bool looks_like_math(string text) {
+		return text[0] != ':' &&
+			   (text.contains("+") ||
+				text.contains("-") ||
+				text.contains("*") ||
+				text.contains("/") ||
+				text.contains("^"));
+	}
+
 	[GtkCallback]
 	public void update_list() {
-		int i = 0;
-		RunnerButton? app = (RunnerButton)this.app_list.get_row_at_index(0);
+		string input = this.entry.text.strip();
 
-		while (app != null) {
-			app.score = apps.fuzzy_score(this.entry.text, app.app);
-			app = (RunnerButton)this.app_list.get_row_at_index(++i);
+		// Handle math expressions
+		if (looks_like_math(input)) {
+			string error;
+			double result = mpars_evaluate(input, out error);
+
+			if (error == null) {
+				math_label.set_text("%s = %g".printf(input, result));
+				math_bin.set_visible(true);
+				return;
+			} else {
+				math_bin.set_visible(false);
+			}
+			app_list.set_visible(false);
+			return;
+		} else {
+			app_list.set_visible(true);
+			math_bin.set_visible(false);
 		}
+
+		// Update app filtering
+		var child = this.app_list.get_first_child();
+		while (child != null) {
+			if (child is RunnerButton) {
+				var app = (RunnerButton)child;
+				app.score = apps.fuzzy_score(input, app.app);
+			}
+			child = child.get_next_sibling();
+		}
+
 		this.app_list.invalidate_sort();
 		this.app_list.invalidate_filter();
 	}

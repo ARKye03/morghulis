@@ -1,3 +1,4 @@
+
 project(
   'morghulis',
   ['vala', 'c'],
@@ -13,9 +14,10 @@ i18n.gettext('morghulis', preset: 'glib')
 project_name = meson.project_name()
 project_resources = []
 
+subdir('lib')
 subdir('data')
-subdir('cli')
 subdir('src')
+subdir('cli')
 
 gnome.post_install(
   glib_compile_schemas: true,

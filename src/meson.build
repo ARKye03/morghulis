@@ -10,24 +10,22 @@ astal_battery_dep = dependency('astal-battery-0.1', required: false)
 astal_power_profiles_dep = dependency('astal-power-profiles-0.1', required: false)
 libgtop_dep = dependency('libgtop-2.0', required: false)
 
-
 deps = [
-        dependency('gtk4'),
-        dependency('gtk4-layer-shell-0'),
-        dependency('astal-4-4.0'),
-        dependency('astal-io-0.1'),
-        dependency('libnm'),
-        dependency('astal-wireplumber-0.1'),
-        dependency('astal-mpris-0.1'),
-        dependency('astal-tray-0.1'),
-        dependency('astal-notifd-0.1'),
-        dependency('astal-network-0.1'),
-        dependency('astal-bluetooth-0.1'),
-        dependency('astal-apps-0.1'),
-        dependency('gio-unix-2.0'),
-        dependency('libadwaita-1', version: '>= 1.6.0'),
-    ]
-
+    dependency('gtk4'),
+    dependency('gtk4-layer-shell-0'),
+    dependency('astal-4-4.0'),
+    dependency('astal-io-0.1'),
+    dependency('libnm'),
+    dependency('astal-wireplumber-0.1'),
+    dependency('astal-mpris-0.1'),
+    dependency('astal-tray-0.1'),
+    dependency('astal-notifd-0.1'),
+    dependency('astal-network-0.1'),
+    dependency('astal-bluetooth-0.1'),
+    dependency('astal-apps-0.1'),
+    dependency('gio-unix-2.0'),
+    dependency('libadwaita-1', version: '>= 1.6.0'),
+]
 
 # Add optional dependencies if found
 if astal_hyprland_dep.found()
@@ -64,7 +62,8 @@ executable(
     vala_args: [
         '--gresourcesdir=data/',
         '--vapidir=' + vapidir,
-    ] + project_args,
+    ]
+    + project_args,
     dependencies: deps,
     link_args: ['-lm'], # Link math library
     install: true,
