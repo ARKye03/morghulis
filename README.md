@@ -122,8 +122,10 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [x] Bluetooth
   - [x] (WIP) Network
   - [ ] (WIP) Audio
-- [x] Apps Runner
-  - [x] (WIP) Handle Hyprland Clients
+- [x] Runner
+  - [x] Run apps
+  - [x] Solve math expressions
+  - [ ] Handle Hyprland Clients
   - [ ] Handle River views?
 - [x] Notifications
   - [x] Center
