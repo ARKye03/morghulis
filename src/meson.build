@@ -10,9 +10,6 @@ astal_battery_dep = dependency('astal-battery-0.1', required: false)
 astal_power_profiles_dep = dependency('astal-power-profiles-0.1', required: false)
 libgtop_dep = dependency('libgtop-2.0', required: false)
 
-# Local dependencies
-math_dep = subproject('Math').get_variable('math_dep')
-
 deps = [
     dependency('gtk4'),
     dependency('gtk4-layer-shell-0'),
@@ -28,7 +25,6 @@ deps = [
     dependency('astal-apps-0.1'),
     dependency('gio-unix-2.0'),
     dependency('libadwaita-1', version: '>= 1.6.0'),
-    math_dep,
 ]
 
 # Add optional dependencies if found

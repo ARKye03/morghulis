@@ -1,5 +1,8 @@
 using GtkLayerShell;
 
+[CCode(cname = "mpars_evaluate")]
+public extern double mpars_evaluate(string expression, out string? error);
+
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
 	public AstalApps.Apps apps { get; construct set; }
@@ -28,12 +31,11 @@ public class Runner : Astal.Window {
 
 	[GtkCallback]
 	public void update_list() {
-		int i = 0;
-		RunnerButton? app = (RunnerButton)this.app_list.get_row_at_index(0);
+		RunnerButton? app = (RunnerButton)this.app_list.get_first_child();
 
 		while (app != null) {
 			app.score = apps.fuzzy_score(this.entry.text, app.app);
-			app = (RunnerButton)this.app_list.get_row_at_index(++i);
+			app = (RunnerButton)app.get_next_sibling();
 		}
 		this.app_list.invalidate_sort();
 		this.app_list.invalidate_filter();
