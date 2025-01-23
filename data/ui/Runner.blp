@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using Adw 1;
 
 template $Runner: Astal.Window {
     styles [
@@ -36,6 +37,27 @@ template $Runner: Astal.Window {
                 "title-4",
                 "top_left_right_corner_borders"
             ]
+        }
+
+        Adw.Bin math_bin {
+            visible: false;
+
+            styles [
+                "bottom_left_right_corner_borders",
+                "padding_10",
+                "view"
+            ]
+
+            Label math_label {
+                justify: left;
+                halign: start;
+                valign: center;
+
+                styles [
+                    "title-2",
+                    "numeric-result"
+                ]
+            }
         }
 
         ScrolledWindow {
