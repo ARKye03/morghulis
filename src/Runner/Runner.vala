@@ -36,11 +36,11 @@ public class Runner : Astal.Window {
 
 	private bool looks_like_math(string text) {
 		return text[0] != ':' &&
-			   text.contains("+") ||
-			   text.contains("-") ||
-			   text.contains("*") ||
-			   text.contains("/") ||
-			   text.contains("^");
+			   (text.contains("+") ||
+				text.contains("-") ||
+				text.contains("*") ||
+				text.contains("/") ||
+				text.contains("^"));
 	}
 
 	[GtkCallback]
@@ -59,7 +59,10 @@ public class Runner : Astal.Window {
 			} else {
 				math_bin.set_visible(false);
 			}
+			app_list.set_visible(false);
+			return;
 		} else {
+			app_list.set_visible(true);
 			math_bin.set_visible(false);
 		}
 
