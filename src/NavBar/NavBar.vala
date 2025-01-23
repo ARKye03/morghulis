@@ -3,12 +3,6 @@ using GtkLayerShell;
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Astal.Window {
 	public static NavBar instance { get; private set; }
-
-	// Properties
-	private AstalMpris.Mpris mpris { get; set; }
-
-	public AstalMpris.Player mpd { get; set; }
-	public AstalWp.Endpoint speaker { get; set; }
 	public AstalBattery.Device battery { get; set; }
 
 	[GtkChild]
@@ -26,7 +20,6 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	public unowned Adw.Bin active_client;
 
-	// Callback Methods
 	[GtkCallback]
 	public void tray_popover_popup() {
 		tray_popover.popup();
@@ -60,7 +53,6 @@ public class NavBar : Astal.Window {
 		return @"$(Math.round(percentage * 100))%";
 	}
 
-	// Constructor
 	public NavBar() {
 		Object(
 			namespace : "NavBar",
@@ -70,8 +62,6 @@ public class NavBar : Astal.Window {
 	}
 
 	construct {
-		speaker = AstalWp.get_default().audio.default_speaker;
-		mpris = AstalMpris.Mpris.get_default();
 		battery = AstalBattery.Device.get_default();
 
 		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
