@@ -38,3 +38,6 @@ test(
     compile_schemas,
     args: ['--strict', '--dry-run', meson.current_source_dir()],
 )
+
+# Install the icon to /usr/share/pixmaps
+install_data('com.github.ARKye03.morghulis.png', install_dir: '/usr/share/pixmaps')

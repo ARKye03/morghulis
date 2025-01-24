@@ -9,7 +9,6 @@ public class MorghulCTL {
 			{ "start", 0, OptionFlags.NONE, OptionArg.NONE, out start, "Start the application", null },
 			{ "toggle-window", 't', OptionFlags.NONE, OptionArg.STRING, out toggle_window, "Toggle window(s)", "WINDOW" },
 			{ "show-inspector", 'i', OptionFlags.NONE, OptionArg.NONE, out show_inspector, "Show inspector", null },
-			{ "autostart", 'a', OptionFlags.NONE, OptionArg.STRING, out autostart, "Control autostart (on/off/status)", "STATE" },
 			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, out quit, "Quit the application", null },
 			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, out show_version, "Show version", null },
 		};
@@ -34,8 +33,6 @@ public class MorghulCTL {
 			return toggle_window_func(toggle_window);
 		} else if (show_inspector) {
 			return toggle_inspector();
-		} else if (autostart != null) {
-			return manage_autostart(autostart);
 		} else if (quit) {
 			return exit_morghulis();
 		} else {
@@ -71,48 +68,6 @@ public class MorghulCTL {
 			return 1;
 		}
 		return 0;
-	}
-
-	private static int manage_autostart(string state) {
-		string autostart_dir = Path.build_filename(Environment.get_user_config_dir(), "autostart");
-		string target_file = Path.build_filename(autostart_dir, "com.github.ARKye03.morghulis.desktop");
-
-		switch (state.down()) {
-			case "on":
-				try {
-					DirUtils.create_with_parents(autostart_dir, 0755);
-					File source = File.new_for_path("/usr/share/applications/com.github.ARKye03.morghulis.desktop");
-					File dest = File.new_for_path(target_file);
-					source.copy(dest, FileCopyFlags.NONE);
-					stdout.printf("Autostart enabled\n");
-					return 0;
-				} catch (Error e) {
-					stderr.printf("Failed to enable autostart: %s\n", e.message);
-					return 1;
-				}
-
-			case "off":
-				try {
-					File file = File.new_for_path(target_file);
-					if (file.query_exists()) {
-						file.delete();
-					}
-					stdout.printf("Autostart disabled\n");
-					return 0;
-				} catch (Error e) {
-					stderr.printf("Failed to disable autostart: %s\n", e.message);
-					return 1;
-				}
-
-			case "status":
-				File file = File.new_for_path(target_file);
-				stdout.printf("Autostart is %s\n", file.query_exists() ? "enabled" : "disabled");
-				return 0;
-
-			default:
-				stderr.printf("Invalid autostart option. Use 'on', 'off' or 'status'\n");
-				return 1;
-		}
 	}
 
 	private static int toggle_window_func(string window) {
@@ -189,7 +144,6 @@ public class MorghulCTL {
 	private static bool start = false;
 	private static string? toggle_window = null;
 	private static bool show_inspector = false;
-	private static string? autostart = null;
 	private static bool quit = false;
 	private static bool show_version = false;
 }
