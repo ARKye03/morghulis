@@ -53,7 +53,7 @@ public class Runner : Astal.Window {
 			double result = mpars_evaluate(input, out error);
 
 			if (error == null) {
-				math_label.set_text("%s = %g".printf(input, result));
+				math_label.set_text(result.to_string());
 				math_bin.set_visible(true);
 				return;
 			} else {
@@ -82,9 +82,9 @@ public class Runner : Astal.Window {
 
 	[GtkCallback]
 	public void launch_first_runner_button() {
-		RunnerButton selected_button = (RunnerButton)this.app_list.get_row_at_index(0);
+		RunnerButton selected_button = (RunnerButton)this.app_list.get_first_child();
 
-		if (selected_button != null) {
+		if (selected_button != null && app_list.visible) {
 			selected_button.activate();
 			this.visible = false;
 		}
