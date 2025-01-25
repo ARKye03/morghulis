@@ -5,7 +5,8 @@ using AstalBattery 0.1;
 
 template $NavBar: Astal.Window {
   styles [
-    "nav_bar_master"
+    "top_left_right_corner_borders",
+    "x_padding_5"
   ]
 
   title: "NavBar";
@@ -13,28 +14,34 @@ template $NavBar: Astal.Window {
   exclusivity: exclusive;
 
   CenterBox {
+    styles [
+      "y_padding_5"
+    ]
+
     [start]
     Box {
       spacing: 10;
 
-      Button apps_button {
-        icon-name: "view-grid-symbolic";
-        name: "apps_button";
-        clicked => $toggle_runner();
-
+      Adw.Bin {
         styles [
-          "nav_bar_box",
-          "rounded",
+          "master_border",
           "view",
-          "nav_bar_button"
+          "rounded"
         ]
+
+        Button {
+          icon-name: "view-grid-symbolic";
+          name: "apps_button";
+          clicked => $toggle_runner();
+        }
       }
 
       Adw.Bin active_client {
         visible: false;
 
         styles [
-          "nav_bar_box",
+          "x_padding_5",
+          "master_border",
           "rounded",
           "view"
         ]
@@ -44,7 +51,7 @@ template $NavBar: Astal.Window {
         visible: false;
 
         styles [
-          "nav_bar_box",
+          "master_border",
           "rounded",
           "view"
         ]
@@ -55,7 +62,7 @@ template $NavBar: Astal.Window {
     Adw.Bin workspaces {
       styles [
         "workspaces",
-        "nav_bar_box",
+        "master_border",
         "rounded",
         "view"
       ]
@@ -65,26 +72,18 @@ template $NavBar: Astal.Window {
     Box right_box {
       spacing: 10;
 
-      styles [
-        "right_box"
-      ]
-
-      Button {
-        clicked => $tray_popover_popup();
-
+      Adw.Bin {
         styles [
-          "nav_bar_box",
-          "rounded",
+          "master_border",
           "view",
-          "nav_bar_button"
+          "rounded"
         ]
 
-        Box {
-          Image tray_popover_icon {
-            icon-name: "go-up-symbolic";
-          }
+        MenuButton {
+          valign: center;
+          icon-name: "go-up-symbolic";
 
-          Popover tray_popover {
+          popover: Popover {
             position: top;
             height-request: 50;
             autohide: true;
@@ -92,7 +91,7 @@ template $NavBar: Astal.Window {
             margin-bottom: 10;
 
             $Tray tray {}
-          }
+          };
         }
       }
 
@@ -100,7 +99,7 @@ template $NavBar: Astal.Window {
         visible: bind template.battery as <AstalBattery.Device>.is-present;
 
         styles [
-          "nav_bar_box",
+          "master_border",
           "rounded",
           "view"
         ]
@@ -116,18 +115,25 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Button {
-        clicked => $clock_popover_popup();
-
+      Adw.Bin {
         styles [
-          "nav_bar_label",
-          "nav_bar_box",
-          "rounded",
-          "nav_bar_button"
+          "master_border",
+          "view",
+          "rounded"
         ]
 
-        Box {
-          Popover clock_popover {
+        MenuButton {
+          styles [
+            "nav_bar_label",
+            "master_border",
+            "rounded"
+          ]
+
+          Label clock {
+            name: "clock";
+          }
+
+          popover: Popover {
             position: top;
             width-request: 350;
             height-request: 250;
@@ -136,25 +142,28 @@ template $NavBar: Astal.Window {
             margin-bottom: 10;
 
             Calendar {}
-          }
-
-          Label clock {
-            name: "clock";
-          }
+          };
         }
       }
 
-      Button power_button {
-        icon-name: "system-shutdown-symbolic";
-        name: "power_button";
-        clicked => $toggle_side_dashboard();
-
+      Adw.Bin {
         styles [
-          "nav_bar_box",
-          "rounded",
+          "master_border",
           "view",
-          "nav_bar_button"
+          "rounded"
         ]
+
+        Button power_button {
+          icon-name: "system-shutdown-symbolic";
+          name: "power_button";
+          clicked => $toggle_side_dashboard();
+
+          styles [
+            "master_border",
+            "rounded",
+            "view",
+          ]
+        }
       }
     }
   }

@@ -1,38 +1,6 @@
 @use "Colors";
 @use "adw";
 
-.mpris_window {
-    all: unset;
-}
-
-.mpris_master_box {
-    @include Colors.MasterBorder;
-    min-width: 270px;
-    min-height: 150px;
-    padding: 10px;
-}
-
-.mpris_media_info {
-
-    & .player_name_label {
-        color: adw.$light_3;
-        font-weight: bold;
-        font-size: 0.8em;
-    }
-
-    & .title_label {
-        color: adw.$light_2;
-        font-weight: bold;
-        font-size: 1.2em;
-    }
-
-    & .artist_label {
-        color: adw.$light_3;
-        font-weight: bold;
-        font-size: 1.0em;
-    }
-}
-
 .mpris_slider {
     border-radius: 5px;
     padding: 5px;

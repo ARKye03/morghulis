@@ -1,30 +1,11 @@
 @use "Colors";
 @use "adw";
 
-.nav_bar_master {
-    background-color: adw.$window_bg_color;
-    border-top-left-radius: Colors.$master-border-radius;
-    border-top-right-radius: Colors.$master-border-radius;
-    padding: 0 5px;
-}
-
-.nav_bar_box {
-    margin: 5px 0;
-    @include Colors.MasterBorder;
-    padding: 0 10px;
-}
-
-.nav_bar_button {
-    background-color: adw.$view_bg_color;
-    color: adw.$view_fg_color;
-}
-
 .workspaces button {
     font-size: 16px;
     padding-right: 5px;
     transition: all .2s ease-in-out;
 }
-
 
 .has_windows,
 .occupied {
@@ -41,12 +22,4 @@
 
 .nav_bar_label {
     font-size: 16px;
-}
-
-.notif_count_label {
-    border: 1px solid adw.$dark_3;
-    min-width: 1em;
-    margin-right: -5px;
-    padding: 1px;
-    border-radius: 25px;
 }

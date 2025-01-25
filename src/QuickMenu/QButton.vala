@@ -42,9 +42,6 @@ public class QButton : Gtk.Box {
 		clicked_extras();
 	}
 
-	static construct {
-		set_css_name("quick_settings_button");
-	}
 	QButton() {
 		Object(
 			name: "Button"

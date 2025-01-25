@@ -1,11 +1,4 @@
 @use "adw";
 
 $master-border-color: #8839ef;
-
-
-@mixin MasterBorder {
-  // border: 1px solid adw.$borders_color;
-  border: unset;
-}
-
 $master-border-radius: 10px;

@@ -5,10 +5,13 @@ template $Mpris: Box {
     orientation: vertical;
     hexpand: true;
     spacing: 5;
+    width-request: 270;
+    height-request: 150;
 
     styles [
-        "mpris_master_box",
+        "master_border",
         "rounded",
+        "padding_10",
         "view"
     ]
 
@@ -33,10 +36,6 @@ template $Mpris: Box {
             valign: center;
             spacing: 10;
 
-            styles [
-                "mpris_media_info"
-            ]
-
             Label player_name {
                 label: bind template.player as <AstalMpris.Player>.identity;
                 halign: start;
@@ -44,7 +43,7 @@ template $Mpris: Box {
                 max-width-chars: 25;
 
                 styles [
-                    "player_name_label",
+                    "title_5",
                     "dim-label"
                 ]
             }
@@ -56,7 +55,7 @@ template $Mpris: Box {
                 max-width-chars: 18;
 
                 styles [
-                    "title_label"
+                    "title-3"
                 ]
             }
 
@@ -67,7 +66,7 @@ template $Mpris: Box {
                 max-width-chars: 20;
 
                 styles [
-                    "artist_label"
+                    "title-4"
                 ]
             }
         }

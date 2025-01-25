@@ -6,7 +6,6 @@
 }
 
 .osd_slider {
-    @include Colors.MasterBorder;
     min-width: 250px;
 
     & trough {

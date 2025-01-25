@@ -20,13 +20,7 @@ public class RiverTags : Gtk.Box {
 			int tag_index = i;
 			var tag_button = new Gtk.Button();
 			var tag_button_label = new Gtk.Label(wicons[tag_index]);
-			tag_button_label.justify = Gtk.Justification.CENTER;
-			tag_button_label.halign = Gtk.Align.CENTER;
-			tag_button_label.xalign = 0.5f;
-
 			tag_button.set_child(tag_button_label);
-			tag_button.valign = Gtk.Align.CENTER;
-			tag_button.halign = Gtk.Align.CENTER;
 
 			this.append(tag_button);
 			tags.append(tag_button);
