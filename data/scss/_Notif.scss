@@ -2,28 +2,33 @@
 @use "adw";
 
 .notification_badge {
-    background-color: adw.$view_bg_color;
-    color: adw.$view_fg_color;
-
     &.critical {
-        border: 1px solid adw.$red_5;
+        label.app_name {
+            color: adw.$red_5;
+        }
+
+        separator {
+            color: adw.$red_5;
+        }
     }
 
     &.normal {
-        border: 1px solid adw.$blue_5;
+        label.app_name {
+            color: adw.$blue_5;
+        }
+
+        separator {
+            color: adw.$blue_5;
+        }
     }
 
     &.low {
-        border: 1px solid adw.$green_5;
+        label.app_name {
+            color: adw.$green_5;
+        }
+
+        separator {
+            color: adw.$green_5;
+        }
     }
-}
-
-.notif_header_box {
-    border-top-left-radius: Colors.$master-border-radius;
-    border-top-right-radius: Colors.$master-border-radius;
-    padding: 0 0 0 10px;
-}
-
-.notif_body_box {
-    padding: 10px;
 }

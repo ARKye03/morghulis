@@ -14,7 +14,6 @@ public class NotifPop : ListBoxRow {
 			action.label = a.label;
 			action.clicked.connect(() => this.notification.invoke(a.id));
 			action.hexpand = true;
-			action.add_css_class("notification-action");
 			this.actions_box.append(action);
 		});
 	}
