@@ -206,23 +206,13 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 		// Percentage
 		layout = Pango.cairo_create_layout(cr);
-		layout.set_text("%d".printf((int)(percentage * 100.0)), -1);
+		int rounded_percentage = (int)Math.round(percentage * 100.0);
+		layout.set_text("%d".printf(rounded_percentage), -1);
 		desc = Pango.FontDescription.from_string(@"$font $font_size");
 		layout.set_font_description(desc);
 		Pango.cairo_update_layout(cr, layout);
 		layout.get_size(out w, out h);
 		cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - ((h / Pango.SCALE) / 2));
 		Pango.cairo_show_layout(cr, layout);
-
-		// Units indicator (percentage)
-		//  layout.set_text("PERCENT", -1);
-		//  desc = Pango.FontDescription.from_string(font + " 8");
-		//  layout.set_font_description(desc);
-		//  Pango.cairo_update_layout(cr, layout);
-		//  layout.get_size(out w, out h);
-		//  cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y + 13);
-		//  Pango.cairo_show_layout(cr, layout);
-		//  context.restore();
-		//  cr.restore();
 	}
 }
