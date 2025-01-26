@@ -1,17 +1,6 @@
-/* -*- Mode: Vala; indent-tabs-mode: nil; c-basic-offset: 4; tab-width: 4 -*- */
-/* vim: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab : */
-
 /*
- * CircularProgressBar.vala
- *
- * Custom Gtk.Widget to provide a circular progress bar.i
- * This is the Gtk4 version, it extends/subclasses Gtk.DrawingArea.
- *
- * Line width as 0 turns the widget into a pie.
- *
- * FIXME: Text size is hardcoded.
- *
- * José Miguel Fonte
+ * Original work from José Miguel Fonte
+ * https://github.com/phastmike/vala-circular-progress-bar
  */
 
 using Gtk;
