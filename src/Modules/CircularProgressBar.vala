@@ -25,7 +25,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 	public bool radius_filled { set; get; default = false; }
 
 	[Description(nick = "Font", blurb = "Font description without size, just the font name")]
-	public string font { set; get; default = "URW Gothic"; }
+	public string font { set; get; default = "FreeSerifBold"; }
 
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Cairo.LineCap")]
 	public Cairo.LineCap line_cap { set; get; default = Cairo.LineCap.BUTT; }
@@ -140,6 +140,28 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 	public override Gtk.SizeRequestMode get_request_mode() {
 		return Gtk.SizeRequestMode.CONSTANT_SIZE;
+	}
+
+	public override void measure(Gtk.Orientation orientation,
+								 int for_size,
+								 out int minimum,
+								 out int natural,
+								 out int minimum_baseline,
+								 out int natural_baseline) {
+		// Base minimum size
+		minimum = 24;
+
+		// Calculate natural size
+		if (icon_name != null) {
+			natural = minimum;                          // Icon mode uses minimum as natural
+		} else {
+			// Text mode - ensure natural size is at least minimum
+			natural = int.max(minimum, font_size * 2);
+		}
+
+		// Baselines not used for circular widget
+		minimum_baseline = -1;
+		natural_baseline = -1;
 	}
 
 	public void draw(DrawingArea da, Cairo.Context cr, int width, int height) {
