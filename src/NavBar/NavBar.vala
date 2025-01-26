@@ -75,23 +75,21 @@ public class NavBar : Astal.Window {
 		}
 
 		init_clock();
-		init_volume();
+		//  init_volume();
 		instance = this;
 	}
 
-	private void init_volume() {
-		var cpbv = new CircularProgressBar();
+	//  private void init_volume() {
+	//  	var cpbv = new CircularProgressBar();
 
-		speaker.bind_property("volume", cpbv, "percentage", BindingFlags.SYNC_CREATE);
-		//  cpbv.content_width = 35;
-		//  cpbv.content_height = 35;
-		cpbv.line_width = 5;
-		cpbv.line_cap = Cairo.LineCap.ROUND;
-		cpbv.font_size = 10;
-		speaker.bind_property("volume_icon", cpbv, "icon_name", BindingFlags.SYNC_CREATE);
+	//  	speaker.bind_property("volume", cpbv, "percentage", BindingFlags.SYNC_CREATE);
+	//  	cpbv.line_width = 5;
+	//  	cpbv.line_cap = Cairo.LineCap.ROUND;
+	//  	cpbv.font_size = 10;
+	//  	speaker.bind_property("volume_icon", cpbv, "icon_name", BindingFlags.SYNC_CREATE);
 
-		volume_bin.set_child(cpbv);
-	}
+	//  	volume_bin.set_child(cpbv);
+	//  }
 
 #if hyprland
 	private AstalHyprland.Hyprland hyprland { get; set; }
