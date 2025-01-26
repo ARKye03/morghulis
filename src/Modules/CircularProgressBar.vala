@@ -14,6 +14,10 @@ public class CircularProgressBar : Gtk.DrawingArea {
 	private string _radius_fill_color;
 	private string _progress_fill_color;
 
+	private Cairo.Surface? _cached_icon_surface = null;
+	private int _cached_icon_size = 0;
+	private string? _cached_icon_name = null;
+
 	[Description(nick = "Center Fill", blurb = "Center Fill toggle")]
 	public bool center_filled { set; get; default = false; }
 
@@ -216,37 +220,48 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		Gdk.cairo_set_source_rgba(cr, color);
 
 		if (icon_name != null) {
-			var icon_theme = Gtk.IconTheme.get_for_display(get_display());
-			var paintable = icon_theme.lookup_icon(icon_name,
-												   null,
-												   int.min(width, height) / 2,
-												   get_scale_factor(),
-												   Gtk.TextDirection.NONE,
-												   0);
+			int icon_size = int.min(width, height) / 2;
 
-			if (paintable != null) {
-				var icon_width = paintable.get_intrinsic_width();
-				var icon_height = paintable.get_intrinsic_height();
+			// Rebuild cache only if something changed
+			if (_cached_icon_surface == null ||
+				icon_name != _cached_icon_name ||
+				icon_size != _cached_icon_size) {
+				_cached_icon_surface = null;
+				_cached_icon_name = icon_name;
+				_cached_icon_size = icon_size;
 
-				var snapshot = new Gtk.Snapshot();
-				paintable.snapshot(snapshot, icon_width, icon_height);
+				var icon_theme = Gtk.IconTheme.get_for_display(get_display());
+				var paintable = icon_theme.lookup_icon(icon_name,
+													   null,
+													   icon_size,
+													   get_scale_factor(),
+													   Gtk.TextDirection.NONE,
+													   0);
+				if (paintable != null) {
+					var snapshot = new Gtk.Snapshot();
+					paintable.snapshot(snapshot, icon_size, icon_size);
 
-				var node = snapshot.to_node();
-				if (node != null) {
-					var surface = new Cairo.Surface.similar(cr.get_target(),
-															Cairo.Content.COLOR_ALPHA,
-															icon_width,
-															icon_height);
-					var surface_cr = new Cairo.Context(surface);
-					node.draw(surface_cr);
-
-					cr.save();
-					cr.translate(center_x - icon_width / 2,
-								 center_y - icon_height / 2);
-					cr.set_source_surface(surface, 0, 0);
-					cr.paint();
-					cr.restore();
+					var node = snapshot.to_node();
+					if (node != null) {
+						_cached_icon_surface = new Cairo.Surface.similar(
+							cr.get_target(),
+							Cairo.Content.COLOR_ALPHA,
+							icon_size,
+							icon_size
+							);
+						var surface_cr = new Cairo.Context(_cached_icon_surface);
+						node.draw(surface_cr);
+					}
 				}
+			}
+
+			// Paint from cache if valid
+			if (_cached_icon_surface != null) {
+				cr.save();
+				cr.translate(center_x - icon_size / 2, center_y - icon_size / 2);
+				cr.set_source_surface(_cached_icon_surface, 0, 0);
+				cr.paint();
+				cr.restore();
 			}
 		} else {
 			layout = Pango.cairo_create_layout(cr);
