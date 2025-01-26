@@ -153,7 +153,8 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 		// Calculate natural size
 		if (icon_name != null) {
-			natural = minimum;                          // Icon mode uses minimum as natural
+			// Icon mode uses minimum as natural
+			natural = minimum;
 		} else {
 			// Text mode - ensure natural size is at least minimum
 			natural = int.max(minimum, font_size * 2);
@@ -233,7 +234,6 @@ public class CircularProgressBar : Gtk.DrawingArea {
 			}
 		}
 
-		// Textual information
 		var context = get_style_context();
 		context.save();
 		// FIXME: Gtk4 has changes in the styles that need to be reviewed
