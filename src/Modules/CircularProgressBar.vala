@@ -18,6 +18,7 @@ using Gtk;
 using Cairo;
 public class CircularProgressBar : Gtk.DrawingArea {
 	private int _line_width;
+	private int _font_size;
 	private double _percentage;
 	private string _center_fill_color;
 	private string _radius_fill_color;
@@ -34,6 +35,19 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Cairo.LineCap")]
 	public Cairo.LineCap line_cap { set; get; default = Cairo.LineCap.BUTT; }
+
+	[Description(nick = "Font Size", blurb = "Size of the percentage text")]
+	public int font_size {
+		get { return _font_size; }
+		set {
+			if (value < 1) {
+				_font_size = 1;
+			} else {
+				_font_size = value;
+			}
+			queue_draw();
+		}
+	}
 
 	[Description(nick = "Inside circle fill color", blurb = "Center pad fill color (Check Gdk.RGBA parse method)")]
 	public string center_fill_color {
@@ -109,6 +123,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		_center_fill_color = "#adadad";
 		_radius_fill_color = "#d3d3d3";
 		_progress_fill_color = "#4a90d9";
+		_font_size = 24;
 	}
 
 	public CircularProgressBar() {
@@ -118,13 +133,6 @@ public class CircularProgressBar : Gtk.DrawingArea {
 			queue_draw();
 		});
 	}
-
-	//  private int calculate_radius() {
-	//  	int w = get_width() / 2;
-	//  	int h = get_height() / 2;
-	//  	int min_dim = int.min(w, h);
-	//  	return int.max(0, min_dim - 1);
-	//  }
 
 	public override Gtk.SizeRequestMode get_request_mode() {
 		return Gtk.SizeRequestMode.CONSTANT_SIZE;
@@ -210,7 +218,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		// Percentage
 		layout = Pango.cairo_create_layout(cr);
 		layout.set_text("%d".printf((int)(percentage * 100.0)), -1);
-		desc = Pango.FontDescription.from_string(font + " 24");
+		desc = Pango.FontDescription.from_string(@"$font $font_size");
 		layout.set_font_description(desc);
 		Pango.cairo_update_layout(cr, layout);
 		layout.get_size(out w, out h);
