@@ -4,6 +4,7 @@ using GtkLayerShell;
 public class NavBar : Astal.Window {
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
+	private AstalWp.Endpoint speaker { get; set; }
 
 	[GtkChild]
 	public unowned Gtk.Label clock;
@@ -50,6 +51,7 @@ public class NavBar : Astal.Window {
 
 	construct {
 		battery = AstalBattery.Device.get_default();
+		speaker = AstalWp.get_default().audio.default_speaker;
 
 		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
 #if hyprland
@@ -79,7 +81,6 @@ public class NavBar : Astal.Window {
 
 	private void init_volume() {
 		var cpbv = new CircularProgressBar();
-		var speaker = AstalWp.get_default().audio.default_speaker;
 
 		speaker.bind_property("volume", cpbv, "percentage", BindingFlags.SYNC_CREATE);
 		cpbv.content_width = 35;
