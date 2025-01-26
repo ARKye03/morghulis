@@ -23,3 +23,16 @@
 .nav_bar_label {
     font-size: 16px;
 }
+
+.tray_button {
+    button {
+        image {
+            transition: all 0.2s ease-in-out;
+            transform: rotate(0deg);
+        }
+
+        &:checked image {
+            transform: rotate(180deg);
+        }
+    }
+}
