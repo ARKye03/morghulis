@@ -8,6 +8,7 @@ using Cairo;
 public class CircularProgressBar : Gtk.DrawingArea {
 	private int _line_width;
 	private int _font_size;
+	private string _icon_name;
 	private double _percentage;
 	private string _center_fill_color;
 	private string _radius_fill_color;
@@ -106,6 +107,15 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		}
 	}
 
+	[Description(nick = "Icon Name", blurb = "System icon name to display instead of percentage")]
+	public string? icon_name {
+		get { return _icon_name; }
+		set {
+			_icon_name = value;
+			queue_draw();
+		}
+	}
+
 	construct {
 		_line_width = 1;
 		_percentage = 0;
@@ -113,6 +123,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		_radius_fill_color = "#d3d3d3";
 		_progress_fill_color = "#4a90d9";
 		_font_size = 24;
+		_icon_name = null;
 	}
 
 	public CircularProgressBar() {
@@ -204,15 +215,49 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		color = context.get_color();
 		Gdk.cairo_set_source_rgba(cr, color);
 
-		// Percentage
-		layout = Pango.cairo_create_layout(cr);
-		int rounded_percentage = (int)Math.round(percentage * 100.0);
-		layout.set_text("%d".printf(rounded_percentage), -1);
-		desc = Pango.FontDescription.from_string(@"$font $font_size");
-		layout.set_font_description(desc);
-		Pango.cairo_update_layout(cr, layout);
-		layout.get_size(out w, out h);
-		cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - ((h / Pango.SCALE) / 2));
-		Pango.cairo_show_layout(cr, layout);
+		if (icon_name != null) {
+			var icon_theme = Gtk.IconTheme.get_for_display(get_display());
+			var paintable = icon_theme.lookup_icon(icon_name,
+												   null,
+												   int.min(width, height) / 2,
+												   get_scale_factor(),
+												   Gtk.TextDirection.NONE,
+												   0);
+
+			if (paintable != null) {
+				var icon_width = paintable.get_intrinsic_width();
+				var icon_height = paintable.get_intrinsic_height();
+
+				var snapshot = new Gtk.Snapshot();
+				paintable.snapshot(snapshot, icon_width, icon_height);
+
+				var node = snapshot.to_node();
+				if (node != null) {
+					var surface = new Cairo.Surface.similar(cr.get_target(),
+															Cairo.Content.COLOR_ALPHA,
+															icon_width,
+															icon_height);
+					var surface_cr = new Cairo.Context(surface);
+					node.draw(surface_cr);
+
+					cr.save();
+					cr.translate(center_x - icon_width / 2,
+								 center_y - icon_height / 2);
+					cr.set_source_surface(surface, 0, 0);
+					cr.paint();
+					cr.restore();
+				}
+			}
+		} else {
+			layout = Pango.cairo_create_layout(cr);
+			int rounded_percentage = (int)Math.round(percentage * 100.0);
+			layout.set_text("%d".printf(rounded_percentage), -1);
+			desc = Pango.FontDescription.from_string(@"$font $font_size");
+			layout.set_font_description(desc);
+			Pango.cairo_update_layout(cr, layout);
+			layout.get_size(out w, out h);
+			cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - ((h / Pango.SCALE) / 2));
+			Pango.cairo_show_layout(cr, layout);
+		}
 	}
 }

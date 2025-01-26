@@ -88,6 +88,7 @@ public class NavBar : Astal.Window {
 		cpbv.line_width = 5;
 		cpbv.line_cap = Cairo.LineCap.ROUND;
 		cpbv.font_size = 10;
+		speaker.bind_property("volume_icon", cpbv, "icon_name", BindingFlags.SYNC_CREATE);
 
 		volume_bin.set_child(cpbv);
 	}
