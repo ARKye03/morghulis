@@ -14,6 +14,9 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	public unowned Adw.Bin active_client;
 
+	[GtkChild]
+	public unowned Adw.Bin volume_bin;
+
 	[GtkCallback]
 	public void toggle_side_dashboard() {
 		try {
@@ -70,7 +73,22 @@ public class NavBar : Astal.Window {
 		}
 
 		init_clock();
+		init_volume();
 		instance = this;
+	}
+
+	private void init_volume() {
+		var cpbv = new CircularProgressBar();
+		var speaker = AstalWp.get_default().audio.default_speaker;
+
+		speaker.bind_property("volume", cpbv, "percentage", BindingFlags.SYNC_CREATE);
+		cpbv.content_width = 35;
+		cpbv.content_height = 35;
+		cpbv.line_width = 5;
+		cpbv.line_cap = Cairo.LineCap.ROUND;
+		cpbv.font_size = 10;
+
+		volume_bin.set_child(cpbv);
 	}
 
 #if hyprland
