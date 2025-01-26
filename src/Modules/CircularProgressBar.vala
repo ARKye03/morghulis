@@ -8,10 +8,15 @@ using Cairo;
 public class CircularProgressBar : Gtk.DrawingArea {
 	private int _line_width;
 	private int _font_size;
+	private string _icon_name;
 	private double _percentage;
 	private string _center_fill_color;
 	private string _radius_fill_color;
 	private string _progress_fill_color;
+
+	private Cairo.Surface? _cached_icon_surface = null;
+	private int _cached_icon_size = 0;
+	private string? _cached_icon_name = null;
 
 	[Description(nick = "Center Fill", blurb = "Center Fill toggle")]
 	public bool center_filled { set; get; default = false; }
@@ -20,7 +25,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 	public bool radius_filled { set; get; default = false; }
 
 	[Description(nick = "Font", blurb = "Font description without size, just the font name")]
-	public string font { set; get; default = "URW Gothic"; }
+	public string font { set; get; default = "FreeSerifBold"; }
 
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Cairo.LineCap")]
 	public Cairo.LineCap line_cap { set; get; default = Cairo.LineCap.BUTT; }
@@ -106,6 +111,15 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		}
 	}
 
+	[Description(nick = "Icon Name", blurb = "System icon name to display instead of percentage")]
+	public string? icon_name {
+		get { return _icon_name; }
+		set {
+			_icon_name = value;
+			queue_draw();
+		}
+	}
+
 	construct {
 		_line_width = 1;
 		_percentage = 0;
@@ -113,6 +127,7 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		_radius_fill_color = "#d3d3d3";
 		_progress_fill_color = "#4a90d9";
 		_font_size = 24;
+		_icon_name = null;
 	}
 
 	public CircularProgressBar() {
@@ -125,6 +140,28 @@ public class CircularProgressBar : Gtk.DrawingArea {
 
 	public override Gtk.SizeRequestMode get_request_mode() {
 		return Gtk.SizeRequestMode.CONSTANT_SIZE;
+	}
+
+	public override void measure(Gtk.Orientation orientation,
+								 int for_size,
+								 out int minimum,
+								 out int natural,
+								 out int minimum_baseline,
+								 out int natural_baseline) {
+		// Base minimum size
+		minimum = 24;
+
+		// Calculate natural size
+		if (icon_name != null) {
+			natural = minimum;                          // Icon mode uses minimum as natural
+		} else {
+			// Text mode - ensure natural size is at least minimum
+			natural = int.max(minimum, font_size * 2);
+		}
+
+		// Baselines not used for circular widget
+		minimum_baseline = -1;
+		natural_baseline = -1;
 	}
 
 	public void draw(DrawingArea da, Cairo.Context cr, int width, int height) {
@@ -204,15 +241,60 @@ public class CircularProgressBar : Gtk.DrawingArea {
 		color = context.get_color();
 		Gdk.cairo_set_source_rgba(cr, color);
 
-		// Percentage
-		layout = Pango.cairo_create_layout(cr);
-		int rounded_percentage = (int)Math.round(percentage * 100.0);
-		layout.set_text("%d".printf(rounded_percentage), -1);
-		desc = Pango.FontDescription.from_string(@"$font $font_size");
-		layout.set_font_description(desc);
-		Pango.cairo_update_layout(cr, layout);
-		layout.get_size(out w, out h);
-		cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - ((h / Pango.SCALE) / 2));
-		Pango.cairo_show_layout(cr, layout);
+		if (icon_name != null) {
+			int icon_size = int.min(width, height) / 2;
+
+			// Rebuild cache only if something changed
+			if (_cached_icon_surface == null ||
+				icon_name != _cached_icon_name ||
+				icon_size != _cached_icon_size) {
+				_cached_icon_surface = null;
+				_cached_icon_name = icon_name;
+				_cached_icon_size = icon_size;
+
+				var icon_theme = Gtk.IconTheme.get_for_display(get_display());
+				var paintable = icon_theme.lookup_icon(icon_name,
+													   null,
+													   icon_size,
+													   get_scale_factor(),
+													   Gtk.TextDirection.NONE,
+													   0);
+				if (paintable != null) {
+					var snapshot = new Gtk.Snapshot();
+					paintable.snapshot(snapshot, icon_size, icon_size);
+
+					var node = snapshot.to_node();
+					if (node != null) {
+						_cached_icon_surface = new Cairo.Surface.similar(
+							cr.get_target(),
+							Cairo.Content.COLOR_ALPHA,
+							icon_size,
+							icon_size
+							);
+						var surface_cr = new Cairo.Context(_cached_icon_surface);
+						node.draw(surface_cr);
+					}
+				}
+			}
+
+			// Paint from cache if valid
+			if (_cached_icon_surface != null) {
+				cr.save();
+				cr.translate(center_x - icon_size / 2, center_y - icon_size / 2);
+				cr.set_source_surface(_cached_icon_surface, 0, 0);
+				cr.paint();
+				cr.restore();
+			}
+		} else {
+			layout = Pango.cairo_create_layout(cr);
+			int rounded_percentage = (int)Math.round(percentage * 100.0);
+			layout.set_text("%d".printf(rounded_percentage), -1);
+			desc = Pango.FontDescription.from_string(@"$font $font_size");
+			layout.set_font_description(desc);
+			Pango.cairo_update_layout(cr, layout);
+			layout.get_size(out w, out h);
+			cr.move_to(center_x - ((w / Pango.SCALE) / 2), center_y - ((h / Pango.SCALE) / 2));
+			Pango.cairo_show_layout(cr, layout);
+		}
 	}
 }
