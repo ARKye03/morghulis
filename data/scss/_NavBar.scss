@@ -19,7 +19,7 @@
 }
 
 .tray_button {
-    button {
+    &>button {
         image {
             transition: all 0.2s ease-in-out;
             transform: rotate(0deg);
