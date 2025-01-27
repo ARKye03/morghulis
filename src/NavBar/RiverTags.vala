@@ -9,8 +9,8 @@ public class RiverTags : Gtk.Box {
 		" ", " ", "󰊖 "
 	};
 
-	construct {
-		river = AstalRiver.River.get_default();
+	public RiverTags(AstalRiver.River river) {
+		this.river = river;
 		string focused_output = river.get_focused_output();
 		output = river.get_output(focused_output);
 		tags = new List<Gtk.Button>();

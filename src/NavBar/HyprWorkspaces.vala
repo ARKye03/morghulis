@@ -1,8 +1,8 @@
 using AstalHyprland;
 public class HyprWorkspaces : Gtk.Box {
 	private List<Gtk.Button> workspace_buttons;
-	public AstalHyprland.Hyprland hyprland { get; set; }
-	public int focused_workspace_id { get; set; }
+	private AstalHyprland.Hyprland hyprland { get; set; }
+	private int focused_workspace_id { get; set; }
 
 	// Workspace Icons
 	private static string[] wicons = {
@@ -12,8 +12,8 @@ public class HyprWorkspaces : Gtk.Box {
 		" ",
 	};
 
-	construct {
-		hyprland = AstalHyprland.Hyprland.get_default();
+	public HyprWorkspaces(AstalHyprland.Hyprland hyprland) {
+		this.hyprland = hyprland;
 		workspace_buttons = new List<Gtk.Button>();
 		spacing = 5;
 		this.hyprland.bind_property("focused-workspace", this, "focused-workspace-id", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {

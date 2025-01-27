@@ -75,21 +75,8 @@ public class NavBar : Astal.Window {
 		}
 
 		init_clock();
-		//  init_volume();
 		instance = this;
 	}
-
-	//  private void init_volume() {
-	//  	var cpbv = new CircularProgressBar();
-
-	//  	speaker.bind_property("volume", cpbv, "percentage", BindingFlags.SYNC_CREATE);
-	//  	cpbv.line_width = 5;
-	//  	cpbv.line_cap = Cairo.LineCap.ROUND;
-	//  	cpbv.font_size = 10;
-	//  	speaker.bind_property("volume_icon", cpbv, "icon_name", BindingFlags.SYNC_CREATE);
-
-	//  	volume_bin.set_child(cpbv);
-	//  }
 
 #if hyprland
 	private AstalHyprland.Hyprland hyprland { get; set; }
@@ -100,7 +87,7 @@ public class NavBar : Astal.Window {
 	private void setup_hyprland() {
 		message("Setting up Hyprland");
 		hyprland = AstalHyprland.Hyprland.get_default();
-		workspaces.set_child(new HyprWorkspaces());
+		workspaces.set_child(new HyprWorkspaces(hyprland));
 
 		Gtk.Label submap_label = new Gtk.Label("default");
 		submap_label.set_visible(false);
@@ -146,7 +133,7 @@ public class NavBar : Astal.Window {
 	private void setup_river() {
 		river = AstalRiver.River.get_default();
 
-		workspaces.set_child(new RiverTags());
+		workspaces.set_child(new RiverTags(river));
 
 		view_label.halign = Gtk.Align.START;
 		view_label.ellipsize = Pango.EllipsizeMode.END;
