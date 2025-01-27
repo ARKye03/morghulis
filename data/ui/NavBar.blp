@@ -43,6 +43,7 @@ template $NavBar: Astal.Window {
           "x_padding_5",
           "master_border",
           "rounded",
+          "title-4",
           "view"
         ]
       }
@@ -101,10 +102,12 @@ template $NavBar: Astal.Window {
 
       Box {
         visible: bind template.battery as <AstalBattery.Device>.is-present;
+        tooltip-text: "Isn't obvious?";
 
         styles [
           "master_border",
           "rounded",
+          "x_padding_5",
           "view"
         ]
 
@@ -112,6 +115,10 @@ template $NavBar: Astal.Window {
 
         Label {
           label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
+
+          styles [
+            "title-4"
+          ]
         }
 
         Image {
