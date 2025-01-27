@@ -2,7 +2,6 @@
 @use "NavBar";
 @use "Mpris";
 @use "QuickMenu";
-@use "Runner";
 @use "OnScreenDisplay";
 @use "Notif";
 
@@ -16,6 +15,10 @@ button {
     &:checked {
         background-color: adw.$dark_2;
     }
+}
+
+.all_unset {
+    all: unset;
 }
 
 .master_border {
