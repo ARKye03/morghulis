@@ -1,6 +1,5 @@
 @use "adw";
 @use "NavBar";
-@use "Mpris";
 @use "QuickMenu";
 @use "OnScreenDisplay";
 @use "Notif";
@@ -70,7 +69,7 @@ button {
     font-size: 15px;
 }
 
-.morghulis_slider {
+.hslider {
     border-radius: 5px;
     padding: 5px;
 
@@ -88,7 +87,7 @@ button {
     }
 }
 
-.morghulis_vertical_slider {
+.vslider {
     border-radius: 5px;
     padding: 5px;
 
