@@ -72,17 +72,20 @@ template $Mpris: Box {
         }
     }
 
-    Box slider_box {
-        hexpand: true;
+    CenterBox {
+        vexpand: true;
 
+        [start]
         Label current_pos {
             label: bind $current_pos(template.player as <AstalMpris.Player>.position) as <string>;
+            valign: center;
 
             styles [
-                "mpris_time_label"
+                "numeric"
             ]
         }
 
+        [center]
         Scale mpris_slider {
             hexpand: true;
 
@@ -96,11 +99,13 @@ template $Mpris: Box {
             ]
         }
 
+        [end]
         Label total_pos {
             label: bind $total_pos(template.player as <AstalMpris.Player>.length) as <string>;
+            valign: center;
 
             styles [
-                "mpris_time_label"
+                "numeric"
             ]
         }
     }
