@@ -1,10 +1,5 @@
 @use "adw";
 
-.quick_settings_grid_box {
-    background-color: adw.$window_bg_color;
-    padding: 10px;
-}
-
 .quick_settings_button {
     min-height: 60px;
     min-width: 70px;
@@ -45,10 +40,6 @@
             }
         }
     }
-}
-
-.qnetwork_item {
-    padding: 0 10px;
 }
 
 .active_profile_button {
