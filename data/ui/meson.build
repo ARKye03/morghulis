@@ -1,5 +1,5 @@
 targets = files(
-    'Mpris.blp',
+    'MprisPlayer.blp',
     'NavBar.blp',
     'NotifPop.blp',
     'NotifWindow.blp',

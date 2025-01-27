@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using AstalMpris 0.1;
 
-template $Mpris: Box {
+template $MprisPlayer: Box {
     orientation: vertical;
     hexpand: true;
     spacing: 5;
@@ -15,7 +15,7 @@ template $Mpris: Box {
         "view"
     ]
 
-    Box upper_box {
+    Box {
         spacing: 10;
         hexpand: true;
 
@@ -30,17 +30,18 @@ template $Mpris: Box {
             pixel-size: 100;
         }
 
-        Box media_info {
+        Box {
             orientation: vertical;
             hexpand: true;
             valign: center;
             spacing: 10;
 
-            Label player_name {
+            Label {
                 label: bind template.player as <AstalMpris.Player>.identity;
                 halign: start;
                 ellipsize: end;
                 max-width-chars: 25;
+                tooltip-text: "Player Name";
 
                 styles [
                     "title_5",
@@ -48,22 +49,24 @@ template $Mpris: Box {
                 ]
             }
 
-            Label title {
+            Label {
                 label: bind template.player as <AstalMpris.Player>.title;
                 halign: start;
                 ellipsize: end;
                 max-width-chars: 18;
+                tooltip-text: "Title";
 
                 styles [
                     "title-3"
                 ]
             }
 
-            Label artist {
+            Label {
                 label: bind template.player as <AstalMpris.Player>.artist;
                 halign: start;
                 ellipsize: end;
                 max-width-chars: 20;
+                tooltip-text: "Artist";
 
                 styles [
                     "title-4"
@@ -76,7 +79,7 @@ template $Mpris: Box {
         vexpand: true;
 
         [start]
-        Label current_pos {
+        Label {
             label: bind $current_pos(template.player as <AstalMpris.Player>.position) as <string>;
             valign: center;
 
@@ -86,7 +89,7 @@ template $Mpris: Box {
         }
 
         [center]
-        Scale mpris_slider {
+        Scale {
             hexpand: true;
 
             adjustment: Adjustment media_len_adjust {
@@ -100,7 +103,7 @@ template $Mpris: Box {
         }
 
         [end]
-        Label total_pos {
+        Label {
             label: bind $total_pos(template.player as <AstalMpris.Player>.length) as <string>;
             valign: center;
 
@@ -110,7 +113,7 @@ template $Mpris: Box {
         }
     }
 
-    Box lower_box {
+    Box {
         spacing: 10;
         hexpand: true;
         halign: center;
@@ -124,7 +127,7 @@ template $Mpris: Box {
             clicked => $prev();
         }
 
-        Button playback_button {
+        Button {
             icon-name: bind $pause_icon(template.player as <AstalMpris.Player>.playback-status) as <string>;
             clicked => $play_pause();
         }

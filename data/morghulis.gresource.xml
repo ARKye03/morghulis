@@ -4,7 +4,7 @@
         <file>morghulis.css</file>
         <file>assets/colloid-notif-sound.opus</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
-        <file preprocess="xml-stripblanks">ui/Mpris.ui</file>
+        <file preprocess="xml-stripblanks">ui/MprisPlayer.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>
         <file preprocess="xml-stripblanks">ui/QButton.ui</file>
         <file preprocess="xml-stripblanks">ui/QNetwork.ui</file>

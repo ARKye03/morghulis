@@ -1,6 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Mpris.ui")]
-public class Mpris : Gtk.Box {
-	public AstalMpris.Mpris mpris = AstalMpris.Mpris.get_default();
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/MprisPlayer.ui")]
+public class MprisPlayer : Gtk.Box {
 	public AstalMpris.Player player { get; set; }
 
 	[GtkCallback]
@@ -67,10 +66,7 @@ public class Mpris : Gtk.Box {
 	[GtkChild]
 	public unowned Gtk.Adjustment media_len_adjust;
 
-	[GtkChild]
-	public unowned Gtk.Scale mpris_slider;
-
-	public Mpris(AstalMpris.Player player) {
+	public MprisPlayer(AstalMpris.Player player) {
 		Object();
 		this.player = player;
 

@@ -124,14 +124,14 @@ public class Settings : Adw.Bin {
 	private unowned Adw.Carousel players;
 
 	private void on_player_added(AstalMpris.Player player) {
-		var mpris_widget = new Mpris(player);
+		var mpris_widget = new MprisPlayer(player);
 
 		this.players.append(mpris_widget);
 	}
 
 	private void on_player_removed(AstalMpris.Player player) {
 		for (int i = 0; i < this.players.n_pages; i++) {
-			Mpris p = (Mpris)this.players.get_nth_page(i);
+			MprisPlayer p = (MprisPlayer)this.players.get_nth_page(i);
 			if (p.player == player) {
 				this.players.remove(p);
 				break;
