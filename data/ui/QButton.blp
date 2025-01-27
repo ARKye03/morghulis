@@ -8,13 +8,13 @@ template $QButton: Box {
         "view"
     ]
 
+    overflow: hidden;
+    width-request: 70;
+    height-request: 60;
+
     Button {
         clicked => $on_clicked();
         hexpand: true;
-
-        styles [
-            "quick_settings_button_main"
-        ]
 
         Box {
             orientation: horizontal;
@@ -39,7 +39,7 @@ template $QButton: Box {
                     ellipsize: end;
 
                     styles [
-                        "quick_settings_button_name"
+                        "title_5"
                     ]
                 }
 
@@ -49,7 +49,7 @@ template $QButton: Box {
                     ellipsize: end;
 
                     styles [
-                        "quick_settings_button_status"
+                        "title_6"
                     ]
                 }
             }

@@ -1,32 +1,9 @@
 @use "adw";
 
-.quick_settings_button {
-    min-height: 60px;
-    min-width: 70px;
 
+.qs_grid {
     & button {
         border-radius: unset;
-    }
-
-    & .quick_settings_button_main {
-        border-top-left-radius: adw.$master-border-radius;
-        border-bottom-left-radius: adw.$master-border-radius;
-    }
-
-    & .quick_settings_button_extras {
-        border-top-right-radius: adw.$master-border-radius;
-        border-bottom-right-radius: adw.$master-border-radius;
-    }
-
-    & .quick_settings_button_name {
-        font-size: 12px;
-        font-weight: bold;
-
-    }
-
-    & .quick_settings_button_status {
-        font-size: 10px;
-        font-weight: normal;
     }
 
     &-active {

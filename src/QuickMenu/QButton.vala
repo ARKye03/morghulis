@@ -9,25 +9,25 @@ public class QButton : Gtk.Box {
 
 	public bool active {
 		get {
-			return this.has_css_class("quick_settings_button-active");
+			return this.has_css_class("qs_grid-active");
 		}
 		set {
 			if (value) {
-				this.add_css_class("quick_settings_button-active");
+				this.add_css_class("qs_grid-active");
 			} else {
-				this.remove_css_class("quick_settings_button-active");
+				this.remove_css_class("qs_grid-active");
 			}
 		}
 	}
 	public bool inactive {
 		get {
-			return !this.has_css_class("quick_settings_button-active");
+			return !this.has_css_class("qs_grid-active");
 		}
 		set {
 			if (!value) {
-				this.add_css_class("quick_settings_button-active");
+				this.add_css_class("qs_grid-active");
 			} else {
-				this.remove_css_class("quick_settings_button-active");
+				this.remove_css_class("qs_grid-active");
 			}
 		}
 	}

@@ -21,7 +21,7 @@ template $Settings: Adw.Bin {
                 orientation: vertical;
                 spacing: 10;
 
-                Grid quick_settings_buttons {
+                Grid {
                     column-homogeneous: true;
                     hexpand: true;
                     vexpand: true;
@@ -33,6 +33,7 @@ template $Settings: Adw.Bin {
                         "padding_10",
                         "master_border",
                         "rounded",
+                        "qs_grid"
                     ]
 
                     $QButton {
