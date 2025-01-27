@@ -1,7 +1,6 @@
 sass = find_program('sass')
 
 scss_deps = files(
-    '_Colors.scss',
     '_Mpris.scss',
     '_OnScreenDisplay.scss',
     '_Runner.scss',
