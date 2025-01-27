@@ -33,10 +33,10 @@ public class Mpris : Gtk.Box {
 
 	[GtkCallback]
 	public string art_url(string? url) {
-		if (url == null) {
-			return "";
-		} else {
+		if (url != null && url != "") {
 			return url.substring(7);
+		} else {
+			return "";
 		}
 	}
 
