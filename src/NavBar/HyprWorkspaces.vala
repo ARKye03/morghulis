@@ -63,7 +63,7 @@ public class HyprWorkspaces : Gtk.Box {
 				if (index + 1 == focused_workspace_id) {
 					button.set_css_classes(new string[] { "focused" });
 				} else if (workspace_exists(index + 1)) {
-					button.set_css_classes(new string[] { "has_windows" });
+					button.set_css_classes(new string[] { "occupied" });
 				} else {
 					button.set_css_classes(new string[] { "empty" });
 				}
