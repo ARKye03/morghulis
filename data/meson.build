@@ -1,7 +1,6 @@
 subdir('ui')
 subdir('scss')
 subdir('desktop')
-subdir('assets')
 
 project_resources += gnome.compile_resources(
     project_name,

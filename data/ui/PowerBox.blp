@@ -39,34 +39,39 @@ template $PowerBox: Box {
                 spacing: 5;
                 halign: end;
 
-                Button suspend_btn {
+                Button {
+                    name: "Suspend";
                     visible: false;
-                    icon-name: "colloid-morghulis-system-suspend-symbolic";
+                    icon-name: "radio-symbolic";
                     tooltip-text: "Suspend";
                     clicked => $suspend();
                 }
 
-                Button hibernate_btn {
+                Button {
+                    name: "Hibernate";
                     visible: false;
-                    icon-name: "colloid-morghulis-system-hibernate-symbolic";
+                    icon-name: "weather-clear-night-symbolic";
                     tooltip-text: "Hibernate";
                     clicked => $hibernate();
                 }
 
-                Button lock_btn {
-                    icon-name: "colloid-morghulis-system-lock-screen-symbolic";
+                Button {
+                    name: "Reboot";
+                    icon-name: "system-lock-screen-symbolic";
                     tooltip-text: "Lock";
                     clicked => $lock();
                 }
 
-                Button reboot_btn {
-                    icon-name: "colloid-morghulis-system-reboot-symbolic";
+                Button {
+                    name: "Lock";
+                    icon-name: "system-reboot-symbolic";
                     tooltip-text: "Reboot";
                     clicked => $show_reboot_confirm();
                 }
 
-                Button shutdown_btn {
-                    icon-name: "colloid-morghulis-system-shutdown-symbolic";
+                Button {
+                    name: "Shutdown";
+                    icon-name: "system-shutdown-symbolic";
                     tooltip-text: "Shutdown";
                     clicked => $show_shutdown_confirm();
                 }
