@@ -3,6 +3,7 @@
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
         <file>assets/colloid-notif-sound.opus</file>
+        <file>assets/wyvern-svgrepo-com.svg</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
         <file preprocess="xml-stripblanks">ui/MprisPlayer.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>

@@ -123,6 +123,11 @@ public class Settings : Adw.Bin {
 	[GtkChild]
 	private unowned Adw.Carousel players;
 
+	[GtkCallback]
+	public string mpris_stack(uint n_pages) {
+		return (n_pages > 0) ? "mpris" : "no_mpris";
+	}
+
 	private void on_player_added(AstalMpris.Player player) {
 		var mpris_widget = new MprisPlayer(player);
 

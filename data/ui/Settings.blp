@@ -7,7 +7,6 @@ using Adw 1;
 template $Settings: Adw.Bin {
     Adw.NavigationView quick_settings_navigation_view {
         height-request: 385;
-        vexpand: true;
 
         styles [
             "rounded"
@@ -24,7 +23,6 @@ template $Settings: Adw.Bin {
                 Grid {
                     column-homogeneous: true;
                     hexpand: true;
-                    vexpand: true;
                     column-spacing: 10;
                     row-spacing: 10;
 
@@ -108,25 +106,66 @@ template $Settings: Adw.Bin {
                     }
                 }
 
-                Box {
-                    hexpand: true;
-                    orientation: vertical;
+                Stack {
+                    transition-type: slide_left_right;
+                    transition-duration: 200;
+                    visible-child-name: bind $mpris_stack(players.n-pages) as <string>;
+                    vexpand: true;
 
-                    styles [
-                        "background",
-                        "padding_10",
-                        "master_border",
-                        "rounded",
-                    ]
+                    StackPage {
+                        name: "no_mpris";
 
-                    Adw.Carousel players {
-                        orientation: horizontal;
-                        spacing: 5;
-                        hexpand: true;
+                        child: Box {
+                            orientation: vertical;
+                            spacing: 10;
+
+                            styles [
+                                "background",
+                                "padding_10",
+                                "master_border",
+                                "rounded",
+                            ]
+
+                            Image {
+                                pixel-size: 128;
+                                resource: "/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg";
+                            }
+
+                            Label {
+                                label: "No Media Players";
+
+                                styles [
+                                    "dim-label",
+                                    "title-1"
+                                ]
+                            }
+                        };
                     }
 
-                    Adw.CarouselIndicatorDots {
-                        carousel: players;
+                    StackPage {
+                        name: "mpris";
+
+                        child: Box {
+                            hexpand: true;
+                            orientation: vertical;
+
+                            styles [
+                                "background",
+                                "padding_10",
+                                "master_border",
+                                "rounded",
+                            ]
+
+                            Adw.Carousel players {
+                                orientation: horizontal;
+                                spacing: 5;
+                                hexpand: true;
+                            }
+
+                            Adw.CarouselIndicatorDots {
+                                carousel: players;
+                            }
+                        };
                     }
                 }
             }
