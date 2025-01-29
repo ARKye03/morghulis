@@ -130,7 +130,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] Notifications
   - [x] Center
   - [ ] (WIP) Popup
-  - [ ] Don't Disturb logic
+  - [x] Don't Disturb logic
 - [ ] Power Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
