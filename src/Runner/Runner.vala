@@ -18,6 +18,7 @@ public class Runner : Astal.Window {
 
 	[GtkChild]
 	private unowned Gtk.ListBox app_list;
+
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
 		RunnerButton a = (RunnerButton)la;
 		RunnerButton b = (RunnerButton)lb;
