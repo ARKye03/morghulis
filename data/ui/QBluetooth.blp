@@ -30,12 +30,13 @@ template $QBluetooth: Box {
         }
     }
 
-    styles [
-        "view"
-    ]
-
     ScrolledWindow {
         vexpand: true;
+
+        styles [
+            "background",
+            "padding_10"
+        ]
 
         ListBox blue_list {
             show-separators: true;

@@ -27,18 +27,19 @@ template $QNetwork: Box {
         }
     }
 
-    styles [
-        "view"
-    ]
-
     ScrolledWindow {
         vexpand: true;
+
+        styles [
+            "background",
+            "padding_10"
+        ]
 
         ListView wifi_list {
             show-separators: true;
 
             styles [
-                "navigation-sidebar"
+                "rounded"
             ]
         }
     }

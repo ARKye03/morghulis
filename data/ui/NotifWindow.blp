@@ -14,16 +14,13 @@ template $NotifWindow: Box {
         }
     }
 
-    styles [
-        "view"
-    ]
-
     ScrolledWindow {
         overflow: hidden;
         vexpand: true;
 
         styles [
-            "rounded"
+            "background",
+            "padding_10"
         ]
 
         ListBox notifications {
