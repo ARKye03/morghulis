@@ -6,6 +6,9 @@ public class Settings : Adw.Bin {
 	public AstalMpris.Mpris mpris { get; private set; }
 	public AstalNotifd.Notifd notifd { get; private set; }
 
+	[GtkChild]
+	public unowned QButton notif_button;
+
 	construct {
 		network = AstalNetwork.get_default();
 		bluetooth = AstalBluetooth.get_default();
@@ -87,9 +90,6 @@ public class Settings : Adw.Bin {
 		}
 	}
 
-	[GtkChild]
-	public unowned QButton notif_button;
-
 	[GtkCallback]
 	public void notifications_clicked() {
 		notifd.dont_disturb = !notifd.dont_disturb;
@@ -102,7 +102,13 @@ public class Settings : Adw.Bin {
 
 	[GtkCallback]
 	public bool ppd_present(AstalPowerProfiles.PowerProfiles? power_profiles) {
-		return power_profiles?.version != null;
+		if (power_profiles == null) {
+			return false;
+		}
+		bool present = power_profiles?.version != null;
+
+		message("Power profiles %s present", present ? "" : "not");
+		return present;
 	}
 
 	[GtkCallback]
@@ -117,7 +123,7 @@ public class Settings : Adw.Bin {
 
 	[GtkCallback]
 	public void TODO() {
-		stdout.printf("TODO!\n");
+		message("TODO!");
 	}
 
 	[GtkChild]
