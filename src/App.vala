@@ -1,12 +1,12 @@
 public class Morghulis : Astal.Application {
-	private string socket_path { get; private set; }
-	private bool css_loaded = false;
-	private GLib.File file;
-	private GLib.FileMonitor file_monitor;
+	private string socket_path { get; set; }
+	private bool css_loaded { get; set; default = false; }
+	private GLib.File file { get; set; }
+	private GLib.FileMonitor file_monitor { get; set; }
 
-	public static Morghulis instance;
-	public static Gdk.Display? display;
-	public static Gdk.Monitor? primary_monitor;
+	public static Morghulis instance { get; private set; }
+	public static Gdk.Display? display { get; private set; }
+	public static Gdk.Monitor? primary_monitor { get; private set; }
 
 	public override void request(string msg, SocketConnection conn) {
 		AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
@@ -28,7 +28,7 @@ public class Morghulis : Astal.Application {
 				file_monitor.changed.connect((_) => {
 					apply_css(file.get_path(), true);
 				});
-			} catch (Error e) {
+			} catch (IOError e) {
 				critical("Error: %s\n", e.message);
 			}
 		}
@@ -37,9 +37,7 @@ public class Morghulis : Astal.Application {
 	[DBus(visible = false)]
 	public override void activate() {
 		base.activate();
-
-		display = Gdk.Display.get_default();
-		primary_monitor = display?.get_monitors()?.get_item(0) as Gdk.Monitor;
+		setup_display_and_monitor();
 
 		if (!css_loaded) {
 			load_css();
@@ -54,6 +52,26 @@ public class Morghulis : Astal.Application {
 			apply_css(file.get_path(), true);
 		}
 		this.hold();
+	}
+
+	private void setup_display_and_monitor() {
+		display = Gdk.Display.get_default();
+		if (display == null) {
+			critical("Failed to get default display");
+			return;
+		}
+		var monitors = display.get_monitors();
+		if (monitors == null) {
+			critical("Failed to get monitors");
+			return;
+		}
+		// Morghulis assume there is only one monitor
+		primary_monitor = monitors.get_item(0) as Gdk.Monitor;
+		if (primary_monitor == null) {
+			critical("Failed to get primary monitor");
+			return;
+		}
+		message("Successfully initialized primary monitor");
 	}
 
 	private void load_css() {
