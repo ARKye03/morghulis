@@ -20,6 +20,14 @@ button {
     all: unset;
 }
 
+.button_accent_bg {
+    background-color: adw.$accent_bg_color;
+
+    &:hover {
+        background-color: adw.$accent_color;
+    }
+}
+
 .master_border {
     // border: 1px solid adw.$borders_color;
     border: unset;
