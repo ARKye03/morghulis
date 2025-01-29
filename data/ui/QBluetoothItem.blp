@@ -8,13 +8,14 @@ template $QBluetoothItem: Gtk.ListBoxRow {
     }
 
     selectable: false;
+    active: bind template.device as <AstalBluetooth.Device>.connected;
 
     Gtk.Box {
         spacing: 10;
         hexpand: true;
 
         styles [
-            "x_padding_10"
+            "padding_10"
         ]
 
         Image {
@@ -30,6 +31,10 @@ template $QBluetoothItem: Gtk.ListBoxRow {
             Label {
                 halign: start;
                 label: bind template.device as <AstalBluetooth.Device>.name;
+
+                styles [
+                    "title-4"
+                ]
             }
 
             Label {
@@ -57,9 +62,22 @@ template $QBluetoothItem: Gtk.ListBoxRow {
             transition-type: slide_left;
             reveal-child: bind template.device as <AstalBluetooth.Device>.connected;
 
-            Label {
+            Box {
+                orientation: vertical;
                 halign: end;
-                label: "Connected";
+                spacing: 5;
+
+                Label battery_label {
+                    visible: bind $is_battery_a_real_thing(template.device as <AstalBluetooth.Device>.battery-percentage) as <bool>;
+                    label: bind $battery_percent(template.device as <AstalBluetooth.Device>.battery-percentage) as <string>;
+                    halign: center;
+                }
+
+                Label {
+                    label: "Connected";
+                    valign: center;
+                    vexpand: true;
+                }
             }
         }
     }

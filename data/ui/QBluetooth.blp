@@ -17,12 +17,15 @@ template $QBluetooth: Box {
                 transition-type: slide_left;
                 reveal-child: bind template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.discovering;
 
-                Adw.Spinner spinner {}
+                Adw.Spinner spinner {
+                    tooltip-text: "What do you think?";
+                }
             }
 
             Button {
                 icon-name: "view-refresh-symbolic";
-                clicked => $refresh();
+                tooltip-text: "Discover";
+                clicked => $toggle_discover();
             }
         }
     }

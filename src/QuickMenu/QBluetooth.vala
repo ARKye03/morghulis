@@ -9,12 +9,21 @@ public class QBluetooth : Gtk.Box {
 		bluetooth = AstalBluetooth.get_default();
 
 		bluetooth.devices.@foreach(dev => on_added(dev));
-		bluetooth.device_added.connect((_, device) => on_added(device));
-		bluetooth.device_removed.connect((_, device) => on_removed(device));
+		bluetooth.device_added.connect((_, dev) => on_added(dev));
+		bluetooth.device_removed.connect((_, dev) => on_removed(dev));
+		this.blue_list.set_sort_func(sfunc);
+		this.blue_list.invalidate_sort();
+	}
+
+	public int sfunc(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
+		QBluetoothItem a = (QBluetoothItem)la;
+
+		return a.device.connected ? -1 : 1;
 	}
 
 	private void on_added(AstalBluetooth.Device device) {
 		blue_list.append(new QBluetoothItem(device));
+		this.blue_list.invalidate_sort();
 	}
 
 	private void on_removed(AstalBluetooth.Device device) {
@@ -28,14 +37,23 @@ public class QBluetooth : Gtk.Box {
 
 			current = (QBluetoothItem)current.get_next_sibling();
 		}
+		this.blue_list.invalidate_sort();
 	}
 
 	[GtkCallback]
-	public void refresh() {
-		try {
-			bluetooth.adapter.start_discovery();
-		} catch (Error e) {
-			critical("Error: %s", e.message);
+	public void toggle_discover() {
+		if (bluetooth.adapter.discovering) {
+			try {
+				bluetooth.adapter.stop_discovery();
+			} catch (Error e) {
+				critical("Error: %s", e.message);
+			}
+		} else {
+			try {
+				bluetooth.adapter.start_discovery();
+			} catch (Error e) {
+				critical("Error: %s", e.message);
+			}
 		}
 	}
 }
