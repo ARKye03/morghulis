@@ -5,7 +5,7 @@ public class HyprWorkspaces : Gtk.Box {
 	private int focused_workspace_id { get; set; }
 
 	// Workspace Icons
-	private static string[] wicons = {
+	private string[] wicons = {
 		" ", " ", "󰨞 ",
 		" ", " ", "󰭹 ",
 		" ", " ", "󰊖 ",
