@@ -6,12 +6,16 @@
     transition: all .2s ease-in-out;
 }
 
-.occupied {
-    color: adw.$green_5;
-}
-
 .empty {
     color: adw.$dark_1;
+}
+
+.occupied {
+    color: adw.$green_5 ;
+}
+
+.urgent {
+    color: adw.$red_5;
 }
 
 .focused {
