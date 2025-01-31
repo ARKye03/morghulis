@@ -13,11 +13,12 @@ public class Morghulis : Astal.Application {
 	}
 
 	construct {
+		Adw.init();
 		instance_name = "morghulis";
 		try {
 			acquire_socket();
 		} catch (Error e) {
-			printerr("%s", e.message);
+			critical("%s", e.message);
 		}
 		instance = this;
 
@@ -27,6 +28,7 @@ public class Morghulis : Astal.Application {
 				file_monitor = file.monitor_file(GLib.FileMonitorFlags.NONE);
 				file_monitor.changed.connect((_) => {
 					apply_css(file.get_path(), true);
+					message("Reloaded CSS");
 				});
 			} catch (IOError e) {
 				critical("Error: %s\n", e.message);
