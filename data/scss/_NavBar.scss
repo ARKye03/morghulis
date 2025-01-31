@@ -2,7 +2,7 @@
 
 .workspaces button {
     font-size: 16px;
-    padding-right: 5px;
+    // padding-right: 5px;
     transition: all .2s ease-in-out;
 }
 
@@ -20,6 +20,10 @@
 
 .focused {
     color: adw.$accent_color;
+
+    * {
+        color: adw.$accent_color;
+    }
 }
 
 .tray_button {

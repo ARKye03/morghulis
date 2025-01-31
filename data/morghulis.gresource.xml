@@ -4,6 +4,15 @@
         <file>morghulis.css</file>
         <file>assets/colloid-notif-sound.opus</file>
         <file>assets/wyvern-svgrepo-com.svg</file>
+        <file>assets/NavBar/browser.svg</file>
+        <file>assets/NavBar/code.svg</file>
+        <file>assets/NavBar/docs.svg</file>
+        <file>assets/NavBar/explorer.svg</file>
+        <file>assets/NavBar/gaming.svg</file>
+        <file>assets/NavBar/media.svg</file>
+        <file>assets/NavBar/settings.svg</file>
+        <file>assets/NavBar/social.svg</file>
+        <file>assets/NavBar/terminal.svg</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
         <file preprocess="xml-stripblanks">ui/MprisPlayer.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>
