@@ -2,21 +2,37 @@ using GtkLayerShell;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Astal.Window {
+	private GLib.DateTime clock_time { get; set; }
+	private string clock_format { get; set; default = "%H:%M %b %e"; }
+
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
-	private AstalWp.Endpoint speaker { get; set; }
 
 	[GtkChild]
-	public unowned Gtk.Label clock;
+	private unowned Gtk.Label clock;
 
 	[GtkChild]
-	public unowned Adw.Bin workspaces;
+	private unowned Adw.Bin workspaces;
 
 	[GtkChild]
-	public unowned Adw.Bin active_client;
+	private unowned Adw.Bin active_client;
 
 	[GtkChild]
-	public unowned Adw.Bin volume_bin;
+	private unowned Adw.Bin active_submap;
+
+	public NavBar() {
+		Object(
+			namespace : "NavBar",
+			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
+			);
+		battery = AstalBattery.Device.get_default();
+
+		init_compositor();
+		init_clock();
+		instance = this;
+
+		present();
+	}
 
 	[GtkCallback]
 	public void toggle_side_dashboard() {
@@ -41,19 +57,23 @@ public class NavBar : Astal.Window {
 		return @"$(Math.round(percentage * 100))%";
 	}
 
-	public NavBar() {
-		Object(
-			namespace : "NavBar",
-			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-			);
-		present();
+	private void update_clock() {
+		clock_time = new DateTime.now_local();
+
+		clock.label = clock_time.format(clock_format);
 	}
 
-	construct {
-		battery = AstalBattery.Device.get_default();
-		speaker = AstalWp.get_default().audio.default_speaker;
+	private void init_clock() {
+		update_clock();
+		GLib.Timeout.add(60000, () => {
+			update_clock();
+			return true;
+		});
+	}
 
+	private void init_compositor() {
 		string current_session = Environment.get_variable("XDG_CURRENT_DESKTOP");
+
 #if hyprland
 		if (current_session == "Hyprland") {
 			setup_hyprland();
@@ -73,16 +93,10 @@ public class NavBar : Astal.Window {
 		if (current_session != "Hyprland" && current_session != "river") {
 			warning("No Hyprland or River detected");
 		}
-
-		init_clock();
-		instance = this;
 	}
 
 #if hyprland
 	private AstalHyprland.Hyprland hyprland { get; set; }
-
-	[GtkChild]
-	public unowned Adw.Bin active_submap;
 
 	private void setup_hyprland() {
 		message("Setting up Hyprland");
@@ -131,6 +145,7 @@ public class NavBar : Astal.Window {
 	private AstalRiver.River river { get; set; }
 
 	private void setup_river() {
+		message("Setting up River");
 		river = AstalRiver.River.get_default();
 
 		workspaces.set_child(new RiverTags(river));
@@ -153,19 +168,4 @@ public class NavBar : Astal.Window {
 		}
 	}
 #endif
-
-	// Clock Methods
-	private void update_clock() {
-		var clock_time = new DateTime.now_local();
-
-		clock.label = clock_time.format("%I:%M %p %b %e");
-	}
-
-	private void init_clock() {
-		update_clock();
-		GLib.Timeout.add(60000, () => {
-			update_clock();
-			return true;
-		});
-	}
 }
