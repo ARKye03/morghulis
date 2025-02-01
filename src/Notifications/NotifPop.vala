@@ -22,7 +22,7 @@ public class NotifPop : ListBoxRow {
 	public string current_time(int64 t) {
 		DateTime dt = new DateTime.from_unix_local(t);
 
-		return dt.format("%I:%M %p");
+		return dt.format(Morghulis.clock_format);
 	}
 
 	[GtkCallback]
