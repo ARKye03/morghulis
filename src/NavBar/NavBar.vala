@@ -3,7 +3,6 @@ using GtkLayerShell;
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Astal.Window {
 	private GLib.DateTime clock_time { get; set; }
-	private string clock_format { get; set; default = "%H:%M %b %e"; }
 
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
@@ -60,7 +59,7 @@ public class NavBar : Astal.Window {
 	private void update_clock() {
 		clock_time = new DateTime.now_local();
 
-		clock.label = clock_time.format(clock_format);
+		clock.label = clock_time.format(Morghulis.clock_format);
 	}
 
 	private void init_clock() {

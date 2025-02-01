@@ -7,6 +7,7 @@ public class Morghulis : Astal.Application {
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
+	public static string clock_format { get; set; default = "%H:%M %b %e"; }
 
 	public override void request(string msg, SocketConnection conn) {
 		AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
