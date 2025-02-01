@@ -137,6 +137,9 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [ ] Brightness
 - [x] Dynamic CSS
 
+> [!NOTE]
+> For OSD to work, you need to append `morghulctl -r raise_volume` to whatever keybinding you want to use to raise/volume the volume.
+
 ## Preview
 
 ![Morghulis](public/morghulis.webp)

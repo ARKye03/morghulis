@@ -11,11 +11,7 @@ public class Morghulis : Astal.Application {
 
 	public override void request(string msg, SocketConnection conn) {
 		switch (msg) {
-			case "raise_volume":
-				OnScreenDisplay.instance.change_volume();
-			break;
-
-			case "lower_volume":
+			case "change_volume":
 				OnScreenDisplay.instance.change_volume();
 			break;
 
