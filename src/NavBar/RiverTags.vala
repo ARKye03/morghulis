@@ -1,17 +1,23 @@
 public class TagButton : Gtk.Button {
 	private AstalRiver.Output _output;
+	private Gtk.GestureClick _rclick;
 	private int _index;
 
 	public TagButton(AstalRiver.Output output, int index, string icon) {
 		this._output = output;
 		this._index = index;
+		this._rclick = new Gtk.GestureClick();
+		_rclick.set_button(Gdk.BUTTON_SECONDARY);
 
 		set_child(new Gtk.Label(icon));
-		add_css_class("empty");
 
 		clicked.connect(() => {
 			this._output.focused_tags = 1 << this._index;
 		});
+		_rclick.pressed.connect(() => {
+			this._output.focused_tags ^= 1 << this._index;
+		});
+		add_controller(_rclick);
 	}
 
 	public void update_css() {
@@ -19,22 +25,14 @@ public class TagButton : Gtk.Button {
 		uint focused_tags = _output.focused_tags;
 		uint urgent_tags = _output.urgent_tags;
 
-		if ((occupied_tags & (1 << _index)) != 0) {
-			add_css_class("occupied");
-		} else {
-			remove_css_class("occupied");
-		}
-
 		if ((focused_tags & (1 << _index)) != 0) {
-			add_css_class("focused");
+			set_css_classes({ "focused" });
+		} else if ((urgent_tags & (1 << _index)) != 0) {
+			set_css_classes({ "urgent" });
+		} else if ((occupied_tags & (1 << _index)) != 0) {
+			set_css_classes({ "occupied" });
 		} else {
-			remove_css_class("focused");
-		}
-
-		if ((urgent_tags & (1 << _index)) != 0) {
-			add_css_class("urgent");
-		} else {
-			remove_css_class("urgent");
+			set_css_classes({ "empty" });
 		}
 	}
 }
@@ -43,7 +41,7 @@ public class RiverTags : Gtk.Box {
 	private AstalRiver.Output output { get; set; }
 	private uint total_tags { get; set; }
 	public AstalRiver.River river { get; set; }
-	public List<TagButton> tags;
+	public List<TagButton> tags { get; set; }
 
 	private string[] wicons = {
 		" ", " ", "󰨞 ",
