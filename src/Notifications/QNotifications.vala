@@ -1,5 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotifWindow.ui")]
-public class NotifWindow : Gtk.Box {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QNotifications.ui")]
+public class QNotifications : Gtk.Box {
 	private AstalNotifd.Notifd notifd { get; set; }
 	private Gtk.MediaFile notif_sound { get; set; }
 
@@ -31,18 +31,18 @@ public class NotifWindow : Gtk.Box {
 		}
 
 		var notification = notifd.get_notification(notification_id);
-		notif_list_box.prepend(new NotifPop(notification));
+		notif_list_box.prepend(new NotifItem(notification));
 	}
 
 	private void remove_notification(uint notification_id, Gtk.ListBox notif_list_box) {
-		NotifPop? notif_popup = (NotifPop)notif_list_box.get_first_child();
+		NotifItem? notif_popup = (NotifItem)notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {
 				notif_list_box.remove(notif_popup);
 				break;
 			}
-			notif_popup = (NotifPop)notif_popup.get_next_sibling();
+			notif_popup = (NotifItem)notif_popup.get_next_sibling();
 		}
 	}
 }
