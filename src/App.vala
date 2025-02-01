@@ -10,7 +10,19 @@ public class Morghulis : Astal.Application {
 	public static string clock_format { get; set; default = "%H:%M %b %e"; }
 
 	public override void request(string msg, SocketConnection conn) {
-		AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
+		switch (msg) {
+			case "raise_volume":
+				OnScreenDisplay.instance.change_volume();
+			break;
+
+			case "lower_volume":
+				OnScreenDisplay.instance.change_volume();
+			break;
+
+			default:
+				AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
+			break;
+		}
 	}
 
 	construct {
