@@ -3,6 +3,7 @@ using AstalMpris;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
 public class OnScreenDisplay : Astal.Window {
+	public static OnScreenDisplay instance { get; private set; }
 	public AstalWp.Endpoint speaker { get; set; }
 
 	[GtkChild]
@@ -16,12 +17,11 @@ public class OnScreenDisplay : Astal.Window {
 	construct {
 		speaker = AstalWp.get_default().audio.default_speaker;
 
-		//  speaker.bind_property("volume", vol_adjust, "value", GLib.BindingFlags.BIDIRECTIONAL | GLib.BindingFlags.SYNC_CREATE);
-		speaker.notify["volume"].connect(() => {
-			this.visible = true;
-			this.stack_osd.visible_child_name = "volume_osd";
-			handle_timeout();
-		});
+		if (instance == null) {
+			instance = this;
+		} else {
+			this.destroy();
+		}
 	}
 	public OnScreenDisplay() {
 		Object(namespace : "OnScreenDisplay");
@@ -40,5 +40,11 @@ public class OnScreenDisplay : Astal.Window {
 			hide_timeout_id = 0;
 			return false;
 		});
+	}
+
+	public void change_volume() {
+		this.visible = true;
+		this.stack_osd.visible_child_name = "volume_osd";
+		handle_timeout();
 	}
 }
