@@ -6,6 +6,7 @@ public class Settings : Adw.Bin {
 	public AstalNetwork.Network network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
 	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
+	public static Adw.NavigationView settings_navigation { get; private set; }
 
 	[GtkChild]
 	public unowned Adw.NavigationView quick_settings_navigation_view;
@@ -25,6 +26,8 @@ public class Settings : Adw.Bin {
 		mpris.players.@foreach((p) => on_player_added(p));
 		mpris.player_added.connect((p) => on_player_added(p));
 		mpris.player_closed.connect((p) => on_player_removed(p));
+
+		settings_navigation = quick_settings_navigation_view;
 	}
 
 	private void dnd() {

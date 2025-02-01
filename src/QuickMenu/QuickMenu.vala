@@ -14,5 +14,11 @@ public class QuickMenu : Astal.Window {
 		} else {
 			this.destroy();
 		}
+
+		this.notify["visible"].connect(() => {
+			if (!this.visible) {
+				Settings.settings_navigation.pop();
+			}
+		});
 	}
 }
