@@ -41,7 +41,7 @@ public class RiverTags : Gtk.Box {
 	private AstalRiver.Output output { get; set; }
 	private uint total_tags { get; set; }
 	public AstalRiver.River river { get; set; }
-	public List<TagButton> tags { get; set; }
+	public List<TagButton> tags;
 
 	private string[] wicons = {
 		" ", " ", "󰨞 ",
