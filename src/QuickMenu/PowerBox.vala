@@ -47,11 +47,11 @@ public class PowerBox : Gtk.Box {
 		switch (pending_action) {
 			case "shutdown":
 				shutdown();
-				break;
+			break;
 
 			case "reboot":
 				reboot();
-				break;
+			break;
 		}
 		pending_action = null;
 		main_stack.visible_child_name = "main";

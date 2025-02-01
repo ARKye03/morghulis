@@ -54,19 +54,19 @@ class QPowerProfiles : Gtk.Box {
 				performance_button.set_css_classes({ "active_profile_button" });
 				power_saver_button.set_css_classes({ "" });
 				balanced_button.set_css_classes({ "" });
-				break;
+			break;
 
 			case "power-saver":
 				performance_button.set_css_classes({ "" });
 				power_saver_button.set_css_classes({ "active_profile_button" });
 				balanced_button.set_css_classes({ "" });
-				break;
+			break;
 
 			case "balanced":
 				performance_button.set_css_classes({ "" });
 				power_saver_button.set_css_classes({ "" });
 				balanced_button.set_css_classes({ "active_profile_button" });
-				break;
+			break;
 		}
 	}
 }
