@@ -54,10 +54,11 @@ public class Morghulis : Astal.Application {
 			load_css();
 			css_loaded = true;
 		}
-		add_window(new QuickMenu());
-		add_window(new Runner());
-		add_window(new OnScreenDisplay());
 		add_window(new NavBar());
+		add_window(new Runner());
+		add_window(new QuickMenu());
+		add_window(new OnScreenDisplay());
+		add_window(new NotifItemsCenter());
 
 		if (file.query_exists()) {
 			apply_css(file.get_path(), true);

@@ -1,7 +1,6 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QNotifications.ui")]
 public class QNotifications : Gtk.Box {
 	private AstalNotifd.Notifd notifd { get; set; }
-	private Gtk.MediaFile notif_sound { get; set; }
 
 	[GtkChild]
 	private unowned Gtk.ListBox notifications;
@@ -12,15 +11,10 @@ public class QNotifications : Gtk.Box {
 
 	construct {
 		notifd = AstalNotifd.get_default();
-		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
 
 		this.notifd.notifications.@foreach(n => this.on_notification_added(n.id, false, this.notifications));
 		this.notifd.notified.connect((id, replace) => {
 			this.on_notification_added(id, replace, this.notifications);
-			if (!notifd.dont_disturb) {
-				this.notif_sound.seek(0);
-				this.notif_sound.play();
-			}
 		});
 		this.notifd.resolved.connect((id) => this.remove_notification(id, this.notifications));
 	}
