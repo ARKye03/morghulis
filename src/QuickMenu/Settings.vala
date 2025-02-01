@@ -1,10 +1,14 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
 public class Settings : Adw.Bin {
+	private AstalMpris.Mpris mpris { get; set; }
+	private AstalNotifd.Notifd notifd { get; set; }
+
 	public AstalNetwork.Network network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
 	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
-	public AstalMpris.Mpris mpris { get; private set; }
-	public AstalNotifd.Notifd notifd { get; private set; }
+
+	[GtkChild]
+	public unowned Adw.NavigationView quick_settings_navigation_view;
 
 	[GtkChild]
 	public unowned QButton notif_button;
@@ -34,9 +38,6 @@ public class Settings : Adw.Bin {
 			notif_button.icon = "preferences-system-notifications-symbolic";
 		}
 	}
-
-	[GtkChild]
-	public unowned Adw.NavigationView quick_settings_navigation_view;
 
 	[GtkCallback]
 	public void network_clicked() {
