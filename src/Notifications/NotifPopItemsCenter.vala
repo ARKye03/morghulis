@@ -17,44 +17,56 @@ public class NotifPopItemsCenter : Astal.Window {
 			anchor: WindowAnchor.TOP | x_anchor
 		);
 		notifd = AstalNotifd.Notifd.get_default();
-		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
-		notif_list_box = new Gtk.ListBox();
 
-		this.default_width = 330;
-		this.default_height = 1;
-		this.set_css_classes({ "all_unset" });
-
-		notif_list_box.set_selection_mode(Gtk.SelectionMode.NONE);
-
-		this.notifd.notified.connect((id, replace) => {
-			this.visible = true;
-			this.on_notification_added(id, replace, this.notif_list_box);
-			this.play_sound();
-		});
-		this.notifd.resolved.connect((id) => this.remove_notification(id, this.notif_list_box));
-
-		this.set_child(notif_list_box);
+		setup_window();
+		setup_notifications();
 	}
 
-	private void play_sound() {
+	private void setup_window() {
+		default_width = 330;
+		default_height = 1;
+		set_css_classes({ "all_unset" });
+
+		notif_list_box = new Gtk.ListBox();
+		notif_list_box.set_selection_mode(Gtk.SelectionMode.NONE);
+		set_child(notif_list_box);
+
+		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
+	}
+
+	private void setup_notifications() {
+		notifd = AstalNotifd.Notifd.get_default();
+		notifd.notified.connect((id, replace) => this.handle_notification(id, replace));
+		notifd.resolved.connect((id) => this.remove_notification(id));
+	}
+
+	private void handle_notification(uint notification_id, bool replace) {
+		if (!this.visible) {
+			this.visible = true;
+		}
+		this.on_notification_added(notification_id, replace);
+		this.play_notification_sound();
+	}
+
+	private void play_notification_sound() {
 		if (!notifd.dont_disturb) {
 			this.notif_sound.seek(0);
 			this.notif_sound.play();
 		}
 	}
 
-	private void on_notification_added(uint notification_id, bool is_replaced, Gtk.ListBox notif_list_box) {
+	private void on_notification_added(uint notification_id, bool is_replaced) {
 		if (is_replaced) {
-			remove_notification(notification_id, notif_list_box);
+			remove_notification(notification_id);
 		}
 
 		var notification = notifd.get_notification(notification_id);
-		var notif_item = new NotifPopItem(notification, notif_list_box);
+		var notif_item = new NotifPopItem(notification);
 		notif_list_box.prepend(notif_item);
 		_notif_count++;
 	}
 
-	private void remove_notification(uint notification_id, Gtk.ListBox notif_list_box) {
+	private void remove_notification(uint notification_id) {
 		NotifPopItem? notif_popup = (NotifPopItem)notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
