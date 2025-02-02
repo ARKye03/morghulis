@@ -18,10 +18,17 @@ public class NotifPopItemsCenter : Astal.Window {
 
 	private void setup_window() {
 		default_width = 330;
-		default_height = 1;
+		default_height = 0;
 		margin = 5;
 		set_css_classes({ "all_unset", "rounded" });
 		overflow = Gtk.Overflow.HIDDEN;
+		notify["visible"].connect(() => {
+			if (visible) {
+				this.default_height = -1;
+			} else {
+				this.default_height = 0;
+			}
+		});
 
 		notif_list_box = new Gtk.ListBox();
 		notif_list_box.set_selection_mode(Gtk.SelectionMode.NONE);
