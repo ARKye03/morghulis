@@ -30,7 +30,8 @@ template $NotifPopItem: ListBoxRow {
                 hexpand: true;
 
                 styles [
-                    "app_name"
+                    "app_name",
+                    "title-2"
                 ]
             }
 
@@ -65,6 +66,10 @@ template $NotifPopItem: ListBoxRow {
                 label: bind template.notification as <AstalNotifd.Notification>.summary;
                 justify: center;
                 ellipsize: end;
+
+                styles [
+                    "title-4"
+                ]
             }
 
             Label {
@@ -74,6 +79,10 @@ template $NotifPopItem: ListBoxRow {
                 lines: 3;
                 ellipsize: end;
                 hexpand: true;
+
+                styles [
+                    "tile_5"
+                ]
             }
 
             Box actions_box {
