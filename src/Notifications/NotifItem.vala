@@ -19,7 +19,7 @@ public class NotifItem : Gtk.ListBoxRow {
 	public string current_time(int64 t) {
 		DateTime dt = new DateTime.from_unix_local(t);
 
-		return dt.format(Morghulis.clock_format);
+		return dt.format("%H:%M");
 	}
 
 	[GtkCallback]
