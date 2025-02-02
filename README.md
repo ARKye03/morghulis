@@ -129,7 +129,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [ ] Handle River views?
 - [x] Notifications
   - [x] Center
-  - [ ] (WIP) Popup
+  - [x] Popup
   - [x] Don't Disturb logic
 - [ ] Power Menu (WIP)
 - [x] OnScreenDisplay
