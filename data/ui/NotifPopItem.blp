@@ -4,8 +4,7 @@ using AstalNotifd 0.1;
 template $NotifPopItem: ListBoxRow {
     styles [
         "notification_badge",
-        "rounded",
-        "view"
+        "background"
     ]
 
     activatable: false;
@@ -15,19 +14,11 @@ template $NotifPopItem: ListBoxRow {
         orientation: vertical;
 
         CenterBox {
-            styles [
-                "top_left_right_corner_borders"
-            ]
-
             [start]
             Image app_image {
                 overflow: hidden;
                 icon-name: bind template.notification as <AstalNotifd.Notification>.app-icon;
                 tooltip-text: "App Icon";
-
-                styles [
-                    "notification_image"
-                ]
             }
 
             [center]
@@ -37,10 +28,6 @@ template $NotifPopItem: ListBoxRow {
                 margin-bottom: 10;
                 margin-top: 10;
                 hexpand: true;
-
-                styles [
-                    "app_name"
-                ]
             }
 
             [end]
@@ -85,7 +72,15 @@ template $NotifPopItem: ListBoxRow {
                 hexpand: true;
             }
 
-            Box actions_box {}
+            Box actions_box {
+                halign: center;
+                hexpand: true;
+                homogeneous: true;
+
+                styles [
+                    "linked"
+                ]
+            }
         }
     }
 }

@@ -37,10 +37,8 @@ public class NotifPopItem : Gtk.ListBoxRow {
 
 	private void setup_actions() {
 		notification.actions.@foreach(a => {
-			Gtk.Button action = new Gtk.Button();
-			action.label = a.label;
+			Gtk.Button action = new Gtk.Button.with_label(a.label);
 			action.clicked.connect(() => this.notification.invoke(a.id));
-			action.hexpand = true;
 			this.actions_box.append(action);
 		});
 	}

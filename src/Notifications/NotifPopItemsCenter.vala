@@ -19,10 +19,14 @@ public class NotifPopItemsCenter : Astal.Window {
 	private void setup_window() {
 		default_width = 330;
 		default_height = 1;
-		set_css_classes({ "all_unset" });
+		margin = 5;
+		set_css_classes({ "all_unset", "rounded" });
+		overflow = Gtk.Overflow.HIDDEN;
 
 		notif_list_box = new Gtk.ListBox();
 		notif_list_box.set_selection_mode(Gtk.SelectionMode.NONE);
+		notif_list_box.set_css_classes({ "boxed-list" });
+
 		set_child(notif_list_box);
 
 		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
@@ -35,9 +39,6 @@ public class NotifPopItemsCenter : Astal.Window {
 	}
 
 	private void handle_notification(uint notification_id, bool replace) {
-		if (!this.visible) {
-			this.visible = true;
-		}
 		if (replace) {
 			remove_notification(notification_id);
 		}
@@ -52,6 +53,7 @@ public class NotifPopItemsCenter : Astal.Window {
 			remove_notification(notification_id);
 			return false;
 		});
+		this.visible = true;
 		this.play_notification_sound();
 	}
 
