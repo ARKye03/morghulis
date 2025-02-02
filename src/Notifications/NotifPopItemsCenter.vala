@@ -38,19 +38,7 @@ public class NotifPopItemsCenter : Astal.Window {
 		if (!this.visible) {
 			this.visible = true;
 		}
-		this.on_notification_added(notification_id, replace);
-		this.play_notification_sound();
-	}
-
-	private void play_notification_sound() {
-		if (!notifd.dont_disturb) {
-			this.notif_sound.seek(0);
-			this.notif_sound.play();
-		}
-	}
-
-	private void on_notification_added(uint notification_id, bool is_replaced) {
-		if (is_replaced) {
+		if (replace) {
 			remove_notification(notification_id);
 		}
 
@@ -64,6 +52,14 @@ public class NotifPopItemsCenter : Astal.Window {
 			remove_notification(notification_id);
 			return false;
 		});
+		this.play_notification_sound();
+	}
+
+	private void play_notification_sound() {
+		if (!notifd.dont_disturb) {
+			this.notif_sound.seek(0);
+			this.notif_sound.play();
+		}
 	}
 
 	private void remove_notification(uint notification_id) {
