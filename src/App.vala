@@ -15,7 +15,7 @@ public class Morghulis : Astal.Application {
 				OnScreenDisplay.instance.change_volume();
 			break;
 
-			default:
+				default:
 				AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
 			break;
 		}
@@ -54,10 +54,11 @@ public class Morghulis : Astal.Application {
 			load_css();
 			css_loaded = true;
 		}
-		add_window(new QuickMenu());
-		add_window(new Runner());
-		add_window(new OnScreenDisplay());
 		add_window(new NavBar());
+		add_window(new Runner());
+		add_window(new QuickMenu());
+		add_window(new OnScreenDisplay());
+		add_window(new NotifPopItemsCenter());
 
 		if (file.query_exists()) {
 			apply_css(file.get_path(), true);

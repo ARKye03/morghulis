@@ -1,12 +1,9 @@
-using Gtk;
-using AstalNotifd;
-
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotifPop.ui")]
-public class NotifPop : ListBoxRow {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotifItem.ui")]
+public class NotifItem : Gtk.ListBoxRow {
 	public AstalNotifd.Notification notification { get; set; }
 
 	[GtkChild]
-	public unowned Box actions_box;
+	public unowned Gtk.Box actions_box;
 
 	private void init_actions() {
 		notification.actions.@foreach(a => {
@@ -30,7 +27,7 @@ public class NotifPop : ListBoxRow {
 		this.notification.dismiss();
 	}
 
-	public NotifPop(AstalNotifd.Notification notification) {
+	public NotifItem(AstalNotifd.Notification notification) {
 		Object(notification: notification);
 		this.init_actions();
 		if (notification.urgency == AstalNotifd.Urgency.CRITICAL) {
