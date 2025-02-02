@@ -4,14 +4,12 @@ public class NotifPopItemsCenter : Astal.Window {
 	private Gtk.ListBox notif_list_box { get; set; }
 	private Gtk.MediaFile notif_sound { get; set; }
 	private uint _notif_count = 0;
-	private HashTable<uint, uint> timeout_ids;
 
 	public NotifPopItemsCenter(WindowAnchor x_anchor = WindowAnchor.RIGHT) {
 		Object(
 			title: "Notifications",
 			anchor: WindowAnchor.TOP | x_anchor
 		);
-		timeout_ids = new HashTable<uint, uint>(direct_hash, direct_equal);
 		notifd = AstalNotifd.Notifd.get_default();
 
 		setup_window();
