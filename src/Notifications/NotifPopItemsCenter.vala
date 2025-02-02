@@ -4,18 +4,14 @@ public class NotifPopItemsCenter : Astal.Window {
 	private Gtk.ListBox notif_list_box { get; set; }
 	private Gtk.MediaFile notif_sound { get; set; }
 	private uint _notif_count = 0;
-	public static NotifPopItemsCenter instance { get;  private set; }
+	private HashTable<uint, uint> timeout_ids;
 
 	public NotifPopItemsCenter(WindowAnchor x_anchor = WindowAnchor.RIGHT) {
-		if (instance == null) {
-			instance = this;
-		} else {
-			this.destroy();
-		}
 		Object(
 			title: "Notifications",
 			anchor: WindowAnchor.TOP | x_anchor
 		);
+		timeout_ids = new HashTable<uint, uint>(direct_hash, direct_equal);
 		notifd = AstalNotifd.Notifd.get_default();
 
 		setup_window();
@@ -64,6 +60,12 @@ public class NotifPopItemsCenter : Astal.Window {
 		var notif_item = new NotifPopItem(notification);
 		notif_list_box.prepend(notif_item);
 		_notif_count++;
+
+		uint timeout_ms = notification.expire_timeout > 0 ? notification.expire_timeout * 1000 : 3000;
+		Timeout.add(timeout_ms, () => {
+			remove_notification(notification_id);
+			return false;
+		});
 	}
 
 	private void remove_notification(uint notification_id) {

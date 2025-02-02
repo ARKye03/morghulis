@@ -11,7 +11,6 @@ public class NotifPopItem : Gtk.ListBoxRow {
 		);
 		setup_actions();
 		setup_urgency();
-		setup_auto_remove();
 	}
 
 	[GtkCallback]
@@ -34,18 +33,6 @@ public class NotifPopItem : Gtk.ListBoxRow {
 		} else {
 			this.add_css_class("normal");
 		}
-	}
-
-	private void setup_auto_remove() {
-		// Get timeout value, default to 3 seconds if not set
-		uint timeout = notification.expire_timeout > 0
-					   ? notification.expire_timeout * 1000
-					   : 3000;
-
-		Timeout.add(timeout, () => {
-			((Gtk.ListBox)this.get_parent()).remove(this);
-			return false;
-		});
 	}
 
 	private void setup_actions() {
