@@ -17,6 +17,7 @@ blueprints = custom_target(
         'RunnerButton.blp',
         'Settings.blp',
         'SliderBox.blp',
+        'NotifPopItem.blp'
     ),
     output: '.',
     command: [

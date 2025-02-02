@@ -19,6 +19,7 @@
         <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>
         <file preprocess="xml-stripblanks">ui/NotifItem.ui</file>
+        <file preprocess="xml-stripblanks">ui/NotifPopItem.ui</file>
         <file preprocess="xml-stripblanks">ui/QNotifications.ui</file>
     </gresource>
 </gresources>

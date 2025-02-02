@@ -1,2 +1,2 @@
 
-project_resources += files('NotifItem.vala', 'QNotifications.vala', 'NotifItemsCenter.vala')
+project_resources += files('NotifItem.vala', 'QNotifications.vala', 'NotifPopItemsCenter.vala', 'NotifPopItem.vala')

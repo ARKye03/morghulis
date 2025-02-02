@@ -1,0 +1,91 @@
+using Gtk 4.0;
+using AstalNotifd 0.1;
+
+template $NotifPopItem: ListBoxRow {
+    styles [
+        "notification_badge",
+        "rounded",
+        "view"
+    ]
+
+    activatable: false;
+    selectable: false;
+
+    Box {
+        orientation: vertical;
+
+        CenterBox {
+            styles [
+                "top_left_right_corner_borders"
+            ]
+
+            [start]
+            Image app_image {
+                overflow: hidden;
+                icon-name: bind template.notification as <AstalNotifd.Notification>.app-icon;
+                tooltip-text: "App Icon";
+
+                styles [
+                    "notification_image"
+                ]
+            }
+
+            [center]
+            Label app_name {
+                label: bind template.notification as <AstalNotifd.Notification>.app-name;
+                tooltip-text: "App Name";
+                margin-bottom: 10;
+                margin-top: 10;
+                hexpand: true;
+
+                styles [
+                    "app_name"
+                ]
+            }
+
+            [end]
+            Box {
+                Label {
+                    label: bind $current_time(template.notification as <AstalNotifd.Notification>.time) as <string>;
+                    tooltip-text: "Time";
+                }
+
+                Button {
+                    valign: center;
+                    icon-name: "window-close-symbolic";
+                    clicked => $dismiss_notif();
+                }
+            }
+        }
+
+        Separator {
+            height-request: 2;
+        }
+
+        Box {
+            styles [
+                "padding_10"
+            ]
+
+            spacing: 10;
+            orientation: vertical;
+
+            Label {
+                label: bind template.notification as <AstalNotifd.Notification>.summary;
+                justify: center;
+                ellipsize: end;
+            }
+
+            Label {
+                label: bind template.notification as <AstalNotifd.Notification>.body;
+                wrap: true;
+                justify: left;
+                lines: 3;
+                ellipsize: end;
+                hexpand: true;
+            }
+
+            Box actions_box {}
+        }
+    }
+}

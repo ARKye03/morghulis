@@ -22,7 +22,7 @@ private void init_types() {
 	typeof(Settings).ensure();
 	typeof(SliderBox).ensure();
 	typeof(OnScreenDisplay).ensure();
-	typeof(NotifItem).ensure();
+	typeof(NotifPopItem).ensure();
 	typeof(QNotifications).ensure();
 	typeof(CircularProgressBar).ensure();
 	typeof(Tray).ensure();
