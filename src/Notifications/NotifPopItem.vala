@@ -6,9 +6,6 @@ public class NotifPopItem : Gtk.ListBoxRow {
 	[GtkChild]
 	public unowned Gtk.Box actions_box;
 
-	[GtkChild]
-	public unowned Gtk.ProgressBar progress;
-
 	public NotifPopItem(AstalNotifd.Notification notification, Gtk.ListBox notif_list_box) {
 		Object(
 			notification: notification

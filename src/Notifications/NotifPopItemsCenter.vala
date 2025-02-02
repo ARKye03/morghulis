@@ -43,22 +43,6 @@ public class NotifPopItemsCenter : Astal.Window {
 		}
 	}
 
-	private uint hide_timeout_id = 0;
-	private void handle_timeout() {
-		// Remove the existing timeout if it exists
-		if (hide_timeout_id != 0) {
-			GLib.Source.remove(hide_timeout_id);
-			hide_timeout_id = 0;
-		}
-
-		// Set a new timeout
-		hide_timeout_id = GLib.Timeout.add(3000, () => {
-			this.visible = false;
-			hide_timeout_id = 0;
-			return false;
-		});
-	}
-
 	private void on_notification_added(uint notification_id, bool is_replaced, Gtk.ListBox notif_list_box) {
 		if (is_replaced) {
 			remove_notification(notification_id, notif_list_box);
