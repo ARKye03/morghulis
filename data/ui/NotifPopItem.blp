@@ -66,6 +66,7 @@ template $NotifPopItem: ListBoxRow {
                 label: bind template.notification as <AstalNotifd.Notification>.summary;
                 justify: center;
                 ellipsize: end;
+                max-width-chars: 15;
 
                 styles [
                     "title-4"
@@ -75,10 +76,9 @@ template $NotifPopItem: ListBoxRow {
             Label {
                 label: bind template.notification as <AstalNotifd.Notification>.body;
                 wrap: true;
-                justify: left;
+                wrap-mode: word_char;
                 lines: 3;
                 ellipsize: end;
-                hexpand: true;
 
                 styles [
                     "tile_5"

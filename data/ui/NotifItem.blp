@@ -73,15 +73,16 @@ template $NotifItem: ListBoxRow {
                 label: bind template.notification as <AstalNotifd.Notification>.summary;
                 justify: center;
                 ellipsize: end;
+                max-width-chars: 15;
             }
 
             Label {
                 label: bind template.notification as <AstalNotifd.Notification>.body;
                 wrap: true;
+                wrap-mode: word_char;
                 justify: left;
                 lines: 3;
                 ellipsize: end;
-                hexpand: true;
             }
 
             Box actions_box {}
