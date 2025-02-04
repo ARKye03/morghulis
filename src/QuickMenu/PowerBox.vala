@@ -1,13 +1,14 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
 public class PowerBox : Gtk.Box {
-	public string user_name { get; set; }
-	public string user_image { get; set; }
-	public Gdk.Paintable user_image_paintable { get; set; }
+	private string? pending_action { get; set; default = null; }
+
+	public string user_name { get; private set; }
+	public string user_image { get; private set; }
+	public Gdk.Paintable user_image_paintable { get; private set; }
+	public static Gtk.Stack mstack { get; private set; }
 
 	[GtkChild]
 	private unowned Gtk.Stack main_stack;
-
-	private string? pending_action = null;
 
 	construct {
 		user_name = @"Hello there $(Environment.get_user_name())!";
@@ -20,6 +21,7 @@ public class PowerBox : Gtk.Box {
 		} catch (Error e) {
 			stderr.printf("Error loading image: %s\n", e.message);
 		}
+		mstack = main_stack;
 	}
 
 	/// I honestly think this can be done better
@@ -60,7 +62,7 @@ public class PowerBox : Gtk.Box {
 	public void shutdown() {
 		try {
 			Process.spawn_command_line_async("systemctl poweroff");
-		} catch (Error e) {
+		} catch (SpawnError e) {
 			warning("Failed to shutdown: %s", e.message);
 		}
 	}
@@ -68,7 +70,7 @@ public class PowerBox : Gtk.Box {
 	public void reboot() {
 		try {
 			Process.spawn_command_line_async("systemctl reboot");
-		} catch (Error e) {
+		} catch (SpawnError e) {
 			warning("Failed to reboot: %s", e.message);
 		}
 	}
@@ -77,7 +79,7 @@ public class PowerBox : Gtk.Box {
 	public void suspend() {
 		try {
 			Process.spawn_command_line_async("systemctl suspend");
-		} catch (Error e) {
+		} catch (SpawnError e) {
 			warning("Failed to suspend: %s", e.message);
 		}
 	}
@@ -86,7 +88,7 @@ public class PowerBox : Gtk.Box {
 	public void hibernate() {
 		try {
 			Process.spawn_command_line_async("systemctl hibernate");
-		} catch (Error e) {
+		} catch (SpawnError e) {
 			warning("Failed to hibernate: %s", e.message);
 		}
 	}
@@ -95,7 +97,7 @@ public class PowerBox : Gtk.Box {
 	public void lock() {
 		try {
 			Process.spawn_command_line_async("loginctl lock-session");
-		} catch (Error e) {
+		} catch (SpawnError e) {
 			warning("Failed to lock: %s", e.message);
 		}
 	}
