@@ -16,7 +16,7 @@ public class QuickMenu : Astal.Window {
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				Settings.settings_navigation.pop();
-				PowerBox.mstack.visible_child_name = "main";
+				PowerBox.mstack.set_visible_child_name("main");
 			}
 		});
 	}
