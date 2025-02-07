@@ -25,5 +25,6 @@ private void init_types() {
 	typeof(NotifPopItem).ensure();
 	typeof(QNotifications).ensure();
 	typeof(CircularProgressBar).ensure();
+	typeof(ScrollingLabel).ensure();
 	typeof(Tray).ensure();
 }

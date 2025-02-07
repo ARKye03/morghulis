@@ -3,6 +3,7 @@ using GtkLayerShell;
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Astal.Window {
 	private GLib.DateTime clock_time { get; set; }
+	private AstalWp.Endpoint speaker { get; set; }
 
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
@@ -19,15 +20,19 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	private unowned Adw.Bin active_submap;
 
+	[GtkChild]
+	private unowned Adw.Bin volume_bin;
+
 	public NavBar() {
 		Object(
 			namespace : "NavBar",
 			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-			);
+		);
 		battery = AstalBattery.Device.get_default();
 
 		init_compositor();
 		init_clock();
+		setup_volume_bin();
 		instance = this;
 
 		present();
@@ -54,6 +59,19 @@ public class NavBar : Astal.Window {
 	[GtkCallback]
 	public string current_battery(double percentage) {
 		return @"$(Math.round(percentage * 100))%";
+	}
+
+	private void setup_volume_bin() {
+		CircularProgressSnapshot volume = new CircularProgressSnapshot();
+
+		speaker = AstalWp.get_default().audio.default_speaker;
+
+		volume.line_width = 2;
+		speaker.bind_property("volume", volume, "percentage", BindingFlags.SYNC_CREATE);
+		speaker.bind_property("volume_icon", volume, "icon-name", BindingFlags.SYNC_CREATE);
+		//  volume.queue_draw();
+
+		volume_bin.set_child(volume);
 	}
 
 	private void update_clock() {
@@ -138,7 +156,6 @@ public class NavBar : Astal.Window {
 		hyprland.bind_property("focused-client", client_label, "label", BindingFlags.SYNC_CREATE);
 	}
 #endif
-
 #if river
 	private Gtk.Label view_label = new Gtk.Label("default");
 	private AstalRiver.River river { get; set; }

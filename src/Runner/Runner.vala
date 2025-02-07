@@ -116,5 +116,7 @@ public class Runner : Astal.Window {
 			}
 		});
 		this.margin_top = Morghulis.primary_monitor.get_geometry().height / 4;
+		this.default_width = 0;
+		this.default_height = 0;
 	}
 }

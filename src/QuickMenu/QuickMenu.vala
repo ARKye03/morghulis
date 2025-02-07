@@ -19,5 +19,8 @@ public class QuickMenu : Astal.Window {
 				PowerBox.mstack.set_visible_child_name("main");
 			}
 		});
+
+		this.default_width = 400;
+		this.default_height = 500;
 	}
 }
