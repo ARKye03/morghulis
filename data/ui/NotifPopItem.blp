@@ -19,6 +19,7 @@ template $NotifPopItem: ListBoxRow {
                 overflow: hidden;
                 icon-name: bind template.notification as <AstalNotifd.Notification>.app-icon;
                 tooltip-text: "App Icon";
+                margin-start: 10;
             }
 
             [center]
@@ -28,6 +29,8 @@ template $NotifPopItem: ListBoxRow {
                 margin-bottom: 10;
                 margin-top: 10;
                 hexpand: true;
+                ellipsize: end;
+                max-width-chars: 12;
 
                 styles [
                     "app_name",
@@ -37,6 +40,8 @@ template $NotifPopItem: ListBoxRow {
 
             [end]
             Box {
+                spacing: 5;
+
                 Label {
                     label: bind $current_time(template.notification as <AstalNotifd.Notification>.time) as <string>;
                     tooltip-text: "Time";
