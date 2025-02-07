@@ -11,6 +11,7 @@
     - [Nix](#nix)
   - [Features](#features)
   - [Preview](#preview)
+    - [Thanks to](#thanks-to)
   - [License](#license)
 
 Desktop Shell created with GTK4, Libadwaita, and Astal.
@@ -146,6 +147,11 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 > [!NOTE]
 > The preview uses the Adwaita-black theme, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
+
+### Thanks to
+
+- [kotontrion](https://github.com/kotontrion) and its [kompass](https://github.com/kotontrion/kompass) project for inspiration, code snippets, and guidance.
+- [Aylur](https://github.com/Aylur) for the awesome project [Astal](https://github.com/Aylur/astal) is.
 
 ## License
 
