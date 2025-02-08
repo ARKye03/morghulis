@@ -1,13 +1,16 @@
 public class CircularProgressSnapshot : Gtk.Widget {
-	// This is deprecated, so needs to be changed, but for now, works for testing.
-	private Gtk.StyleContext _context;
+	private ProgressArc _progress_arc;
+	private CenterFill _center_fill;
+	private RadiusFill _radius_fill;
+	private Gtk.Widget _child;
 
 	private int _line_width;
 	private double _percentage;
-	private string _center_fill_color;
-	private string _radius_fill_color;
-	private string _progress_fill_color;
-	private Gtk.Widget _child;
+
+	private float _cached_radius = -1;
+	private float _cached_delta = -1;
+	private int _cached_width = -1;
+	private int _cached_height = -1;
 
 	[Description(nick = "Center Fill", blurb = "Center Fill toggle")]
 	public bool center_filled { set; get; default = false; }
@@ -17,45 +20,6 @@ public class CircularProgressSnapshot : Gtk.Widget {
 
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Cairo.LineCap")]
 	public Cairo.LineCap line_cap { set; get; default = Cairo.LineCap.BUTT; }
-
-	[Description(nick = "Inside circle fill color", blurb = "Center pad fill color (Check Gdk.RGBA parse method)")]
-	public string center_fill_color {
-		get {
-			return _center_fill_color;
-		}
-		set {
-			var color = Gdk.RGBA();
-			if (color.parse(value)) {
-				_center_fill_color = value;
-			}
-		}
-	}
-
-	[Description(nick = "Circular radius fill color", blurb = "The circular pad fill color (Check GdkRGBA parse method)")]
-	public string radius_fill_color {
-		get {
-			return _radius_fill_color;
-		}
-		set {
-			var color = Gdk.RGBA();
-			if (color.parse(value)) {
-				_radius_fill_color = value;
-			}
-		}
-	}
-
-	[Description(nick = "Progress fill color", blurb = "Progress line color (Check GdkRGBA parse method)")]
-	public string progress_fill_color {
-		get {
-			return _progress_fill_color;
-		}
-		set {
-			var color = Gdk.RGBA();
-			if (color.parse(value)) {
-				_progress_fill_color = value;
-			}
-		}
-	}
 
 	[Description(nick = "Circle width", blurb = "The circle radius line width")]
 	public int line_width {
@@ -72,16 +36,17 @@ public class CircularProgressSnapshot : Gtk.Widget {
 
 	[Description(nick = "Percentage/Value", blurb = "The percentage value [0.0 ... 1.0]")]
 	public double percentage {
-		get {
-			return _percentage;
-		}
+		get { return _percentage; }
 		set {
-			if (value > 1.0) {
-				_percentage = 1.0;
-			} else if (value < 0.0) {
-				_percentage = 0.0;
-			} else {
-				_percentage = value;
+			if (_percentage != value) {
+				if (value > 1.0) {
+					_percentage = 1.0;
+				} else if (value < 0.0) {
+					_percentage = 0.0;
+				} else {
+					_percentage = value;
+				}
+				queue_draw();
 			}
 		}
 	}
@@ -101,18 +66,20 @@ public class CircularProgressSnapshot : Gtk.Widget {
 	}
 
 	construct {
-		_context = get_style_context();
-		_line_width = 1;
-		_percentage = 0;
-		_center_fill_color = "#adadad";
-		_radius_fill_color = "#d3d3d3";
-		_progress_fill_color = "#4a90d9";
-		set_layout_manager(new Gtk.BinLayout());
+		_progress_arc = new ProgressArc();
+		_center_fill = new CenterFill();
+		_radius_fill = new RadiusFill();
+
+		_progress_arc.set_parent(this);
+		_center_fill.set_parent(this);
+		_radius_fill.set_parent(this);
 	}
 
 	public CircularProgressSnapshot() {
 		Object(
-			css_name: "circular-progress"
+			name: "circular-progress",
+			css_name: "circular-progress",
+			layout_manager: new Gtk.BinLayout()
 		);
 		notify.connect(() => {
 			queue_draw();
@@ -124,120 +91,52 @@ public class CircularProgressSnapshot : Gtk.Widget {
 			_child.unparent();
 			_child = null;
 		}
+		_progress_arc.unparent();
+		_progress_arc = null;
+		_center_fill.unparent();
+		_center_fill = null;
+		_radius_fill.unparent();
+		_radius_fill = null;
 		base.dispose();
-	}
-
-	private void draw_progress_arc(
-		Gtk.Snapshot snapshot,
-		float center_x,
-		float center_y,
-		float delta,
-		float actual_line_width
-	) {
-		if (percentage <= 0) {
-			return;
-		}
-
-		var color = Gdk.RGBA();
-		_context.lookup_color("accent_color", out color);
-
-		var start_angle = 1.5f * Math.PI;
-		var end_angle = start_angle + (percentage * 2 * Math.PI);
-
-		var start_x = center_x + (float)(delta * Math.cos(start_angle));
-		var start_y = center_y + (float)(delta * Math.sin(start_angle));
-		var end_x = center_x + (float)(delta * Math.cos(end_angle));
-		var end_y = center_y + (float)(delta * Math.sin(end_angle));
-
-		var path_builder = new Gsk.PathBuilder();
-		path_builder.move_to(start_x, start_y);
-		path_builder.svg_arc_to(
-			delta, delta, 0.0f,
-			percentage > 0.5, true,
-			end_x, end_y
-		);
-
-		var stroke = new Gsk.Stroke(actual_line_width);
-		snapshot.append_stroke(path_builder.to_path(), stroke, color);
-	}
-
-	private void draw_center_fill(
-		Gtk.Snapshot snapshot,
-		float center_x,
-		float center_y,
-		float delta
-	) {
-		if (!center_filled) {
-			return;
-		}
-
-		var color = Gdk.RGBA();
-		_context.lookup_color("light_3", out color);
-
-		var bounds = Graphene.Rect().init(
-			center_x - delta,
-			center_y - delta,
-			delta * 2,
-			delta * 2
-		);
-
-		snapshot.append_color(color, bounds);
-	}
-
-	private void draw_radius_fill(
-		Gtk.Snapshot snapshot,
-		float center_x,
-		float center_y,
-		float delta,
-		float radius,
-		float actual_line_width
-	) {
-		if (!radius_filled) {
-			return;
-		}
-
-		var color = Gdk.RGBA();
-		_context.lookup_color("accent_fg_color", out color);
-
-		var rect = Gsk.RoundedRect() {
-			bounds = Graphene.Rect().init(
-				center_x - delta,
-				center_y - delta,
-				delta * 2,
-				delta * 2
-			)
-		};
-
-		var graphene_size = Graphene.Size().init(radius, radius);
-		for (int i = 0; i < 4; i++) {
-			rect.corner[i] = graphene_size;
-		}
-
-		snapshot.append_border(
-			rect,
-			{ actual_line_width, actual_line_width, actual_line_width, actual_line_width },
-			{ color, color, color, color }
-		);
 	}
 
 	public override void snapshot(Gtk.Snapshot snapshot) {
 		var width = get_width();
 		var height = get_height();
 
-		var center_x = width / 2.0f;
-		var center_y = height / 2.0f;
-		var radius = float.min(width / 2.0f, height / 2.0f) - 1;
-
-		var actual_line_width = (float)line_width;
-		if (actual_line_width > radius) {
-			actual_line_width = radius;
+		// Only recalculate if dimensions changed
+		if (width != _cached_width || height != _cached_height) {
+			_cached_width = width;
+			_cached_height = height;
+			_cached_radius = float.min(width / 2.0f, height / 2.0f) - 1;
+			_cached_delta = _cached_radius - ((float)line_width / 2.0f);
 		}
 
-		var delta = radius - (actual_line_width / 2.0f);
+		// Use cached values
+		var actual_line_width = (float)line_width;
+		if (actual_line_width > _cached_radius) {
+			actual_line_width = _cached_radius;
+		}
 
-		draw_progress_arc(snapshot, center_x, center_y, delta, actual_line_width);
-		draw_center_fill(snapshot, center_x, center_y, delta);
-		draw_radius_fill(snapshot, center_x, center_y, delta, radius, actual_line_width);
+		_progress_arc.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta, actual_line_width, percentage);
+
+		if (center_filled) {
+			_center_fill.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta);
+		}
+
+		if (radius_filled) {
+			_radius_fill.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta, _cached_radius, actual_line_width);
+		}
+
+		_progress_arc.snapshot(snapshot);
+
+		if (center_filled) {
+			_center_fill.snapshot(snapshot);
+		}
+
+		if (radius_filled) {
+			_radius_fill.snapshot(snapshot);
+		}
 
 		if (_child != null) {
 			_child.snapshot(snapshot);
@@ -250,22 +149,173 @@ public class CircularProgressSnapshot : Gtk.Widget {
 								 out int natural,
 								 out int minimum_baseline,
 								 out int natural_baseline) {
-		minimum = 24;
-		natural = minimum;
+		minimum = natural = 24;
+		minimum_baseline = natural_baseline = -1;
 
-		// Get child measurements if it exists
 		if (_child != null) {
-			int child_min, child_nat, child_min_baseline, child_nat_baseline;
-			_child.measure(orientation, for_size,
-						   out child_min, out child_nat,
-						   out child_min_baseline, out child_nat_baseline);
+			int child_min, child_nat;
+			_child.measure(
+				orientation,
+				for_size,
+				out child_min,
+				out child_nat,
+				null,
+				null
+			);
+			minimum = natural = int.max(24, child_min);
+		}
+	}
+}
 
-			// Use the larger of our minimum size and child's size
-			minimum = int.max(minimum, child_min);
-			natural = int.max(natural, child_nat);
+internal class ProgressArc : Gtk.Widget {
+	private float _center_x;
+	private float _center_y;
+	private float _delta;
+	private float _line_width;
+	private double _percentage;
+	private bool _updating_geometry = false;
+
+	public ProgressArc() {
+		Object(
+			name: "progress-arc",
+			css_name: "progress-arc",
+			layout_manager: new Gtk.BinLayout()
+		);
+	}
+
+	public void update_geometry(float center_x, float center_y, float delta, float line_width, double percentage) {
+		if (_updating_geometry) {
+			return;
+		}
+		_updating_geometry = true;
+
+		_center_x = center_x;
+		_center_y = center_y;
+		_delta = delta;
+		_line_width = line_width;
+		_percentage = percentage;
+
+		_updating_geometry = false;
+		queue_draw();
+	}
+
+	public override void snapshot(Gtk.Snapshot snapshot) {
+		if (_percentage <= 0) {
+			return;
 		}
 
-		minimum_baseline = -1;
-		natural_baseline = -1;
+		var color = get_color();
+		var start_angle = 1.5f * Math.PI;
+		var end_angle = start_angle + (_percentage * 2 * Math.PI);
+
+		var start_x = _center_x + (float)(_delta * Math.cos(start_angle));
+		var start_y = _center_y + (float)(_delta * Math.sin(start_angle));
+		var end_x = _center_x + (float)(_delta * Math.cos(end_angle));
+		var end_y = _center_y + (float)(_delta * Math.sin(end_angle));
+
+		var path_builder = new Gsk.PathBuilder();
+		path_builder.move_to(start_x, start_y);
+		path_builder.svg_arc_to(
+			_delta, _delta, 0.0f,
+			_percentage > 0.5, true,
+			end_x, end_y
+		);
+
+		var stroke = new Gsk.Stroke(_line_width);
+		snapshot.append_stroke(path_builder.to_path(), stroke, color);
+	}
+}
+
+internal class CenterFill : Gtk.Widget {
+	private float _center_x;
+	private float _center_y;
+	private float _delta;
+	private bool _updating_geometry = false;
+
+	public CenterFill() {
+		Object(
+			name: "center-fill",
+			css_name: "center-fill",
+			layout_manager: new Gtk.BinLayout()
+		);
+	}
+
+	public void update_geometry(float center_x, float center_y, float delta) {
+		if (_updating_geometry) {
+			return;
+		}
+		_updating_geometry = true;
+		_center_x = center_x;
+		_center_y = center_y;
+		_delta = delta;
+		_updating_geometry = false;
+		queue_draw();
+	}
+
+	public override void snapshot(Gtk.Snapshot snapshot) {
+		var color = get_color();
+		var bounds = Graphene.Rect().init(
+			_center_x - _delta,
+			_center_y - _delta,
+			_delta * 2,
+			_delta * 2
+		);
+
+		snapshot.append_color(color, bounds);
+	}
+}
+
+internal class RadiusFill : Gtk.Widget {
+	private float _center_x;
+	private float _center_y;
+	private float _delta;
+	private float _radius;
+	private float _line_width;
+	private bool _updating_geometry = false;
+
+	public RadiusFill() {
+		Object(
+			name: "radius-fill",
+			css_name: "radius-fill",
+			layout_manager: new Gtk.BinLayout()
+		);
+	}
+
+	public void update_geometry(float center_x, float center_y, float delta, float radius, float line_width) {
+		if (_updating_geometry) {
+			return;
+		}
+		_updating_geometry = true;
+		_center_x = center_x;
+		_center_y = center_y;
+		_delta = delta;
+		_radius = radius;
+		_line_width = line_width;
+		_updating_geometry = false;
+		queue_draw();
+	}
+
+	public override void snapshot(Gtk.Snapshot snapshot) {
+		var color = get_color();
+		var rect = Gsk.RoundedRect() {
+			bounds = Graphene.Rect().init(
+				_center_x - _delta,
+				_center_y - _delta,
+				_delta * 2,
+				_delta * 2
+			)
+		};
+
+		var graphene_size = Graphene.Size().init(_radius, _radius);
+
+		for (int i = 0; i < 4; i++) {
+			rect.corner[i] = graphene_size;
+		}
+
+		snapshot.append_border(
+			rect,
+			{ _line_width, _line_width, _line_width, _line_width },
+			{ color, color, color, color }
+		);
 	}
 }
