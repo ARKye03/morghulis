@@ -1,5 +1,5 @@
 public class CircularProgressSnapshot : Gtk.Widget {
-	// This is deprecated, so needs to be changed
+	// This is deprecated, so needs to be changed, but for now, works for testing.
 	private Gtk.StyleContext _context;
 
 	private int _line_width;
