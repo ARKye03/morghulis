@@ -27,6 +27,7 @@ public class QNetwork : Gtk.Box {
 			var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 5);
 			box.append(new Gtk.Image());
 			box.append(new Gtk.Label(null));
+			box.add_css_class("padding_10");
 			list_item.set_child(box);
 		});
 
