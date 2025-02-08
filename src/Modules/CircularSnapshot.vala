@@ -1,11 +1,13 @@
 public class CircularProgressSnapshot : Gtk.Widget {
+	// This is deprecated, so needs to be changed
+	private Gtk.StyleContext _context;
+
 	private int _line_width;
-	private int _font_size;
-	private string _icon_name;
 	private double _percentage;
 	private string _center_fill_color;
 	private string _radius_fill_color;
 	private string _progress_fill_color;
+	private Gtk.Widget _child;
 
 	[Description(nick = "Center Fill", blurb = "Center Fill toggle")]
 	public bool center_filled { set; get; default = false; }
@@ -13,24 +15,8 @@ public class CircularProgressSnapshot : Gtk.Widget {
 	[Description(nick = "Radius Fill", blurb = "Radius Fill toggle")]
 	public bool radius_filled { set; get; default = false; }
 
-	[Description(nick = "Font", blurb = "Font description without size, just the font name")]
-	public string font { set; get; default = "FreeSerifBold"; }
-
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Cairo.LineCap")]
 	public Cairo.LineCap line_cap { set; get; default = Cairo.LineCap.BUTT; }
-
-	[Description(nick = "Font Size", blurb = "Size of the percentage text")]
-	public int font_size {
-		get { return _font_size; }
-		set {
-			if (value < 1) {
-				_font_size = 1;
-			} else {
-				_font_size = value;
-			}
-			queue_draw();
-		}
-	}
 
 	[Description(nick = "Inside circle fill color", blurb = "Center pad fill color (Check Gdk.RGBA parse method)")]
 	public string center_fill_color {
@@ -100,29 +86,138 @@ public class CircularProgressSnapshot : Gtk.Widget {
 		}
 	}
 
-	[Description(nick = "Icon Name", blurb = "System icon name to display instead of percentage")]
-	public string? icon_name {
-		get { return _icon_name; }
+	[Description(nick = "Child Widget", blurb = "The child widget contained within the circular progress")]
+	public Gtk.Widget? child {
+		get { return _child; }
 		set {
-			_icon_name = value;
-			queue_draw();
+			if (_child != null) {
+				_child.unparent();
+			}
+			_child = value;
+			if (_child != null) {
+				_child.set_parent(this);
+			}
 		}
 	}
 
 	construct {
+		_context = get_style_context();
 		_line_width = 1;
 		_percentage = 0;
 		_center_fill_color = "#adadad";
 		_radius_fill_color = "#d3d3d3";
 		_progress_fill_color = "#4a90d9";
-		_font_size = 24;
-		_icon_name = null;
+		set_layout_manager(new Gtk.BinLayout());
 	}
 
 	public CircularProgressSnapshot() {
+		Object(
+			css_name: "circular-progress"
+		);
 		notify.connect(() => {
 			queue_draw();
 		});
+	}
+
+	protected override void dispose() {
+		if (_child != null) {
+			_child.unparent();
+			_child = null;
+		}
+		base.dispose();
+	}
+
+	private void draw_progress_arc(
+		Gtk.Snapshot snapshot,
+		float center_x,
+		float center_y,
+		float delta,
+		float actual_line_width
+	) {
+		if (percentage <= 0) {
+			return;
+		}
+
+		var color = Gdk.RGBA();
+		_context.lookup_color("accent_color", out color);
+
+		var start_angle = 1.5f * Math.PI;
+		var end_angle = start_angle + (percentage * 2 * Math.PI);
+
+		var start_x = center_x + (float)(delta * Math.cos(start_angle));
+		var start_y = center_y + (float)(delta * Math.sin(start_angle));
+		var end_x = center_x + (float)(delta * Math.cos(end_angle));
+		var end_y = center_y + (float)(delta * Math.sin(end_angle));
+
+		var path_builder = new Gsk.PathBuilder();
+		path_builder.move_to(start_x, start_y);
+		path_builder.svg_arc_to(
+			delta, delta, 0.0f,
+			percentage > 0.5, true,
+			end_x, end_y
+		);
+
+		var stroke = new Gsk.Stroke(actual_line_width);
+		snapshot.append_stroke(path_builder.to_path(), stroke, color);
+	}
+
+	private void draw_center_fill(
+		Gtk.Snapshot snapshot,
+		float center_x,
+		float center_y,
+		float delta
+	) {
+		if (!center_filled) {
+			return;
+		}
+
+		var color = Gdk.RGBA();
+		_context.lookup_color("light_3", out color);
+
+		var bounds = Graphene.Rect().init(
+			center_x - delta,
+			center_y - delta,
+			delta * 2,
+			delta * 2
+		);
+
+		snapshot.append_color(color, bounds);
+	}
+
+	private void draw_radius_fill(
+		Gtk.Snapshot snapshot,
+		float center_x,
+		float center_y,
+		float delta,
+		float radius,
+		float actual_line_width
+	) {
+		if (!radius_filled) {
+			return;
+		}
+
+		var color = Gdk.RGBA();
+		_context.lookup_color("accent_fg_color", out color);
+
+		var rect = Gsk.RoundedRect() {
+			bounds = Graphene.Rect().init(
+				center_x - delta,
+				center_y - delta,
+				delta * 2,
+				delta * 2
+			)
+		};
+
+		var graphene_size = Graphene.Size().init(radius, radius);
+		for (int i = 0; i < 4; i++) {
+			rect.corner[i] = graphene_size;
+		}
+
+		snapshot.append_border(
+			rect,
+			{ actual_line_width, actual_line_width, actual_line_width, actual_line_width },
+			{ color, color, color, color }
+		);
 	}
 
 	public override void snapshot(Gtk.Snapshot snapshot) {
@@ -140,101 +235,12 @@ public class CircularProgressSnapshot : Gtk.Widget {
 
 		var delta = radius - (actual_line_width / 2.0f);
 
-		// Center fill
-		if (center_filled) {
-			var color = Gdk.RGBA();
-			color.parse(center_fill_color);
+		draw_progress_arc(snapshot, center_x, center_y, delta, actual_line_width);
+		draw_center_fill(snapshot, center_x, center_y, delta);
+		draw_radius_fill(snapshot, center_x, center_y, delta, radius, actual_line_width);
 
-			var bounds = Graphene.Rect().init(
-				center_x - delta,
-				center_y - delta,
-				delta * 2,
-				delta * 2
-			);
-
-			snapshot.append_color(color, bounds);
-		}
-
-		// Radius fill (circle outline)
-		if (radius_filled) {
-			var color = Gdk.RGBA();
-			color.parse(radius_fill_color);
-
-			var rect = Gsk.RoundedRect() {
-				bounds = Graphene.Rect().init(
-					center_x - delta,
-					center_y - delta,
-					delta * 2,
-					delta * 2
-				)
-			};
-			var graphene_size = Graphene.Size().init(radius, radius);
-			for (int i = 0; i < 4; i++) {
-				rect.corner[i] = graphene_size;
-			}
-
-			snapshot.append_border(
-				rect,
-				{ actual_line_width, actual_line_width, actual_line_width, actual_line_width },
-				{ color, color, color, color }
-			);
-		}
-
-		// Progress arc
-		if (percentage > 0) {
-			var color = Gdk.RGBA();
-			color.parse(progress_fill_color);
-
-			var start_angle = 1.5f * Math.PI;
-			var end_angle = start_angle + (percentage * 2 * Math.PI);
-
-			// Calculate end point on circle
-			var end_x = center_x + (float)(delta * Math.cos(end_angle));
-			var end_y = center_y + (float)(delta * Math.sin(end_angle));
-
-			var path = new Gsk.PathBuilder();
-			path.move_to(center_x, center_y);
-			path.svg_arc_to(
-				delta,
-				delta,
-				0.0f,
-				false,
-				true,
-				end_x,
-				end_y
-			);
-			path.close();
-
-			var stroke = new Gsk.Stroke(actual_line_width);
-			snapshot.append_stroke(path.to_path(), stroke, color);
-		}
-
-		// Text or Icon
-		if (icon_name != null) {
-			var icon_size = (int)float.min(width, height) / 2;
-			var icon_theme = Gtk.IconTheme.get_for_display(get_display());
-			var paintable = icon_theme.lookup_icon(
-				icon_name, null, icon_size,
-				get_scale_factor(), Gtk.TextDirection.NONE, 0
-			);
-
-			if (paintable != null) {
-				paintable.snapshot(snapshot, icon_size, icon_size);
-			}
-		} else {
-			var color = get_style_context().get_color();
-			var layout = create_pango_layout("%d".printf((int)(percentage * 100)));
-			var font_desc = Pango.FontDescription.from_string(@"$font $font_size");
-			layout.set_font_description(font_desc);
-
-			int text_width, text_height;
-			layout.get_size(out text_width, out text_height);
-
-			var text_x = center_x - (text_width / Pango.SCALE / 2);
-			var text_y = center_y - (text_height / Pango.SCALE / 2);
-
-			snapshot.translate({ text_x, text_y });
-			snapshot.append_layout(layout, color);
+		if (_child != null) {
+			_child.snapshot(snapshot);
 		}
 	}
 
@@ -245,7 +251,20 @@ public class CircularProgressSnapshot : Gtk.Widget {
 								 out int minimum_baseline,
 								 out int natural_baseline) {
 		minimum = 24;
-		natural = icon_name != null ? minimum : int.max(minimum, font_size * 2);
+		natural = minimum;
+
+		// Get child measurements if it exists
+		if (_child != null) {
+			int child_min, child_nat, child_min_baseline, child_nat_baseline;
+			_child.measure(orientation, for_size,
+						   out child_min, out child_nat,
+						   out child_min_baseline, out child_nat_baseline);
+
+			// Use the larger of our minimum size and child's size
+			minimum = int.max(minimum, child_min);
+			natural = int.max(natural, child_nat);
+		}
+
 		minimum_baseline = -1;
 		natural_baseline = -1;
 	}
