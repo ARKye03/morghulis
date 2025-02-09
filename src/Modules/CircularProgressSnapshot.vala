@@ -22,8 +22,8 @@ public class CircularProgressSnapshot : Gtk.Widget {
 	public int line_width {
 		get { return _line_width; }
 		set {
-			if (value < 0) {
-				_line_width = 0;
+			if (value < 1) {
+				_line_width = 1;
 			} else {
 				_line_width = value;
 			}
@@ -33,6 +33,9 @@ public class CircularProgressSnapshot : Gtk.Widget {
 
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Gsk.LineCap")]
 	public Gsk.LineCap line_cap { set; get; default = Gsk.LineCap.BUTT; }
+
+	[Description(nick = "Fill Rule", blurb = "Fill Rule for center fill as in Gsk.FillRule")]
+	public Gsk.FillRule fill_rule { set; get; default = Gsk.FillRule.EVEN_ODD; }
 
 	[Description(nick = "Percentage/Value", blurb = "The percentage value [0.0 ... 1.0]")]
 	public double percentage {
@@ -118,18 +121,18 @@ public class CircularProgressSnapshot : Gtk.Widget {
 			actual_line_width = _cached_radius;
 		}
 
+		// Update geometries
 		_progress_arc.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta, actual_line_width, line_cap, percentage);
 
 		if (center_filled) {
-			_center_fill.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta);
+			_center_fill.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta, fill_rule);
 		}
 
 		if (radius_filled) {
 			_radius_fill.update_geometry(_cached_width / 2.0f, _cached_height / 2.0f, _cached_delta, _cached_radius, actual_line_width);
 		}
 
-		_progress_arc.snapshot(snapshot);
-
+		// Draw in correct order: background to foreground
 		if (center_filled) {
 			_center_fill.snapshot(snapshot);
 		}
@@ -137,6 +140,8 @@ public class CircularProgressSnapshot : Gtk.Widget {
 		if (radius_filled) {
 			_radius_fill.snapshot(snapshot);
 		}
+
+		_progress_arc.snapshot(snapshot);
 
 		if (_child != null) {
 			_child.snapshot(snapshot);
@@ -216,23 +221,61 @@ internal class ProgressArc : Gtk.Widget {
 		var color = get_color();
 		var start_angle = 1.5f * Math.PI;
 		var end_angle = start_angle + (_percentage * 2 * Math.PI);
-
-		var start_x = _center_x + (float)(_delta * Math.cos(start_angle));
-		var start_y = _center_y + (float)(_delta * Math.sin(start_angle));
-		var end_x = _center_x + (float)(_delta * Math.cos(end_angle));
-		var end_y = _center_y + (float)(_delta * Math.sin(end_angle));
-
 		var path_builder = new Gsk.PathBuilder();
-		path_builder.move_to(start_x, start_y);
-		path_builder.svg_arc_to(
-			_delta, _delta, 0.0f,
-			_percentage > 0.5, true,
-			end_x, end_y
-		);
 
-		var stroke = new Gsk.Stroke(_line_width);
-		stroke.set_line_cap(_line_cap);
-		snapshot.append_stroke(path_builder.to_path(), stroke, color);
+		if (_line_width <= 0) {
+			// Draw as pie when line_width is 0
+			path_builder.move_to(_center_x, _center_y);                                     // Start from center
+
+			if (_percentage >= 1.0) {
+				// Full circle
+				path_builder.add_circle(
+					Graphene.Point().init(_center_x, _center_y),
+					_delta
+				);
+			} else {
+				// Partial pie
+				var start_x = _center_x + (float)(_delta * Math.cos(start_angle));
+				var start_y = _center_y + (float)(_delta * Math.sin(start_angle));
+				var end_x = _center_x + (float)(_delta * Math.cos(end_angle));
+				var end_y = _center_y + (float)(_delta * Math.sin(end_angle));
+
+				path_builder.line_to(start_x, start_y);
+				path_builder.svg_arc_to(
+					_delta, _delta, 0.0f,
+					_percentage > 0.5, true,
+					end_x, end_y
+				);
+				path_builder.line_to(_center_x, _center_y);                                                 // Close the pie
+				path_builder.close();
+			}
+
+			snapshot.append_fill(path_builder.to_path(), Gsk.FillRule.EVEN_ODD, color);
+		} else {
+			// Original stroke drawing code
+			if (_percentage >= 1.0) {
+				path_builder.add_circle(
+					Graphene.Point().init(_center_x, _center_y),
+					_delta
+				);
+			} else {
+				var start_x = _center_x + (float)(_delta * Math.cos(start_angle));
+				var start_y = _center_y + (float)(_delta * Math.sin(start_angle));
+				var end_x = _center_x + (float)(_delta * Math.cos(end_angle));
+				var end_y = _center_y + (float)(_delta * Math.sin(end_angle));
+
+				path_builder.move_to(start_x, start_y);
+				path_builder.svg_arc_to(
+					_delta, _delta, 0.0f,
+					_percentage > 0.5, true,
+					end_x, end_y
+				);
+			}
+
+			var stroke = new Gsk.Stroke(_line_width);
+			stroke.set_line_cap(_line_cap);
+			snapshot.append_stroke(path_builder.to_path(), stroke, color);
+		}
 	}
 }
 
@@ -240,6 +283,7 @@ internal class CenterFill : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
 	private float _delta;
+	private Gsk.FillRule _fill_rule;
 	private bool _updating_geometry = false;
 
 	public CenterFill() {
@@ -250,7 +294,12 @@ internal class CenterFill : Gtk.Widget {
 		);
 	}
 
-	public void update_geometry(float center_x, float center_y, float delta) {
+	public void update_geometry(
+		float center_x,
+		float center_y,
+		float delta,
+		Gsk.FillRule fill_rule
+	) {
 		if (_updating_geometry) {
 			return;
 		}
@@ -258,20 +307,25 @@ internal class CenterFill : Gtk.Widget {
 		_center_x = center_x;
 		_center_y = center_y;
 		_delta = delta;
+		_fill_rule = fill_rule;
 		_updating_geometry = false;
 		queue_draw();
 	}
 
 	public override void snapshot(Gtk.Snapshot snapshot) {
 		var color = get_color();
-		var bounds = Graphene.Rect().init(
-			_center_x - _delta,
-			_center_y - _delta,
-			_delta * 2,
-			_delta * 2
+		var path_builder = new Gsk.PathBuilder();
+
+		path_builder.add_circle(
+			Graphene.Point().init(_center_x, _center_y),
+			_delta
 		);
 
-		snapshot.append_color(color, bounds);
+		snapshot.append_fill(
+			path_builder.to_path(),
+			_fill_rule,
+			color
+		);
 	}
 }
 
@@ -307,25 +361,14 @@ internal class RadiusFill : Gtk.Widget {
 
 	public override void snapshot(Gtk.Snapshot snapshot) {
 		var color = get_color();
-		var rect = Gsk.RoundedRect() {
-			bounds = Graphene.Rect().init(
-				_center_x - _delta,
-				_center_y - _delta,
-				_delta * 2,
-				_delta * 2
-			)
-		};
+		var path_builder = new Gsk.PathBuilder();
 
-		var graphene_size = Graphene.Size().init(_radius, _radius);
-
-		for (int i = 0; i < 4; i++) {
-			rect.corner[i] = graphene_size;
-		}
-
-		snapshot.append_border(
-			rect,
-			{ _line_width, _line_width, _line_width, _line_width },
-			{ color, color, color, color }
+		path_builder.add_circle(
+			Graphene.Point().init(_center_x, _center_y),
+			_delta
 		);
+
+		var stroke = new Gsk.Stroke(_line_width);
+		snapshot.append_stroke(path_builder.to_path(), stroke, color);
 	}
 }
