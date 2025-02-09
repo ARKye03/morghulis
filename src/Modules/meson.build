@@ -1,1 +1,1 @@
-project_resources += files('CircularProgressSnapshot.vala')
+project_resources += files('CircularProgress.vala')
