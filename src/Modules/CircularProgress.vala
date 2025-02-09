@@ -361,12 +361,19 @@ internal class RadiusFill : Gtk.Widget {
 		var color = get_color();
 		var path_builder = new Gsk.PathBuilder();
 
-		path_builder.add_circle(
-			Graphene.Point().init(_center_x, _center_y),
-			_delta
-		);
-
-		var stroke = new Gsk.Stroke(_line_width);
-		snapshot.append_stroke(path_builder.to_path(), stroke, color);
+		if (_line_width <= 0) {
+			path_builder.add_circle(
+				Graphene.Point().init(_center_x, _center_y),
+				_delta
+			);
+			snapshot.append_fill(path_builder.to_path(), Gsk.FillRule.EVEN_ODD, color);
+		} else {
+			path_builder.add_circle(
+				Graphene.Point().init(_center_x, _center_y),
+				_delta
+			);
+			var stroke = new Gsk.Stroke(_line_width);
+			snapshot.append_stroke(path_builder.to_path(), stroke, color);
+		}
 	}
 }
