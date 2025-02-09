@@ -22,8 +22,8 @@ public class CircularProgressBar : Gtk.Widget {
 	public int line_width {
 		get { return _line_width; }
 		set {
-			if (value < 1) {
-				_line_width = 1;
+			if (value < 0) {
+				_line_width = 0;
 			} else {
 				_line_width = value;
 			}
@@ -223,18 +223,16 @@ internal class ProgressArc : Gtk.Widget {
 		var end_angle = start_angle + (_percentage * 2 * Math.PI);
 		var path_builder = new Gsk.PathBuilder();
 
+		// Draw as pie when line_width is 0
 		if (_line_width <= 0) {
-			// Draw as pie when line_width is 0
-			path_builder.move_to(_center_x, _center_y);                                                 // Start from center
+			path_builder.move_to(_center_x, _center_y);
 
 			if (_percentage >= 1.0) {
-				// Full circle
 				path_builder.add_circle(
 					Graphene.Point().init(_center_x, _center_y),
 					_delta
 				);
 			} else {
-				// Partial pie
 				var start_x = _center_x + (float)(_delta * Math.cos(start_angle));
 				var start_y = _center_y + (float)(_delta * Math.sin(start_angle));
 				var end_x = _center_x + (float)(_delta * Math.cos(end_angle));
@@ -246,7 +244,7 @@ internal class ProgressArc : Gtk.Widget {
 					_percentage > 0.5, true,
 					end_x, end_y
 				);
-				path_builder.line_to(_center_x, _center_y);                                                                 // Close the pie
+				path_builder.line_to(_center_x, _center_y);
 				path_builder.close();
 			}
 
