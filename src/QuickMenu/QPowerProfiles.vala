@@ -40,11 +40,16 @@ class QPowerProfiles : Gtk.Box {
 			power_profiles.active_profile = "balanced";
 		});
 
+		Gtk.Image ppd_icon = new Gtk.Image.from_icon_name(power_profiles.icon_name);
+		ppd_icon.icon_size = Gtk.IconSize.LARGE;
+
 		CircularProgressBar progress_bar = new CircularProgressBar();
-		power_profiles.bind_property("icon_name", progress_bar, "icon-name", BindingFlags.SYNC_CREATE);
-		battery.bind_property("percentage", progress_bar, "percentage", BindingFlags.SYNC_CREATE);
-		progress_bar.line_cap = Cairo.LineCap.ROUND;
+		progress_bar.line_cap = Gsk.LineCap.ROUND;
 		progress_bar.line_width = 15;
+		progress_bar.child = ppd_icon;
+
+		power_profiles.bind_property("icon_name", ppd_icon, "icon_name", BindingFlags.SYNC_CREATE);
+		battery.bind_property("percentage", progress_bar, "percentage", BindingFlags.SYNC_CREATE);
 
 		cpb.set_child(progress_bar);
 	}

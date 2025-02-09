@@ -1,4 +1,4 @@
-public class CircularProgressSnapshot : Gtk.Widget {
+public class CircularProgressBar : Gtk.Widget {
 	private ProgressArc _progress_arc;
 	private CenterFill _center_fill;
 	private RadiusFill _radius_fill;
@@ -78,7 +78,7 @@ public class CircularProgressSnapshot : Gtk.Widget {
 		_radius_fill.set_parent(this);
 	}
 
-	public CircularProgressSnapshot() {
+	public CircularProgressBar() {
 		Object(
 			name: "circular-progress",
 			css_name: "circular-progress",
@@ -225,7 +225,7 @@ internal class ProgressArc : Gtk.Widget {
 
 		if (_line_width <= 0) {
 			// Draw as pie when line_width is 0
-			path_builder.move_to(_center_x, _center_y);                                     // Start from center
+			path_builder.move_to(_center_x, _center_y);                                                 // Start from center
 
 			if (_percentage >= 1.0) {
 				// Full circle
@@ -246,7 +246,7 @@ internal class ProgressArc : Gtk.Widget {
 					_percentage > 0.5, true,
 					end_x, end_y
 				);
-				path_builder.line_to(_center_x, _center_y);                                                 // Close the pie
+				path_builder.line_to(_center_x, _center_y);                                                                 // Close the pie
 				path_builder.close();
 			}
 

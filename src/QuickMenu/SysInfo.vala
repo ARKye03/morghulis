@@ -39,9 +39,7 @@ private class CpuMonitorBar : Gtk.Box {
 		this.orientation = Gtk.Orientation.VERTICAL;
 
 		cpu_bar.line_width = 10;
-		cpu_bar.line_cap = Cairo.LineCap.ROUND;
-		cpu_bar.content_height = 50;
-		cpu_bar.content_width = 90;
+		cpu_bar.line_cap = Gsk.LineCap.ROUND;
 		cpu_bar.percentage = 0;
 		cpu_bar.hexpand = true;
 		cpu_bar.vexpand = true;
@@ -92,9 +90,7 @@ private class MemMonitorBar : Gtk.Box {
 		this.orientation = Gtk.Orientation.VERTICAL;
 
 		mem_bar.line_width = 10;
-		mem_bar.line_cap = Cairo.LineCap.ROUND;
-		mem_bar.content_height = 50;
-		mem_bar.content_width = 90;
+		mem_bar.line_cap = Gsk.LineCap.ROUND;
 		mem_bar.percentage = 0;
 		mem_bar.hexpand = true;
 		mem_bar.vexpand = true;
