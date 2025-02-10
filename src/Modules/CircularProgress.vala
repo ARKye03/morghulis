@@ -12,11 +12,32 @@ public class CircularProgressBar : Gtk.Widget {
 	private int _cached_width = -1;
 	private int _cached_height = -1;
 
+	private bool _center_filled;
+	private bool _radius_filled;
+	private Gsk.LineCap _line_cap;
+	private Gsk.FillRule _fill_rule;
+
 	[Description(nick = "Center Fill", blurb = "Center Fill toggle")]
-	public bool center_filled { set; get; default = false; }
+	public bool center_filled {
+		get { return _center_filled; }
+		set {
+			if (_center_filled != value) {
+				_center_filled = value;
+				queue_draw();
+			}
+		}
+	}
 
 	[Description(nick = "Radius Fill", blurb = "Radius Fill toggle")]
-	public bool radius_filled { set; get; default = false; }
+	public bool radius_filled {
+		get { return _radius_filled; }
+		set {
+			if (_radius_filled != value) {
+				_radius_filled = value;
+				queue_draw();
+			}
+		}
+	}
 
 	[Description(nick = "Circle width", blurb = "The circle radius line width")]
 	public int line_width {
@@ -32,10 +53,26 @@ public class CircularProgressBar : Gtk.Widget {
 	}
 
 	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Gsk.LineCap")]
-	public Gsk.LineCap line_cap { set; get; default = Gsk.LineCap.BUTT; }
+	public Gsk.LineCap line_cap {
+		get { return _line_cap; }
+		set {
+			if (_line_cap != value) {
+				_line_cap = value;
+				queue_draw();
+			}
+		}
+	}
 
 	[Description(nick = "Fill Rule", blurb = "Fill Rule for center fill as in Gsk.FillRule")]
-	public Gsk.FillRule fill_rule { set; get; default = Gsk.FillRule.EVEN_ODD; }
+	public Gsk.FillRule fill_rule {
+		get { return _fill_rule; }
+		set {
+			if (_fill_rule != value) {
+				_fill_rule = value;
+				queue_draw();
+			}
+		}
+	}
 
 	[Description(nick = "Percentage/Value", blurb = "The percentage value [0.0 ... 1.0]")]
 	public double percentage {
@@ -76,13 +113,21 @@ public class CircularProgressBar : Gtk.Widget {
 		_progress_arc.set_parent(this);
 		_center_fill.set_parent(this);
 		_radius_fill.set_parent(this);
+
+		layout_manager = new Gtk.BinLayout();
+		overflow = Gtk.Overflow.HIDDEN;
+
+		notify["child"].connect(() => {
+			if (_child != null) {
+				_child.notify.connect(() => queue_draw());
+			}
+		});
 	}
 
 	public CircularProgressBar() {
 		Object(
 			name: "circular-progress",
-			css_name: "circular-progress",
-			layout_manager: new Gtk.BinLayout()
+			css_name: "circular-progress"
 		);
 		notify.connect(() => {
 			queue_draw();
