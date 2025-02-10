@@ -94,7 +94,7 @@ template $Settings: Adw.Bin {
                         }
 
                         name: "Power profiles";
-                        identity: "Power profiles";
+                        identity: "Power";
                         status: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.active-profile;
                         icon: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
                         clicked => $power_profiles_clicked();
