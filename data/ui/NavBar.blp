@@ -101,32 +101,6 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Box {
-        visible: bind template.battery as <AstalBattery.Device>.is-present;
-        tooltip-text: "Isn't obvious?";
-
-        styles [
-          "master_border",
-          "rounded",
-          "x_padding_5",
-          "view"
-        ]
-
-        spacing: 10;
-
-        Label {
-          label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
-
-          styles [
-            "title-4"
-          ]
-        }
-
-        Image {
-          icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
-        }
-      }
-
       Adw.Bin volume_bin {
         styles [
           "master_border",
@@ -187,14 +161,30 @@ template $NavBar: Astal.Window {
         ]
 
         Button power_button {
-          icon-name: "system-shutdown-symbolic";
           name: "power_button";
           clicked => $toggle_side_dashboard();
 
-          styles [
-            "rounded",
-            "view",
-          ]
+          Box {
+            visible: bind template.battery as <AstalBattery.Device>.is-present;
+            spacing: 5;
+
+            Label {
+              label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
+
+              styles [
+                "title-4"
+              ]
+            }
+
+            Image {
+              icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+            }
+
+            Image {
+              icon-name: "system-shutdown-symbolic";
+              margin-start: 10;
+            }
+          }
         }
       }
     }
