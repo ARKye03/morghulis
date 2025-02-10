@@ -193,12 +193,14 @@ public class CircularProgressBar : Gtk.Widget {
 		}
 	}
 
-	public override void measure(Gtk.Orientation orientation,
-								 int for_size,
-								 out int minimum,
-								 out int natural,
-								 out int minimum_baseline,
-								 out int natural_baseline) {
+	public override void measure(
+		Gtk.Orientation orientation,
+		int for_size,
+		out int minimum,
+		out int natural,
+		out int minimum_baseline,
+		out int natural_baseline
+	) {
 		minimum = natural = 24;
 		minimum_baseline = natural_baseline = -1;
 
@@ -217,7 +219,7 @@ public class CircularProgressBar : Gtk.Widget {
 	}
 }
 
-internal class ProgressArc : Gtk.Widget {
+private class ProgressArc : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
 	private float _delta;
@@ -322,7 +324,7 @@ internal class ProgressArc : Gtk.Widget {
 	}
 }
 
-internal class CenterFill : Gtk.Widget {
+private class CenterFill : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
 	private float _delta;
@@ -372,7 +374,7 @@ internal class CenterFill : Gtk.Widget {
 	}
 }
 
-internal class RadiusFill : Gtk.Widget {
+private class RadiusFill : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
 	private float _delta;
