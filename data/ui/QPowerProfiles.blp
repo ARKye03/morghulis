@@ -43,7 +43,7 @@ template $QPowerProfiles: Box {
 
         Separator {}
 
-        Box ppd_box {
+        Box {
             orientation: vertical;
             spacing: 10;
             homogeneous: true;
@@ -53,6 +53,21 @@ template $QPowerProfiles: Box {
                 "linked",
                 "title-2"
             ]
+
+            Button performance_button {
+                label: "Performance";
+                clicked => $set_performance_mode();
+            }
+
+            Button balanced_button {
+                label: "Balanced";
+                clicked => $set_balanced_mode();
+            }
+
+            Button power_saver_button {
+                label: "Power Saver";
+                clicked => $set_power_saver_mode();
+            }
         }
     }
 }
