@@ -2,6 +2,7 @@ using Gtk 4.0;
 using Adw 1;
 using Astal 4.0;
 using AstalBattery 0.1;
+using AstalWp 0.1;
 
 template $NavBar: Astal.Window {
   styles [
@@ -127,8 +128,6 @@ template $NavBar: Astal.Window {
       }
 
       Adw.Bin volume_bin {
-        visible: false;
-
         styles [
           "master_border",
           "view",
@@ -137,6 +136,16 @@ template $NavBar: Astal.Window {
 
         width-request: 35;
         tooltip-text: "Volume";
+
+        $CircularProgressBar {
+          percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
+          line-width: 5;
+          line-cap: round;
+
+          child: Image {
+            icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+          };
+        }
       }
 
       Adw.Bin {

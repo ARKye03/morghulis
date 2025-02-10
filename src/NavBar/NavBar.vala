@@ -6,6 +6,7 @@ public class NavBar : Astal.Window {
 
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
+	public AstalWp.Endpoint speaker { get; set; }
 
 	[GtkChild]
 	private unowned Gtk.Label clock;
@@ -23,11 +24,13 @@ public class NavBar : Astal.Window {
 		Object(
 			namespace : "NavBar",
 			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-			);
+		);
 		battery = AstalBattery.Device.get_default();
+		speaker = AstalWp.get_default().audio.default_speaker;
 
 		init_compositor();
 		init_clock();
+
 		instance = this;
 
 		present();
