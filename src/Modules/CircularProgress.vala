@@ -107,9 +107,6 @@ public class CircularProgressBar : Gtk.Widget {
 
 	static construct {
 		set_css_name("circular-progress");
-	}
-
-	construct {
 		Gtk.CssProvider css_provider = new Gtk.CssProvider();
 		css_provider.load_from_string(
 			"""
@@ -131,7 +128,9 @@ public class CircularProgressBar : Gtk.Widget {
 			css_provider,
 			Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
 		);
+	}
 
+	construct {
 		_progress_arc = new ProgressArc();
 		_center_fill = new CenterFill();
 		_radius_fill = new RadiusFill();
