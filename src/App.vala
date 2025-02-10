@@ -3,6 +3,7 @@ public class Morghulis : Astal.Application {
 	private bool css_loaded { get; set; default = false; }
 	private GLib.File file { get; set; }
 	private GLib.FileMonitor file_monitor { get; set; }
+	private Adw.StyleManager style_manager { get; set; }
 
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
@@ -24,6 +25,8 @@ public class Morghulis : Astal.Application {
 	construct {
 		Adw.init();
 		instance_name = "morghulis";
+		style_manager = Adw.StyleManager.get_default();
+
 		try {
 			acquire_socket();
 		} catch (Error e) {
@@ -54,6 +57,7 @@ public class Morghulis : Astal.Application {
 			load_css();
 			css_loaded = true;
 		}
+
 		add_window(new NavBar());
 		add_window(new Runner());
 		add_window(new QuickMenu());
@@ -87,9 +91,36 @@ public class Morghulis : Astal.Application {
 	}
 
 	private void load_css() {
+		var accent_color = style_manager.get_accent_color();
+		var accent_rgba = accent_color.to_rgba();
+
+		// Lighten each channel by 10%
+		accent_rgba.red = float.min(1.0f, float.max(0.0f, accent_rgba.red + (1.0f - accent_rgba.red) * 0.1f));
+		accent_rgba.green = float.min(1.0f, float.max(0.0f, accent_rgba.green + (1.0f - accent_rgba.green) * 0.1f));
+		accent_rgba.blue = float.min(1.0f, float.max(0.0f, accent_rgba.blue + (1.0f - accent_rgba.blue) * 0.1f));
+
+		// Convert to integer range 0–255
+		int r_byte = (int)(accent_rgba.red * 255.0);
+		int g_byte = (int)(accent_rgba.green * 255.0);
+		int b_byte = (int)(accent_rgba.blue * 255.0);
+
+		Gtk.CssProvider accent_provider = new Gtk.CssProvider();
+		string accent_css = @"@define-color accent_hover_color rgb($(r_byte), $(g_byte), $(b_byte));";
+		message(accent_css);
+		accent_provider.load_from_string(accent_css);
+		Gtk.StyleContext.add_provider_for_display(
+			Gdk.Display.get_default(),
+			accent_provider,
+			Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+		);
+
 		Gtk.CssProvider provider = new Gtk.CssProvider();
 		provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
-		Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider,
-												  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+		Gtk.StyleContext.add_provider_for_display(
+			Gdk.Display.get_default(),
+			provider,
+			Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+		);
 	}
 }
