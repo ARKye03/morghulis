@@ -165,24 +165,27 @@ template $NavBar: Astal.Window {
           clicked => $toggle_side_dashboard();
 
           Box {
-            visible: bind template.battery as <AstalBattery.Device>.is-present;
-            spacing: 5;
+            spacing: 10;
 
-            Label {
-              label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
+            Box {
+              visible: bind template.battery as <AstalBattery.Device>.is-present;
+              spacing: 5;
 
-              styles [
-                "title-4"
-              ]
-            }
+              Label {
+                label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
 
-            Image {
-              icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+                styles [
+                  "title-4"
+                ]
+              }
+
+              Image {
+                icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+              }
             }
 
             Image {
               icon-name: "system-shutdown-symbolic";
-              margin-start: 10;
             }
           }
         }
