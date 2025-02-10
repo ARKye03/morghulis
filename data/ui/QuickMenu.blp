@@ -1,18 +1,18 @@
 using Gtk 4.0;
-using Astal 4.0;
 
-template $QuickMenu: Astal.Window {
+template $QuickMenu: Popover {
+    width-request: 415;
+    height-request: 500;
+    position: top;
+    margin-bottom: 10;
+    margin-end: 5;
+    autohide: true;
+    has-arrow: false;
+
     styles [
-        "all_unset"
+        "all_unset",
+        "unset_popover"
     ]
-
-    default-width: 400;
-    default-height: 500;
-    title: "QuickMenu";
-    namespace: "QuickMenu";
-    anchor: right | bottom;
-    margin-right: 5;
-    margin-bottom: 5;
 
     Box {
         vexpand: true;

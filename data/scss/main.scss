@@ -41,6 +41,10 @@ button {
     background-color: transparent;
 }
 
+.unset_popover contents {
+    all: unset;
+}
+
 .top_left_right_corner_borders {
     border-radius: unset;
     border-top-left-radius: adw.$master-border-radius;

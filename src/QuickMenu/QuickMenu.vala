@@ -1,12 +1,9 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu.ui")]
-public class QuickMenu : Astal.Window {
+public class QuickMenu : Gtk.Popover {
 	public AstalWp.Endpoint speaker { get; set; }
 	public static QuickMenu instance { get; private set; }
 
 	public QuickMenu() {
-		Object(
-			anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-		);
 		if (instance == null) {
 			instance = this;
 		} else {
@@ -14,10 +11,9 @@ public class QuickMenu : Astal.Window {
 		}
 
 		this.notify["visible"].connect(() => {
-			if (!this.visible) {
-				Settings.settings_navigation.pop();
-				PowerBox.mstack.set_visible_child_name("main");
-			}
+			message("Closed");
+			Settings.settings_navigation.pop();
+			PowerBox.mstack.set_visible_child_name("main");
 		});
 	}
 }

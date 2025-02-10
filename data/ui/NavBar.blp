@@ -185,15 +185,16 @@ template $NavBar: Astal.Window {
           "rounded"
         ]
 
-        Button power_button {
+        MenuButton power_button {
           icon-name: "system-shutdown-symbolic";
           name: "power_button";
-          clicked => $toggle_side_dashboard();
 
           styles [
             "rounded",
             "view",
           ]
+
+          popover: $QuickMenu {};
         }
       }
     }
