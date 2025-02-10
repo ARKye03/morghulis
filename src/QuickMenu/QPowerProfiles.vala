@@ -1,17 +1,14 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QPowerProfiles.ui")]
 class QPowerProfiles : Gtk.Box {
-	public AstalPowerProfiles.PowerProfiles power_profiles { get; construct; }
-	private AstalBattery.Device battery { get; set; }
-
 	private Gtk.Button performance_button { get; set; }
 	private Gtk.Button power_saver_button { get; set; }
 	private Gtk.Button balanced_button { get; set; }
 
-	[GtkChild]
-	public unowned Gtk.Box ppd_box;
+	public AstalPowerProfiles.PowerProfiles power_profiles { get; construct; }
+	public AstalBattery.Device battery { get; set; }
 
 	[GtkChild]
-	public unowned Adw.Bin cpb;
+	public unowned Gtk.Box ppd_box;
 
 	construct {
 		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
@@ -39,19 +36,6 @@ class QPowerProfiles : Gtk.Box {
 		balanced_button.clicked.connect(() => {
 			power_profiles.active_profile = "balanced";
 		});
-
-		Gtk.Image ppd_icon = new Gtk.Image.from_icon_name(power_profiles.icon_name);
-		ppd_icon.icon_size = Gtk.IconSize.LARGE;
-
-		CircularProgressBar progress_bar = new CircularProgressBar();
-		progress_bar.line_cap = Gsk.LineCap.ROUND;
-		progress_bar.line_width = 15;
-		progress_bar.child = ppd_icon;
-
-		power_profiles.bind_property("icon_name", ppd_icon, "icon_name", BindingFlags.SYNC_CREATE);
-		battery.bind_property("percentage", progress_bar, "percentage", BindingFlags.SYNC_CREATE);
-
-		cpb.set_child(progress_bar);
 	}
 	private void switch_profile() {
 		switch (power_profiles.active_profile) {

@@ -1,5 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
+using AstalBattery 0.1;
+using AstalPowerProfiles 0.1;
 
 template $QPowerProfiles: Box {
     orientation: vertical;
@@ -20,12 +22,23 @@ template $QPowerProfiles: Box {
             "padding_10"
         ]
 
-        Adw.Bin cpb {
+        Adw.Bin {
             vexpand: true;
 
             styles [
                 "padding_10"
             ]
+
+            $CircularProgressBar {
+                percentage: bind template.battery as <AstalBattery.Device>.percentage;
+                line-width: 15;
+                line-cap: round;
+
+                child: Image {
+                    icon-name: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
+                    icon-size: large;
+                };
+            }
         }
 
         Separator {}
