@@ -126,6 +126,11 @@ template $NavBar: Astal.Window {
           scroll => $scroll_volume();
           flags: vertical;
         }
+
+        Gtk.GestureClick {
+          button: 1;
+          pressed => $toggle_volume();
+        }
       }
 
       Adw.Bin {

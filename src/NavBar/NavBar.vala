@@ -65,6 +65,11 @@ public class NavBar : Astal.Window {
 	}
 
 	[GtkCallback]
+	public void toggle_volume() {
+		speaker.mute = !speaker.mute;
+	}
+
+	[GtkCallback]
 	public string current_volume(double volume) {
 		return @"$(Math.round(volume * 100))%";
 	}
