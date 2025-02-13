@@ -55,6 +55,21 @@ public class NavBar : Astal.Window {
 	}
 
 	[GtkCallback]
+	public bool scroll_volume(double dx, double dy) {
+		if (dy > 0) {
+			speaker.volume = double.max(speaker.volume - 0.05, 0);
+		} else {
+			speaker.volume = double.min(speaker.volume + 0.05, 1);
+		}
+		return true;
+	}
+
+	[GtkCallback]
+	public string current_volume(double volume) {
+		return @"$(Math.round(volume * 100))%";
+	}
+
+	[GtkCallback]
 	public string current_battery(double percentage) {
 		return @"$(Math.round(percentage * 100))%";
 	}

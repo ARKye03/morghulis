@@ -109,7 +109,7 @@ template $NavBar: Astal.Window {
         ]
 
         width-request: 35;
-        tooltip-text: "Volume";
+        tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
 
         $CircularProgressBar {
           percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
@@ -119,6 +119,11 @@ template $NavBar: Astal.Window {
           child: Image {
             icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
           };
+        }
+
+        Gtk.EventControllerScroll {
+          scroll => $scroll_volume();
+          flags: vertical;
         }
       }
 
