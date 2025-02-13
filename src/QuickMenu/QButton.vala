@@ -45,6 +45,6 @@ public class QButton : Gtk.Box {
 	QButton() {
 		Object(
 			name: "Button"
-			);
+		);
 	}
 }

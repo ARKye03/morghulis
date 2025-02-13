@@ -131,7 +131,7 @@ public class MorghulCTL {
 				SpawnFlags.DO_NOT_REAP_CHILD,
 				null,
 				out child_pid
-				);
+			);
 			stdout.printf("Starting the application…\n");
 		} catch (SpawnError e) {
 			stderr.printf("Failed to start the application: %s\n", e.message);
