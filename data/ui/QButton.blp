@@ -2,7 +2,6 @@ using Gtk 4.0;
 
 template $QButton: Box {
     styles [
-        "quick_settings_button",
         "master_border",
         "rounded",
         "view"
@@ -61,10 +60,6 @@ template $QButton: Box {
     }
 
     Button {
-        styles [
-            "quick_settings_button_extras"
-        ]
-
         icon-name: "pan-end-symbolic";
         clicked => $on_clicked_extras();
     }
