@@ -3,15 +3,14 @@ using Gtk 4.0;
 template $QButton: Box {
     styles [
         "master_border",
-        "rounded",
-        "view"
+        "rounded"
     ]
 
     overflow: hidden;
     width-request: 70;
     height-request: 60;
 
-    Button {
+    Button main_btn {
         clicked => $on_clicked();
         hexpand: true;
 
@@ -32,7 +31,7 @@ template $QButton: Box {
                 hexpand: true;
                 spacing: 5;
 
-                Label qbutton_name {
+                Label {
                     label: bind template.identity;
                     max-width-chars: 12;
                     ellipsize: end;
@@ -42,7 +41,7 @@ template $QButton: Box {
                     ]
                 }
 
-                Label qbutton_status {
+                Label {
                     label: bind template.status;
                     max-width-chars: 12;
                     ellipsize: end;
@@ -59,7 +58,7 @@ template $QButton: Box {
         orientation: vertical;
     }
 
-    Button {
+    Button extra_btn {
         icon-name: "pan-end-symbolic";
         clicked => $on_clicked_extras();
     }

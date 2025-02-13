@@ -9,27 +9,43 @@ public class QButton : Gtk.Box {
 
 	public bool active {
 		get {
-			return this.has_css_class("qs_grid-active");
+			return this.main_btn.has_css_class("suggested-action") && this.extra_btn.has_css_class("suggested-action");
 		}
 		set {
 			if (value) {
-				this.add_css_class("qs_grid-active");
+				this.main_btn.add_css_class("suggested-action");
+				this.extra_btn.add_css_class("suggested-action");
 			} else {
-				this.remove_css_class("qs_grid-active");
+				this.main_btn.remove_css_class("suggested-action");
+				this.extra_btn.remove_css_class("suggested-action");
 			}
 		}
 	}
 	public bool inactive {
 		get {
-			return !this.has_css_class("qs_grid-active");
+			return !this.main_btn.has_css_class("suggested-action") && !this.extra_btn.has_css_class("suggested-action");
 		}
 		set {
 			if (!value) {
-				this.add_css_class("qs_grid-active");
+				this.main_btn.add_css_class("suggested-action");
+				this.extra_btn.add_css_class("suggested-action");
 			} else {
-				this.remove_css_class("qs_grid-active");
+				this.main_btn.remove_css_class("suggested-action");
+				this.extra_btn.remove_css_class("suggested-action");
 			}
 		}
+	}
+
+	[GtkChild]
+	private unowned Gtk.Button main_btn;
+
+	[GtkChild]
+	private unowned Gtk.Button extra_btn;
+
+	QButton() {
+		Object(
+			name: "Button"
+		);
 	}
 
 	[GtkCallback]
@@ -40,11 +56,5 @@ public class QButton : Gtk.Box {
 	[GtkCallback]
 	public void on_clicked_extras() {
 		clicked_extras();
-	}
-
-	QButton() {
-		Object(
-			name: "Button"
-		);
 	}
 }

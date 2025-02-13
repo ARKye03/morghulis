@@ -1,11 +1,14 @@
 @use "adw";
 @use "NavBar";
-@use "QuickMenu";
 @use "OnScreenDisplay";
 @use "Notif";
 
-button {
-    background-color: transparent;
+.all_unset {
+    all: unset;
+}
+
+.flats button {
+    background-color: unset;
 
     &:hover {
         background-color: adw.$dark_2;
@@ -16,18 +19,6 @@ button {
     }
 }
 
-.all_unset {
-    all: unset;
-}
-
-.button_accent_bg {
-    background-color: adw.$accent_bg_color;
-
-    &:hover {
-        background-color: adw.$accent_color;
-    }
-}
-
 .master_border {
     // border: 1px solid adw.$borders_color;
     border: unset;
@@ -35,6 +26,10 @@ button {
 
 .rounded {
     border-radius: adw.$master-border-radius;
+}
+
+.squares button {
+    border-radius: unset;
 }
 
 .bg_transparent {
