@@ -24,7 +24,10 @@ template $SliderBox: Box {
 
     Label {
         label: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
-        width-request: 50;
+
+        styles [
+            "numeric"
+        ]
     }
 
     styles [
