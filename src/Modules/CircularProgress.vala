@@ -108,17 +108,16 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			if (_child != null) {
 				_child.set_parent(this);
 			}
-
 			queue_draw();
 		}
 	}
 
 	public void add_child(Gtk.Builder builder, GLib.Object child, string? type) {
-		if (!(child is Gtk.Widget)) {
-			return;
+		if (child is Gtk.Widget) {
+			this.child = (Gtk.Widget)child;
+		} else if (child is Gtk.EventController) {
+			this.add_controller((Gtk.EventController)child);
 		}
-
-		this.child = (Gtk.Widget)child;
 	}
 
 	static construct {
@@ -157,6 +156,9 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 		layout_manager = new Gtk.BinLayout();
 		overflow = Gtk.Overflow.HIDDEN;
+		can_focus = true;
+		focusable = true;
+		can_target = true;
 
 		notify["child"].connect(() => {
 			if (_child != null) {
