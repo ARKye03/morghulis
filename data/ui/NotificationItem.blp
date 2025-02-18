@@ -9,15 +9,12 @@ template $NotificationItem: ListBoxRow {
 
     activatable: false;
     selectable: false;
+    overflow: hidden;
 
     Box {
         orientation: vertical;
 
         CenterBox {
-            styles [
-                "top_left_right_corner_borders",
-            ]
-
             [start]
             Image app_image {
                 overflow: hidden;
