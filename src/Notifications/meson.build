@@ -1,4 +1,5 @@
 project_resources += files(
     'NotificationItem.vala',
-    'NotificationManager.vala',
+    'QNotifications.vala',
+    'NotificationPopupsCenter.vala'
 )
