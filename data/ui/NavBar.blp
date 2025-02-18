@@ -8,7 +8,7 @@ template $NavBar: Astal.Window {
   styles [
     "top_left_right_corner_borders",
     "x_padding_5",
-    "flats"
+    "flats",
   ]
 
   title: "NavBar";
@@ -17,7 +17,7 @@ template $NavBar: Astal.Window {
 
   CenterBox {
     styles [
-      "y_padding_5"
+      "y_padding_5",
     ]
 
     [start]
@@ -28,7 +28,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         Button {
@@ -46,7 +46,7 @@ template $NavBar: Astal.Window {
           "master_border",
           "rounded",
           "title-4",
-          "view"
+          "view",
         ]
       }
 
@@ -56,7 +56,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "rounded",
-          "view"
+          "view",
         ]
       }
     }
@@ -67,7 +67,7 @@ template $NavBar: Astal.Window {
         "workspaces",
         "master_border",
         "rounded",
-        "view"
+        "view",
       ]
     }
 
@@ -79,7 +79,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         MenuButton {
@@ -87,7 +87,7 @@ template $NavBar: Astal.Window {
           icon-name: "go-up-symbolic";
 
           styles [
-            "tray_button"
+            "tray_button",
           ]
 
           popover: Popover {
@@ -106,7 +106,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         width-request: 35;
@@ -117,9 +117,9 @@ template $NavBar: Astal.Window {
           line-width: 5;
           line-cap: round;
 
-          child: Image {
+          Image {
             icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-          };
+          }
         }
 
         Gtk.EventControllerScroll {
@@ -137,13 +137,13 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         MenuButton {
           styles [
             "title-4",
-            "numeric"
+            "numeric",
           ]
 
           Label clock {
@@ -167,7 +167,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         Button power_button {
@@ -186,7 +186,7 @@ template $NavBar: Astal.Window {
 
                 styles [
                   "title-4",
-                  "numeric"
+                  "numeric",
                 ]
               }
 

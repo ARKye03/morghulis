@@ -1,4 +1,4 @@
-public class CircularProgressBar : Gtk.Widget {
+public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	private ProgressArc _progress_arc;
 	private CenterFill _center_fill;
 	private RadiusFill _radius_fill;
@@ -95,14 +95,30 @@ public class CircularProgressBar : Gtk.Widget {
 	public Gtk.Widget? child {
 		get { return _child; }
 		set {
+			if (_child == value) {
+				return;
+			}
+
 			if (_child != null) {
 				_child.unparent();
 			}
+
 			_child = value;
+
 			if (_child != null) {
 				_child.set_parent(this);
 			}
+
+			queue_draw();
 		}
+	}
+
+	public void add_child(Gtk.Builder builder, GLib.Object child, string? type) {
+		if (!(child is Gtk.Widget)) {
+			return;
+		}
+
+		this.child = (Gtk.Widget)child;
 	}
 
 	static construct {
