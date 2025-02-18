@@ -1,17 +1,16 @@
-using Astal;
 public class NotifPopItemsCenter : Astal.Window {
 	private AstalNotifd.Notifd notifd { get; set; }
 	private Gtk.ListBox notif_list_box { get; set; }
-	private Gtk.MediaFile notif_sound { get; set; }
+	private GSound.Context scontext { get; set; }
 	private uint _notif_count = 0;
 
-	public NotifPopItemsCenter(WindowAnchor x_anchor = WindowAnchor.RIGHT) {
+	public NotifPopItemsCenter(Astal.WindowAnchor x_anchor = Astal.WindowAnchor.RIGHT) {
 		Object(
 			title: "Notifications",
-			anchor: WindowAnchor.TOP | x_anchor
+			anchor: Astal.WindowAnchor.TOP | x_anchor
 		);
-		notifd = AstalNotifd.Notifd.get_default();
 
+		setup_sound();
 		setup_window();
 		setup_notifications();
 	}
@@ -35,8 +34,6 @@ public class NotifPopItemsCenter : Astal.Window {
 		notif_list_box.set_css_classes({ "boxed-list" });
 
 		set_child(notif_list_box);
-
-		notif_sound = Gtk.MediaFile.for_resource("/com/github/ARKye03/morghulis/assets/colloid-notif-sound.opus");
 	}
 
 	private void setup_notifications() {
@@ -61,13 +58,29 @@ public class NotifPopItemsCenter : Astal.Window {
 			return false;
 		});
 		this.visible = true;
-		this.play_notification_sound();
+		this.play_notification_sound.begin();
 	}
 
-	private void play_notification_sound() {
+	private void setup_sound() {
+		try {
+			scontext = new GSound.Context();
+			scontext.init();
+		} catch (Error e) {
+			warning("Failed to create sound context: %s", e.message);
+		}
+	}
+
+	private async void play_notification_sound() {
 		if (!notifd.dont_disturb) {
-			this.notif_sound.seek(0);
-			this.notif_sound.play();
+			try {
+				yield scontext.play_full(
+					null,
+					GSound.Attribute.EVENT_ID,
+					"message"
+				);
+			} catch (Error e) {
+				warning("Failed to play sound: %s", e.message);
+			}
 		}
 	}
 

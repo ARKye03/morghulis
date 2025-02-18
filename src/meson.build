@@ -13,9 +13,10 @@ libgtop_dep = dependency('libgtop-2.0', required: false)
 deps = [
     dependency('gtk4'),
     dependency('gtk4-layer-shell-0'),
+    dependency('gsound'),
+    dependency('libnm'),
     dependency('astal-4-4.0'),
     dependency('astal-io-0.1'),
-    dependency('libnm'),
     dependency('astal-wireplumber-0.1'),
     dependency('astal-mpris-0.1'),
     dependency('astal-tray-0.1'),

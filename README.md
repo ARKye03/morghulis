@@ -25,6 +25,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 - [GTK](https://www.gtk.org/)
   - [gtk4](https://docs.gtk.org/gtk4/)
   - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
+- [GSound](https://gitlab.gnome.org/GNOME/gsound)
 - [Astal](https://github.com/Aylur/astal)
   - 4
   - Tray
