@@ -1,23 +1,20 @@
 using Gtk 4.0;
 using AstalNotifd 0.1;
 
-template $NotifItem: ListBoxRow {
+template $NotificationItem: ListBoxRow {
     styles [
         "notification_badge",
-        "view"
+        "view",
     ]
 
     activatable: false;
     selectable: false;
+    overflow: hidden;
 
     Box {
         orientation: vertical;
 
         CenterBox {
-            styles [
-                "top_left_right_corner_borders"
-            ]
-
             [start]
             Image app_image {
                 overflow: hidden;
@@ -25,7 +22,7 @@ template $NotifItem: ListBoxRow {
                 tooltip-text: "App Icon";
 
                 styles [
-                    "notification_image"
+                    "notification_image",
                 ]
             }
 
@@ -38,7 +35,7 @@ template $NotifItem: ListBoxRow {
                 hexpand: true;
 
                 styles [
-                    "app_name"
+                    "app_name",
                 ]
             }
 
@@ -55,7 +52,7 @@ template $NotifItem: ListBoxRow {
                     clicked => $dismiss_notif();
 
                     styles [
-                        "flat"
+                        "flat",
                     ]
                 }
             }
@@ -67,7 +64,7 @@ template $NotifItem: ListBoxRow {
 
         Box {
             styles [
-                "padding_10"
+                "padding_10",
             ]
 
             spacing: 10;

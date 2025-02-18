@@ -3,7 +3,7 @@ blueprints = custom_target(
     input: files(
         'MprisPlayer.blp',
         'NavBar.blp',
-        'NotifItem.blp',
+        'NotificationItem.blp',
         'OnScreenDisplay.blp',
         'PowerBox.blp',
         'QBluetooth.blp',
@@ -16,8 +16,7 @@ blueprints = custom_target(
         'Runner.blp',
         'RunnerButton.blp',
         'Settings.blp',
-        'SliderBox.blp',
-        'NotifPopItem.blp'
+        'SliderBox.blp'
     ),
     output: '.',
     command: [

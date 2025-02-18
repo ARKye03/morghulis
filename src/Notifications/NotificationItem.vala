@@ -1,11 +1,11 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotifPopItem.ui")]
-public class NotifPopItem : Gtk.ListBoxRow {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotificationItem.ui")]
+public class NotificationItem : Gtk.ListBoxRow {
 	public AstalNotifd.Notification notification { get; set; }
 
 	[GtkChild]
 	public unowned Gtk.Box actions_box;
 
-	public NotifPopItem(AstalNotifd.Notification notification) {
+	public NotificationItem(AstalNotifd.Notification notification) {
 		Object(
 			notification: notification
 		);

@@ -25,18 +25,18 @@ public class QNotifications : Gtk.Box {
 		}
 
 		var notification = notifd.get_notification(notification_id);
-		notif_list_box.prepend(new NotifItem(notification));
+		notif_list_box.prepend(new NotificationItem(notification));
 	}
 
 	private void remove_notification(uint notification_id, Gtk.ListBox notif_list_box) {
-		NotifItem? notif_popup = (NotifItem)notif_list_box.get_first_child();
+		NotificationItem? notif_popup = (NotificationItem)notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {
 				notif_list_box.remove(notif_popup);
 				break;
 			}
-			notif_popup = (NotifItem)notif_popup.get_next_sibling();
+			notif_popup = (NotificationItem)notif_popup.get_next_sibling();
 		}
 	}
 }

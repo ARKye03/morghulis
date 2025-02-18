@@ -48,7 +48,7 @@ public class NotifPopItemsCenter : Astal.Window {
 		}
 
 		var notification = notifd.get_notification(notification_id);
-		var notif_item = new NotifPopItem(notification);
+		var notif_item = new NotificationItem(notification);
 		notif_list_box.prepend(notif_item);
 		_notif_count++;
 
@@ -85,7 +85,7 @@ public class NotifPopItemsCenter : Astal.Window {
 	}
 
 	private void remove_notification(uint notification_id) {
-		NotifPopItem? notif_popup = (NotifPopItem)notif_list_box.get_first_child();
+		NotificationItem? notif_popup = (NotificationItem)notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {
@@ -93,7 +93,7 @@ public class NotifPopItemsCenter : Astal.Window {
 				_notif_count--;
 				break;
 			}
-			notif_popup = (NotifPopItem)notif_popup.get_next_sibling();
+			notif_popup = (NotificationItem)notif_popup.get_next_sibling();
 		}
 		if (_notif_count == 0) {
 			this.visible = false;
