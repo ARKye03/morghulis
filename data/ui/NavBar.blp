@@ -102,25 +102,18 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Adw.Bin volume_bin {
+      $CircularProgressBar {
+        tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
+        percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
+        line-width: 5;
+        line-cap: round;
+        width-request: 35;
+
         styles [
           "master_border",
           "view",
           "rounded",
         ]
-
-        width-request: 35;
-        tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
-
-        $CircularProgressBar {
-          percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
-          line-width: 5;
-          line-cap: round;
-
-          Image {
-            icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-          }
-        }
 
         Gtk.EventControllerScroll {
           scroll => $scroll_volume();
@@ -130,6 +123,10 @@ template $NavBar: Astal.Window {
         Gtk.GestureClick {
           button: 1;
           pressed => $toggle_volume();
+        }
+
+        Image {
+          icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
         }
       }
 
