@@ -1,3 +1,10 @@
+/**
+ * A circular progress bar widget for GTK4.
+ *
+ * CircularProgressBar is a custom widget that displays progress in a circular format.
+ * It supports various styling options including center filling, radius filling, and
+ * customizable line properties.
+ */
 public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	private ProgressArc _progress_arc;
 	private CenterFill _center_fill;
@@ -17,7 +24,9 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	private Gsk.LineCap _line_cap;
 	private Gsk.FillRule _fill_rule;
 
-	[Description(nick = "Center Fill", blurb = "Center Fill toggle")]
+	/**
+	 * Whether the center of the circle is filled.
+	 */
 	public bool center_filled {
 		get { return _center_filled; }
 		set {
@@ -28,7 +37,9 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	[Description(nick = "Radius Fill", blurb = "Radius Fill toggle")]
+	/**
+	 * Whether the radius area is filled.
+	 */
 	public bool radius_filled {
 		get { return _radius_filled; }
 		set {
@@ -39,7 +50,11 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	[Description(nick = "Circle width", blurb = "The circle radius line width")]
+	/**
+	 * The width of the circle's radius line.
+	 *
+	 * The line width in pixels. If the value is 0, then the CircularProgress will be shown as a pie chart.
+	 */
 	public int line_width {
 		get { return _line_width; }
 		set {
@@ -48,11 +63,16 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			} else {
 				_line_width = value;
 			}
+			invalidate_dimensions();
 			queue_draw();
 		}
 	}
 
-	[Description(nick = "Line Cap", blurb = "Line Cap for stroke as in Gsk.LineCap")]
+	/**
+	 * The line cap style for the progress stroke.
+	 *
+	 * Check [[https://docs.gtk.org/gsk4/enum.LineCap.html]] for more information.
+	 */
 	public Gsk.LineCap line_cap {
 		get { return _line_cap; }
 		set {
@@ -63,7 +83,11 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	[Description(nick = "Fill Rule", blurb = "Fill Rule for center fill as in Gsk.FillRule")]
+	/**
+	 * The fill rule for the center fill area.
+	 *
+	 * Check [[https://docs.gtk.org/gsk4/enum.FillRule.html]] for more information.
+	 */
 	public Gsk.FillRule fill_rule {
 		get { return _fill_rule; }
 		set {
@@ -74,7 +98,11 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	[Description(nick = "Percentage/Value", blurb = "The percentage value [0.0 ... 1.0]")]
+	/**
+	 * The progress value between 0.0 and 1.0.
+	 *
+	 * Values outside [0.0, 1.0] will be clamped.
+	 */
 	public double percentage {
 		get { return _percentage; }
 		set {
@@ -91,7 +119,9 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	[Description(nick = "Child Widget", blurb = "The child widget contained within the circular progress")]
+	/**
+	 * The child widget contained within the circular progress.
+	 */
 	public Gtk.Widget? child {
 		get { return _child; }
 		set {
@@ -108,10 +138,14 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			if (_child != null) {
 				_child.set_parent(this);
 			}
+
 			queue_draw();
 		}
 	}
 
+	/*
+	 * Implements Gtk.Buildable interface.
+	 */
 	public void add_child(Gtk.Builder builder, GLib.Object child, string? type) {
 		if (child is Gtk.Widget) {
 			this.child = (Gtk.Widget)child;
@@ -137,7 +171,7 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			"""
 		);
 
-		//`add_provider_for_display` is not deprecated even though vala states that it is
+		// `add_provider_for_display` is not deprecated even though vala states that it is
 		Gtk.StyleContext.add_provider_for_display(
 			Gdk.Display.get_default(),
 			css_provider,
@@ -154,12 +188,14 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		_center_fill.set_parent(this);
 		_radius_fill.set_parent(this);
 
+		// Set for the child, and better compatibility with Composite Templates
 		layout_manager = new Gtk.BinLayout();
 		overflow = Gtk.Overflow.HIDDEN;
 		can_focus = true;
 		focusable = true;
 		can_target = true;
 
+		// Connect to child's notify signal to redraw when child changes
 		notify["child"].connect(() => {
 			if (_child != null) {
 				_child.notify.connect(() => queue_draw());
@@ -169,7 +205,7 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 	public CircularProgressBar() {
 		Object(
-			name: "circular-progress"
+			name : "circular-progress"
 		);
 		notify.connect(() => {
 			queue_draw();
@@ -199,13 +235,20 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			_cached_width = width;
 			_cached_height = height;
 			_cached_radius = float.min(width / 2.0f, height / 2.0f) - 1;
-			_cached_delta = _cached_radius - ((float)line_width / 2.0f);
+
+			// Adjust delta based on line width to prevent overflow
+			float half_line_width = (float)line_width / 2.0f;
+			_cached_delta = _cached_radius - half_line_width;
+
+			if (_cached_delta < 0) {
+				_cached_delta = 0;
+			}
 		}
 
-		// Use cached values
+		// Use cached values and ensure line width doesn't exceed available space
 		var actual_line_width = (float)line_width;
-		if (actual_line_width > _cached_radius) {
-			actual_line_width = _cached_radius;
+		if (actual_line_width > _cached_radius * 2) {
+			actual_line_width = _cached_radius * 2;
 		}
 
 		// Update geometries
@@ -235,14 +278,19 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	public override void measure(
-		Gtk.Orientation orientation,
-		int for_size,
-		out int minimum,
-		out int natural,
-		out int minimum_baseline,
-		out int natural_baseline
-	) {
+	private void invalidate_dimensions() {
+		_cached_width = -1;
+		_cached_height = -1;
+		_cached_radius = -1;
+		_cached_delta = -1;
+	}
+
+	public override void measure(Gtk.Orientation orientation,
+								 int for_size,
+								 out int minimum,
+								 out int natural,
+								 out int minimum_baseline,
+								 out int natural_baseline) {
 		minimum = natural = 24;
 		minimum_baseline = natural_baseline = -1;
 
@@ -261,6 +309,9 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	}
 }
 
+/**
+ * Private widget that handles drawing the progress arc.
+ */
 private class ProgressArc : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
@@ -278,14 +329,12 @@ private class ProgressArc : Gtk.Widget {
 		);
 	}
 
-	public void update_geometry(
-		float center_x,
-		float center_y,
-		float delta,
-		float line_width,
-		Gsk.LineCap line_cap,
-		double percentage
-	) {
+	public void update_geometry(float center_x,
+								float center_y,
+								float delta,
+								float line_width,
+								Gsk.LineCap line_cap,
+								double percentage) {
 		if (_updating_geometry) {
 			return;
 		}
@@ -366,6 +415,9 @@ private class ProgressArc : Gtk.Widget {
 	}
 }
 
+/**
+ * Private widget that handles drawing the center fill.
+ */
 private class CenterFill : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
@@ -381,12 +433,10 @@ private class CenterFill : Gtk.Widget {
 		);
 	}
 
-	public void update_geometry(
-		float center_x,
-		float center_y,
-		float delta,
-		Gsk.FillRule fill_rule
-	) {
+	public void update_geometry(float center_x,
+								float center_y,
+								float delta,
+								Gsk.FillRule fill_rule) {
 		if (_updating_geometry) {
 			return;
 		}
@@ -416,6 +466,9 @@ private class CenterFill : Gtk.Widget {
 	}
 }
 
+/**
+ * Private widget that handles drawing the radius fill.
+ */
 private class RadiusFill : Gtk.Widget {
 	private float _center_x;
 	private float _center_y;
