@@ -117,21 +117,24 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	construct {
 		_progress_arc = new Gizmo(
 			"progress",
-			null, null,
+			calculate_measurement,
+			null,
 			draw_progress_arc,
 			null, null, null
 		);
 
 		_center_fill = new Gizmo(
 			"center",
-			null, null,
+			calculate_measurement,
+			null,
 			draw_center_fill,
 			null, null, null
 		);
 
 		_radius_fill = new Gizmo(
 			"radius",
-			null, null,
+			calculate_measurement,
+			null,
 			draw_radius_fill,
 			null, null, null
 		);
@@ -202,6 +205,18 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		if (_child != null) {
 			_child.snapshot(snapshot);
 		}
+	}
+
+	private void calculate_measurement(
+		Gtk.Orientation orientation,
+		int for_size,
+		out int minimum,
+		out int natural,
+		out int minimum_baseline,
+		out int natural_baseline
+	) {
+		minimum = natural = get_width();
+		minimum_baseline = natural_baseline = -1;
 	}
 
 	private void draw_progress_arc(Gtk.Snapshot snapshot) {
