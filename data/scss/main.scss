@@ -76,6 +76,20 @@
     font-size: 12px;
 }
 
+circularprogress {
+    & progress {
+        color: adw.$accent_color;
+    }
+
+    & radius {
+        color: adw.$headerbar_backdrop_color;
+    }
+
+    & center {
+        color: adw.$headerbar_shade_color;
+    }
+}
+
 .hslider {
     border-radius: 5px;
     padding: 5px;
