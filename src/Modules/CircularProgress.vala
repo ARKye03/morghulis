@@ -92,9 +92,6 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 			if (_child != null) {
 				_child.set_parent(this);
-				_child.notify.connect(() => {
-					queue_draw();
-				});
 			}
 		}
 	}
@@ -154,9 +151,6 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		Object(
 			name : "circularprogress"
 		);
-		notify.connect(() => {
-			queue_draw();
-		});
 	}
 
 	protected override void dispose() {
@@ -203,7 +197,7 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		_progress_arc.snapshot(snapshot);
 
 		if (_child != null) {
-			_child.snapshot(snapshot);
+			snapshot_child(_child, snapshot);
 		}
 	}
 
