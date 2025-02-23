@@ -16,6 +16,19 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	private double _start_at;
 	private double _end_at;
 
+	/**
+	 * Emitted when the start and end angles are normalized.
+	 *
+	 * This signal is emitted in the following cases:
+	 * - When end_at becomes less than start_at, causing them to swap
+	 * - When the angles are swapped, the progress direction is automatically inverted
+	 *   to maintain visual consistency
+	 *
+	 * Connect to this signal to be notified when the angle normalization occurs
+	 * and the progress direction changes.
+	 */
+	public signal void angles_changed();
+
 	/** Whether the progress bar is inverted:
 	 * - True: Clockwise
 	 * - False: Counter-clockwise
@@ -130,6 +143,7 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			_end_at = _start_at;
 			_start_at = temp;
 			_inverted = !_inverted;
+			angles_changed();
 		}
 	}
 
@@ -415,14 +429,14 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		double start_angle = _start_at * 2 * Math.PI;
 		double end_angle = _end_at * 2 * Math.PI;
 
-		if ((end_angle - start_angle).abs() > 2 * Math.PI) {
-			if (end_angle > start_angle) {
-				end_angle = start_angle + 2 * Math.PI;
-			} else {
-				end_angle = start_angle - 2 * Math.PI;
-			}
-		}
 		double sweep_angle = end_angle - start_angle;
+		if (end_angle < start_angle) {
+			critical("End angle is less than start angle");
+		}
+		if (sweep_angle.abs() > 2 * Math.PI) {
+			sweep_angle = sweep_angle.abs() > 0 ? 2 * Math.PI : -2 * Math.PI;
+			end_angle = start_angle + sweep_angle;
+		}
 
 		double progress_angle = start_angle;
 		if (_inverted) {
