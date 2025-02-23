@@ -100,6 +100,7 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			} else {
 				_start_at = value;
 			}
+			normalize_angles();
 		}
 	}
 
@@ -119,6 +120,16 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			} else {
 				_end_at = value;
 			}
+			normalize_angles();
+		}
+	}
+
+	private void normalize_angles() {
+		if (_end_at < _start_at) {
+			var temp = _end_at;
+			_end_at = _start_at;
+			_start_at = temp;
+			_inverted = !_inverted;
 		}
 	}
 
@@ -285,14 +296,12 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		_radius_fill.size_allocate(width, height, baseline);
 	}
 
-	protected override void measure(
-		Gtk.Orientation orientation,
-		int for_size,
-		out int minimum,
-		out int natural,
-		out int minimum_baseline,
-		out int natural_baseline
-	) {
+	protected override void measure(Gtk.Orientation orientation,
+									int for_size,
+									out int minimum,
+									out int natural,
+									out int minimum_baseline,
+									out int natural_baseline) {
 		minimum = natural = 0;
 		minimum_baseline = natural_baseline = -1;
 
