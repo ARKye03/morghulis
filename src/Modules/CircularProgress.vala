@@ -13,6 +13,14 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 	private int _line_width;
 	private double _percentage;
+	private double _start_at;
+	private double _end_at;
+
+	/** Whether the progress bar is inverted:
+	 * - True: Clockwise
+	 * - False: Counter-clockwise
+	 */
+	public bool inverted { get; set; }
 
 	/**
 	 * Whether the center of the circle is filled.
@@ -75,6 +83,46 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	}
 
 	/**
+	 * The starting position (-1.0 to 1.0).
+	 * - -1.0 = -2π degrees (3 o'clock)
+	 * - -0.5 = π degrees (9 o'clock)
+	 * - 0.0 = 0 degrees (3 o'clock)
+	 * - 0.5 = π degrees (9 o'clock)
+	 * - 1.0 = 2π degrees (3 o'clock)
+	 */
+	public double start_at {
+		get { return _start_at; }
+		set {
+			if (value < -1.0) {
+				_start_at = -1.0;
+			} else if (value > 1.0) {
+				_start_at = 1.0;
+			} else {
+				_start_at = value;
+			}
+		}
+	}
+
+	/**
+	 * The ending position (-1.0 to 1.0).
+	 *
+	 * Similar to {@link start_at}, this property determines the angular position
+	 * where the circular progress indicator ends.
+	 */
+	public double end_at {
+		get { return _end_at; }
+		set {
+			if (value < -1.0) {
+				_end_at = -1.0;
+			} else if (value > 1.0) {
+				_end_at = 1.0;
+			} else {
+				_end_at = value;
+			}
+		}
+	}
+
+	/**
 	 * The child widget contained within the circular progress.
 	 */
 	public Gtk.Widget? child {
@@ -116,9 +164,12 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			"progress",
 			calculate_measurement,
 			null,
-			draw_progress_arc,
+			progress_arc_snapshot,
 			null, null, null
 		);
+
+		_start_at = 0.0;
+		_end_at = 1;
 
 		_center_fill = new Gizmo(
 			"center",
@@ -274,7 +325,60 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		minimum_baseline = natural_baseline = -1;
 	}
 
-	private void draw_progress_arc(Gtk.Snapshot snapshot) {
+	private struct ArcPoints {
+		public float start_x;
+		public float start_y;
+		public float end_x;
+		public float end_y;
+	}
+
+	private void draw_full_circle(Gsk.PathBuilder path_builder, float center_x, float center_y, float delta) {
+		path_builder.add_circle(
+			Graphene.Point().init(center_x, center_y),
+			delta
+		);
+	}
+
+	private void draw_arc(Gsk.PathBuilder path_builder,
+						  double start_angle,
+						  double progress_angle,
+						  double sweep_angle,
+						  float center_x,
+						  float center_y,
+						  float delta,
+						  bool as_pie = false) {
+		var points = calculate_arc_points(start_angle, progress_angle, center_x, center_y, delta);
+		bool large_arc = (_percentage * sweep_angle).abs() > Math.PI;
+
+		if (as_pie) {
+			path_builder.move_to(center_x, center_y);
+			path_builder.line_to(points.start_x, points.start_y);
+		} else {
+			path_builder.move_to(points.start_x, points.start_y);
+		}
+
+		path_builder.svg_arc_to(
+			delta, delta, 0.0f,
+			large_arc, _inverted,
+			points.end_x, points.end_y
+		);
+
+		if (as_pie) {
+			path_builder.line_to(center_x, center_y);
+			path_builder.close();
+		}
+	}
+
+	private ArcPoints calculate_arc_points(double start_angle, double progress_angle, float center_x, float center_y, float delta) {
+		return ArcPoints() {
+				   start_x = center_x + (float)(delta * Math.cos(start_angle)),
+				   start_y = center_y + (float)(delta * Math.sin(start_angle)),
+				   end_x = center_x + (float)(delta * Math.cos(progress_angle)),
+				   end_y = center_y + (float)(delta * Math.sin(progress_angle))
+		};
+	}
+
+	private void progress_arc_snapshot(Gtk.Snapshot snapshot) {
 		if (_percentage <= 0) {
 			return;
 		}
@@ -296,59 +400,58 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			actual_line_width = radius * 2;
 		}
 
+		var path_builder = new Gsk.PathBuilder();
 		var color = _progress_arc.get_color();
+
 		var start_angle = 1.5f * Math.PI;
 		var end_angle = start_angle + (_percentage * 2 * Math.PI);
-		var path_builder = new Gsk.PathBuilder();
 
-		// Draw as pie when line_width is 0
-		if (_line_width <= 0) {
+		if ((end_angle - start_angle).abs() > 2 * Math.PI) {
+			if (end_angle > start_angle) {
+				end_angle = start_angle + 2 * Math.PI;
+			} else {
+				end_angle = start_angle - 2 * Math.PI;
+			}
+		}
+		var sweep_angle = end_angle - start_angle;
+
+		var progress_angle = start_angle;
+		if (_inverted) {
+			progress_angle += (_percentage * sweep_angle);
+		} else {
+			progress_angle -= (_percentage * sweep_angle);
+		}
+
+		while (progress_angle < 0) {
+			progress_angle += 2 * Math.PI;
+		}
+		while (progress_angle > 2 * Math.PI) {
+			progress_angle -= 2 * Math.PI;
+		}
+
+		bool as_pie = actual_line_width <= 0;
+		bool as_circle = _percentage >= 1.0 && sweep_angle.abs() >= 2 * Math.PI;
+
+		// Draw as pie when actual_line_width is 0
+		if (as_pie) {
 			path_builder.move_to(center_x, center_y);
 
-			if (_percentage >= 1.0) {
-				path_builder.add_circle(
-					Graphene.Point().init(center_x, center_y),
-					delta
-				);
+			if (as_circle) {
+				draw_full_circle(path_builder, center_x, center_y, delta);
 			} else {
-				var start_x = center_x + (float)(delta * Math.cos(start_angle));
-				var start_y = center_y + (float)(delta * Math.sin(start_angle));
-				var end_x = center_x + (float)(delta * Math.cos(end_angle));
-				var end_y = center_y + (float)(delta * Math.sin(end_angle));
-
-				path_builder.line_to(start_x, start_y);
-				path_builder.svg_arc_to(
-					delta, delta, 0.0f,
-					_percentage > 0.5, true,
-					end_x, end_y
-				);
-				path_builder.line_to(center_x, center_y);
-				path_builder.close();
+				draw_arc(path_builder, start_angle, progress_angle, sweep_angle, center_x, center_y, delta, true);
 			}
 
 			snapshot.append_fill(path_builder.to_path(), Gsk.FillRule.EVEN_ODD, color);
 		} else {
 			// Original stroke drawing code
-			if (_percentage >= 1.0) {
-				path_builder.add_circle(
-					Graphene.Point().init(center_x, center_y),
-					delta
-				);
+			if (as_circle) {
+				draw_full_circle(path_builder, center_x, center_y, delta);
 			} else {
-				var start_x = center_x + (float)(delta * Math.cos(start_angle));
-				var start_y = center_y + (float)(delta * Math.sin(start_angle));
-				var end_x = center_x + (float)(delta * Math.cos(end_angle));
-				var end_y = center_y + (float)(delta * Math.sin(end_angle));
-
-				path_builder.move_to(start_x, start_y);
-				path_builder.svg_arc_to(
-					delta, delta, 0.0f,
-					_percentage > 0.5, true,
-					end_x, end_y
-				);
+				draw_arc(path_builder, start_angle, progress_angle, sweep_angle, center_x, center_y, delta, false);
 			}
 
-			var stroke = new Gsk.Stroke(_line_width);
+			var stroke = new Gsk.Stroke(actual_line_width);
 			stroke.set_line_cap(_line_cap);
 			snapshot.append_stroke(path_builder.to_path(), stroke, color);
 		}
@@ -403,18 +506,13 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 		var color = _radius_fill.get_color();
 		var path_builder = new Gsk.PathBuilder();
+		var as_pie = _line_width <= 0;
 
-		if (_line_width <= 0) {
-			path_builder.add_circle(
-				Graphene.Point().init(center_x, center_y),
-				delta
-			);
+		if (as_pie) {
+			draw_full_circle(path_builder, center_x, center_y, delta);
 			snapshot.append_fill(path_builder.to_path(), Gsk.FillRule.EVEN_ODD, color);
 		} else {
-			path_builder.add_circle(
-				Graphene.Point().init(center_x, center_y),
-				delta
-			);
+			draw_full_circle(path_builder, center_x, center_y, delta);
 			var stroke = new Gsk.Stroke(_line_width);
 			snapshot.append_stroke(path_builder.to_path(), stroke, color);
 		}
