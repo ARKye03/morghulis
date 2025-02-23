@@ -336,14 +336,12 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	private void calculate_measurement(
-		Gtk.Orientation orientation,
-		int for_size,
-		out int minimum,
-		out int natural,
-		out int minimum_baseline,
-		out int natural_baseline
-	) {
+	private void calculate_measurement(Gtk.Orientation orientation,
+									   int for_size,
+									   out int minimum,
+									   out int natural,
+									   out int minimum_baseline,
+									   out int natural_baseline) {
 		minimum = natural = get_width();
 		minimum_baseline = natural_baseline = -1;
 	}
