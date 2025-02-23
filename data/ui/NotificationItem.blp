@@ -86,7 +86,15 @@ template $NotificationItem: ListBoxRow {
                 ellipsize: end;
             }
 
-            Box actions_box {}
+            Box actions_box {
+                homogeneous: true;
+                halign: center;
+                hexpand: true;
+
+                styles [
+                    "linked",
+                ]
+            }
         }
     }
 }
