@@ -5,7 +5,7 @@
  * It supports various styling options including center filling, radius filling, and
  * customizable line properties.
  */
-public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
+internal class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 	private Gizmo _progress_arc;
 	private Gizmo _center_fill;
 	private Gizmo _radius_fill;
@@ -279,7 +279,7 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		return Gtk.SizeRequestMode.WIDTH_FOR_HEIGHT;
 	}
 
-	protected override void size_allocate(int width, int height, int baseline) {
+	public override void size_allocate(int width, int height, int baseline) {
 		var radius = float.min(width / 2.0f, height / 2.0f) - 1;
 		var half_line_width = (float)line_width / 2.0f;
 		var delta = radius - half_line_width;
@@ -310,12 +310,12 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		_radius_fill.size_allocate(width, height, baseline);
 	}
 
-	protected override void measure(Gtk.Orientation orientation,
-									int for_size,
-									out int minimum,
-									out int natural,
-									out int minimum_baseline,
-									out int natural_baseline) {
+	public override void measure(Gtk.Orientation orientation,
+								 int for_size,
+								 out int minimum,
+								 out int natural,
+								 out int minimum_baseline,
+								 out int natural_baseline) {
 		minimum = natural = 0;
 		minimum_baseline = natural_baseline = -1;
 
