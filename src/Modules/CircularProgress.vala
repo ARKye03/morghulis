@@ -383,19 +383,19 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 			return;
 		}
 
-		var width = get_width();
-		var height = get_height();
-		var radius = float.min(width / 2.0f, height / 2.0f) - 1;
-		var half_line_width = (float)line_width / 2.0f;
-		var delta = radius - half_line_width;
-		var center_x = width / 2.0f;
-		var center_y = height / 2.0f;
+		int width = get_width();
+		int height = get_height();
+		float radius = float.min(width / 2.0f, height / 2.0f) - 1;
+		float half_line_width = (float)line_width / 2.0f;
+		float delta = radius - half_line_width;
+		float center_x = width / 2.0f;
+		float center_y = height / 2.0f;
 
 		if (delta < 0) {
 			delta = 0;
 		}
 
-		var actual_line_width = (float)line_width;
+		float actual_line_width = (float)line_width;
 		if (actual_line_width > radius * 2) {
 			actual_line_width = radius * 2;
 		}
@@ -403,8 +403,8 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		var path_builder = new Gsk.PathBuilder();
 		var color = _progress_arc.get_color();
 
-		var start_angle = 1.5f * Math.PI;
-		var end_angle = start_angle + (_percentage * 2 * Math.PI);
+		double start_angle = _start_at * 2 * Math.PI;
+		double end_angle = _end_at * 2 * Math.PI;
 
 		if ((end_angle - start_angle).abs() > 2 * Math.PI) {
 			if (end_angle > start_angle) {
@@ -413,9 +413,9 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 				end_angle = start_angle - 2 * Math.PI;
 			}
 		}
-		var sweep_angle = end_angle - start_angle;
+		double sweep_angle = end_angle - start_angle;
 
-		var progress_angle = start_angle;
+		double progress_angle = start_angle;
 		if (_inverted) {
 			progress_angle += (_percentage * sweep_angle);
 		} else {
