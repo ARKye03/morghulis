@@ -11,11 +11,11 @@
     background-color: unset;
 
     &:hover {
-        background-color: adw.$dark_2;
+        background-color: color-mix(in srgb, currentColor 15%, transparent);
     }
 
     &:checked {
-        background-color: adw.$dark_2;
+        background-color: color-mix(in srgb, currentColor 30%, transparent);
     }
 }
 
