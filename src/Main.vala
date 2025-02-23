@@ -20,7 +20,6 @@ private void init_types() {
 	typeof(QPowerProfiles).ensure();
 	typeof(PowerBox).ensure();
 	typeof(Settings).ensure();
-	typeof(SliderBox).ensure();
 	typeof(OnScreenDisplay).ensure();
 	typeof(NotificationItem).ensure();
 	typeof(QNotifications).ensure();

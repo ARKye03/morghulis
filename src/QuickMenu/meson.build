@@ -8,7 +8,6 @@ project_resources += files(
     'QButton.vala',
     'PowerBox.vala',
     'Settings.vala',
-    'SliderBox.vala',
 )
 
 if astal_battery_dep.found()

@@ -16,7 +16,6 @@ blueprints = custom_target(
         'Runner.blp',
         'RunnerButton.blp',
         'Settings.blp',
-        'SliderBox.blp'
     ),
     output: '.',
     command: [

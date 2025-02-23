@@ -1,7 +1,9 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
 public class PowerBox : Gtk.Box {
-	private string? pending_action { get; set; default = null; }
+	private string? _pending_action;
+	private GTop.Uptime _uptime;
 
+	public string uptime_string { get; private set; }
 	public string user_name { get; private set; }
 	public string user_image { get; private set; }
 	public Gdk.Paintable user_image_paintable { get; private set; }
@@ -11,7 +13,7 @@ public class PowerBox : Gtk.Box {
 	private unowned Gtk.Stack main_stack;
 
 	construct {
-		user_name = @"Hello there $(Environment.get_user_name())!";
+		user_name = Environment.get_user_name();
 		user_image = Environment.get_home_dir() + "/user.png";
 		try {
 			var pixbuf = new Gdk.Pixbuf.from_file(user_image);
@@ -22,31 +24,44 @@ public class PowerBox : Gtk.Box {
 			stderr.printf("Error loading image: %s\n", e.message);
 		}
 		mstack = main_stack;
+
+		Timeout.add_seconds(60, () => {
+			update_values();
+			return true;
+		});
+		update_values();
+	}
+	private void update_values() {
+		GTop.get_uptime(out _uptime);
+		var uptime_hours = Math.floor(_uptime.uptime / 3600);
+		var uptime_minutes = Math.floor((_uptime.uptime % 3600) / 60);
+
+		uptime_string = @"Up $uptime_hours hours, and $uptime_minutes minutes";
 	}
 
 	/// I honestly think this can be done better
 
 	[GtkCallback]
 	private void show_shutdown_confirm() {
-		pending_action = "shutdown";
+		_pending_action = "shutdown";
 		main_stack.visible_child_name = "confirm";
 	}
 
 	[GtkCallback]
 	private void show_reboot_confirm() {
-		pending_action = "reboot";
+		_pending_action = "reboot";
 		main_stack.visible_child_name = "confirm";
 	}
 
 	[GtkCallback]
 	private void cancel_action() {
-		pending_action = null;
+		_pending_action = null;
 		main_stack.visible_child_name = "main";
 	}
 
 	[GtkCallback]
 	private void confirm_action() {
-		switch (pending_action) {
+		switch (_pending_action) {
 			case "shutdown":
 				shutdown();
 			break;
@@ -55,7 +70,7 @@ public class PowerBox : Gtk.Box {
 				reboot();
 			break;
 		}
-		pending_action = null;
+		_pending_action = null;
 		main_stack.visible_child_name = "main";
 	}
 
