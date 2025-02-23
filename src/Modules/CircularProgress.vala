@@ -140,8 +140,6 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		_center_fill.set_parent(this);
 		_radius_fill.set_parent(this);
 
-		layout_manager = new Gtk.BinLayout();
-
 		notify.connect(() => {
 			queue_draw();
 		});
@@ -198,6 +196,69 @@ public class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 		if (_child != null) {
 			snapshot_child(_child, snapshot);
+		}
+	}
+
+	public override Gtk.SizeRequestMode get_request_mode() {
+		return Gtk.SizeRequestMode.WIDTH_FOR_HEIGHT;
+	}
+
+	protected override void size_allocate(int width, int height, int baseline) {
+		var radius = float.min(width / 2.0f, height / 2.0f) - 1;
+		var half_line_width = (float)line_width / 2.0f;
+		var delta = radius - half_line_width;
+
+		if (delta < 0) {
+			delta = 0;
+		}
+
+		if (_child != null) {
+			var max_child_size = (int)(delta * Math.sqrt(2));
+
+			var child_x = (width - max_child_size) / 2;
+			var child_y = (height - max_child_size) / 2;
+
+			var child_allocation = Gtk.Allocation() {
+				x = child_x,
+				y = child_y,
+				width = max_child_size,
+				height = max_child_size
+			};
+
+			_child.allocate_size(child_allocation, baseline);
+		}
+
+		// Allocate space for the progress bar components
+		_progress_arc.size_allocate(width, height, baseline);
+		_center_fill.size_allocate(width, height, baseline);
+		_radius_fill.size_allocate(width, height, baseline);
+	}
+
+	protected override void measure(
+		Gtk.Orientation orientation,
+		int for_size,
+		out int minimum,
+		out int natural,
+		out int minimum_baseline,
+		out int natural_baseline
+	) {
+		minimum = natural = 0;
+		minimum_baseline = natural_baseline = -1;
+
+		// Get child's size requirements if it exists
+		if (_child != null) {
+			int child_minimum, child_natural;
+			int child_minimum_baseline, child_natural_baseline;
+
+			_child.measure(orientation, for_size,
+						   out child_minimum, out child_natural,
+						   out child_minimum_baseline, out child_natural_baseline);
+
+			var padding = (int)(_line_width * 4);
+			minimum = child_minimum + padding;
+			natural = child_natural + padding;
+		} else {
+			minimum = natural = 40;
 		}
 	}
 
