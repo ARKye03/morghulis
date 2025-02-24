@@ -114,7 +114,7 @@ public class PowerBox : Gtk.Box {
 
 	public void logout() {
 		try {
-			Process.spawn_command_line_async(@"loginctl terminate-session $user_name");
+			Process.spawn_command_line_async(@"loginctl terminate-user $user_name");
 		} catch (SpawnError e) {
 			warning("Failed to logout: %s", e.message);
 		}
