@@ -1,7 +1,7 @@
 public class NotifPopItemsCenter : Astal.Window {
-	private AstalNotifd.Notifd notifd { get; set; }
-	private Gtk.ListBox notif_list_box { get; set; }
-	private GSound.Context scontext { get; set; }
+	private AstalNotifd.Notifd _notifd;
+	private Gtk.ListBox _notif_list_box;
+	private GSound.Context _scontext;
 	private uint _notif_count = 0;
 
 	public NotifPopItemsCenter(Astal.WindowAnchor x_anchor = Astal.WindowAnchor.RIGHT) {
@@ -16,12 +16,12 @@ public class NotifPopItemsCenter : Astal.Window {
 	}
 
 	private void setup_window() {
-		default_width = 330;
-		default_height = 0;
-		margin = 5;
-		set_css_classes({ "all_unset", "rounded" });
-		overflow = Gtk.Overflow.HIDDEN;
-		notify["visible"].connect(() => {
+		this.default_width = 330;
+		this.default_height = 0;
+		this.margin = 5;
+		this.css_classes = { "all_unset", "rounded" };
+		this.overflow = Gtk.Overflow.HIDDEN;
+		this.notify["visible"].connect(() => {
 			if (visible) {
 				this.default_height = -1;
 			} else {
@@ -29,17 +29,18 @@ public class NotifPopItemsCenter : Astal.Window {
 			}
 		});
 
-		notif_list_box = new Gtk.ListBox();
-		notif_list_box.set_selection_mode(Gtk.SelectionMode.NONE);
-		notif_list_box.set_css_classes({ "boxed-list" });
+		this._notif_list_box = new Gtk.ListBox() {
+			selection_mode = Gtk.SelectionMode.NONE,
+			css_classes = { "boxed-list" }
+		};
 
-		set_child(notif_list_box);
+		this.child = _notif_list_box;
 	}
 
 	private void setup_notifications() {
-		notifd = AstalNotifd.Notifd.get_default();
-		notifd.notified.connect((id, replace) => this.handle_notification(id, replace));
-		notifd.resolved.connect((id) => this.remove_notification(id));
+		this._notifd = AstalNotifd.Notifd.get_default();
+		this._notifd.notified.connect((id, replace) => this.handle_notification(id, replace));
+		this._notifd.resolved.connect((id) => this.remove_notification(id));
 	}
 
 	private void handle_notification(uint notification_id, bool replace) {
@@ -47,10 +48,10 @@ public class NotifPopItemsCenter : Astal.Window {
 			remove_notification(notification_id);
 		}
 
-		var notification = notifd.get_notification(notification_id);
+		var notification = _notifd.get_notification(notification_id);
 		var notif_item = new NotificationItem(notification);
-		notif_list_box.prepend(notif_item);
-		_notif_count++;
+		this._notif_list_box.prepend(notif_item);
+		this._notif_count++;
 
 		uint timeout_ms = notification.expire_timeout > 0 ? notification.expire_timeout * 1000 : 3000;
 		Timeout.add(timeout_ms, () => {
@@ -63,17 +64,17 @@ public class NotifPopItemsCenter : Astal.Window {
 
 	private void setup_sound() {
 		try {
-			scontext = new GSound.Context();
-			scontext.init();
+			this._scontext = new GSound.Context();
+			this._scontext.init();
 		} catch (Error e) {
 			warning("Failed to create sound context: %s", e.message);
 		}
 	}
 
 	private async void play_notification_sound() {
-		if (!notifd.dont_disturb) {
+		if (!this._notifd.dont_disturb) {
 			try {
-				yield scontext.play_full(
+				yield this._scontext.play_full(
 					null,
 					GSound.Attribute.EVENT_ID,
 					"message"
@@ -85,17 +86,17 @@ public class NotifPopItemsCenter : Astal.Window {
 	}
 
 	private void remove_notification(uint notification_id) {
-		NotificationItem? notif_popup = (NotificationItem)notif_list_box.get_first_child();
+		NotificationItem? notif_popup = (NotificationItem)_notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {
-				notif_list_box.remove(notif_popup);
-				_notif_count--;
+				this._notif_list_box.remove(notif_popup);
+				this._notif_count--;
 				break;
 			}
 			notif_popup = (NotificationItem)notif_popup.get_next_sibling();
 		}
-		if (_notif_count == 0) {
+		if (this._notif_count == 0) {
 			this.visible = false;
 		}
 	}
