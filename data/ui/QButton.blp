@@ -10,7 +10,7 @@ template $QButton: Box {
     width-request: 70;
     height-request: 60;
 
-    Button main_btn {
+    Button {
         clicked => $on_clicked();
         hexpand: true;
 
@@ -58,7 +58,7 @@ template $QButton: Box {
         orientation: vertical;
     }
 
-    Button extra_btn {
+    Button {
         icon-name: "pan-end-symbolic";
         clicked => $on_clicked_extras();
     }

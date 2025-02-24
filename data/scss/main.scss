@@ -76,6 +76,18 @@
     font-size: 12px;
 }
 
+.qbutton {
+    &>button {
+        background-color: adw.$accent_bg_color;
+        color: adw.$accent_fg_color;
+
+        &:hover {
+            background-color: #{"hsl(from @accent_bg_color h s calc(l + 5%))"};
+        }
+
+    }
+}
+
 circularprogress {
     & progress {
         color: adw.$accent_color;
