@@ -7,6 +7,7 @@ template $QuickMenu: Astal.Window {
     ]
 
     default-width: 400;
+    default-height: 1;
     title: "QuickMenu";
     namespace: "QuickMenu";
     anchor: right | bottom;
@@ -19,6 +20,7 @@ template $QuickMenu: Astal.Window {
         spacing: 10;
 
         $Settings {
+            height-request: 385;
             hexpand: true;
             vexpand: true;
         }
