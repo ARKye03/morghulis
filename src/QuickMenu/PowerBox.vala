@@ -48,6 +48,12 @@ public class PowerBox : Gtk.Box {
 	}
 
 	[GtkCallback]
+	private void show_logout_confirm() {
+		_pending_action = "logout";
+		main_stack.visible_child_name = "confirm";
+	}
+
+	[GtkCallback]
 	private void show_reboot_confirm() {
 		_pending_action = "reboot";
 		main_stack.visible_child_name = "confirm";
@@ -69,12 +75,20 @@ public class PowerBox : Gtk.Box {
 			case "reboot":
 				reboot();
 			break;
+
+			case "logout":
+				logout();
+			break;
+
+			default:
+				message("Unreachable code reached");
+			break;
 		}
 		_pending_action = null;
 		main_stack.visible_child_name = "main";
 	}
 
-	public void shutdown() {
+	private void shutdown() {
 		try {
 			Process.spawn_command_line_async("systemctl poweroff");
 		} catch (SpawnError e) {
@@ -82,11 +96,19 @@ public class PowerBox : Gtk.Box {
 		}
 	}
 
-	public void reboot() {
+	private void reboot() {
 		try {
 			Process.spawn_command_line_async("systemctl reboot");
 		} catch (SpawnError e) {
 			warning("Failed to reboot: %s", e.message);
+		}
+	}
+
+	public void logout() {
+		try {
+			Process.spawn_command_line_async(@"loginctl terminate-session $user_name");
+		} catch (SpawnError e) {
+			warning("Failed to logout: %s", e.message);
 		}
 	}
 

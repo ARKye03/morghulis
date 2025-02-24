@@ -43,7 +43,7 @@ template $PowerBox: Box {
 
             child: Box {
                 hexpand: true;
-                spacing: 5;
+                spacing: 2;
                 halign: end;
 
                 Button {
@@ -63,14 +63,21 @@ template $PowerBox: Box {
                 }
 
                 Button {
-                    name: "Reboot";
+                    name: "Lock";
                     icon-name: "system-lock-screen-symbolic";
                     tooltip-text: "Lock";
                     clicked => $lock();
                 }
 
                 Button {
-                    name: "Lock";
+                    name: "Logout";
+                    icon-name: "system-log-out-symbolic";
+                    tooltip-text: "Logout";
+                    clicked => $show_logout_confirm();
+                }
+
+                Button {
+                    name: "Reboot";
                     icon-name: "system-reboot-symbolic";
                     tooltip-text: "Reboot";
                     clicked => $show_reboot_confirm();
