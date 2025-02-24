@@ -44,7 +44,11 @@ public class PowerBox : Gtk.Box {
 		var uptime_hours = Math.floor(_uptime.uptime / 3600);
 		var uptime_minutes = Math.floor((_uptime.uptime % 3600) / 60);
 
-		uptime_string = @"Up $uptime_hours hours, and $uptime_minutes minutes";
+		if (uptime_hours <= 0) {
+			uptime_string = @"Up for $uptime_minutes minutes";
+		} else {
+			uptime_string = @"Up $uptime_hours hours, and $uptime_minutes minutes";
+		}
 	}
 
 	/// I honestly think this can be done better
