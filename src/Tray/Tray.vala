@@ -29,10 +29,9 @@ public class Tray : Gtk.Box {
 	}
 
 	private Gtk.Widget create_tray_item(AstalTray.TrayItem item) {
-		var button = new Gtk.MenuButton();
-
-		button.direction = Gtk.ArrowType.UP;
-		button.add_css_class("tray-item");
+		var button = new Gtk.MenuButton() {
+			direction = Gtk.ArrowType.UP,
+		};
 
 		item.notify["action_group"].connect(() => {
 			button.insert_action_group("dbusmenu", item.action_group);
@@ -41,7 +40,7 @@ public class Tray : Gtk.Box {
 		item.bind_property("menu-model", button, "menu-model", BindingFlags.SYNC_CREATE);
 		var icon = new Gtk.Image();
 		item.bind_property("gicon", icon, "gicon", BindingFlags.SYNC_CREATE);
-		button.set_child(icon);
+		button.child = icon;
 		return button;
 	}
 }
