@@ -1,7 +1,14 @@
+private enum PowerOption {
+	NONE,
+	SHUTDOWN,
+	REBOOT,
+	LOGOUT
+}
+
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
 public class PowerBox : Gtk.Box {
-	private string? _pending_action;
 	private GTop.Uptime _uptime;
+	private PowerOption _option;
 
 	public string uptime_string { get; private set; }
 	public string user_name { get; private set; }
@@ -13,6 +20,7 @@ public class PowerBox : Gtk.Box {
 	private unowned Gtk.Stack main_stack;
 
 	construct {
+		_option = PowerOption.NONE;
 		user_name = Environment.get_user_name();
 		user_image = Environment.get_home_dir() + "/user.png";
 		try {
@@ -43,40 +51,40 @@ public class PowerBox : Gtk.Box {
 
 	[GtkCallback]
 	private void show_shutdown_confirm() {
-		_pending_action = "shutdown";
+		_option = PowerOption.SHUTDOWN;
 		main_stack.visible_child_name = "confirm";
 	}
 
 	[GtkCallback]
 	private void show_logout_confirm() {
-		_pending_action = "logout";
+		_option = PowerOption.LOGOUT;
 		main_stack.visible_child_name = "confirm";
 	}
 
 	[GtkCallback]
 	private void show_reboot_confirm() {
-		_pending_action = "reboot";
+		_option = PowerOption.REBOOT;
 		main_stack.visible_child_name = "confirm";
 	}
 
 	[GtkCallback]
 	private void cancel_action() {
-		_pending_action = null;
+		_option = PowerOption.NONE;
 		main_stack.visible_child_name = "main";
 	}
 
 	[GtkCallback]
 	private void confirm_action() {
-		switch (_pending_action) {
-			case "shutdown":
+		switch (_option) {
+			case PowerOption.SHUTDOWN:
 				shutdown();
 			break;
 
-			case "reboot":
+			case PowerOption.REBOOT:
 				reboot();
 			break;
 
-			case "logout":
+			case PowerOption.LOGOUT:
 				logout();
 			break;
 
@@ -84,7 +92,7 @@ public class PowerBox : Gtk.Box {
 				message("Unreachable code reached");
 			break;
 		}
-		_pending_action = null;
+		_option = PowerOption.NONE;
 		main_stack.visible_child_name = "main";
 	}
 
