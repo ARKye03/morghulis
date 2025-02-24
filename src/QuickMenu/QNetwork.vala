@@ -1,3 +1,4 @@
+//This file if complete garbage
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
 	public AstalNetwork.Network network { get; set; }
@@ -28,7 +29,7 @@ public class QNetwork : Gtk.Box {
 			box.append(new Gtk.Image());
 			box.append(new Gtk.Label(null));
 			box.add_css_class("padding_10");
-			list_item.set_child(box);
+			list_item.child = box;
 		});
 
 		factory.bind.connect((factory, obj) => {
