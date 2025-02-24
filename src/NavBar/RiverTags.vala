@@ -6,10 +6,11 @@ public class TagButton : Gtk.Button {
 	public TagButton(AstalRiver.Output output, int index, string icon) {
 		this._output = output;
 		this._index = index;
-		this._rclick = new Gtk.GestureClick();
-		_rclick.set_button(Gdk.BUTTON_SECONDARY);
+		this._rclick = new Gtk.GestureClick() {
+			button = Gdk.BUTTON_SECONDARY,
+		};
 
-		set_child(new Gtk.Label(icon));
+		child = new Gtk.Label(icon);
 
 		clicked.connect(() => {
 			this._output.focused_tags = 1 << this._index;
