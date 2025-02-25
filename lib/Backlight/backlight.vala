@@ -32,7 +32,7 @@ public class Backlight : Object {
 	}
 
 	public string icon_name { owned get; private set; }
-	public double percentage { get;  set; }
+	public double percentage { get; set; }
 
 	construct {
 		load_interface();
@@ -80,28 +80,29 @@ public class Backlight : Object {
 			_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
 			_b_monitor = _b_file.monitor_file(FileMonitorFlags.NONE);
 			_b_monitor.changed.connect((file, other_file, event_type) => {
-				if (event_type == FileMonitorEvent.CHANGED ||
-					event_type == FileMonitorEvent.CREATED) {
-					sync_brightness();
-				}
+				sync_brightness.begin();
 			});
 
-			sync_brightness();
+			sync_brightness.begin();
 		} catch (Error e) {
 			critical("Error setting up brightness monitor: %s", e.message);
 		}
 	}
 
-	private void sync_brightness() {
-		try {
-			uint8[] contents;
-			string etag_out;
-			if (_b_file.load_contents(null, out contents, out etag_out)) {
-				string content = (string)contents;
-				brightness = uint.parse(content.strip());
+	private async void sync_brightness() {
+		_b_file.load_contents_async.begin(null, (obj, res) => {
+			try {
+				uint8[] contents;
+				string etag_out;
+
+				_b_file.load_contents_async.end(res, out contents, out etag_out);
+				if (contents != null) {
+					string content = (string)contents;
+					brightness = uint.parse(content.strip());
+				}
+			} catch (Error e) {
+				critical("Error reading brightness: %s", e.message);
 			}
-		} catch (Error e) {
-			critical("Error reading brightness: %s", e.message);
-		}
+		});
 	}
 }
