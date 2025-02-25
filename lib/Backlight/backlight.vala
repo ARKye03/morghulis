@@ -3,6 +3,8 @@ public class Backlight : Object {
 	private FileMonitor _b_monitor;
 	private File _b_file;
 	private uint _brightness;
+	private uint _max_brightness;
+	private File _max_b_file;
 	private string _b_file_path;
 
 	public string b_interface { get; private set; }
@@ -21,8 +23,8 @@ public class Backlight : Object {
 		set {
 			if (value < 0.0) {
 				_brightness = 0;
-			} else if (value > 96000) {
-				_brightness = 96000;
+			} else if (value > _max_brightness) {
+				_brightness = _max_brightness;
 			} else {
 				_brightness = value;
 			}
@@ -30,19 +32,19 @@ public class Backlight : Object {
 	}
 
 	public string icon_name { owned get; private set; }
+	public double percentage { get;  set; }
 
 	construct {
 		load_interface();
+		load_m_b();
+		load_b();
 
-		_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
-		if (_b_file.query_exists()) {
-			try {
-				_b_monitor = _b_file.monitor_file(GLib.FileMonitorFlags.NONE, null);
-				_b_monitor.changed.connect((src, d, e) => load_b(src));
-			} catch (IOError e) {
-				critical("Error monitoring brightness file: %s", e.message);
-			}
-		}
+		this.bind_property("brightness", this, "percentage", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+			trgt = brightness / (double)_max_brightness;
+			return true;
+		});
+
+		icon_name = "display-brightness-symbolic";
 	}
 
 	private void load_interface() {
@@ -57,7 +59,36 @@ public class Backlight : Object {
 		}
 	}
 
-	private void load_b(File src) {
+	private void load_m_b() {
+		_max_b_file = File.new_for_path(@"$(_b_file_path)/max_brightness");
+		if (_max_b_file.query_exists()) {
+			try {
+				uint8[] contents;
+				string etag_out;
+				if (_max_b_file.load_contents(null, out contents, out etag_out)) {
+					string content = (string)contents;
+					_max_brightness = uint.parse(content.strip());
+				}
+			} catch (Error e) {
+				critical("Error reading max brightness: %s", e.message);
+			}
+		}
+	}
+
+	private void load_b() {
+		_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
+		if (_b_file.query_exists()) {
+			try {
+				_b_monitor = _b_file.monitor_file(GLib.FileMonitorFlags.NONE, null);
+				_b_monitor.changed.connect((src, d, e) => sync_brightness(src));
+			} catch (IOError e) {
+				critical("Error monitoring brightness file: %s", e.message);
+			}
+			sync_brightness(_b_file);
+		}
+	}
+
+	private void sync_brightness(File src) {
 		uint8[] contents;
 		string etag_out;
 		try {
