@@ -1,6 +1,6 @@
 public class Backlight : Object {
 	private static Backlight _instance;
-	private FileMonitor _b_monitor;
+	private FileMonitor? _b_monitor;
 	private File _b_file;
 	private uint _brightness;
 	private uint _max_brightness;
@@ -76,23 +76,27 @@ public class Backlight : Object {
 	}
 
 	private void load_b() {
-		_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
-		if (_b_file.query_exists()) {
-			try {
-				_b_monitor = _b_file.monitor_file(GLib.FileMonitorFlags.NONE, null);
-				_b_monitor.changed.connect((src, d, e) => sync_brightness(src));
-			} catch (IOError e) {
-				critical("Error monitoring brightness file: %s", e.message);
-			}
-			sync_brightness(_b_file);
+		try {
+			_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
+			_b_monitor = _b_file.monitor_file(FileMonitorFlags.NONE);
+			_b_monitor.changed.connect((file, other_file, event_type) => {
+				if (event_type == FileMonitorEvent.CHANGED ||
+					event_type == FileMonitorEvent.CREATED) {
+					sync_brightness();
+				}
+			});
+
+			sync_brightness();
+		} catch (Error e) {
+			critical("Error setting up brightness monitor: %s", e.message);
 		}
 	}
 
-	private void sync_brightness(File src) {
-		uint8[] contents;
-		string etag_out;
+	private void sync_brightness() {
 		try {
-			if (src.load_contents(null, out contents, out etag_out)) {
+			uint8[] contents;
+			string etag_out;
+			if (_b_file.load_contents(null, out contents, out etag_out)) {
 				string content = (string)contents;
 				brightness = uint.parse(content.strip());
 			}
