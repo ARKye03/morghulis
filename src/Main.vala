@@ -13,6 +13,7 @@ private void init_types() {
 	typeof(HyprWorkspaces).ensure();
 #endif
 	typeof(QuickMenu).ensure();
+	typeof(Backlight).ensure();
 	typeof(SysInfo).ensure();
 	typeof(QButton).ensure();
 	typeof(QNetwork).ensure();
