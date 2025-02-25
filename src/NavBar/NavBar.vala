@@ -159,7 +159,6 @@ public class NavBar : Astal.Window {
 #endif
 
 #if river
-	private Gtk.Label _view_label;
 	private AstalRiver.River _river;
 
 	private void setup_river() {
@@ -176,17 +175,16 @@ public class NavBar : Astal.Window {
 		};
 		active_client.child = view_label;
 
-		_river.notify["focused-view"].connect(active_view);
-		active_view();
-	}
-
-	private void active_view() {
-		if (_river.focused_view != null && _river.focused_view != "") {
-			_view_label.label = _river.focused_view;
-			active_client.visible = true;
-		} else {
-			active_client.visible = false;
-		}
+		_river.bind_property("focused-view", view_label, "label", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+			var view_title = (string)src;
+			if (view_title != null && view_title != "") {
+				trgt = view_title;
+				active_client.visible = true;
+			} else {
+				active_client.visible = false;
+			}
+			return true;
+		});
 	}
 #endif
 }
