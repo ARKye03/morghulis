@@ -118,7 +118,6 @@ public class NavBar : Astal.Window {
 		workspaces.child = new HyprWorkspaces(_hyprland);
 
 		Gtk.Label submap_label = new Gtk.Label("default") {
-			visible = false,
 			halign = Gtk.Align.START,
 			ellipsize = Pango.EllipsizeMode.END,
 			max_width_chars = 20,
