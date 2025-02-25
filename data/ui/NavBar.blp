@@ -147,8 +147,8 @@ template $NavBar: Astal.Window {
             "numeric",
           ]
 
-          Label clock {
-            name: "clock";
+          Label {
+            label: bind template.current_time;
           }
 
           popover: Popover {

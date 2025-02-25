@@ -7,9 +7,7 @@ public class NavBar : Astal.Window {
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
-
-	[GtkChild]
-	private unowned Gtk.Label clock;
+	public string current_time { get; private set; }
 
 	[GtkChild]
 	private unowned Adw.Bin workspaces;
@@ -73,16 +71,15 @@ public class NavBar : Astal.Window {
 
 	private void update_clock() {
 		_clock_time = new DateTime.now_local();
-
-		clock.label = _clock_time.format(Morghulis.clock_format);
+		current_time = _clock_time.format(Morghulis.clock_format);
 	}
 
 	private void init_clock() {
-		update_clock();
 		Timeout.add(60000, () => {
 			update_clock();
 			return true;
 		});
+		update_clock();
 	}
 
 	private void init_compositor() {
