@@ -30,21 +30,6 @@ public class NavBar : Astal.Window {
 		init_clock();
 
 		instance = this;
-
-		Backlight bl = Backlight.get_default();
-		Gtk.Label bl_label = new Gtk.Label("Brightness") {
-			halign = Gtk.Align.START,
-			ellipsize = Pango.EllipsizeMode.END,
-			max_width_chars = 20,
-			tooltip_text = "Brightness"
-		};
-		bl.bind_property("brightness", bl_label, "label", BindingFlags.SYNC_CREATE, (binding, srcval, ref trgt) => {
-			trgt = @"$(Math.round(bl.brightness / 960.0))%";
-			return true;
-		});
-		active_submap.child = bl_label;
-		active_submap.visible = true;
-
 		present();
 	}
 
