@@ -145,12 +145,14 @@ public class Settings : Adw.Bin {
 	}
 
 	private void on_player_removed(AstalMpris.Player player) {
-		for (int i = 0; i < this.players.n_pages; i++) {
-			MprisPlayer p = (MprisPlayer)this.players.get_nth_page(i);
-			if (p.player == player) {
-				this.players.remove(p);
+		MprisPlayer current = (MprisPlayer)this.players.get_first_child();
+
+		while (current != null) {
+			if (current.player == player) {
+				this.players.remove(current);
 				break;
 			}
+			current = (MprisPlayer)current.get_next_sibling();
 		}
 	}
 }
