@@ -16,7 +16,11 @@ public class Morghulis : Astal.Application {
 				OnScreenDisplay.instance.change_volume();
 			break;
 
-				default:
+			case "change_brightness":
+				OnScreenDisplay.instance.change_brightness();
+			break;
+
+			default:
 				AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
 			break;
 		}

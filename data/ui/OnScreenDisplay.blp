@@ -14,7 +14,7 @@ template $OnScreenDisplay: Astal.Window {
     layer: overlay;
 
     Stack stack_osd { // Stack for volume and brightness
-        Gtk.StackPage {
+        StackPage {
             name: "volume_osd";
 
             child: Overlay volume_osd {
@@ -41,6 +41,41 @@ template $OnScreenDisplay: Astal.Window {
                     valign: center;
                     margin-start: 10;
                     icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+
+                    styles [
+                        "osd_icon",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "brightness_osd";
+
+            child: Overlay brightness_osd {
+                hexpand: true;
+                vexpand: true;
+                width-request: 300;
+
+                ProgressBar {
+                    hexpand: true;
+                    orientation: horizontal;
+                    fraction: bind template.backlight as <$Backlight>.percentage;
+                    vexpand: true;
+
+                    styles [
+                        "osd_slider",
+                        "master_border",
+                        "rounded",
+                    ]
+                }
+
+                [overlay]
+                Image {
+                    halign: start;
+                    valign: center;
+                    margin-start: 10;
+                    icon-name: bind template.backlight as <$Backlight>.icon-name;
 
                     styles [
                         "osd_icon",
