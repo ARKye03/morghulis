@@ -88,8 +88,13 @@ template $QAudioBox: Gtk.Box {
       }
 
       ListBox sinks {
-        show-separators: true;
+        show-separators: false;
         selection-mode: none;
+        overflow: hidden;
+
+        styles [
+          "rounded",
+        ]
       }
 
       Separator {}
@@ -101,8 +106,13 @@ template $QAudioBox: Gtk.Box {
       }
 
       ListBox sources {
-        show-separators: true;
+        show-separators: false;
         selection-mode: none;
+        overflow: hidden;
+
+        styles [
+          "rounded",
+        ]
       }
 
       Separator {}
@@ -114,8 +124,13 @@ template $QAudioBox: Gtk.Box {
       }
 
       ListBox mixers {
-        show-separators: true;
+        show-separators: false;
         selection-mode: none;
+        overflow: hidden;
+
+        styles [
+          "rounded",
+        ]
       }
     }
   }
