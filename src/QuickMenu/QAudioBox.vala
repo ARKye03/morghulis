@@ -60,7 +60,6 @@ public class QAudioBox : Gtk.Box {
 		wp.audio.stream_added.connect((e) => on_added(e, mixers));
 		wp.audio.stream_removed.connect((e) => on_removed(e, mixers));
 
-		scrolled_window.vadjustment.value_changed.connect(update_revealer_visibility);
 		scrolled_window.edge_reached.connect(on_edge_reached);
 	}
 
@@ -90,17 +89,11 @@ public class QAudioBox : Gtk.Box {
 		}
 	}
 
-	private void update_revealer_visibility() {
-		var adj = scrolled_window.vadjustment;
-		// Allow a small threshold
-		bool at_top = adj.value <= 0.1;
-
-		go_down_revealer.reveal_child = at_top;
-	}
-
 	private void on_edge_reached(Gtk.PositionType pos) {
 		if (pos == Gtk.PositionType.TOP) {
 			go_down_revealer.reveal_child = true;
+		} else {
+			go_down_revealer.reveal_child = false;
 		}
 	}
 }
