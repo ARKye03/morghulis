@@ -123,7 +123,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [x] Power Profiles
   - [x] Bluetooth
   - [x] (WIP) Network
-  - [ ] (WIP) Audio
+  - [x] Audio
 - [x] Runner
   - [x] Run apps
   - [x] Solve math expressions
@@ -133,7 +133,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [x] Center
   - [x] Popup
   - [x] Don't Disturb logic
-- [ ] Power Menu (WIP)
+- [ ] Power Popup Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
   - [ ] Brightness
