@@ -6,6 +6,7 @@ public class Settings : Adw.Bin {
 	public AstalNetwork.Network network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
 	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
+	public AstalWp.Wp? wp { get; private set; }
 	public static Adw.NavigationView settings_navigation { get; private set; }
 
 	[GtkChild]
@@ -17,6 +18,7 @@ public class Settings : Adw.Bin {
 	construct {
 		network = AstalNetwork.get_default();
 		bluetooth = AstalBluetooth.get_default();
+		wp = AstalWp.get_default();
 		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 		_notifd = AstalNotifd.get_default();
 		_notifd.notify["dont-disturb"].connect(dnd);
@@ -95,6 +97,23 @@ public class Settings : Adw.Bin {
 	}
 
 	[GtkCallback]
+	public void audio_clicked() {
+		wp.audio.default_speaker.mute = !wp.audio.default_speaker.mute;
+	}
+
+	[GtkCallback]
+	public void audio_clicked_extras() {
+		quick_settings_navigation_view.push_by_tag("audio");
+	}
+
+	[GtkCallback]
+	public string audio_status(bool muted) {
+		return muted
+			   ? "Muted"
+			   : "Unmuted";
+	}
+
+	[GtkCallback]
 	public void notifications_clicked() {
 		_notifd.dont_disturb = !_notifd.dont_disturb;
 	}
@@ -125,7 +144,6 @@ public class Settings : Adw.Bin {
 		quick_settings_navigation_view.push_by_tag("power_profiles");
 	}
 
-	[GtkCallback]
 	public void TODO() {
 		message("TODO!");
 	}

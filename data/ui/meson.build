@@ -16,6 +16,8 @@ blueprints = custom_target(
         'Runner.blp',
         'RunnerButton.blp',
         'Settings.blp',
+        'QAudioBox.blp',
+        'QAudioItem.blp'
     ),
     output: '.',
     command: [

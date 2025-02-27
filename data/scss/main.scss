@@ -103,14 +103,13 @@ circularprogress {
 }
 
 .hslider {
-    border-radius: 5px;
-    padding: 5px;
-
     & trough {
+        @extend .rounded;
         padding: 0;
         min-height: 10px;
 
         & highlight {
+            @extend .rounded;
             background-color: adw.$accent_color;
         }
 
@@ -121,9 +120,6 @@ circularprogress {
 }
 
 .vslider {
-    border-radius: 5px;
-    padding: 5px;
-
     & trough {
         padding: 0;
         min-width: 10px;

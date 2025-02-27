@@ -1,0 +1,122 @@
+using Gtk 4.0;
+using Adw 1;
+using AstalWp 0.1;
+
+template $QAudioBox: Gtk.Box {
+  orientation: vertical;
+
+  styles [
+    "background",
+    "rounded",
+    "flats",
+  ]
+
+  Adw.HeaderBar {
+    show-end-title-buttons: false;
+  }
+
+  ScrolledWindow {
+    hscrollbar-policy: never;
+    vexpand: true;
+
+    Box {
+      vexpand: true;
+      spacing: 10;
+      orientation: vertical;
+
+      styles [
+        "rounded",
+        "padding_10",
+      ]
+
+      Box {
+        spacing: 5;
+
+        styles [
+          "view",
+          "rounded",
+        ]
+
+        Button {
+          icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+          clicked => $toggle_speaker();
+        }
+
+        Scale {
+          hexpand: true;
+          adjustment: bind template.speaker_adj;
+
+          styles [
+            "hslider",
+            "rounded",
+            "padding_5",
+          ]
+        }
+      }
+
+      Box {
+        spacing: 5;
+
+        styles [
+          "view",
+          "rounded",
+        ]
+
+        Button {
+          icon-name: bind template.microphone as <AstalWp.Endpoint>.volume-icon;
+          clicked => $toggle_microphone();
+        }
+
+        Scale {
+          hexpand: true;
+          adjustment: bind template.microphone_adj;
+
+          styles [
+            "hslider",
+            "rounded",
+            "padding_5",
+          ]
+        }
+      }
+
+      Separator {}
+
+      Label {
+        label: "Sinks";
+        halign: center;
+        hexpand: true;
+      }
+
+      ListBox sinks {
+        show-separators: true;
+        selection-mode: none;
+      }
+
+      Separator {}
+
+      Label {
+        label: "Sources";
+        halign: center;
+        hexpand: true;
+      }
+
+      ListBox sources {
+        show-separators: true;
+        selection-mode: none;
+      }
+
+      Separator {}
+
+      Label {
+        label: "Mixers";
+        halign: center;
+        hexpand: true;
+      }
+
+      ListBox mixers {
+        show-separators: true;
+        selection-mode: none;
+      }
+    }
+  }
+}

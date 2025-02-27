@@ -19,5 +19,7 @@
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>
         <file preprocess="xml-stripblanks">ui/NotificationItem.ui</file>
         <file preprocess="xml-stripblanks">ui/QNotifications.ui</file>
+        <file preprocess="xml-stripblanks">ui/QAudioBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/QAudioItem.ui</file>
     </gresource>
 </gresources>

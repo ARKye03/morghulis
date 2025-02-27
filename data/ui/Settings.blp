@@ -3,6 +3,7 @@ using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 using AstalPowerProfiles 0.1;
 using Adw 1;
+using AstalWp 0.1;
 
 template $Settings: Adw.Bin {
     Adw.NavigationView quick_settings_navigation_view {
@@ -69,10 +70,11 @@ template $Settings: Adw.Bin {
 
                         name: "Audio";
                         identity: "Audio";
-                        status: "Coming soon";
+                        status: bind $audio_status(template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute) as <string>;
                         icon: "audio-volume-high-symbolic";
-                        clicked => $TODO();
-                        clicked_extras => $TODO();
+                        inactive: bind template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute;
+                        clicked => $audio_clicked();
+                        clicked_extras => $audio_clicked_extras();
                     }
 
                     $QButton notif_button {
@@ -181,6 +183,13 @@ template $Settings: Adw.Bin {
             title: "Bluetooth";
 
             $QBluetooth {}
+        }
+
+        Adw.NavigationPage {
+            tag: "audio";
+            title: "Audio";
+
+            $QAudioBox {}
         }
 
         Adw.NavigationPage {
