@@ -141,7 +141,7 @@ public class NavBar : Astal.Window {
 
 		_hyprland.bind_property("focused_client", client_label, "label", BindingFlags.SYNC_CREATE, (binding, srcval, ref targetval) => {
 			var client = (AstalHyprland.Client)srcval;
-			if (client.title != null && client.title != "") {
+			if (client != null && client.title != null && client.title != "") {
 				targetval = client.title;
 				active_client.visible = true;
 			} else {
