@@ -156,4 +156,4 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 ## License
 
-Licensed under the WTFPL. See the [LICENSE](./LICENSE) file for details.
+Licensed under the General Public License v3.0. See the [LICENSE](./LICENSE) file for details.
