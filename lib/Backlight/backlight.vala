@@ -84,9 +84,7 @@ public class Backlight : Object {
 		try {
 			_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
 			_b_monitor = _b_file.monitor_file(FileMonitorFlags.NONE);
-			_b_monitor.changed.connect((file, other_file, event_type) => {
-				sync_brightness.begin();
-			});
+			_b_monitor.changed.connect((file, other_file, event_type) => sync_brightness.begin());
 
 			sync_brightness.begin();
 		} catch (Error e) {
