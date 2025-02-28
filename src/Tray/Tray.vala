@@ -1,34 +1,48 @@
-public class Tray : Gtk.Box {
-	public AstalTray.Tray tray { get; private set; }
+public class Tray : Gtk.Widget {
 	private HashTable<string, Gtk.Widget> items;
+	private Gtk.FlowBox flow_box;
+
+	public AstalTray.Tray tray { get; private set; }
 
 	construct {
-		this.visible = false;
-		this.items = new HashTable<string, Gtk.Widget>(str_hash, str_equal);
 		this.tray = AstalTray.get_default();
-		this.tray.item_added.connect((obj, item_id) => {
-			if (this.items.contains(item_id)) {
-				return;
-			}
-			var tray_item = this.tray.get_item(item_id);
-			if (tray_item.id != null && tray_item.id != "") {
-				var item = create_tray_item(tray_item);
-				this.items.insert(item_id, item);
-				this.append(item);
-				this.visible = true;
-			}
-		});
-		this.tray.item_removed.connect((obj, item_id) => {
-			if (!this.items.contains(item_id)) {
-				return;
-			}
-			var item = this.items.take(item_id);
-			this.remove(item);
-			this.visible = items.size() > 0;
-		});
+		this.items = new HashTable<string, Gtk.Widget>(str_hash, str_equal);
+		this.layout_manager = new Gtk.BinLayout();
+		this.visible = false;
+		this.flow_box = new Gtk.FlowBox() {
+			max_children_per_line = 4,
+			homogeneous = true,
+			column_spacing = row_spacing = 1,
+		};
+
+		this.tray.item_added.connect(on_added);
+		this.tray.item_removed.connect(on_removed);
+		flow_box.set_parent(this);
 	}
 
-	private Gtk.Widget create_tray_item(AstalTray.TrayItem item) {
+	private void on_added(AstalTray.Tray tray, string item_id) {
+		if (this.items.contains(item_id)) {
+			return;
+		}
+		var tray_item = this.tray.get_item(item_id);
+		if (tray_item.id != null && tray_item.id != "") {
+			var item = create_tray_item(tray_item);
+			this.items.insert(item_id, item);
+			flow_box.append(item);
+			this.visible = true;
+		}
+	}
+
+	private void on_removed(AstalTray.Tray tray, string item_id) {
+		if (!this.items.contains(item_id)) {
+			return;
+		}
+		var item = this.items.take(item_id);
+		flow_box.remove(item);
+		this.visible = items.size() > 0;
+	}
+
+	private Gtk.FlowBoxChild create_tray_item(AstalTray.TrayItem item) {
 		var button = new Gtk.MenuButton() {
 			direction = Gtk.ArrowType.UP,
 		};
@@ -41,6 +55,11 @@ public class Tray : Gtk.Box {
 		var icon = new Gtk.Image();
 		item.bind_property("gicon", icon, "gicon", BindingFlags.SYNC_CREATE);
 		button.child = icon;
-		return button;
+
+		var fbc = new Gtk.FlowBoxChild() {
+			child = button,
+		};
+
+		return fbc;
 	}
 }
