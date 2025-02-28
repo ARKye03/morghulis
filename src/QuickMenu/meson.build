@@ -10,6 +10,7 @@ project_resources += files(
     'Settings.vala',
     'QAudioBox.vala',
     'QAudioItem.vala',
+    'SysInfo.vala',
 )
 
 if astal_battery_dep.found()
@@ -18,8 +19,4 @@ endif
 
 if astal_power_profiles_dep.found()
     project_args += ['--define=power-profiles']
-endif
-
-if libgtop_dep.found()
-    project_resources += files('SysInfo.vala')
 endif

@@ -44,7 +44,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
   - <details> <summary>Power Profiles</summary>
       While it might not be used, its mandatory to install it (For now).
     </details>
-- [libgtop](https://gitlab.gnome.org/GNOME/libgtop) (Optional)
+- [libgtop](https://gitlab.gnome.org/GNOME/libgtop)
 
 > [!NOTE]
 > Optional dependencies are not required only if built from source, the binary release requires all.
