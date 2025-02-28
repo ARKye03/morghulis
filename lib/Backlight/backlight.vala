@@ -59,7 +59,9 @@ public class Backlight : Object {
 			_b_file_path = "/sys/class/backlight/acpi_video0";
 			return true;
 		} else {
+#if DEBUG
 			critical("No supported backlight interface found");
+#endif
 			return false;
 		}
 	}
