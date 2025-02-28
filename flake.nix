@@ -42,6 +42,7 @@
               pkg-config
             ]
             ++ gtk-utils
+            ++ runtime-utils
             ++ compiler-utils
             ++ build-utils
             ++ astal-libs;
@@ -135,6 +136,10 @@
           gtk4-layer-shell
           libadwaita
         ];
+        runtime-utils = with pkgs; [
+          gsound
+          libgtop
+        ];
         compiler-utils = with pkgs; [
           vala
           vala-language-server
@@ -143,7 +148,6 @@
           dart-sass
           blueprint-compiler
           desktop-file-utils
-          libgtop
         ];
         build-utils = with pkgs.buildPackages; [
           muon
@@ -183,6 +187,7 @@
                 ]
                 ++ nix-utils
                 ++ gtk-utils
+                ++ runtime-utils
                 ++ compiler-utils
                 ++ build-utils
                 ++ astal-libs;
