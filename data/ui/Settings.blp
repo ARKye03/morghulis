@@ -1,9 +1,10 @@
 using Gtk 4.0;
+using Adw 1;
 using AstalNetwork 0.1;
 using AstalBluetooth 0.1;
 using AstalPowerProfiles 0.1;
-using Adw 1;
 using AstalWp 0.1;
+using AstalNotifd 0.1;
 
 template $Settings: Adw.Bin {
     Adw.NavigationView quick_settings_navigation_view {
@@ -87,6 +88,9 @@ template $Settings: Adw.Bin {
                         identity: "Notifications";
                         clicked => $notifications_clicked();
                         clicked_extras => $notifications_clicked_extras();
+                        inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
+                        status: bind $notif_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+                        icon: bind $notif_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
                     }
 
                     $QButton {

@@ -1,10 +1,10 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
 public class Settings : Adw.Bin {
 	private AstalMpris.Mpris _mpris;
-	private AstalNotifd.Notifd _notifd;
 
 	public AstalNetwork.Network network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
+	public AstalNotifd.Notifd notifd { get; private set; }
 	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
 	public AstalWp.Wp? wp { get; private set; }
 	public static Adw.NavigationView settings_navigation { get; private set; }
@@ -20,9 +20,7 @@ public class Settings : Adw.Bin {
 		bluetooth = AstalBluetooth.get_default();
 		wp = AstalWp.get_default();
 		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
-		_notifd = AstalNotifd.get_default();
-		_notifd.notify["dont-disturb"].connect(dnd);
-		dnd();
+		notifd = AstalNotifd.get_default();
 
 		_mpris = AstalMpris.get_default();
 		_mpris.players.@foreach((p) => on_player_added(p));
@@ -32,16 +30,18 @@ public class Settings : Adw.Bin {
 		settings_navigation = quick_settings_navigation_view;
 	}
 
-	private void dnd() {
-		if (_notifd.dont_disturb) {
-			notif_button.active = false;
-			notif_button.status = "Don't disturb";
-			notif_button.icon = "notifications-disabled-symbolic";
-		} else {
-			notif_button.active = true;
-			notif_button.status = "Enabled";
-			notif_button.icon = "preferences-system-notifications-symbolic";
-		}
+	[GtkCallback]
+	public string notif_status(bool dnd) {
+		return dnd
+			   ? "Don't disturb"
+			   : "Enabled";
+	}
+
+	[GtkCallback]
+	public string notif_icon(bool dnd) {
+		return dnd
+			   ? "notifications-disabled-symbolic"
+			   : "preferences-system-notifications-symbolic";
 	}
 
 	[GtkCallback]
@@ -115,7 +115,7 @@ public class Settings : Adw.Bin {
 
 	[GtkCallback]
 	public void notifications_clicked() {
-		_notifd.dont_disturb = !_notifd.dont_disturb;
+		notifd.dont_disturb = !notifd.dont_disturb;
 	}
 
 	[GtkCallback]
