@@ -7,6 +7,15 @@
     all: unset;
 }
 
+button {
+    border-radius: adw.$master-border-radius;
+
+    &:hover,
+    &:checked {
+        border-radius: adw.$master-border-radius;
+    }
+}
+
 .flats button {
     background-color: unset;
 
