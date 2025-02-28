@@ -1,17 +1,16 @@
+private enum SignalStrength {
+	WEAK = 30,
+	OK = 55,
+	GOOD = 80,
+	EXCELLENT = 100
+}
+
 public class NetworkManager : Object {
 	private static NetworkManager _instance;
 	private NM.DeviceWifi? _wifi_device;
-	private NM.AccessPoint? _active_ap;
 	private string? _active_ssid;
 	private NM.Client _client;
 	private bool _wireless_enabled;
-
-	private enum SignalStrength {
-		WEAK = 30,
-		OK = 55,
-		GOOD = 80,
-		EXCELLENT = 100
-	}
 
 	public signal void access_point_added(NM.AccessPoint ap);
 	public signal void access_point_removed(NM.AccessPoint ap);
@@ -22,6 +21,30 @@ public class NetworkManager : Object {
 			_instance = new NetworkManager();
 		}
 		return _instance;
+	}
+
+	public NM.AccessPoint? active_ap { get; private set; }
+
+	public bool wireless_enabled {
+		get {
+			return _client.wireless_enabled;
+		}
+		set {
+			if (_wireless_enabled != value) {
+				_client.wireless_enabled = value;
+				_wireless_enabled = value;
+			}
+		}
+	}
+
+	public unowned string icon_name {
+		get {
+			if (active_ap == null) {
+				return "network-wireless-offline-symbolic";
+			}
+
+			return get_icon_for_strength(active_ap.get_strength());
+		}
 	}
 
 	private NetworkManager() {
@@ -38,29 +61,6 @@ public class NetworkManager : Object {
 		}
 	}
 
-	public bool wireless_enabled {
-		get {
-			_wireless_enabled = _client.wireless_enabled;
-			return _wireless_enabled;
-		}
-		set {
-			if (_wireless_enabled != value) {
-				_client.wireless_enabled = value;
-				_wireless_enabled = value;
-			}
-		}
-	}
-
-	public unowned string icon_name {
-		get {
-			if (_active_ap == null) {
-				return "network-wireless-offline-symbolic";
-			}
-
-			return get_icon_for_strength(_active_ap.get_strength());
-		}
-	}
-
 	private unowned string get_icon_for_strength(uint8 strength) {
 		if (strength > SignalStrength.GOOD) {
 			return "network-wireless-signal-excellent-symbolic";
@@ -72,19 +72,15 @@ public class NetworkManager : Object {
 		return "network-wireless-signal-weak-symbolic";
 	}
 
-	public unowned string ssid {
+	public unowned string active_ap_ssid {
 		get {
-			if (_active_ap == null) {
+			if (active_ap == null) {
 				_active_ssid = "";
 			} else if (_active_ssid == null) {
-				_active_ssid = NM.Utils.ssid_to_utf8(_active_ap.get_ssid().get_data());
+				_active_ssid = NM.Utils.ssid_to_utf8(active_ap.get_ssid().get_data());
 			}
 			return _active_ssid;
 		}
-	}
-
-	public NM.AccessPoint? active_ap {
-		get { return _active_ap; }
 	}
 
 	private void check_wifi_device() {
@@ -125,8 +121,8 @@ public class NetworkManager : Object {
 
 	private void update_active_ap() {
 		var new_ap = _wifi_device.get_active_access_point();
-		if (_active_ap != new_ap) {
-			_active_ap = new_ap;
+		if (active_ap != new_ap) {
+			active_ap = new_ap;
 			_active_ssid = null;
 			active_ap_changed();
 		}
