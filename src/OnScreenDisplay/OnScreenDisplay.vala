@@ -12,9 +12,6 @@ public class OnScreenDisplay : Astal.Window {
 	[GtkChild]
 	public unowned Gtk.Stack stack_osd;
 
-	[GtkChild]
-	public unowned Gtk.Overlay volume_osd;
-
 	construct {
 		if (instance == null) {
 			instance = this;
