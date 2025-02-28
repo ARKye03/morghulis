@@ -30,7 +30,6 @@ public class NavBar : Astal.Window {
 		init_clock();
 
 		instance = this;
-
 		present();
 	}
 
