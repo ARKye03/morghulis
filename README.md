@@ -136,7 +136,8 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [ ] Power Popup Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
-  - [ ] Brightness
+  - [x] Brightness
+- [x] Backlight (WIP)
 - [x] Dynamic CSS
 
 > [!NOTE]
