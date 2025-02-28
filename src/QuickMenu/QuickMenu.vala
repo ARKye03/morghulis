@@ -5,6 +5,7 @@ public class QuickMenu : Astal.Window {
 
 	public QuickMenu() {
 		Object(
+			namespace : "QuickMenu",
 			anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 		);
 		if (instance == null) {
