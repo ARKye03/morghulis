@@ -35,7 +35,9 @@ public class Backlight : Object {
 	public double percentage { get; set; }
 
 	construct {
-		load_interface();
+		if (!load_interface()) {
+			return;
+		}
 		load_m_b();
 		load_b();
 
@@ -47,15 +49,18 @@ public class Backlight : Object {
 		icon_name = "display-brightness-symbolic";
 	}
 
-	private void load_interface() {
+	private bool load_interface() {
 		if (FileUtils.test("/sys/class/backlight/intel_backlight", FileTest.IS_DIR)) {
 			b_interface = "intel_backlight";
 			_b_file_path = "/sys/class/backlight/intel_backlight";
+			return true;
 		} else if (FileUtils.test("/sys/class/backlight/acpi_video0", FileTest.IS_DIR)) {
 			b_interface = "acpi_video0";
 			_b_file_path = "/sys/class/backlight/acpi_video0";
+			return true;
 		} else {
 			critical("No supported backlight interface found");
+			return false;
 		}
 	}
 
