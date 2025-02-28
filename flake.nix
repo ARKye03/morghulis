@@ -102,13 +102,7 @@
 
               # Define asset files
               filenames=(
-                "data/assets/colloid-morghulis-system-hibernate-symbolic.svg"
-                "data/assets/colloid-morghulis-system-lock-screen-symbolic.svg"
-                "data/assets/colloid-morghulis-system-reboot-symbolic.svg"
-                "data/assets/colloid-morghulis-system-shutdown-symbolic.svg"
-                "data/assets/colloid-morghulis-system-suspend-symbolic.svg"
                 "data/desktop/com.github.ARKye03.morghulis.desktop.in"
-                "data/desktop/com.github.ARKye03.morghulis.png"
               )
 
               # Copy binaries to staging
