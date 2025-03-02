@@ -13,6 +13,7 @@ public class Tray : Gtk.Widget {
 			max_children_per_line = 4,
 			homogeneous = true,
 			column_spacing = row_spacing = 1,
+			selection_mode = Gtk.SelectionMode.NONE,
 		};
 
 		this.tray.item_added.connect(on_added);

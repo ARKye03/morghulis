@@ -5,6 +5,7 @@ public class QuickMenu : Astal.Window {
 
 	public QuickMenu() {
 		Object(
+			namespace : "QuickMenu",
 			anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
 		);
 		if (instance == null) {
@@ -17,6 +18,7 @@ public class QuickMenu : Astal.Window {
 			if (!this.visible) {
 				Settings.settings_navigation.pop();
 				PowerBox.mstack.set_visible_child_name("main");
+				BatteryBox.bb_stack_ref?.set_visible_child_name("sliders");
 			}
 		});
 	}

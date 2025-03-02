@@ -9,8 +9,6 @@ template $QuickMenu: Astal.Window {
     default-width: 400;
     default-height: 1;
     title: "QuickMenu";
-    namespace: "QuickMenu";
-    anchor: right | bottom;
     margin-right: 5;
     margin-bottom: 5;
 
@@ -24,6 +22,11 @@ template $QuickMenu: Astal.Window {
             height-request: 398;
             hexpand: true;
             vexpand: true;
+        }
+
+        $BatteryBox {
+            hexpand: true;
+            vexpand: false;
         }
 
         $PowerBox {

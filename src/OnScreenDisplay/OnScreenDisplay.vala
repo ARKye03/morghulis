@@ -22,7 +22,10 @@ public class OnScreenDisplay : Astal.Window {
 		backlight = Backlight.get_default();
 	}
 	public OnScreenDisplay() {
-		Object(namespace : "OnScreenDisplay");
+		Object(namespace : "OnScreenDisplay",
+			   anchor: Astal.WindowAnchor.BOTTOM,
+			   layer: Astal.Layer.OVERLAY
+		);
 	}
 
 	private void handle_timeout() {

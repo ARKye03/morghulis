@@ -3,7 +3,6 @@ public class Morghulis : Astal.Application {
 	private bool css_loaded { get; set; default = false; }
 	private GLib.File file { get; set; }
 	private GLib.FileMonitor file_monitor { get; set; }
-	private Adw.StyleManager style_manager { get; set; }
 
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
@@ -29,7 +28,6 @@ public class Morghulis : Astal.Application {
 	construct {
 		Adw.init();
 		instance_name = "morghulis";
-		style_manager = Adw.StyleManager.get_default();
 
 		try {
 			acquire_socket();
@@ -87,19 +85,12 @@ public class Morghulis : Astal.Application {
 			return;
 		}
 		// Morghulis assume there is only one monitor
-		primary_monitor = monitors.get_item(0) as Gdk.Monitor;
+		primary_monitor = (Gdk.Monitor)monitors.get_item(0);
 		if (primary_monitor == null) {
 			critical("Failed to get primary monitor");
 			return;
 		}
 		message("Successfully initialized primary monitor");
-	}
-
-	private Gdk.RGBA lighten_color(Gdk.RGBA color, float factor = 0.1f) {
-		color.red = float.min(1.0f, float.max(0.0f, color.red + (1.0f - color.red) * factor));
-		color.green = float.min(1.0f, float.max(0.0f, color.green + (1.0f - color.green) * factor));
-		color.blue = float.min(1.0f, float.max(0.0f, color.blue + (1.0f - color.blue) * factor));
-		return color;
 	}
 
 	// Function made to HAVE ONLY ONE: `Gtk.StyleContext' has been deprecated since 4.10
@@ -112,13 +103,6 @@ public class Morghulis : Astal.Application {
 	}
 
 	private void load_css() {
-		var accent_rgba = lighten_color(style_manager.get_accent_color().to_rgba());
-		var accent_provider = new Gtk.CssProvider();
-		var rgb = @"rgb($((int)(accent_rgba.red * 255)), $((int)(accent_rgba.green * 255)), $((int)(accent_rgba.blue * 255)))";
-		accent_provider.load_from_string(@"@define-color accent_hover_color $(rgb);");
-		add_css_provider(accent_provider);
-
-		// Load main stylesheet
 		var provider = new Gtk.CssProvider();
 		provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
 		add_css_provider(provider);

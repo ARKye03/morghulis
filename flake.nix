@@ -42,6 +42,7 @@
               pkg-config
             ]
             ++ gtk-utils
+            ++ runtime-utils
             ++ compiler-utils
             ++ build-utils
             ++ astal-libs;
@@ -101,13 +102,7 @@
 
               # Define asset files
               filenames=(
-                "data/assets/colloid-morghulis-system-hibernate-symbolic.svg"
-                "data/assets/colloid-morghulis-system-lock-screen-symbolic.svg"
-                "data/assets/colloid-morghulis-system-reboot-symbolic.svg"
-                "data/assets/colloid-morghulis-system-shutdown-symbolic.svg"
-                "data/assets/colloid-morghulis-system-suspend-symbolic.svg"
                 "data/desktop/com.github.ARKye03.morghulis.desktop.in"
-                "data/desktop/com.github.ARKye03.morghulis.png"
               )
 
               # Copy binaries to staging
@@ -135,6 +130,10 @@
           gtk4-layer-shell
           libadwaita
         ];
+        runtime-utils = with pkgs; [
+          gsound
+          libgtop
+        ];
         compiler-utils = with pkgs; [
           vala
           vala-language-server
@@ -143,7 +142,6 @@
           dart-sass
           blueprint-compiler
           desktop-file-utils
-          libgtop
         ];
         build-utils = with pkgs.buildPackages; [
           muon
@@ -183,6 +181,7 @@
                 ]
                 ++ nix-utils
                 ++ gtk-utils
+                ++ runtime-utils
                 ++ compiler-utils
                 ++ build-utils
                 ++ astal-libs;
