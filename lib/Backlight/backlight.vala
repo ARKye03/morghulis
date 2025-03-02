@@ -44,6 +44,7 @@ public class Backlight : Object {
 			} else {
 				_percentage = value;
 			}
+			// Only apply brightness changes with brightnessctl after full initialization
 			if (is_brightnessctl_a_thing) {
 				try {
 					Process.spawn_command_line_sync(@"brightnessctl -q set $(_percentage * 100)%");
@@ -59,9 +60,15 @@ public class Backlight : Object {
 			return;
 		}
 		load_m_b();
+
+		// First load brightness synchronously to avoid the 0 brightness problem
+		load_brightness_sync();
+
+		// Then set up monitoring for future changes
 		load_b();
 		check_brightnessctl();
 
+		// Only set up binding after we have initial values
 		this.bind_property("brightness", this, "percentage", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
 			trgt = brightness / (double)_max_brightness;
 			return true;
@@ -145,5 +152,22 @@ public class Backlight : Object {
 				critical("Error reading brightness: %s", e.message);
 			}
 		});
+	}
+
+	private void load_brightness_sync() {
+		try {
+			var file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
+			if (file.query_exists()) {
+				uint8[] contents;
+				string etag_out;
+				if (file.load_contents(null, out contents, out etag_out)) {
+					string content = (string)contents;
+					_brightness = uint.parse(content.strip());
+					_percentage = _brightness / (double)_max_brightness;
+				}
+			}
+		} catch (Error e) {
+			critical("Error reading initial brightness: %s", e.message);
+		}
 	}
 }

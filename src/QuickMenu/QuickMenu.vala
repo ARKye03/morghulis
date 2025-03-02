@@ -18,6 +18,7 @@ public class QuickMenu : Astal.Window {
 			if (!this.visible) {
 				Settings.settings_navigation.pop();
 				PowerBox.mstack.set_visible_child_name("main");
+				BatteryBox.bb_stack_ref.set_visible_child_name("sliders");
 			}
 		});
 	}
