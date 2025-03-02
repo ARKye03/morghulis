@@ -18,7 +18,7 @@ private void init_types() {
 	typeof(QButton).ensure();
 	typeof(QNetwork).ensure();
 	typeof(QBluetooth).ensure();
-	typeof(QPowerProfiles).ensure();
+	typeof(BatteryBox).ensure();
 	typeof(QAudioBox).ensure();
 	typeof(PowerBox).ensure();
 	typeof(Settings).ensure();

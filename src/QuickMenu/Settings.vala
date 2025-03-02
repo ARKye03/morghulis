@@ -5,21 +5,16 @@ public class Settings : Adw.Bin {
 	public AstalNetwork.Network network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
 	public AstalNotifd.Notifd notifd { get; private set; }
-	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
 	public AstalWp.Wp? wp { get; private set; }
 	public static Adw.NavigationView settings_navigation { get; private set; }
 
 	[GtkChild]
 	public unowned Adw.NavigationView quick_settings_navigation_view;
 
-	[GtkChild]
-	public unowned QButton notif_button;
-
 	construct {
 		network = AstalNetwork.get_default();
 		bluetooth = AstalBluetooth.get_default();
 		wp = AstalWp.get_default();
-		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 		notifd = AstalNotifd.get_default();
 
 		_mpris = AstalMpris.get_default();
@@ -121,27 +116,6 @@ public class Settings : Adw.Bin {
 	[GtkCallback]
 	public void notifications_clicked_extras() {
 		quick_settings_navigation_view.push_by_tag("notifications");
-	}
-
-	[GtkCallback]
-	public bool ppd_present(AstalPowerProfiles.PowerProfiles? power_profiles) {
-		if (power_profiles == null) {
-			return false;
-		}
-		bool present = power_profiles?.version != null;
-
-		message("Power profiles %s present", present ? "" : "not");
-		return present;
-	}
-
-	[GtkCallback]
-	public void power_profiles_clicked() {
-		TODO();
-	}
-
-	[GtkCallback]
-	public void power_profiles_clicked_extras() {
-		quick_settings_navigation_view.push_by_tag("power_profiles");
 	}
 
 	public void TODO() {
