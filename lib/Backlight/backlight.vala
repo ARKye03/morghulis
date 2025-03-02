@@ -3,9 +3,11 @@ public class Backlight : Object {
 	private FileMonitor? _b_monitor;
 	private File _b_file;
 	private uint _brightness;
+	private double _percentage;
 	private uint _max_brightness;
 	private File _max_b_file;
 	private string _b_file_path;
+	private bool is_brightnessctl_a_thing = false;
 
 	public string b_interface { get; private set; }
 
@@ -32,7 +34,25 @@ public class Backlight : Object {
 	}
 
 	public string icon_name { owned get; private set; }
-	public double percentage { get; set; }
+	public double percentage {
+		get { return _percentage; }
+		set {
+			if (value < 0.0) {
+				_percentage = 0.0;
+			} else if (value > 1.0) {
+				_percentage = 1.0;
+			} else {
+				_percentage = value;
+			}
+			if (is_brightnessctl_a_thing) {
+				try {
+					Process.spawn_command_line_sync(@"brightnessctl -q set $(_percentage * 100)%");
+				} catch (Error e) {
+					critical("Failed to set brightness: %s", e.message);
+				}
+			}
+		}
+	}
 
 	construct {
 		if (!load_interface()) {
@@ -40,6 +60,7 @@ public class Backlight : Object {
 		}
 		load_m_b();
 		load_b();
+		check_brightnessctl();
 
 		this.bind_property("brightness", this, "percentage", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
 			trgt = brightness / (double)_max_brightness;
@@ -63,6 +84,21 @@ public class Backlight : Object {
 			critical("No supported backlight interface found");
 #endif
 			return false;
+		}
+	}
+
+	private void check_brightnessctl() {
+		try {
+			string stdout_data, stderr_data;
+			int exit_status;
+			Process.spawn_command_line_sync("which brightnessctl",
+											out stdout_data,
+											out stderr_data,
+											out exit_status);
+			is_brightnessctl_a_thing = exit_status == 0;
+		} catch (Error e) {
+			warning("Failed to check for brightnessctl: %s", e.message);
+			is_brightnessctl_a_thing = false;
 		}
 	}
 
