@@ -23,24 +23,29 @@ class BatteryBox : Gtk.Box {
 	private unowned Gtk.Button performance;
 
 	construct {
-		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 		battery = AstalBattery.Device.get_default();
+		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
 		backlight = Backlight.get_default();
+		if (battery.is_present) {
+			debug("Setting up Battery module");
+			brightness_adj = new Gtk.Adjustment(0, 0, 1, 0, 0, 0);
+			battery_adj = new Gtk.Adjustment(0, 0, 1, 0, 0, 0);
 
-		brightness_adj = new Gtk.Adjustment(0, 0, 1, 0, 0, 0);
-		battery_adj = new Gtk.Adjustment(0, 0, 1, 0, 0, 0);
+			backlight.bind_property("percentage", brightness_adj, "value", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+			battery.bind_property("percentage", battery_adj, "value", BindingFlags.SYNC_CREATE);
 
-		backlight.bind_property("percentage", brightness_adj, "value", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
-		battery.bind_property("percentage", battery_adj, "value", BindingFlags.SYNC_CREATE);
-
-		if (power_profiles != null && power_profiles.version != null && power_profiles.version != "") {
-			sync_ppd();
-			power_profiles.notify["active-profile"].connect(sync_ppd);
+			if (power_profiles != null && power_profiles.version != null && power_profiles.version != "") {
+				debug("Setting up Power Profiles module");
+				sync_ppd();
+				power_profiles.notify["active-profile"].connect(sync_ppd);
+			} else {
+				ppd_stack_btn.visible = false;
+			}
+			bb_stack_ref = bb_stack;
 		} else {
-			message("Power profiles not found");
-			ppd_stack_btn.visible = false;
+			this.unparent();
+			this.dispose();
 		}
-		bb_stack_ref = bb_stack;
 	}
 
 	[GtkCallback]
