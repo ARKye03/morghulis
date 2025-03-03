@@ -6,6 +6,7 @@ public class Settings : Adw.Bin {
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
 	public AstalNotifd.Notifd notifd { get; private set; }
 	public AstalWp.Wp? wp { get; private set; }
+	public Gdk.Paintable no_media_players { get; private set; }
 	public static Adw.NavigationView settings_navigation { get; private set; }
 
 	[GtkChild]
@@ -16,6 +17,8 @@ public class Settings : Adw.Bin {
 		bluetooth = AstalBluetooth.get_default();
 		wp = AstalWp.get_default();
 		notifd = AstalNotifd.get_default();
+
+		setup_empty_notif();
 
 		_mpris = AstalMpris.get_default();
 		_mpris.players.@foreach((p) => on_player_added(p));
@@ -145,6 +148,17 @@ public class Settings : Adw.Bin {
 				break;
 			}
 			current = (MprisPlayer)current.get_next_sibling();
+		}
+	}
+
+	private void setup_empty_notif() {
+		try {
+			var pixbuf = new Gdk.Pixbuf.from_resource("/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg");
+			if (pixbuf != null) {
+				no_media_players = Gdk.Texture.for_pixbuf(pixbuf);
+			}
+		} catch (Error e) {
+			warning("Failed to load image: %s", e.message);
 		}
 	}
 }
