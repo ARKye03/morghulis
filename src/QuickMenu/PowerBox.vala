@@ -29,7 +29,7 @@ public class PowerBox : Gtk.Box {
 				user_image_paintable = Gdk.Texture.for_pixbuf(pixbuf);
 			}
 		} catch (Error e) {
-			stderr.printf("Error loading image: %s\n", e.message);
+			critical("Error loading paintable: %s\n", e.message);
 		}
 		mstack = main_stack;
 
