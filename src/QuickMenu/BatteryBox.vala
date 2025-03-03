@@ -43,7 +43,6 @@ class BatteryBox : Gtk.Box {
 			}
 			bb_stack_ref = bb_stack;
 		} else {
-			this.unparent();
 			this.dispose();
 		}
 	}
