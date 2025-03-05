@@ -241,7 +241,7 @@ internal class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		base.dispose();
 	}
 
-	public override void snapshot(Gtk.Snapshot snapshot) {
+	protected override void snapshot(Gtk.Snapshot snapshot) {
 		var width = get_width();
 		var height = get_height();
 		var radius = float.min(width / 2.0f, height / 2.0f) - 1;
@@ -275,11 +275,11 @@ internal class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 		}
 	}
 
-	public override Gtk.SizeRequestMode get_request_mode() {
+	protected override Gtk.SizeRequestMode get_request_mode() {
 		return Gtk.SizeRequestMode.WIDTH_FOR_HEIGHT;
 	}
 
-	public override void size_allocate(int width, int height, int baseline) {
+	protected override void size_allocate(int width, int height, int baseline) {
 		var radius = float.min(width / 2.0f, height / 2.0f) - 1;
 		var half_line_width = (float)line_width / 2.0f;
 		var delta = radius - half_line_width;
@@ -303,19 +303,14 @@ internal class CircularProgressBar : Gtk.Widget, Gtk.Buildable {
 
 			_child.allocate_size(child_allocation, baseline);
 		}
-
-		// Allocate space for the progress bar components
-		_progress_arc.size_allocate(width, height, baseline);
-		_center_fill.size_allocate(width, height, baseline);
-		_radius_fill.size_allocate(width, height, baseline);
 	}
 
-	public override void measure(Gtk.Orientation orientation,
-								 int for_size,
-								 out int minimum,
-								 out int natural,
-								 out int minimum_baseline,
-								 out int natural_baseline) {
+	protected override void measure(Gtk.Orientation orientation,
+									int for_size,
+									out int minimum,
+									out int natural,
+									out int minimum_baseline,
+									out int natural_baseline) {
 		minimum = natural = 0;
 		minimum_baseline = natural_baseline = -1;
 
