@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
+    <gresource prefix="/com/github/ARKye03/morghulis/icons/scalable/actions">
+        <file alias="terminal-symbolic.svg">assets/NavBar/terminal-symbolic.svg</file>
+        <file alias="browser-symbolic.svg">assets/NavBar/browser-symbolic.svg</file>
+        <file alias="code-symbolic.svg">assets/NavBar/code-symbolic.svg</file>
+        <file alias="explorer-symbolic.svg">assets/NavBar/explorer-symbolic.svg</file>
+        <file alias="docs-symbolic.svg">assets/NavBar/docs-symbolic.svg</file>
+        <file alias="social-symbolic.svg">assets/NavBar/social-symbolic.svg</file>
+        <file alias="media-symbolic.svg">assets/NavBar/media-symbolic.svg</file>
+        <file alias="settings-symbolic.svg">assets/NavBar/settings-symbolic.svg</file>
+        <file alias="gaming-symbolic.svg">assets/NavBar/gaming-symbolic.svg</file>
+    </gresource>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
         <file>assets/colloid-notif-sound.opus</file>
         <file>assets/wyvern-svgrepo-com.svg</file>
-        <file>assets/NavBar/browser.svg</file>
-        <file>assets/NavBar/code.svg</file>
-        <file>assets/NavBar/docs.svg</file>
-        <file>assets/NavBar/explorer.svg</file>
-        <file>assets/NavBar/gaming.svg</file>
-        <file>assets/NavBar/media.svg</file>
-        <file>assets/NavBar/settings.svg</file>
-        <file>assets/NavBar/social.svg</file>
-        <file>assets/NavBar/terminal.svg</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
         <file preprocess="xml-stripblanks">ui/MprisPlayer.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>

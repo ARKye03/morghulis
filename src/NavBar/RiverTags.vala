@@ -6,13 +6,9 @@ public class TagButton : Gtk.Button {
 	public TagButton(AstalRiver.Output output, int index, string icon) {
 		this._output = output;
 		this._index = index;
-		try {
-			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.from_resource(icon);
-			Gdk.Paintable paintable = Gdk.Texture.for_pixbuf(pixbuf);
-			child = new Gtk.Image.from_paintable(paintable);
-		} catch (Error e) {
-			warning("Failed to load icon: %s", e.message);
-		}
+		child = new Gtk.Image.from_icon_name(icon) {
+			pixel_size = 20
+		};
 		add_css_class("empty");
 		this._rclick = new Gtk.GestureClick() {
 			button = Gdk.BUTTON_SECONDARY,
@@ -50,18 +46,6 @@ public class RiverTags : Gtk.Box {
 	public AstalRiver.River river { get; set; }
 	public List<TagButton> tags;
 
-	private string[] wicons = {
-		"/com/github/ARKye03/morghulis/assets/NavBar/terminal.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/browser.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/code.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/explorer.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/docs.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/social.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/media.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/settings.svg",
-		"/com/github/ARKye03/morghulis/assets/NavBar/gaming.svg",
-	};
-
 	public RiverTags(AstalRiver.River river, uint total_tags = 9) {
 		this.river = river;
 		string focused_output = river.get_focused_output();
@@ -70,7 +54,7 @@ public class RiverTags : Gtk.Box {
 		spacing = 5;
 
 		for (int i = 0; i < total_tags; i++) {
-			var tag_button = new TagButton(output, i, wicons[i]);
+			var tag_button = new TagButton(output, i, Morghulis.icon_names[i]);
 			this.append(tag_button);
 			tags.append(tag_button);
 		}
