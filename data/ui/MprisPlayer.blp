@@ -128,6 +128,11 @@ template $MprisPlayer: Box {
         }
 
         Button {
+            icon-name: bind $pause_icon(template.player as <AstalMpris.Player>.playback-status) as <string>;
+            clicked => $play_pause();
+        }
+
+        Button {
             icon-name: "media-skip-forward-symbolic";
             clicked => $next();
         }
