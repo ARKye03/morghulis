@@ -54,7 +54,7 @@ public class Morghulis : Astal.Application {
 	public override void activate() {
 		base.activate();
 		setup_display_and_monitor();
-		setup_icons();
+		Gtk.IconTheme.get_for_display(display).add_resource_path("/com/github/ARKye03/morghulis/icons");
 
 		if (!css_loaded) {
 			load_css();
@@ -92,25 +92,6 @@ public class Morghulis : Astal.Application {
 			return;
 		}
 		message("Successfully initialized primary monitor");
-	}
-
-	public static string[] icon_names = {
-		"terminal-symbolic",
-		"browser-symbolic",
-		"code-symbolic",
-		"explorer-symbolic",
-		"social-symbolic",
-		"docs-symbolic",
-		"media-symbolic",
-		"settings-symbolic",
-		"gaming-symbolic",
-	};
-	private void setup_icons() {
-		var icon_theme = Gtk.IconTheme.get_for_display(display);
-
-		foreach (var item in icon_names) {
-			icon_theme.add_resource_path("/com/github/ARKye03/morghulis/icons");
-		}
 	}
 
 	// Function made to HAVE ONLY ONE: `Gtk.StyleContext' has been deprecated since 4.10

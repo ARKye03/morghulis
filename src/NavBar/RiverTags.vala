@@ -54,7 +54,7 @@ public class RiverTags : Gtk.Box {
 		spacing = 5;
 
 		for (int i = 0; i < total_tags; i++) {
-			var tag_button = new TagButton(output, i, Morghulis.icon_names[i]);
+			var tag_button = new TagButton(output, i, NavBar.icon_names[i]);
 			this.append(tag_button);
 			tags.append(tag_button);
 		}

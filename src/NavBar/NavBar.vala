@@ -8,6 +8,17 @@ public class NavBar : Astal.Window {
 	public AstalBattery.Device battery { get; set; }
 	public AstalWp.Endpoint speaker { get; set; }
 	public string current_time { get; private set; }
+	public static string[] icon_names = {
+		"terminal-symbolic",
+		"browser-symbolic",
+		"code-symbolic",
+		"explorer-symbolic",
+		"social-symbolic",
+		"docs-symbolic",
+		"media-symbolic",
+		"settings-symbolic",
+		"gaming-symbolic",
+	};
 
 	[GtkChild]
 	private unowned Adw.Bin workspaces;
