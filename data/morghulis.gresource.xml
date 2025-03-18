@@ -20,14 +20,15 @@
         <file preprocess="xml-stripblanks">ui/QNetwork.ui</file>
         <file preprocess="xml-stripblanks">ui/QBluetooth.ui</file>
         <file preprocess="xml-stripblanks">ui/QBluetoothItem.ui</file>
-        <file preprocess="xml-stripblanks">ui/QPowerProfiles.ui</file>
+        <file preprocess="xml-stripblanks">ui/BatteryBox.ui</file>
         <file preprocess="xml-stripblanks">ui/PowerBox.ui</file>
         <file preprocess="xml-stripblanks">ui/Settings.ui</file>
-        <file preprocess="xml-stripblanks">ui/SliderBox.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner.ui</file>
         <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>
-        <file preprocess="xml-stripblanks">ui/NotifPop.ui</file>
-        <file preprocess="xml-stripblanks">ui/NotifWindow.ui</file>
+        <file preprocess="xml-stripblanks">ui/NotificationItem.ui</file>
+        <file preprocess="xml-stripblanks">ui/QNotifications.ui</file>
+        <file preprocess="xml-stripblanks">ui/QAudioBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/QAudioItem.ui</file>
     </gresource>
 </gresources>

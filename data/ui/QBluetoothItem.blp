@@ -15,7 +15,7 @@ template $QBluetoothItem: Gtk.ListBoxRow {
         hexpand: true;
 
         styles [
-            "padding_10"
+            "padding_10",
         ]
 
         Image {
@@ -33,7 +33,7 @@ template $QBluetoothItem: Gtk.ListBoxRow {
                 label: bind template.device as <AstalBluetooth.Device>.name;
 
                 styles [
-                    "title-4"
+                    "title-4",
                 ]
             }
 
@@ -42,7 +42,7 @@ template $QBluetoothItem: Gtk.ListBoxRow {
                 label: bind template.device as <AstalBluetooth.Device>.address;
 
                 styles [
-                    "dim-label"
+                    "dim-label",
                 ]
             }
         }

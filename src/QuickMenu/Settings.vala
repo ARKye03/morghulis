@@ -1,42 +1,46 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
 public class Settings : Adw.Bin {
+	private AstalMpris.Mpris _mpris;
+
 	public AstalNetwork.Network network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
-	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }
-	public AstalMpris.Mpris mpris { get; private set; }
 	public AstalNotifd.Notifd notifd { get; private set; }
+	public AstalWp.Wp? wp { get; private set; }
+	public Gdk.Paintable no_media_players { get; private set; }
+	public static Adw.NavigationView settings_navigation { get; private set; }
 
 	[GtkChild]
-	public unowned QButton notif_button;
+	public unowned Adw.NavigationView quick_settings_navigation_view;
 
 	construct {
 		network = AstalNetwork.get_default();
 		bluetooth = AstalBluetooth.get_default();
-		power_profiles = AstalPowerProfiles.PowerProfiles.get_default();
+		wp = AstalWp.get_default();
 		notifd = AstalNotifd.get_default();
-		notifd.notify["dont-disturb"].connect(dnd);
-		dnd();
 
-		mpris = AstalMpris.get_default();
-		mpris.players.@foreach((p) => on_player_added(p));
-		mpris.player_added.connect((p) => on_player_added(p));
-		mpris.player_closed.connect((p) => on_player_removed(p));
+		setup_empty_notif();
+
+		_mpris = AstalMpris.get_default();
+		_mpris.players.@foreach((p) => on_player_added(p));
+		_mpris.player_added.connect((p) => on_player_added(p));
+		_mpris.player_closed.connect((p) => on_player_removed(p));
+
+		settings_navigation = quick_settings_navigation_view;
 	}
 
-	private void dnd() {
-		if (notifd.dont_disturb) {
-			notif_button.active = false;
-			notif_button.status = "Don't disturb";
-			notif_button.icon = "notifications-disabled-symbolic";
-		} else {
-			notif_button.active = true;
-			notif_button.status = "Enabled";
-			notif_button.icon = "preferences-system-notifications-symbolic";
-		}
+	[GtkCallback]
+	public string notif_status(bool dnd) {
+		return dnd
+			   ? "Don't disturb"
+			   : "Enabled";
 	}
 
-	[GtkChild]
-	public unowned Adw.NavigationView quick_settings_navigation_view;
+	[GtkCallback]
+	public string notif_icon(bool dnd) {
+		return dnd
+			   ? "notifications-disabled-symbolic"
+			   : "preferences-system-notifications-symbolic";
+	}
 
 	[GtkCallback]
 	public void network_clicked() {
@@ -91,6 +95,23 @@ public class Settings : Adw.Bin {
 	}
 
 	[GtkCallback]
+	public void audio_clicked() {
+		wp.audio.default_speaker.mute = !wp.audio.default_speaker.mute;
+	}
+
+	[GtkCallback]
+	public void audio_clicked_extras() {
+		quick_settings_navigation_view.push_by_tag("audio");
+	}
+
+	[GtkCallback]
+	public string audio_status(bool muted) {
+		return muted
+			   ? "Muted"
+			   : "Unmuted";
+	}
+
+	[GtkCallback]
 	public void notifications_clicked() {
 		notifd.dont_disturb = !notifd.dont_disturb;
 	}
@@ -100,28 +121,6 @@ public class Settings : Adw.Bin {
 		quick_settings_navigation_view.push_by_tag("notifications");
 	}
 
-	[GtkCallback]
-	public bool ppd_present(AstalPowerProfiles.PowerProfiles? power_profiles) {
-		if (power_profiles == null) {
-			return false;
-		}
-		bool present = power_profiles?.version != null;
-
-		message("Power profiles %s present", present ? "" : "not");
-		return present;
-	}
-
-	[GtkCallback]
-	public void power_profiles_clicked() {
-		TODO();
-	}
-
-	[GtkCallback]
-	public void power_profiles_clicked_extras() {
-		quick_settings_navigation_view.push_by_tag("power_profiles");
-	}
-
-	[GtkCallback]
 	public void TODO() {
 		message("TODO!");
 	}
@@ -141,12 +140,25 @@ public class Settings : Adw.Bin {
 	}
 
 	private void on_player_removed(AstalMpris.Player player) {
-		for (int i = 0; i < this.players.n_pages; i++) {
-			MprisPlayer p = (MprisPlayer)this.players.get_nth_page(i);
-			if (p.player == player) {
-				this.players.remove(p);
+		MprisPlayer current = (MprisPlayer)this.players.get_first_child();
+
+		while (current != null) {
+			if (current.player == player) {
+				this.players.remove(current);
 				break;
 			}
+			current = (MprisPlayer)current.get_next_sibling();
+		}
+	}
+
+	private void setup_empty_notif() {
+		try {
+			var pixbuf = new Gdk.Pixbuf.from_resource("/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg");
+			if (pixbuf != null) {
+				no_media_players = Gdk.Texture.for_pixbuf(pixbuf);
+			}
+		} catch (Error e) {
+			warning("Failed to load image: %s", e.message);
 		}
 	}
 }

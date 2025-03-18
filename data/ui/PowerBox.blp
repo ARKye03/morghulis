@@ -9,6 +9,7 @@ template $PowerBox: Box {
         "padding_10",
         "master_border",
         "rounded",
+        "flats",
     ]
 
     Box {
@@ -17,6 +18,7 @@ template $PowerBox: Box {
         spacing: 10;
 
         Adw.Avatar {
+            tooltip-text: bind template.user_name;
             text: bind template.user_name;
             custom-image: bind template.user_image_paintable;
             show-initials: true;
@@ -24,7 +26,12 @@ template $PowerBox: Box {
         }
 
         Label {
-            label: bind template.user_name;
+            label: bind template.uptime_string;
+            valign: center;
+
+            styles [
+                "title_5",
+            ]
         }
     }
 
@@ -36,7 +43,7 @@ template $PowerBox: Box {
 
             child: Box {
                 hexpand: true;
-                spacing: 5;
+                spacing: 2;
                 halign: end;
 
                 Button {
@@ -56,14 +63,21 @@ template $PowerBox: Box {
                 }
 
                 Button {
-                    name: "Reboot";
+                    name: "Lock";
                     icon-name: "system-lock-screen-symbolic";
                     tooltip-text: "Lock";
                     clicked => $lock();
                 }
 
                 Button {
-                    name: "Lock";
+                    name: "Logout";
+                    icon-name: "system-log-out-symbolic";
+                    tooltip-text: "Logout";
+                    clicked => $show_logout_confirm();
+                }
+
+                Button {
+                    name: "Reboot";
                     icon-name: "system-reboot-symbolic";
                     tooltip-text: "Reboot";
                     clicked => $show_reboot_confirm();
@@ -91,7 +105,7 @@ template $PowerBox: Box {
                     clicked => $cancel_action();
 
                     styles [
-                        "destructive-action"
+                        "destructive-action",
                     ]
                 }
 
@@ -100,7 +114,7 @@ template $PowerBox: Box {
                     clicked => $confirm_action();
 
                     styles [
-                        "suggested-action"
+                        "suggested-action",
                     ]
                 }
             };

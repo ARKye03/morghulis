@@ -11,6 +11,7 @@
     - [Nix](#nix)
   - [Features](#features)
   - [Preview](#preview)
+    - [Thanks to](#thanks-to)
   - [License](#license)
 
 Desktop Shell created with GTK4, Libadwaita, and Astal.
@@ -24,6 +25,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 - [GTK](https://www.gtk.org/)
   - [gtk4](https://docs.gtk.org/gtk4/)
   - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
+- [GSound](https://gitlab.gnome.org/GNOME/gsound)
 - [Astal](https://github.com/Aylur/astal)
   - 4
   - Tray
@@ -42,7 +44,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
   - <details> <summary>Power Profiles</summary>
       While it might not be used, its mandatory to install it (For now).
     </details>
-- [libgtop](https://gitlab.gnome.org/GNOME/libgtop) (Optional)
+- [libgtop](https://gitlab.gnome.org/GNOME/libgtop)
 
 > [!NOTE]
 > Optional dependencies are not required only if built from source, the binary release requires all.
@@ -121,7 +123,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [x] Power Profiles
   - [x] Bluetooth
   - [x] (WIP) Network
-  - [ ] (WIP) Audio
+  - [x] Audio
 - [x] Runner
   - [x] Run apps
   - [x] Solve math expressions
@@ -129,13 +131,17 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [ ] Handle River views?
 - [x] Notifications
   - [x] Center
-  - [ ] (WIP) Popup
+  - [x] Popup
   - [x] Don't Disturb logic
-- [ ] Power Menu (WIP)
+- [ ] Power Popup Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
-  - [ ] Brightness
+  - [x] Brightness
+- [x] Backlight (WIP)
 - [x] Dynamic CSS
+
+> [!NOTE]
+> For OSD to work, you need to append `morghulctl -r change_volume` to whatever keybinding you want to use to raise/volume the volume.
 
 ## Preview
 
@@ -144,6 +150,11 @@ nix run github:ARKye03/morghulis#fhs -- --help
 > [!NOTE]
 > The preview uses the Adwaita-black theme, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
 
+### Thanks to
+
+- [kotontrion](https://github.com/kotontrion) and its [kompass](https://github.com/kotontrion/kompass) project for inspiration, code snippets, and guidance.
+- [Aylur](https://github.com/Aylur) for the awesome project [Astal](https://github.com/Aylur/astal) is.
+
 ## License
 
-Licensed under the WTFPL. See the [LICENSE](./LICENSE) file for details.
+Licensed under the General Public License v3.0. See the [LICENSE](./LICENSE) file for details.

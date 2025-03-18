@@ -13,17 +13,18 @@ private void init_types() {
 	typeof(HyprWorkspaces).ensure();
 #endif
 	typeof(QuickMenu).ensure();
+	typeof(Backlight).ensure();
 	typeof(SysInfo).ensure();
 	typeof(QButton).ensure();
 	typeof(QNetwork).ensure();
 	typeof(QBluetooth).ensure();
-	typeof(QPowerProfiles).ensure();
+	typeof(BatteryBox).ensure();
+	typeof(QAudioBox).ensure();
 	typeof(PowerBox).ensure();
 	typeof(Settings).ensure();
-	typeof(SliderBox).ensure();
 	typeof(OnScreenDisplay).ensure();
-	typeof(NotifPop).ensure();
-	typeof(NotifWindow).ensure();
+	typeof(NotificationItem).ensure();
+	typeof(QNotifications).ensure();
 	typeof(CircularProgressBar).ensure();
 	typeof(Tray).ensure();
 }

@@ -1,1 +1,1 @@
-project_resources += files('CircularProgressBar.vala')
+project_resources += files('CircularProgress.vala', 'Gizmo.vala', 'ScrollingLabel.vala')

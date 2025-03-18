@@ -2,14 +2,12 @@ using GtkLayerShell;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : Astal.Window {
-	private GLib.DateTime clock_time { get; set; }
-	private string clock_format { get; set; default = "%H:%M %b %e"; }
+	private GLib.DateTime _clock_time;
 
 	public static NavBar instance { get; private set; }
 	public AstalBattery.Device battery { get; set; }
-
-	[GtkChild]
-	private unowned Gtk.Label clock;
+	public AstalWp.Endpoint speaker { get; set; }
+	public string current_time { get; private set; }
 
 	[GtkChild]
 	private unowned Adw.Bin workspaces;
@@ -23,33 +21,47 @@ public class NavBar : Astal.Window {
 	public NavBar() {
 		Object(
 			namespace : "NavBar",
-			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-			);
+			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT,
+			exclusivity: Astal.Exclusivity.EXCLUSIVE
+		);
 		battery = AstalBattery.Device.get_default();
+		speaker = AstalWp.get_default().audio.default_speaker;
 
 		init_compositor();
 		init_clock();
-		instance = this;
 
+		instance = this;
 		present();
 	}
 
 	[GtkCallback]
 	public void toggle_side_dashboard() {
-		try {
-			Morghulis.instance.toggle_window("QuickMenu");
-		} catch (GLib.Error e) {
-			warning("Failed to toggle window: %s", e.message);
-		}
+		QuickMenu.instance.visible = !QuickMenu.instance.visible;
 	}
 
 	[GtkCallback]
 	public void toggle_runner() {
-		try {
-			Morghulis.instance.toggle_window("Runner");
-		} catch (GLib.Error e) {
-			warning("Failed to toggle window: %s", e.message);
+		Runner.instance.visible = !Runner.instance.visible;
+	}
+
+	[GtkCallback]
+	public bool scroll_volume(double dx, double dy) {
+		if (dy > 0) {
+			speaker.volume = double.max(speaker.volume - 0.05, 0);
+		} else {
+			speaker.volume = double.min(speaker.volume + 0.05, 1);
 		}
+		return true;
+	}
+
+	[GtkCallback]
+	public void toggle_volume() {
+		speaker.mute = !speaker.mute;
+	}
+
+	[GtkCallback]
+	public string current_volume(double volume) {
+		return @"$(Math.round(volume * 100))%";
 	}
 
 	[GtkCallback]
@@ -58,17 +70,16 @@ public class NavBar : Astal.Window {
 	}
 
 	private void update_clock() {
-		clock_time = new DateTime.now_local();
-
-		clock.label = clock_time.format(clock_format);
+		_clock_time = new DateTime.now_local();
+		current_time = _clock_time.format(Morghulis.clock_format);
 	}
 
 	private void init_clock() {
-		update_clock();
-		GLib.Timeout.add(60000, () => {
+		Timeout.add(60000, () => {
 			update_clock();
 			return true;
 		});
+		update_clock();
 	}
 
 	private void init_compositor() {
@@ -96,76 +107,80 @@ public class NavBar : Astal.Window {
 	}
 
 #if hyprland
-	private AstalHyprland.Hyprland hyprland { get; set; }
+	private AstalHyprland.Hyprland _hyprland;
 
 	private void setup_hyprland() {
 		message("Setting up Hyprland");
-		hyprland = AstalHyprland.Hyprland.get_default();
-		workspaces.set_child(new HyprWorkspaces(hyprland));
+		_hyprland = AstalHyprland.Hyprland.get_default();
+		workspaces.child = new HyprWorkspaces(_hyprland);
 
-		Gtk.Label submap_label = new Gtk.Label("default");
-		submap_label.set_visible(false);
-		submap_label.halign = Gtk.Align.START;
-		submap_label.ellipsize = Pango.EllipsizeMode.END;
-		submap_label.max_width_chars = 20;
-		submap_label.tooltip_text = "Active submap";
-		active_submap.set_child(submap_label);
-		hyprland.submap.connect((value) => {
+		Gtk.Label submap_label = new Gtk.Label("default") {
+			halign = Gtk.Align.START,
+			ellipsize = Pango.EllipsizeMode.END,
+			max_width_chars = 20,
+			tooltip_text = "Active submap"
+		};
+
+		active_submap.child = submap_label;
+
+		_hyprland.submap.connect((value) => {
 			if (value != null && value != "") {
 				submap_label.label = value;
-				active_submap.set_visible(true);
+				active_submap.visible = true;
 			} else {
-				active_submap.set_visible(false);
+				active_submap.visible = false;
 			}
 		});
 
-		Gtk.Label client_label = new Gtk.Label("default");
-		client_label.set_visible(false);
-		client_label.halign = Gtk.Align.START;
-		client_label.ellipsize = Pango.EllipsizeMode.END;
-		client_label.max_width_chars = 20;
-		client_label.tooltip_text = "Active client";
-		hyprland.notify["focused_client"].connect((value) => {
-			var client = (AstalHyprland.Client)value;
-			if (client.title != null && client.title != "") {
-				client_label.label = client.title;
-				active_client.set_visible(true);
+		Gtk.Label client_label = new Gtk.Label("default") {
+			halign = Gtk.Align.START,
+			ellipsize = Pango.EllipsizeMode.END,
+			max_width_chars = 20,
+			tooltip_text = "Active client",
+		};
+
+		_hyprland.bind_property("focused_client", client_label, "label", BindingFlags.SYNC_CREATE, (binding, srcval, ref targetval) => {
+			var client = (AstalHyprland.Client)srcval;
+			if (client != null && client.title != null && client.title != "") {
+				targetval = client.title;
+				active_client.visible = true;
 			} else {
-				active_client.set_visible(false);
+				active_client.visible = false;
 			}
+			return true;
 		});
 
-		active_client.set_child(client_label);
-		hyprland.bind_property("focused-client", client_label, "label", BindingFlags.SYNC_CREATE);
+		active_client.child = client_label;
 	}
 #endif
 
 #if river
-	private Gtk.Label view_label = new Gtk.Label("default");
-	private AstalRiver.River river { get; set; }
+	private AstalRiver.River _river;
 
 	private void setup_river() {
 		message("Setting up River");
-		river = AstalRiver.River.get_default();
+		_river = AstalRiver.River.get_default();
 
-		workspaces.set_child(new RiverTags(river));
+		workspaces.child = new RiverTags(_river);
 
-		view_label.halign = Gtk.Align.START;
-		view_label.ellipsize = Pango.EllipsizeMode.END;
-		view_label.max_width_chars = 20;
-		active_client.tooltip_text = "Active View";
-		active_client.set_child(view_label);
-		river.notify["focused-view"].connect(active_view);
-		active_view();
-	}
+		Gtk.Label view_label = new Gtk.Label("default") {
+			halign = Gtk.Align.START,
+			ellipsize = Pango.EllipsizeMode.END,
+			max_width_chars = 20,
+			tooltip_text = "Active View"
+		};
+		active_client.child = view_label;
 
-	private void active_view() {
-		if (river.focused_view != null && river.focused_view != "") {
-			view_label.label = river.focused_view;
-			active_client.visible = true;
-		} else {
-			active_client.visible = false;
-		}
+		_river.bind_property("focused-view", view_label, "label", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+			var view_title = (string)src;
+			if (view_title != null && view_title != "") {
+				trgt = view_title;
+				active_client.visible = true;
+			} else {
+				active_client.visible = false;
+			}
+			return true;
+		});
 	}
 #endif
 }

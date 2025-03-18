@@ -1,30 +1,30 @@
 @use "adw";
 @use "NavBar";
-@use "QuickMenu";
 @use "OnScreenDisplay";
 @use "Notif";
-
-button {
-    background-color: transparent;
-
-    &:hover {
-        background-color: adw.$dark_2;
-    }
-
-    &:checked {
-        background-color: adw.$dark_2;
-    }
-}
 
 .all_unset {
     all: unset;
 }
 
-.button_accent_bg {
-    background-color: adw.$accent_bg_color;
+button {
+    border-radius: adw.$master-border-radius;
+
+    &:hover,
+    &:checked {
+        border-radius: adw.$master-border-radius;
+    }
+}
+
+.flats button {
+    background-color: unset;
 
     &:hover {
-        background-color: adw.$accent_color;
+        background-color: color-mix(in srgb, currentColor 15%, transparent);
+    }
+
+    &:checked {
+        background-color: color-mix(in srgb, currentColor 30%, transparent);
     }
 }
 
@@ -35,6 +35,10 @@ button {
 
 .rounded {
     border-radius: adw.$master-border-radius;
+}
+
+.squares button {
+    border-radius: unset;
 }
 
 .bg_transparent {
@@ -81,15 +85,40 @@ button {
     font-size: 12px;
 }
 
-.hslider {
-    border-radius: 5px;
-    padding: 5px;
+.qbutton {
+    &>button {
+        background-color: adw.$accent_bg_color;
+        color: adw.$accent_fg_color;
 
+        &:hover {
+            background-color: #{"hsl(from @accent_bg_color h s calc(l + 5%))"};
+        }
+
+    }
+}
+
+circularprogress {
+    & progress {
+        color: adw.$accent_color;
+    }
+
+    & radius {
+        color: adw.$dark_1;
+    }
+
+    & center {
+        color: adw.$headerbar_shade_color;
+    }
+}
+
+.hslider {
     & trough {
+        @extend .rounded;
         padding: 0;
         min-height: 10px;
 
         & highlight {
+            @extend .rounded;
             background-color: adw.$accent_color;
         }
 
@@ -100,9 +129,6 @@ button {
 }
 
 .vslider {
-    border-radius: 5px;
-    padding: 5px;
-
     & trough {
         padding: 0;
         min-width: 10px;

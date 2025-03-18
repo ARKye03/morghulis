@@ -1,4 +1,12 @@
+:root {
+    --master-border-radius: 5px;
+}
+
+$master-border-radius: var(--master-border-radius);
+
+
 $accent_color: #{"@accent_color"};
+$accent_hover_color: #{"@accent_hover_color"};
 $accent_bg_color: #{"@accent_bg_color"};
 $accent_fg_color: #{"@accent_fg_color"};
 $destructive_color: #{"@destructive_color"};
@@ -86,5 +94,3 @@ $dark_2: #{"@dark_2"};
 $dark_3: #{"@dark_3"};
 $dark_4: #{"@dark_4"};
 $dark_5: #{"@dark_5"};
-
-$master-border-radius: 5px;

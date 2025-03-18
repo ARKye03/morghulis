@@ -2,20 +2,20 @@ using Gtk 4.0;
 using Adw 1;
 using Astal 4.0;
 using AstalBattery 0.1;
+using AstalWp 0.1;
 
 template $NavBar: Astal.Window {
   styles [
     "top_left_right_corner_borders",
-    "x_padding_5"
+    "x_padding_5",
+    "flats",
   ]
 
   title: "NavBar";
-  namespace: "NavBar";
-  exclusivity: exclusive;
 
   CenterBox {
     styles [
-      "y_padding_5"
+      "y_padding_5",
     ]
 
     [start]
@@ -26,7 +26,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         Button {
@@ -44,7 +44,7 @@ template $NavBar: Astal.Window {
           "master_border",
           "rounded",
           "title-4",
-          "view"
+          "view",
         ]
       }
 
@@ -52,9 +52,11 @@ template $NavBar: Astal.Window {
         visible: false;
 
         styles [
+          "x_padding_5",
           "master_border",
           "rounded",
-          "view"
+          "title-4",
+          "view",
         ]
       }
     }
@@ -65,7 +67,7 @@ template $NavBar: Astal.Window {
         "workspaces",
         "master_border",
         "rounded",
-        "view"
+        "view",
       ]
     }
 
@@ -77,7 +79,7 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         MenuButton {
@@ -85,7 +87,7 @@ template $NavBar: Astal.Window {
           icon-name: "go-up-symbolic";
 
           styles [
-            "tray_button"
+            "tray_button",
           ]
 
           popover: Popover {
@@ -100,60 +102,52 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Box {
-        visible: bind template.battery as <AstalBattery.Device>.is-present;
-        tooltip-text: "Isn't obvious?";
-
-        styles [
-          "master_border",
-          "rounded",
-          "x_padding_5",
-          "view"
-        ]
-
-        spacing: 10;
-
-        Label {
-          label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
-
-          styles [
-            "title-4"
-          ]
-        }
-
-        Image {
-          icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
-        }
-      }
-
-      Adw.Bin volume_bin {
-        visible: false;
+      $CircularProgressBar {
+        tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
+        percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
+        line-width: 5;
+        line-cap: round;
+        radius-filled: true;
+        inverted: true;
+        start-at: -0.25;
+        end-at: 0.75;
 
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
-        width-request: 35;
-        tooltip-text: "Volume";
+        Gtk.EventControllerScroll {
+          scroll => $scroll_volume();
+          flags: vertical;
+        }
+
+        Gtk.GestureClick {
+          button: 1;
+          pressed => $toggle_volume();
+        }
+
+        Image {
+          icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+        }
       }
 
       Adw.Bin {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         MenuButton {
           styles [
             "title-4",
-            "rounded"
+            "numeric",
           ]
 
-          Label clock {
-            name: "clock";
+          Label {
+            label: bind template.current_time;
           }
 
           popover: Popover {
@@ -173,18 +167,38 @@ template $NavBar: Astal.Window {
         styles [
           "master_border",
           "view",
-          "rounded"
+          "rounded",
         ]
 
         Button power_button {
-          icon-name: "system-shutdown-symbolic";
           name: "power_button";
           clicked => $toggle_side_dashboard();
 
-          styles [
-            "rounded",
-            "view",
-          ]
+          Box {
+            spacing: 10;
+
+            Box {
+              visible: bind template.battery as <AstalBattery.Device>.is-present;
+              spacing: 5;
+
+              Label {
+                label: bind $current_battery(template.battery as <AstalBattery.Device>.percentage) as <string>;
+
+                styles [
+                  "title-4",
+                  "numeric",
+                ]
+              }
+
+              Image {
+                icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+              }
+            }
+
+            Image {
+              icon-name: "system-shutdown-symbolic";
+            }
+          }
         }
       }
     }

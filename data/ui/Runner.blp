@@ -4,13 +4,10 @@ using Adw 1;
 
 template $Runner: Astal.Window {
     styles [
-        "all_unset"
+        "all_unset",
     ]
 
     title: "Runner";
-    namespace: "Runner";
-    anchor: top;
-    keymode: on_demand;
 
     EventControllerKey {
         key-released => $key_released();
@@ -22,7 +19,7 @@ template $Runner: Astal.Window {
         overflow: hidden;
 
         styles [
-            "bottom_left_right_corner_borders"
+            "bottom_left_right_corner_borders",
         ]
 
         Entry entry {
@@ -35,7 +32,7 @@ template $Runner: Astal.Window {
             styles [
                 "background",
                 "title-4",
-                "top_left_right_corner_borders"
+                "top_left_right_corner_borders",
             ]
         }
 
@@ -45,7 +42,7 @@ template $Runner: Astal.Window {
             styles [
                 "bottom_left_right_corner_borders",
                 "padding_10",
-                "view"
+                "view",
             ]
 
             Label math_label {
@@ -55,7 +52,7 @@ template $Runner: Astal.Window {
 
                 styles [
                     "title-2",
-                    "numeric-result"
+                    "numeric-result",
                 ]
             }
         }
@@ -70,7 +67,7 @@ template $Runner: Astal.Window {
 
                 styles [
                     "bg_transparent",
-                    "bottom_left_right_corner_borders"
+                    "bottom_left_right_corner_borders",
                 ]
             }
         }

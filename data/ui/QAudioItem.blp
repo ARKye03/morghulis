@@ -1,0 +1,51 @@
+using Gtk 4.0;
+using AstalWp 0.1;
+
+template $QAudioItem: Gtk.ListBoxRow {
+    selectable: false;
+    activatable: false;
+
+    styles [
+        "padding_5",
+    ]
+
+    Box {
+        spacing: 10;
+
+        styles [
+            "x_padding_10",
+        ]
+
+        Image {
+            icon-name: bind $fallback_icon(template.endpoint as <AstalWp.Endpoint>.icon) as <string>;
+        }
+
+        Box {
+            orientation: vertical;
+            spacing: 5;
+
+            Label {
+                label: bind template.endpoint as <AstalWp.Endpoint>.description;
+                halign: start;
+
+                styles [
+                    "title-3",
+                    "x_padding_10",
+                ]
+            }
+
+            Scale {
+                hexpand: true;
+
+                adjustment: Adjustment volume_adjust {
+                    lower: 0;
+                    upper: 1;
+                };
+
+                styles [
+                    "hslider",
+                ]
+            }
+        }
+    }
+}

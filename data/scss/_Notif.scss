@@ -3,31 +3,31 @@
 .notification_badge {
     &.critical {
         label.app_name {
-            color: adw.$red_5;
+            color: adw.$red_1;
         }
 
         separator {
-            color: adw.$red_5;
+            color: adw.$red_1;
         }
     }
 
     &.normal {
         label.app_name {
-            color: adw.$blue_5;
+            color: adw.$blue_1;
         }
 
         separator {
-            color: adw.$blue_5;
+            color: adw.$blue_1;
         }
     }
 
     &.low {
         label.app_name {
-            color: adw.$green_5;
+            color: adw.$green_1;
         }
 
         separator {
-            color: adw.$green_5;
+            color: adw.$green_1;
         }
     }
 }

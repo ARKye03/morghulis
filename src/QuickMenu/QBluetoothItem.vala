@@ -8,7 +8,7 @@ public class QBluetoothItem : Gtk.ListBoxRow {
 	public QBluetoothItem(AstalBluetooth.Device? device) {
 		Object(
 			device: device
-			);
+		);
 	}
 
 	[GtkCallback]

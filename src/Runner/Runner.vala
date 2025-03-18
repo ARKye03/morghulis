@@ -5,6 +5,7 @@ public extern double mpars_evaluate(string expression, out string? error);
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
+	public static Runner instance { get; private set; }
 	public AstalApps.Apps apps { get; construct set; }
 
 	[GtkChild]
@@ -55,16 +56,16 @@ public class Runner : Astal.Window {
 
 			if (error == null) {
 				math_label.set_text(result.to_string());
-				math_bin.set_visible(true);
+				math_bin.visible = true;
 				return;
 			} else {
-				math_bin.set_visible(false);
+				math_bin.visible = false;
 			}
-			app_list.set_visible(false);
+			app_list.visible = false;
 			return;
 		} else {
-			app_list.set_visible(true);
-			math_bin.set_visible(false);
+			app_list.visible = true;
+			math_bin.visible = false;
 		}
 
 		// Update app filtering
@@ -99,6 +100,12 @@ public class Runner : Astal.Window {
 	}
 
 	construct {
+		if (instance == null) {
+			instance = this;
+		} else {
+			this.destroy();
+		}
+
 		this.apps = new AstalApps.Apps();
 
 		this.app_list.set_sort_func(sort_func);
@@ -115,6 +122,9 @@ public class Runner : Astal.Window {
 				this.entry.grab_focus();
 			}
 		});
+		this.namespace = "Runner";
+		this.anchor = Astal.WindowAnchor.TOP;
+		this.keymode = Astal.Keymode.ON_DEMAND;
 		this.margin_top = Morghulis.primary_monitor.get_geometry().height / 4;
 	}
 }

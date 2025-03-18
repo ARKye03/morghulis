@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $NotifWindow: Box {
+template $QNotifications: Box {
     orientation: vertical;
 
     Adw.HeaderBar {
@@ -17,10 +17,11 @@ template $NotifWindow: Box {
     ScrolledWindow {
         overflow: hidden;
         vexpand: true;
+        hscrollbar-policy: never;
 
         styles [
             "background",
-            "padding_10"
+            "padding_10",
         ]
 
         ListBox notifications {
@@ -28,7 +29,7 @@ template $NotifWindow: Box {
             show-separators: true;
 
             styles [
-                "boxed-list"
+                "boxed-list",
             ]
         }
     }

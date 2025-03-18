@@ -1,5 +1,6 @@
 public class TagButton : Gtk.Button {
 	private AstalRiver.Output _output;
+	private Gtk.GestureClick _rclick;
 	private int _index;
 
 	public TagButton(AstalRiver.Output output, int index, string icon) {
@@ -8,16 +9,22 @@ public class TagButton : Gtk.Button {
 		try {
 			Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.from_resource(icon);
 			Gdk.Paintable paintable = Gdk.Texture.for_pixbuf(pixbuf);
-			Gtk.Image img = new Gtk.Image.from_paintable(paintable);
-			set_child(img);
+			child = new Gtk.Image.from_paintable(paintable);
 		} catch (Error e) {
 			warning("Failed to load icon: %s", e.message);
 		}
 		add_css_class("empty");
+		this._rclick = new Gtk.GestureClick() {
+			button = Gdk.BUTTON_SECONDARY,
+		};
 
 		clicked.connect(() => {
 			this._output.focused_tags = 1 << this._index;
 		});
+		_rclick.pressed.connect(() => {
+			this._output.focused_tags ^= 1 << this._index;
+		});
+		add_controller(_rclick);
 	}
 
 	public void update_css() {
@@ -25,22 +32,14 @@ public class TagButton : Gtk.Button {
 		uint focused_tags = _output.focused_tags;
 		uint urgent_tags = _output.urgent_tags;
 
-		if ((occupied_tags & (1 << _index)) != 0) {
-			add_css_class("occupied");
-		} else {
-			remove_css_class("occupied");
-		}
-
 		if ((focused_tags & (1 << _index)) != 0) {
-			add_css_class("focused");
+			set_css_classes({ "focused" });
+		} else if ((urgent_tags & (1 << _index)) != 0) {
+			set_css_classes({ "urgent" });
+		} else if ((occupied_tags & (1 << _index)) != 0) {
+			set_css_classes({ "occupied" });
 		} else {
-			remove_css_class("focused");
-		}
-
-		if ((urgent_tags & (1 << _index)) != 0) {
-			add_css_class("urgent");
-		} else {
-			remove_css_class("urgent");
+			set_css_classes({ "empty" });
 		}
 	}
 }

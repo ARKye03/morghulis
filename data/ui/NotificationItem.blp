@@ -1,23 +1,20 @@
 using Gtk 4.0;
 using AstalNotifd 0.1;
 
-template $NotifPop: ListBoxRow {
+template $NotificationItem: ListBoxRow {
     styles [
         "notification_badge",
-        "view"
+        "view",
     ]
 
     activatable: false;
     selectable: false;
+    overflow: hidden;
 
     Box {
         orientation: vertical;
 
         CenterBox {
-            styles [
-                "top_left_right_corner_borders"
-            ]
-
             [start]
             Image app_image {
                 overflow: hidden;
@@ -25,7 +22,7 @@ template $NotifPop: ListBoxRow {
                 tooltip-text: "App Icon";
 
                 styles [
-                    "notification_image"
+                    "notification_image",
                 ]
             }
 
@@ -38,7 +35,7 @@ template $NotifPop: ListBoxRow {
                 hexpand: true;
 
                 styles [
-                    "app_name"
+                    "app_name",
                 ]
             }
 
@@ -53,6 +50,10 @@ template $NotifPop: ListBoxRow {
                     valign: center;
                     icon-name: "window-close-symbolic";
                     clicked => $dismiss_notif();
+
+                    styles [
+                        "flat",
+                    ]
                 }
             }
         }
@@ -63,7 +64,7 @@ template $NotifPop: ListBoxRow {
 
         Box {
             styles [
-                "padding_10"
+                "padding_10",
             ]
 
             spacing: 10;
@@ -73,18 +74,28 @@ template $NotifPop: ListBoxRow {
                 label: bind template.notification as <AstalNotifd.Notification>.summary;
                 justify: center;
                 ellipsize: end;
+                max-width-chars: 15;
             }
 
             Label {
                 label: bind template.notification as <AstalNotifd.Notification>.body;
                 wrap: true;
+                wrap-mode: word_char;
                 justify: left;
                 lines: 3;
                 ellipsize: end;
-                hexpand: true;
+                use-markup: true;
             }
 
-            Box actions_box {}
+            Box actions_box {
+                homogeneous: true;
+                halign: center;
+                hexpand: true;
+
+                styles [
+                    "linked",
+                ]
+            }
         }
     }
 }

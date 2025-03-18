@@ -7,14 +7,28 @@ public class Morghulis : Astal.Application {
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
+	public static string clock_format { get; set; default = "%H:%M %b %e"; }
 
 	public override void request(string msg, SocketConnection conn) {
-		AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
+		switch (msg) {
+			case "change_volume":
+				OnScreenDisplay.instance.change_volume();
+			break;
+
+			case "change_brightness":
+				OnScreenDisplay.instance.change_brightness();
+			break;
+
+			default:
+				AstalIO.write_sock.begin(conn, @"missing response implementation on $instance_name");
+			break;
+		}
 	}
 
 	construct {
 		Adw.init();
 		instance_name = "morghulis";
+
 		try {
 			acquire_socket();
 		} catch (Error e) {
@@ -45,14 +59,17 @@ public class Morghulis : Astal.Application {
 			load_css();
 			css_loaded = true;
 		}
-		add_window(new QuickMenu());
-		add_window(new Runner());
-		add_window(new OnScreenDisplay());
-		add_window(new NavBar());
 
 		if (file.query_exists()) {
 			apply_css(file.get_path(), true);
 		}
+
+		add_window(new NavBar());
+		add_window(new Runner());
+		add_window(new QuickMenu());
+		add_window(new OnScreenDisplay());
+		add_window(new NotifPopItemsCenter());
+
 		this.hold();
 	}
 
@@ -68,7 +85,7 @@ public class Morghulis : Astal.Application {
 			return;
 		}
 		// Morghulis assume there is only one monitor
-		primary_monitor = monitors.get_item(0) as Gdk.Monitor;
+		primary_monitor = (Gdk.Monitor)monitors.get_item(0);
 		if (primary_monitor == null) {
 			critical("Failed to get primary monitor");
 			return;
@@ -76,10 +93,18 @@ public class Morghulis : Astal.Application {
 		message("Successfully initialized primary monitor");
 	}
 
+	// Function made to HAVE ONLY ONE: `Gtk.StyleContext' has been deprecated since 4.10
+	private void add_css_provider(Gtk.CssProvider provider) {
+		Gtk.StyleContext.add_provider_for_display(
+			Gdk.Display.get_default(),
+			provider,
+			Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+		);
+	}
+
 	private void load_css() {
-		Gtk.CssProvider provider = new Gtk.CssProvider();
+		var provider = new Gtk.CssProvider();
 		provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
-		Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider,
-												  Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+		add_css_provider(provider);
 	}
 }
