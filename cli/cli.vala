@@ -7,6 +7,7 @@ public class MorghulCTL {
 	private static bool show_inspector = false;
 	private static bool quit = false;
 	private static bool show_version = false;
+	private static string? autostart = null;
 	private static string version = "1.0-alpha";
 
 	public static int main(string[] args) {
@@ -81,7 +82,7 @@ public class MorghulCTL {
 
 	private static int manage_autostart(string state) {
 		string autostart_dir = Path.build_filename(Environment.get_user_config_dir(), "autostart");
-		string target_file = Path.build_filename(autostart_dir, "com.github.ARKye03.morghulis.desktop");
+		string target_file = Path.build_filename(autostart_dir, "morghulis.desktop");
 
 		switch (state.down()) {
 			case "on":
@@ -190,12 +191,4 @@ public class MorghulCTL {
 		}
 		return 0;
 	}
-
-	private static string request = "";
-	private static bool start = false;
-	private static string? toggle_window = null;
-	private static bool show_inspector = false;
-	private static string? autostart = null;
-	private static bool quit = false;
-	private static bool show_version = false;
 }
