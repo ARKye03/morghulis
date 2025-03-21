@@ -1,6 +1,12 @@
 using GLib;
 
 public class MorghulCTL {
+	private static string request = "";
+	private static bool start = false;
+	private static string? toggle_window = null;
+	private static bool show_inspector = false;
+	private static bool quit = false;
+	private static bool show_version = false;
 	private static string version = "1.0-alpha";
 
 	public static int main(string[] args) {
@@ -42,8 +48,8 @@ public class MorghulCTL {
 
 	private static int send_request(string req) {
 		try {
-			GLib.Process.spawn_command_line_async(@"astal -i morghulis $req");
-		} catch (GLib.Error e) {
+			Process.spawn_command_line_async(@"astal -i morghulis $req");
+		} catch (SpawnError e) {
 			stderr.printf("Failed to send request: %s\n", e.message);
 			return 1;
 		}
@@ -52,8 +58,8 @@ public class MorghulCTL {
 
 	private static int exit_morghulis() {
 		try {
-			GLib.Process.spawn_command_line_async("astal -i morghulis -q");
-		} catch (GLib.Error e) {
+			Process.spawn_command_line_async("astal -i morghulis -q");
+		} catch (SpawnError e) {
 			stderr.printf("Failed to quit the application: %s\n", e.message);
 			return 1;
 		}
@@ -62,8 +68,8 @@ public class MorghulCTL {
 
 	private static int toggle_inspector() {
 		try {
-			GLib.Process.spawn_command_line_async("astal -i morghulis -I");
-		} catch (GLib.Error e) {
+			Process.spawn_command_line_async("astal -i morghulis -I");
+		} catch (SpawnError e) {
 			stderr.printf("Failed to show inspector: %s\n", e.message);
 			return 1;
 		}
@@ -72,8 +78,8 @@ public class MorghulCTL {
 
 	private static int toggle_window_func(string window) {
 		try {
-			GLib.Process.spawn_command_line_async(@"astal -i morghulis -t $window");
-		} catch (GLib.Error e) {
+			Process.spawn_command_line_async(@"astal -i morghulis -t $window");
+		} catch (SpawnError e) {
 			stderr.printf("Failed to toggle window: %s\n", e.message);
 			return 1;
 		}
@@ -123,7 +129,7 @@ public class MorghulCTL {
 		}
 
 		try {
-			GLib.Pid child_pid;
+			Pid child_pid;
 			Process.spawn_async(
 				null,
 				new string[] { morghulis_path },
@@ -139,11 +145,4 @@ public class MorghulCTL {
 		}
 		return 0;
 	}
-
-	private static string request = "";
-	private static bool start = false;
-	private static string? toggle_window = null;
-	private static bool show_inspector = false;
-	private static bool quit = false;
-	private static bool show_version = false;
 }
