@@ -21,12 +21,6 @@ public class OnScreenDisplay : Astal.Window {
 		speaker = AstalWp.get_default().audio.default_speaker;
 		backlight = Backlight.get_default();
 	}
-	public OnScreenDisplay() {
-		Object(namespace : "OnScreenDisplay",
-			   anchor: Astal.WindowAnchor.BOTTOM,
-			   layer: Astal.Layer.OVERLAY
-		);
-	}
 
 	private void handle_timeout() {
 		// Remove the existing timeout if it exists

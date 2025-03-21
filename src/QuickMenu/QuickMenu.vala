@@ -3,11 +3,7 @@ public class QuickMenu : Astal.Window {
 	public AstalWp.Endpoint speaker { get; set; }
 	public static QuickMenu instance { get; private set; }
 
-	public QuickMenu() {
-		Object(
-			namespace : "QuickMenu",
-			anchor: Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-		);
+	construct {
 		if (instance == null) {
 			instance = this;
 		} else {

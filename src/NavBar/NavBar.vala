@@ -30,11 +30,6 @@ public class NavBar : Astal.Window {
 	private unowned Adw.Bin active_submap;
 
 	public NavBar() {
-		Object(
-			namespace : "NavBar",
-			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT,
-			exclusivity: Astal.Exclusivity.EXCLUSIVE
-		);
 		battery = AstalBattery.Device.get_default();
 		speaker = AstalWp.get_default().audio.default_speaker;
 
