@@ -85,7 +85,7 @@ morghulctl --help
 
 ### Style
 
-You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. _Hot Reload_ is supported. As previously mentioned, Adwaita theme is needed.
+You can change the style of Morghulis by creating the file `$XDG_CONFIG_HOME/morghulis/main.css`. _Hot Reload_ is supported. As previously mentioned, Adwaita theme is encouraged.
 
 ## Development
 
@@ -141,7 +141,12 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] Dynamic CSS
 
 > [!NOTE]
-> For OSD to work, you need to append `morghulctl -r change_volume` to whatever keybinding you want to use to raise/volume the volume.
+> For OSD to work, you need to append `"morghulctl -r change_volume" and/or" morghulctl -r change_brightness"` to whatever keybinding you want to use to raise/lower the volume/brightness.
+> Example:
+>
+> ```hyprlang
+> binde=, XF86MonBrightnessUp, exec, brightnessctl set +10% & morghulctl -r change_brightness
+> ```
 
 ## Preview
 
