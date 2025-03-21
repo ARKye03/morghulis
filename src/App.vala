@@ -1,7 +1,7 @@
 public class Morghulis : Astal.Application {
 	private bool _css_loaded;
-	private GLib.File _css_file;
-	private GLib.FileMonitor _css_file_monitor;
+	private File _css_file;
+	private FileMonitor _css_file_monitor;
 
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
@@ -36,16 +36,24 @@ public class Morghulis : Astal.Application {
 		instance = this;
 
 		_css_file = File.new_for_path(@"$(Environment.get_user_config_dir())/morghulis/main.css");
-		if (_css_file.query_exists()) {
-			try {
-				_css_file_monitor = _css_file.monitor_file(GLib.FileMonitorFlags.NONE);
-				_css_file_monitor.changed.connect((_) => {
+		try {
+			_css_file_monitor = _css_file.monitor_file(
+				GLib.FileMonitorFlags.WATCH_HARD_LINKS
+				| GLib.FileMonitorFlags.WATCH_MOUNTS
+				| GLib.FileMonitorFlags.WATCH_MOVES
+			);
+			uint count = 0;
+			_css_file_monitor.changed.connect((file, other_file, event_type) => {
+				if (event_type == FileMonitorEvent.CHANGED) {
 					apply_css(_css_file.get_path(), true);
-					message("Reloaded CSS");
-				});
-			} catch (IOError e) {
-				critical("Error: %s\n", e.message);
-			}
+					print(@"\033[34mCSS Reloaded:\033[0m \033[33mx$(++count)\033[0m\n");
+				} else if (event_type == FileMonitorEvent.CREATED) {
+					apply_css(_css_file.get_path(), true);
+					print("\033[34mCSS File Created!\033[0m\n");
+				}
+			});
+		} catch (IOError e) {
+			critical("Error: %s\n", e.message);
 		}
 	}
 
