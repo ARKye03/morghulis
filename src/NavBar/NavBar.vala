@@ -5,8 +5,8 @@ public class NavBar : Astal.Window {
 	private GLib.DateTime _clock_time;
 
 	public static NavBar instance { get; private set; }
-	public AstalBattery.Device battery { get; set; }
-	public AstalWp.Endpoint speaker { get; set; }
+	public AstalBattery.Device battery { get; private set; }
+	public AstalWp.Endpoint speaker { get; private set; }
 	public string current_time { get; private set; }
 	public static string[] icon_names = {
 		"terminal-symbolic",
