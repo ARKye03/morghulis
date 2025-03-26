@@ -1,3 +1,4 @@
+// Refactor this shite
 public class Backlight : Object {
 	private static Backlight _instance;
 	private FileMonitor? _b_monitor;
@@ -30,7 +31,6 @@ public class Backlight : Object {
 				_brightness = value;
 				set_brightness_file(_brightness);
 			}
-			// No need to manually notify - property setter handles this
 		}
 	}
 
