@@ -29,6 +29,7 @@ public class Backlight : Object {
 				_brightness = _max_brightness;
 			} else {
 				_brightness = value;
+				set_brightness_file(_brightness);
 			}
 		}
 	}
@@ -44,13 +45,10 @@ public class Backlight : Object {
 			} else {
 				_percentage = value;
 			}
-			// Only apply brightness changes with brightnessctl after full initialization
-			if (is_brightnessctl_a_thing) {
-				try {
-					Process.spawn_command_line_sync(@"brightnessctl -q set $(_percentage * 100)%");
-				} catch (Error e) {
-					critical("Failed to set brightness: %s", e.message);
-				}
+			uint new_brightness = (uint)(_percentage * _max_brightness);
+			if (new_brightness != _brightness) {
+				_brightness = new_brightness;
+				set_brightness_file(new_brightness);
 			}
 		}
 	}
@@ -60,15 +58,9 @@ public class Backlight : Object {
 			return;
 		}
 		load_m_b();
-
-		// First load brightness synchronously to avoid the 0 brightness problem
 		load_brightness_sync();
-
-		// Then set up monitoring for future changes
 		load_b();
-		check_brightnessctl();
 
-		// Only set up binding after we have initial values
 		this.bind_property("brightness", this, "percentage", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
 			trgt = brightness / (double)_max_brightness;
 			return true;
@@ -92,19 +84,27 @@ public class Backlight : Object {
 		}
 	}
 
-	private void check_brightnessctl() {
+	private bool set_brightness_file(uint value) {
 		try {
-			string stdout_data, stderr_data;
-			int exit_status;
-			Process.spawn_command_line_sync("which brightnessctl",
-											out stdout_data,
-											out stderr_data,
-											out exit_status);
-			is_brightnessctl_a_thing = exit_status == 0;
+			var file = File.new_for_path(@"$(_b_file_path)/brightness");
+			if (file.query_exists()) {
+				var os = file.replace(null, false, FileCreateFlags.NONE);
+				var dos = new DataOutputStream(os);
+				dos.put_string(value.to_string());
+				return true;
+			}
 		} catch (Error e) {
-			warning("Failed to check for brightnessctl: %s", e.message);
-			is_brightnessctl_a_thing = false;
+			if (is_brightnessctl_a_thing) {
+				try {
+					Process.spawn_command_line_sync(@"brightnessctl -q set $(_percentage * 100)%");
+					return true;
+				} catch (Error e2) {
+					critical("Failed to set brightness with brightnessctl: %s", e2.message);
+				}
+			}
+			critical("Error writing brightness: %s", e.message);
 		}
+		return false;
 	}
 
 	private void load_m_b() {
@@ -144,7 +144,11 @@ public class Backlight : Object {
 				_b_file.load_contents_async.end(res, out contents, out etag_out);
 				if (contents != null) {
 					string content = (string)contents;
-					brightness = uint.parse(content.strip());
+					uint new_brightness = uint.parse(content.strip());
+					if (new_brightness != _brightness) {
+						_brightness = new_brightness;
+						_percentage = _brightness / (double)_max_brightness;
+					}
 				}
 			} catch (Error e) {
 				critical("Error reading brightness: %s", e.message);
