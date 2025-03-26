@@ -1,4 +1,3 @@
-using AstalHyprland;
 public class HyprWorkspaces : Gtk.Box {
 	private AstalHyprland.Hyprland _hyprland;
 

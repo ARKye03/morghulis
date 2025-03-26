@@ -1,6 +1,3 @@
-using GtkLayerShell;
-using AstalMpris;
-
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
 public class OnScreenDisplay : Astal.Window {
 	private uint _hide_timeout_id = 0;
