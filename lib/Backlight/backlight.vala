@@ -70,17 +70,25 @@ public class Backlight : Object {
 	}
 
 	private bool load_interface() {
-		if (FileUtils.test("/sys/class/backlight/intel_backlight", FileTest.IS_DIR)) {
-			b_interface = "intel_backlight";
-			_b_file_path = "/sys/class/backlight/intel_backlight";
-			return true;
-		} else if (FileUtils.test("/sys/class/backlight/acpi_video0", FileTest.IS_DIR)) {
-			b_interface = "acpi_video0";
-			_b_file_path = "/sys/class/backlight/acpi_video0";
-			return true;
-		} else {
-			debug("No supported backlight interface found");
+		try {
+			Dir dir = Dir.open("/sys/class/backlight", 0);
+			if (dir != null) {
+				var name = dir.read_name();
+				b_interface = name;
+				_b_file_path = "/sys/class/backlight/" + name;
+				return true;
+			}
+			debug("No backlight interface found");
 			return false;
+
+		} catch (FileError e) {
+			if (e.code == FileError.NOENT) {
+				debug("No backlight interface found");
+				return false;
+			} else {
+				critical("Error opening backlight directory: %s", e.message);
+				return false;
+			}
 		}
 	}
 
