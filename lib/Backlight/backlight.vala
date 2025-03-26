@@ -133,10 +133,32 @@ public class Backlight : Object {
 
 	private void load_b() {
 		try {
-			_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
+			// Monitor both actual_brightness and brightness files
+			var actual_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
+			var b_file = File.new_for_path(@"$(_b_file_path)/brightness");
+			
+			// Use actual_brightness if available, otherwise use brightness
+			if (actual_b_file.query_exists()) {
+				_b_file = actual_b_file;
+			} else if (b_file.query_exists()) {
+				_b_file = b_file;
+			} else {
+				critical("Neither actual_brightness nor brightness files exist");
+				return;
+			}
+			
+			// Set up the file monitor
 			_b_monitor = _b_file.monitor_file(FileMonitorFlags.NONE);
-			_b_monitor.changed.connect((file, other_file, event_type) => sync_brightness.begin());
-
+			_b_monitor.changed.connect((file, other_file, event_type) => {
+				// Only respond to relevant changes
+				if (event_type == FileMonitorEvent.CHANGED || 
+					event_type == FileMonitorEvent.CREATED) {
+					debug("Brightness file changed externally, syncing...");
+					sync_brightness.begin();
+				}
+			});
+			
+			// Initial sync
 			sync_brightness.begin();
 		} catch (Error e) {
 			critical("Error setting up brightness monitor: %s", e.message);
@@ -144,24 +166,30 @@ public class Backlight : Object {
 	}
 
 	private async void sync_brightness() {
-		_b_file.load_contents_async.begin(null, (obj, res) => {
-			try {
-				uint8[] contents;
-				string etag_out;
-
-				_b_file.load_contents_async.end(res, out contents, out etag_out);
-				if (contents != null) {
-					string content = (string)contents;
-					uint new_brightness = uint.parse(content.strip());
-					if (new_brightness != _brightness) {
-						_brightness = new_brightness;
-						_percentage = _brightness / (double)_max_brightness;
-					}
+		try {
+			uint8[] contents;
+			string etag_out;
+			
+			yield _b_file.load_contents_async(null, out contents, out etag_out);
+			
+			if (contents != null) {
+				string content = (string)contents;
+				uint new_brightness = uint.parse(content.strip());
+				debug("External brightness change detected: %u", new_brightness);
+				
+				// Only update if brightness has actually changed
+				if (new_brightness != _brightness) {
+					_brightness = new_brightness;
+					_percentage = _brightness / (double)_max_brightness;
+					debug("Updated percentage to: %.2f", _percentage);
+					
+					notify_property("brightness");
+					notify_property("percentage");
 				}
-			} catch (Error e) {
-				critical("Error reading brightness: %s", e.message);
 			}
-		});
+		} catch (Error e) {
+			critical("Error reading brightness: %s", e.message);
+		}
 	}
 
 	private void load_brightness_sync() {
