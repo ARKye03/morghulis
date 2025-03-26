@@ -1,15 +1,13 @@
 // Refactor this shite
 public class Backlight : Object {
 	private static Backlight _instance;
-	private FileMonitor? _b_monitor;
-	private File _b_file;
+	private FileMonitor? _brightness_monitor;
 	private uint _brightness;
 	private double _percentage;
 	private uint _max_brightness;
-	private File _max_b_file;
-	private string _b_file_path;
+	private string _brightness_file_path;
 
-	public string b_interface { get; private set; }
+	public string brightness_interface_name { get; private set; }
 
 	public static Backlight get_default() {
 		if (_instance == null) {
@@ -34,7 +32,7 @@ public class Backlight : Object {
 		}
 	}
 
-	public string icon_name { owned get; private set; }
+	public string icon_name { owned get; private set; default = "display-brightness-symbolic"; }
 	public double percentage {
 		get { return _percentage; }
 		set {
@@ -57,9 +55,9 @@ public class Backlight : Object {
 			return;
 		}
 
-		load_m_b();
+		load_max_brightness();
 		load_brightness_sync();
-		load_b();
+		load_brightness();
 
 		// Create bidirectional binding between brightness and percentage
 		this.bind_property(
@@ -76,8 +74,6 @@ public class Backlight : Object {
 			return true;
 		}
 		);
-
-		icon_name = "display-brightness-symbolic";
 	}
 
 	private bool load_interface() {
@@ -104,9 +100,9 @@ public class Backlight : Object {
 			}
 
 			// Use the first valid interface
-			b_interface = interfaces[0];
-			_b_file_path = "/sys/class/backlight/" + b_interface;
-			debug("Using backlight interface: %s", b_interface);
+			brightness_interface_name = interfaces[0];
+			_brightness_file_path = "/sys/class/backlight/" + brightness_interface_name;
+			debug("Using backlight interface: %s", brightness_interface_name);
 			return true;
 		} catch (FileError e) {
 			if (e.code == FileError.NOENT) {
@@ -121,7 +117,7 @@ public class Backlight : Object {
 
 	private bool set_brightness_file(uint value) {
 		try {
-			var file = File.new_for_path(@"$(_b_file_path)/brightness");
+			var file = File.new_for_path(@"$(_brightness_file_path)/brightness");
 			if (file.query_exists()) {
 				var os = file.replace(null, false, FileCreateFlags.NONE);
 				var dos = new DataOutputStream(os);
@@ -135,13 +131,13 @@ public class Backlight : Object {
 		return false;
 	}
 
-	private void load_m_b() {
-		_max_b_file = File.new_for_path(@"$(_b_file_path)/max_brightness");
-		if (_max_b_file.query_exists()) {
+	private void load_max_brightness() {
+		var max_brightness_file = File.new_for_path(@"$(_brightness_file_path)/max_brightness");
+		if (max_brightness_file.query_exists()) {
 			try {
 				uint8[] contents;
 				string etag_out;
-				if (_max_b_file.load_contents(null, out contents, out etag_out)) {
+				if (max_brightness_file.load_contents(null, out contents, out etag_out)) {
 					string content = (string)contents;
 					_max_brightness = uint.parse(content.strip());
 					debug("Max brightness: %u", _max_brightness);
@@ -152,48 +148,32 @@ public class Backlight : Object {
 		}
 	}
 
-	private void load_b() {
+	private void load_brightness() {
 		try {
-			// Monitor both actual_brightness and brightness files
-			var actual_b_file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
-			var b_file = File.new_for_path(@"$(_b_file_path)/brightness");
+			var brightness_file = File.new_for_path(@"$(_brightness_file_path)/brightness");
 
-			// Use actual_brightness if available, otherwise use brightness
-			if (actual_b_file.query_exists()) {
-				_b_file = actual_b_file;
-				debug("Monitoring actual_brightness file");
-			} else if (b_file.query_exists()) {
-				_b_file = b_file;
-				debug("Monitoring brightness file");
-			} else {
-				critical("Neither actual_brightness nor brightness files exist");
-				return;
-			}
-
-			// Set up the file monitor
-			_b_monitor = _b_file.monitor_file(FileMonitorFlags.NONE);
-			_b_monitor.changed.connect((file, other_file, event_type) => {
-				// Only respond to relevant changes
+			_brightness_monitor = brightness_file.monitor_file(FileMonitorFlags.NONE);
+			_brightness_monitor.changed.connect((file, other_file, event_type) => {
 				if (event_type == FileMonitorEvent.CHANGED ||
 					event_type == FileMonitorEvent.CREATED) {
 					debug("Brightness file changed externally, syncing...");
-					sync_brightness.begin();
+					sync_brightness.begin(brightness_file);
 				}
 			});
 
 			// Initial sync
-			sync_brightness.begin();
+			sync_brightness.begin(brightness_file);
 		} catch (Error e) {
 			critical("Error setting up brightness monitor: %s", e.message);
 		}
 	}
 
-	private async void sync_brightness() {
+	private async void sync_brightness(File brightness_file) {
 		try {
 			uint8[] contents;
 			string etag_out;
 
-			yield _b_file.load_contents_async(null, out contents, out etag_out);
+			yield brightness_file.load_contents_async(null, out contents, out etag_out);
 
 			if (contents != null) {
 				string content = (string)contents;
@@ -211,9 +191,9 @@ public class Backlight : Object {
 
 	private void load_brightness_sync() {
 		try {
-			var file = File.new_for_path(@"$(_b_file_path)/actual_brightness");
+			var file = File.new_for_path(@"$(_brightness_file_path)/actual_brightness");
 			if (!file.query_exists()) {
-				file = File.new_for_path(@"$(_b_file_path)/brightness");
+				file = File.new_for_path(@"$(_brightness_file_path)/brightness");
 				if (!file.query_exists()) {
 					critical("Cannot find brightness file");
 					return;
