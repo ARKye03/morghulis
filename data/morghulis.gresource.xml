@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
+    <gresource prefix="/com/github/ARKye03/morghulis/icons/scalable/actions">
+        <file alias="terminal-symbolic.svg">assets/NavBar/terminal-symbolic.svg</file>
+        <file alias="browser-symbolic.svg">assets/NavBar/browser-symbolic.svg</file>
+        <file alias="code-symbolic.svg">assets/NavBar/code-symbolic.svg</file>
+        <file alias="explorer-symbolic.svg">assets/NavBar/explorer-symbolic.svg</file>
+        <file alias="docs-symbolic.svg">assets/NavBar/docs-symbolic.svg</file>
+        <file alias="social-symbolic.svg">assets/NavBar/social-symbolic.svg</file>
+        <file alias="media-symbolic.svg">assets/NavBar/media-symbolic.svg</file>
+        <file alias="settings-symbolic.svg">assets/NavBar/settings-symbolic.svg</file>
+        <file alias="gaming-symbolic.svg">assets/NavBar/gaming-symbolic.svg</file>
+    </gresource>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
         <file>assets/colloid-notif-sound.opus</file>
@@ -11,7 +22,7 @@
         <file preprocess="xml-stripblanks">ui/QNetwork.ui</file>
         <file preprocess="xml-stripblanks">ui/QBluetooth.ui</file>
         <file preprocess="xml-stripblanks">ui/QBluetoothItem.ui</file>
-        <file preprocess="xml-stripblanks">ui/QPowerProfiles.ui</file>
+        <file preprocess="xml-stripblanks">ui/BatteryBox.ui</file>
         <file preprocess="xml-stripblanks">ui/PowerBox.ui</file>
         <file preprocess="xml-stripblanks">ui/Settings.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner.ui</file>

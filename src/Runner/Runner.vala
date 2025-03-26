@@ -1,5 +1,3 @@
-using GtkLayerShell;
-
 [CCode(cname = "mpars_evaluate")]
 public extern double mpars_evaluate(string expression, out string? error);
 

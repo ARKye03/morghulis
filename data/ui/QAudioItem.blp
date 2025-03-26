@@ -12,6 +12,10 @@ template $QAudioItem: Gtk.ListBoxRow {
     Box {
         spacing: 10;
 
+        styles [
+            "x_padding_10",
+        ]
+
         Image {
             icon-name: bind $fallback_icon(template.endpoint as <AstalWp.Endpoint>.icon) as <string>;
         }

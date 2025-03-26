@@ -13,6 +13,7 @@ template $NavBar: Astal.Window {
 
   title: "NavBar";
   namespace: "NavBar";
+  anchor: left | bottom | right;
   exclusivity: exclusive;
 
   CenterBox {
@@ -85,7 +86,6 @@ template $NavBar: Astal.Window {
         ]
 
         MenuButton {
-          valign: center;
           icon-name: "go-up-symbolic";
 
           styles [
@@ -109,6 +109,7 @@ template $NavBar: Astal.Window {
         percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
         line-width: 5;
         line-cap: round;
+        radius-filled: true;
         inverted: true;
         start-at: -0.25;
         end-at: 0.75;

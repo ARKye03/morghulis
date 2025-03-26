@@ -1,0 +1,107 @@
+using Gtk 4.0;
+using AstalBattery 0.1;
+using AstalPowerProfiles 0.1;
+
+template $BatteryBox: Box {
+    spacing: 10;
+
+    styles [
+        "background",
+        "padding_10",
+        "master_border",
+        "rounded",
+        "flats",
+    ]
+
+    Stack bb_stack {
+        transition-duration: 300;
+        transition-type: slide_up_down;
+
+        StackPage {
+            name: "sliders";
+
+            child: Box {
+                orientation: vertical;
+                spacing: 10;
+
+                Box {
+                    orientation: horizontal;
+                    spacing: 10;
+
+                    Image {
+                        icon-name: bind template.backlight as <$Backlight>.icon-name;
+                    }
+
+                    Scale {
+                        hexpand: true;
+                        adjustment: bind template.brightness_adj;
+
+                        styles [
+                            "hslider",
+                            "rounded",
+                            "padding_5",
+                        ]
+                    }
+                }
+
+                Box {
+                    orientation: horizontal;
+                    spacing: 10;
+
+                    Image {
+                        icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+                    }
+
+                    ProgressBar {
+                        hexpand: true;
+                        fraction: bind template.battery as <AstalBattery.Device>.percentage;
+
+                        styles [
+                            "hprogress",
+                            "rounded",
+                            "padding_5",
+                        ]
+                    }
+                }
+            };
+        }
+
+        StackPage {
+            name: "profiles";
+
+            child: Box {
+                orientation: horizontal;
+                spacing: 10;
+                homogeneous: true;
+
+                Button power_saver {
+                    icon-name: "power-profile-power-saver-symbolic";
+                    clicked => $set_power_saver();
+                    tooltip-text: _("Power Saver");
+                }
+
+                Button balanced {
+                    icon-name: "power-profile-balanced-symbolic";
+                    clicked => $set_balanced();
+                    tooltip-text: _("Balanced");
+                }
+
+                Button performance {
+                    icon-name: "power-profile-performance-symbolic";
+                    clicked => $set_performance();
+                    tooltip-text: _("Performance");
+                }
+            };
+        }
+    }
+
+    Button ppd_stack_btn {
+        clicked => $show_power_profiles();
+        tooltip-text: _("Power Profiles");
+
+        Image {
+            icon-name: bind template.power_profiles as <AstalPowerProfiles.PowerProfiles>.icon-name;
+            icon-size: large;
+        }
+    }
+}

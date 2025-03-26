@@ -13,6 +13,7 @@ public class Tray : Gtk.Widget {
 			max_children_per_line = 4,
 			homogeneous = true,
 			column_spacing = row_spacing = 1,
+			selection_mode = Gtk.SelectionMode.NONE,
 		};
 
 		this.tray.item_added.connect(on_added);
@@ -37,8 +38,7 @@ public class Tray : Gtk.Widget {
 		if (!this.items.contains(item_id)) {
 			return;
 		}
-		var item = this.items.take(item_id);
-		flow_box.remove(item);
+		flow_box.remove(this.items.take(item_id));
 		this.visible = items.size() > 0;
 	}
 
@@ -56,10 +56,8 @@ public class Tray : Gtk.Widget {
 		item.bind_property("gicon", icon, "gicon", BindingFlags.SYNC_CREATE);
 		button.child = icon;
 
-		var fbc = new Gtk.FlowBoxChild() {
-			child = button,
+		return new Gtk.FlowBoxChild() {
+				   child = button
 		};
-
-		return fbc;
 	}
 }

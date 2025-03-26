@@ -44,7 +44,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
   - <details> <summary>Power Profiles</summary>
       While it might not be used, its mandatory to install it (For now).
     </details>
-- [libgtop](https://gitlab.gnome.org/GNOME/libgtop) (Optional)
+- [libgtop](https://gitlab.gnome.org/GNOME/libgtop)
 
 > [!NOTE]
 > Optional dependencies are not required only if built from source, the binary release requires all.
@@ -85,7 +85,7 @@ morghulctl --help
 
 ### Style
 
-You can change the style of Morghulis by creating the `main.css` file at `$HOME/.config/morghulis/`. _Hot Reload_ is supported. As previously mentioned, Adwaita theme is needed.
+You can change the style of Morghulis by creating the file `$XDG_CONFIG_HOME/morghulis/main.css`. _Hot Reload_ is supported. As previously mentioned, Adwaita theme is encouraged.
 
 ## Development
 
@@ -136,11 +136,17 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [ ] Power Popup Menu (WIP)
 - [x] OnScreenDisplay
   - [x] Audio
-  - [ ] Brightness
+  - [x] Brightness
+- [x] Backlight (WIP)
 - [x] Dynamic CSS
 
 > [!NOTE]
-> For OSD to work, you need to append `morghulctl -r change_volume` to whatever keybinding you want to use to raise/volume the volume.
+> For OSD to work, you need to append `"morghulctl -r change_volume" and/or" morghulctl -r change_brightness"` to whatever keybinding you want to use to raise/lower the volume/brightness.
+> Example:
+>
+> ```hyprlang
+> binde=, XF86MonBrightnessUp, exec, brightnessctl set +10% & morghulctl -r change_brightness
+> ```
 
 ## Preview
 

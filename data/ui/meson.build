@@ -11,7 +11,7 @@ blueprints = custom_target(
         'QButton.blp',
         'QNetwork.blp',
         'QNotifications.blp',
-        'QPowerProfiles.blp',
+        'BatteryBox.blp',
         'QuickMenu.blp',
         'Runner.blp',
         'RunnerButton.blp',

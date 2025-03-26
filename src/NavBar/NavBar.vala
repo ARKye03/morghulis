@@ -5,9 +5,20 @@ public class NavBar : Astal.Window {
 	private GLib.DateTime _clock_time;
 
 	public static NavBar instance { get; private set; }
-	public AstalBattery.Device battery { get; set; }
-	public AstalWp.Endpoint speaker { get; set; }
+	public AstalBattery.Device battery { get; private set; }
+	public AstalWp.Endpoint speaker { get; private set; }
 	public string current_time { get; private set; }
+	public static string[] icon_names = {
+		"terminal-symbolic",
+		"browser-symbolic",
+		"code-symbolic",
+		"explorer-symbolic",
+		"social-symbolic",
+		"docs-symbolic",
+		"media-symbolic",
+		"settings-symbolic",
+		"gaming-symbolic",
+	};
 
 	[GtkChild]
 	private unowned Adw.Bin workspaces;
@@ -19,10 +30,6 @@ public class NavBar : Astal.Window {
 	private unowned Adw.Bin active_submap;
 
 	public NavBar() {
-		Object(
-			namespace : "NavBar",
-			anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT
-		);
 		battery = AstalBattery.Device.get_default();
 		speaker = AstalWp.get_default().audio.default_speaker;
 
