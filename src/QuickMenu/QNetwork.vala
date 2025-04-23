@@ -1,74 +1,119 @@
-//This file if complete garbage
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
-	public AstalNetwork.Network network { get; set; }
-	private GLib.ListStore wifi_store;
+	public NetworkManager network { get; set; }
 
 	[GtkChild]
-	private unowned Gtk.ListView wifi_list;
+	private unowned Gtk.ListBox wifi_list;
 
 	construct {
-		network = AstalNetwork.get_default();
-		wifi_store = new GLib.ListStore(typeof(WifiItem));
+		network = NetworkManager.get_default();
 
-		var factory = setup_factory();
-		var selection = new Gtk.NoSelection(wifi_store);
-		wifi_list.set_factory(factory);
-		wifi_list.set_model(selection);
+		// Set up ListBox sorting by signal strength
+		wifi_list.set_sort_func((row1, row2) => {
+			var item1 = ((WifiRow)row1).wifi_item;
+			var item2 = ((WifiRow)row2).wifi_item;
+			return item2.access_point.strength - item1.access_point.strength;                                                             // Higher strength first
+		});
 
-		network.wifi.notify["access-points"].connect(refresh_items);
+		// Connect signals for access point changes
+		network.access_point_added.connect(add_access_point);
+		network.access_point_removed.connect(remove_access_point);
+
+		// Initial population
 		refresh_items();
 	}
 
-	private Gtk.SignalListItemFactory setup_factory() {
-		var factory = new Gtk.SignalListItemFactory();
+	private void add_access_point(AccessPoint ap) {
+		// Check if we already have this AP in the list
+		var current = (WifiRow)wifi_list.get_first_child();
 
-		factory.setup.connect((factory, obj) => {
-			var list_item = (Gtk.ListItem)obj;
-			var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 5);
-			box.append(new Gtk.Image());
-			box.append(new Gtk.Label(null));
-			box.add_css_class("padding_10");
-			list_item.child = box;
-		});
+		while (current != null) {
+			if (current.wifi_item.access_point.ssid == ap.ssid) {
+				// Update the existing item
+				current.wifi_item.access_point = ap;
+				wifi_list.invalidate_sort();
+				return;
+			}
+			current = (WifiRow)current.get_next_sibling();
+		}
 
-		factory.bind.connect((factory, obj) => {
-			var list_item = (Gtk.ListItem)obj;
-			var box = (Gtk.Box)list_item.get_child();
-			var image = (Gtk.Image)box.get_first_child();
-			var label = (Gtk.Label)box.get_last_child();
-			var item = (WifiItem)list_item.get_item();
+		var item = new WifiItem(ap);
+		var row = new WifiRow(item);
+		wifi_list.append(row);
+		wifi_list.invalidate_sort();
+	}
 
-			image.set_from_icon_name(item.icon_name);
-			image.pixel_size = 25;
-			label.label = item.ssid;
-		});
+	private void remove_access_point(AccessPoint ap) {
+		var current = (WifiRow)wifi_list.get_first_child();
 
-		return factory;
+		while (current != null) {
+			if (current.wifi_item.access_point.ssid == ap.ssid) {
+				wifi_list.remove(current);
+				return;
+			}
+			current = (WifiRow)current.get_next_sibling();
+		}
 	}
 
 	private void refresh_items() {
-		wifi_store.remove_all();
-		network.wifi.access_points.foreach((ap) => {
-			wifi_store.append(new WifiItem(ap));
-		});
+		var current = wifi_list.get_first_child();
+
+		while (current != null) {
+			var next = current.get_next_sibling();
+			wifi_list.remove(current);
+			current = next;
+		}
 	}
 
 	[GtkCallback]
 	public void refresh() {
-		network.wifi.scan();
+		network.scan_access_points();
 	}
 }
 
 public class WifiItem : Object {
 	public string ssid { get; set; }
 	public string icon_name { get; set; }
-	public AstalNetwork.AccessPoint access_point { get; set; }
+	public AccessPoint access_point { get; set; }
 
-	public WifiItem(AstalNetwork.AccessPoint ap) {
+	public WifiItem(AccessPoint ap) {
 		Object();
 		this.ssid = ap.ssid;
 		this.icon_name = ap.icon_name;
 		this.access_point = ap;
+	}
+}
+
+// New class for ListBox rows
+public class WifiRow : Gtk.ListBoxRow {
+	public WifiItem wifi_item { get; private set; }
+
+	private Gtk.Image icon;
+	private Gtk.Label label;
+
+	public WifiRow(WifiItem item) {
+		this.wifi_item = item;
+
+		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 5);
+		box.add_css_class("padding_10");
+
+		icon = new Gtk.Image();
+		icon.set_from_icon_name(item.icon_name);
+		icon.pixel_size = 25;
+
+		label = new Gtk.Label(item.ssid);
+		label.halign = Gtk.Align.START;
+		label.hexpand = true;
+
+		box.append(icon);
+		box.append(label);
+
+		this.set_child(box);
+
+		// Update UI when access point properties change
+		item.access_point.notify["strength"].connect(() => {
+			icon.set_from_icon_name(item.access_point.icon_name);
+			((Gtk.ListBox)get_parent()).invalidate_sort();
+		});
 	}
 }

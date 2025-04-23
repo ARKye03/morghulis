@@ -1,6 +1,5 @@
 using Gtk 4.0;
 using Adw 1;
-using AstalNetwork 0.1;
 
 template $QNetwork: Box {
     orientation: vertical;
@@ -15,8 +14,7 @@ template $QNetwork: Box {
             Revealer {
                 transition-duration: 200;
                 transition-type: slide_left;
-                reveal-child: bind template.network as <AstalNetwork.Wifi>.scanning;
-
+                // reveal-child: bind template.network as <AstalNetwork.Wifi>.scanning;
                 Adw.Spinner spinner {}
             }
 
@@ -35,11 +33,12 @@ template $QNetwork: Box {
             "padding_10",
         ]
 
-        ListView wifi_list {
-            show-separators: true;
+        ListBox wifi_list {
+            selection-mode: none;
 
             styles [
                 "rounded",
+                "boxed-list",
             ]
         }
     }

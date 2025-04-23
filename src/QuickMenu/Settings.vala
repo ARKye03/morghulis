@@ -2,7 +2,7 @@
 public class Settings : Adw.Bin {
 	private AstalMpris.Mpris _mpris;
 
-	public AstalNetwork.Network network { get; private set; }
+	public NetworkManager network { get; private set; }
 	public AstalBluetooth.Bluetooth bluetooth { get; private set; }
 	public AstalNotifd.Notifd notifd { get; private set; }
 	public AstalWp.Wp? wp { get; private set; }
@@ -13,7 +13,7 @@ public class Settings : Adw.Bin {
 	public unowned Adw.NavigationView quick_settings_navigation_view;
 
 	construct {
-		network = AstalNetwork.get_default();
+		network = NetworkManager.get_default();
 		bluetooth = AstalBluetooth.get_default();
 		wp = AstalWp.get_default();
 		notifd = AstalNotifd.get_default();
@@ -44,7 +44,7 @@ public class Settings : Adw.Bin {
 
 	[GtkCallback]
 	public void network_clicked() {
-		this.network.wifi.enabled = !this.network.wifi.enabled;
+		this.network.wireless_enabled = !this.network.wireless_enabled;
 	}
 
 	[GtkCallback]
@@ -59,14 +59,14 @@ public class Settings : Adw.Bin {
 			   : "Off";
 	}
 
-	[GtkCallback]
-	public string network_identity(string? identity) {
-		if (identity != null && identity != "") {
-			return identity;
-		} else {
-			return "Wifi";
-		}
-	}
+	//  [GtkCallback]
+	//  public string network_identity(string? identity) {
+	//  	if (identity != null && identity != "") {
+	//  		return identity;
+	//  	} else {
+	//  		return "Wifi";
+	//  	}
+	//  }
 
 	[GtkCallback]
 	public void bluetooth_clicked() {

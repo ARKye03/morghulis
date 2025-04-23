@@ -39,10 +39,10 @@ template $Settings: Adw.Bin {
                         }
 
                         name: "Network";
-                        identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
-                        status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
-                        icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
-                        active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+                        identity: bind template.network as <$NetworkManager>.active_ap_ssid;
+                        status: bind $conn_status(template.network as <$NetworkManager>.wireless_enabled) as <string>;
+                        icon: bind template.network as <$NetworkManager>.icon_name;
+                        active: bind template.network as <$NetworkManager>.wireless_enabled;
                         clicked => $network_clicked();
                         clicked_extras => $network_clicked_extras();
                     }
