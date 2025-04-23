@@ -8,6 +8,9 @@ template $OnScreenDisplay: Astal.Window {
     ]
 
     title: "OnScreenDisplay";
+    namespace: "OnScreenDisplay";
+    layer: overlay;
+    anchor: bottom;
     margin-bottom: 5;
 
     Stack stack_osd { // Stack for volume and brightness

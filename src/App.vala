@@ -1,13 +1,12 @@
 public class Morghulis : Astal.Application {
-	private string socket_path { get; set; }
-	private bool css_loaded { get; set; default = false; }
-	private GLib.File file { get; set; }
-	private GLib.FileMonitor file_monitor { get; set; }
+	private bool _css_loaded;
+	private File _css_file;
+	private FileMonitor _css_file_monitor;
 
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
-	public static string clock_format { get; set; default = "%H:%M %b %e"; }
+	public static string clock_format { get; private set; default = "%H:%M %b %e"; }
 
 	public override void request(string msg, SocketConnection conn) {
 		switch (msg) {
@@ -36,17 +35,25 @@ public class Morghulis : Astal.Application {
 		}
 		instance = this;
 
-		file = File.new_for_path(@"$(Environment.get_user_config_dir())/morghulis/main.css");
-		if (file.query_exists()) {
-			try {
-				file_monitor = file.monitor_file(GLib.FileMonitorFlags.NONE);
-				file_monitor.changed.connect((_) => {
-					apply_css(file.get_path(), true);
-					message("Reloaded CSS");
-				});
-			} catch (IOError e) {
-				critical("Error: %s\n", e.message);
-			}
+		_css_file = File.new_for_path(@"$(Environment.get_user_config_dir())/morghulis/main.css");
+		try {
+			_css_file_monitor = _css_file.monitor_file(
+				GLib.FileMonitorFlags.WATCH_HARD_LINKS
+				| GLib.FileMonitorFlags.WATCH_MOUNTS
+				| GLib.FileMonitorFlags.WATCH_MOVES
+			);
+			uint count = 0;
+			_css_file_monitor.changed.connect((file, other_file, event_type) => {
+				if (event_type == FileMonitorEvent.CHANGED) {
+					apply_css(_css_file.get_path(), true);
+					print(@"\033[34mCSS Reloaded:\033[0m \033[33mx$(++count)\033[0m\n");
+				} else if (event_type == FileMonitorEvent.CREATED) {
+					apply_css(_css_file.get_path(), true);
+					print("\033[34mCSS File Created!\033[0m\n");
+				}
+			});
+		} catch (IOError e) {
+			critical("Error: %s\n", e.message);
 		}
 	}
 
@@ -54,14 +61,15 @@ public class Morghulis : Astal.Application {
 	public override void activate() {
 		base.activate();
 		setup_display_and_monitor();
+		Gtk.IconTheme.get_for_display(display).add_resource_path("/com/github/ARKye03/morghulis/icons");
 
-		if (!css_loaded) {
+		if (!_css_loaded) {
 			load_css();
-			css_loaded = true;
+			_css_loaded = true;
 		}
 
-		if (file.query_exists()) {
-			apply_css(file.get_path(), true);
+		if (_css_file.query_exists()) {
+			apply_css(_css_file.get_path(), true);
 		}
 
 		add_window(new NavBar());
@@ -104,6 +112,7 @@ public class Morghulis : Astal.Application {
 
 	private void load_css() {
 		var provider = new Gtk.CssProvider();
+
 		provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
 		add_css_provider(provider);
 	}

@@ -1,6 +1,3 @@
-using GtkLayerShell;
-using AstalMpris;
-
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
 public class OnScreenDisplay : Astal.Window {
 	private uint _hide_timeout_id = 0;
@@ -20,12 +17,6 @@ public class OnScreenDisplay : Astal.Window {
 		}
 		speaker = AstalWp.get_default().audio.default_speaker;
 		backlight = Backlight.get_default();
-	}
-	public OnScreenDisplay() {
-		Object(namespace : "OnScreenDisplay",
-			   anchor: Astal.WindowAnchor.BOTTOM,
-			   layer: Astal.Layer.OVERLAY
-		);
 	}
 
 	private void handle_timeout() {

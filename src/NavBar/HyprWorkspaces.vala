@@ -1,23 +1,15 @@
-using AstalHyprland;
 public class HyprWorkspaces : Gtk.Box {
 	private AstalHyprland.Hyprland _hyprland;
-
-	// Workspace Icons
-	private string[] wicons = {
-		" ", " ", "󰨞 ",
-		" ", " ", "󰭹 ",
-		" ", " ", "󰊖 ",
-		" ",
-	};
 
 	public HyprWorkspaces(AstalHyprland.Hyprland hyprland) {
 		this._hyprland = hyprland;
 		this.spacing = 5;
 
-		for (var i = 1; i <= 10; i++) {
-			var workspace_button = new Gtk.Button.with_label(wicons[i - 1]) {
-				valign = Gtk.Align.CENTER,
-				halign = Gtk.Align.CENTER,
+		for (var i = 1; i <= 9; i++) {
+			var workspace_button = new Gtk.Button() {
+				child = new Gtk.Image.from_icon_name(NavBar.icon_names[i - 1]) {
+					pixel_size = 20
+				},
 			};
 			connect_button_to_workspace(workspace_button, i);
 			this.append(workspace_button);

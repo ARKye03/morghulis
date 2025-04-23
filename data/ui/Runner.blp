@@ -8,6 +8,9 @@ template $Runner: Astal.Window {
     ]
 
     title: "Runner";
+    namespace: "Runner";
+    anchor: top;
+    keymode: on_demand;
 
     EventControllerKey {
         key-released => $key_released();
