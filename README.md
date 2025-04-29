@@ -156,7 +156,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 ![Morghulis](public/morghulis.webp)
 
 > [!NOTE]
-> The preview uses the Adwaita-black theme, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
+> The preview uses a custom Adwaita theme, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
 
 ### Thanks to
 
