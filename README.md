@@ -47,7 +47,7 @@ Desktop Shell created with GTK4, Libadwaita, and Astal.
 - [libgtop](https://gitlab.gnome.org/GNOME/libgtop)
 
 > [!NOTE]
-> Optional dependencies are not required only if built from source, the binary release requires all.
+> Optional dependencies are not required only if built from source; the binary release requires all.
 
 ## Installation
 
@@ -74,18 +74,18 @@ Alternatively, use a binary from [releases](https://github.com/ARKye03/morghulis
 
 ## Usage
 
-Morghulis is a desktop shell that uses Astal under the hood, so the astal cli is available to use, via `astal -i morghulis <command>`, nevertheless, the `morghulis-cli` called `morghulctl` is dedicated to this project itself.
+Morghulis is a desktop shell that uses Astal under the hood, so the Astal CLI is available to use via `astal -i morghulis <command>`; nevertheless, the `morghulis-cli` called `morghulctl` is dedicated to this project itself.
 
 ```shell
 morghulctl --help
 ```
 
 > [!NOTE]
-> The cli at the moment offers simple commands to start the application, toggle window, and show inspector.
+> The CLI currently offers simple commands to start the application, toggle windows, and show the inspector.
 
 ### Style
 
-You can change the style of Morghulis by creating the file `$XDG_CONFIG_HOME/morghulis/main.css`. _Hot Reload_ is supported. As previously mentioned, Adwaita theme is encouraged.
+You can change the style of Morghulis by creating the file `$XDG_CONFIG_HOME/morghulis/main.css`. _Hot Reload_ is supported. As previously mentioned, an Adwaita theme is encouraged.
 
 ## Development
 
@@ -138,10 +138,11 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] OnScreenDisplay
   - [x] Audio
   - [x] Brightness
-- [x] Backlight (WIP)
-  > [!WARNING]
-  > **Users must be part of the `video` group.**
+- [x] Backligh
 - [x] Hot Reload CSS
+
+> [!WARNING]
+> **Users must be part of the `video` group to use backlight services.**
 
 > [!NOTE]
 > For OSD to work, you need to append `"morghulctl -r change_volume" and/or" morghulctl -r change_brightness"` to whatever keybinding you want to use to raise/lower the volume/brightness.
