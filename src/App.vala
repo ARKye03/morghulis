@@ -2,11 +2,15 @@ public class Morghulis : Astal.Application {
 	private bool _css_loaded;
 	private File _css_file;
 	private FileMonitor _css_file_monitor;
+	private GTop.Uptime _g_uptime;
 
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
 	public static string clock_format { get; private set; default = "%H:%M %b %e"; }
+	public static string user_name { get; private set; }
+
+	public string uptime { get; private set; }
 
 	public override void request(string msg, SocketConnection conn) {
 		switch (msg) {
@@ -62,6 +66,7 @@ public class Morghulis : Astal.Application {
 		base.activate();
 		setup_display_and_monitor();
 		Gtk.IconTheme.get_for_display(display).add_resource_path("/com/github/ARKye03/morghulis/icons");
+		user_name = Environment.get_user_name();
 
 		if (!_css_loaded) {
 			load_css();
@@ -77,6 +82,13 @@ public class Morghulis : Astal.Application {
 		add_window(new QuickMenu());
 		add_window(new OnScreenDisplay());
 		add_window(new NotifPopItemsCenter());
+		add_window(new PowerMenu());
+
+		Timeout.add_seconds(60, () => {
+			sync_uptime();
+			return true;
+		});
+		sync_uptime();
 
 		this.hold();
 	}
@@ -115,5 +127,17 @@ public class Morghulis : Astal.Application {
 
 		provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
 		add_css_provider(provider);
+	}
+
+	private void sync_uptime() {
+		GTop.get_uptime(out _g_uptime);
+		var uptime_hours = Math.floor(_g_uptime.uptime / 3600);
+		var uptime_minutes = Math.floor((_g_uptime.uptime % 3600) / 60);
+
+		if (uptime_hours <= 0) {
+			uptime = @"Up for $uptime_minutes minutes";
+		} else {
+			uptime = @"Up $uptime_hours hours, and $uptime_minutes minutes";
+		}
 	}
 }

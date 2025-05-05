@@ -47,6 +47,7 @@ endif
 
 subdir('Modules')
 subdir('NavBar')
+subdir('PowerMenu')
 subdir('Tray')
 subdir('Notifications')
 subdir('OnScreenDisplay')

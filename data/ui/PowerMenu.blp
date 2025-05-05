@@ -1,0 +1,132 @@
+using Gtk 4.0;
+using Astal 4.0;
+
+template $PowerMenu: Astal.Window {
+    title: "PowerMenu";
+    namespace: "Morghulis.PowerMenu";
+    anchor: bottom;
+    margin-bottom: 20;
+    keymode: on_demand;
+    layer: overlay;
+
+    styles [
+        "all_unset",
+    ]
+
+    Box {
+        orientation: vertical;
+        spacing: 10;
+
+        styles [
+            "padding_10",
+            "rounded",
+            "background",
+        ]
+
+        Label {
+            label: bind template.uptime;
+            halign: center;
+        }
+
+        Stack stapel {
+            transition-type: slide_up_down;
+            transition-duration: 200;
+
+            StackPage {
+                name: "actions";
+
+                child: Box {
+                    orientation: horizontal;
+                    spacing: 10;
+                    homogeneous: true;
+
+                    Button {
+                        tooltip-text: _("Lock Screen");
+                        clicked => $just_lock();
+
+                        Image {
+                            icon-name: "lockscreen-symbolic";
+                            icon-size: large;
+                        }
+                    }
+
+                    Button {
+                        tooltip-text: _("Shutdown");
+                        clicked => $set_shutdown();
+
+                        Image {
+                            icon-name: "shutdown-symbolic";
+                            icon-size: large;
+                        }
+                    }
+
+                    Button {
+                        tooltip-text: _("Restart");
+                        clicked => $set_reboot();
+
+                        Image {
+                            icon-name: "reboot-symbolic";
+                            icon-size: large;
+                        }
+                    }
+
+                    Button {
+                        tooltip-text: _("Suspend");
+                        clicked => $set_suspend();
+
+                        Image {
+                            icon-name: "suspend-symbolic";
+                            icon-size: large;
+                        }
+                    }
+
+                    Button {
+                        visible: false;
+                        tooltip-text: _("Hibernate");
+                        clicked => $set_hibernate();
+
+                        Image {
+                            icon-name: "hibernate-symbolic";
+                            icon-size: large;
+                        }
+                    }
+
+                    Button {
+                        tooltip-text: _("Logout");
+                        clicked => $set_logout();
+
+                        Image {
+                            icon-name: "logout-symbolic";
+                            icon-size: large;
+                        }
+                    }
+                };
+            }
+
+            StackPage {
+                name: "confirmation";
+
+                child: Box {
+                    spacing: 10;
+                    halign: center;
+                    hexpand: true;
+                    homogeneous: true;
+
+                    Button {
+                        icon-name: "window-close-symbolic";
+                        clicked => $cancel();
+                    }
+
+                    Button {
+                        icon-name: "object-select-symbolic";
+                        clicked => $confirm();
+
+                        styles [
+                            "destructive-action",
+                        ]
+                    }
+                };
+            }
+        }
+    }
+}

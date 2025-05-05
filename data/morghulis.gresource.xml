@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/com/github/ARKye03/morghulis/icons/scalable/actions">
+        <!-- NavBar -->
         <file alias="terminal-symbolic.svg">assets/NavBar/terminal-symbolic.svg</file>
         <file alias="browser-symbolic.svg">assets/NavBar/browser-symbolic.svg</file>
         <file alias="code-symbolic.svg">assets/NavBar/code-symbolic.svg</file>
@@ -10,6 +11,13 @@
         <file alias="media-symbolic.svg">assets/NavBar/media-symbolic.svg</file>
         <file alias="settings-symbolic.svg">assets/NavBar/settings-symbolic.svg</file>
         <file alias="gaming-symbolic.svg">assets/NavBar/gaming-symbolic.svg</file>
+        <!-- System -->
+        <file alias="hibernate-symbolic.svg">assets/System/hibernate-symbolic.svg</file>
+        <file alias="logout-symbolic.svg">assets/System/logout-symbolic.svg</file>
+        <file alias="reboot-symbolic.svg">assets/System/reboot-symbolic.svg</file>
+        <file alias="shutdown-symbolic.svg">assets/System/shutdown-symbolic.svg</file>
+        <file alias="suspend-symbolic.svg">assets/System/suspend-symbolic.svg</file>
+        <file alias="lockscreen-symbolic.svg">assets/System/lockscreen-symbolic.svg</file>
     </gresource>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
@@ -32,5 +40,6 @@
         <file preprocess="xml-stripblanks">ui/QNotifications.ui</file>
         <file preprocess="xml-stripblanks">ui/QAudioBox.ui</file>
         <file preprocess="xml-stripblanks">ui/QAudioItem.ui</file>
+        <file preprocess="xml-stripblanks">ui/PowerMenu.ui</file>
     </gresource>
 </gresources>

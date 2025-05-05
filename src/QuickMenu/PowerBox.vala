@@ -7,12 +7,10 @@ private enum PowerOption {
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
 public class PowerBox : Gtk.Box {
-	private GTop.Uptime _uptime;
 	private PowerOption _option;
 
-	public string uptime_string { get; private set; }
+	public string uptime { get; set; }
 	public string user_name { get; private set; }
-	public string user_image { get; private set; }
 	public Gdk.Paintable user_image_paintable { get; private set; }
 	public static Gtk.Stack mstack { get; private set; }
 
@@ -21,10 +19,10 @@ public class PowerBox : Gtk.Box {
 
 	construct {
 		_option = PowerOption.NONE;
-		user_name = Environment.get_user_name();
-		user_image = Environment.get_home_dir() + "/user.png";
+		user_name = Morghulis.user_name;
+		var user_image_path = Environment.get_home_dir() + "/user.png";
 		try {
-			var pixbuf = new Gdk.Pixbuf.from_file(user_image);
+			var pixbuf = new Gdk.Pixbuf.from_file(user_image_path);
 			if (pixbuf != null) {
 				user_image_paintable = Gdk.Texture.for_pixbuf(pixbuf);
 			}
@@ -33,22 +31,7 @@ public class PowerBox : Gtk.Box {
 		}
 		mstack = main_stack;
 
-		Timeout.add_seconds(60, () => {
-			update_values();
-			return true;
-		});
-		update_values();
-	}
-	private void update_values() {
-		GTop.get_uptime(out _uptime);
-		var uptime_hours = Math.floor(_uptime.uptime / 3600);
-		var uptime_minutes = Math.floor((_uptime.uptime % 3600) / 60);
-
-		if (uptime_hours <= 0) {
-			uptime_string = @"Up for $uptime_minutes minutes";
-		} else {
-			uptime_string = @"Up $uptime_hours hours, and $uptime_minutes minutes";
-		}
+		Morghulis.instance.bind_property("uptime", this, "uptime", BindingFlags.SYNC_CREATE);
 	}
 
 	/// I honestly think this can be done better
