@@ -143,8 +143,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 
 > [!WARNING]
 > **Users must be part of the `video` group to use backlight services.**
-
-> [!NOTE]
+>
 > For OSD to work, you need to append `"morghulctl -r change_volume" and/or" morghulctl -r change_brightness"` to whatever keybinding you want to use to raise/lower the volume/brightness.
 > Example:
 >
