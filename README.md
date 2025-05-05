@@ -134,7 +134,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [x] Center
   - [x] Popup
   - [x] Don't Disturb logic
-- [ ] Power Popup Menu (WIP)
+- [x] Power Popup Menu
 - [x] OnScreenDisplay
   - [x] Audio
   - [x] Brightness
