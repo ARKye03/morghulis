@@ -1,11 +1,11 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QAudioItem.ui")]
 public class QAudioItem : Gtk.ListBoxRow {
-	public AstalWp.Endpoint endpoint { get; construct; }
+	public AstalWp.Node endpoint { get; construct; }
 
 	[GtkChild]
 	private unowned Gtk.Adjustment volume_adjust;
 
-	public QAudioItem(AstalWp.Endpoint endpoint) {
+	public QAudioItem(AstalWp.Node endpoint) {
 		Object(endpoint: endpoint);
 
 		this.endpoint.bind_property(

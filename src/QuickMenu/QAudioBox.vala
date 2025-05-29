@@ -73,11 +73,11 @@ public class QAudioBox : Gtk.Box {
 		microphone.mute = !microphone.mute;
 	}
 
-	private void on_added(AstalWp.Endpoint e, Gtk.ListBox l) {
+	private void on_added(AstalWp.Node e, Gtk.ListBox l) {
 		l.append(new QAudioItem(e));
 	}
 
-	private void on_removed(AstalWp.Endpoint e, Gtk.ListBox l) {
+	private void on_removed(AstalWp.Node e, Gtk.ListBox l) {
 		var current = (QAudioItem)l.get_first_child();
 
 		while (current != null) {
