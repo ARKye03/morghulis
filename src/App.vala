@@ -7,7 +7,7 @@ public class Morghulis : Astal.Application {
 	public static Morghulis instance { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
-	public static string clock_format { get; private set; default = "%H:%M %b %e"; }
+	public static string clock_format { get; private set; default = "%H:%M %b %d"; }
 	public static string user_name { get; private set; }
 
 	public string uptime { get; private set; }
