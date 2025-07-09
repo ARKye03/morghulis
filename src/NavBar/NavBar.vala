@@ -187,6 +187,25 @@ public class NavBar : Astal.Window {
 			}
 			return true;
 		});
+
+		Gtk.Label mode_label = new Gtk.Label("default") {
+			halign = Gtk.Align.START,
+			ellipsize = Pango.EllipsizeMode.END,
+			max_width_chars = 20,
+			tooltip_text = "Active mode"
+		};
+		active_submap.child = mode_label;
+
+		_river.bind_property("mode", mode_label, "label", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+			var mode_name = (string)src;
+			if (mode_name != null && mode_name != "normal") {
+				trgt = mode_name;
+				active_submap.visible = true;
+			} else {
+				active_submap.visible = false;
+			}
+			return true;
+		});
 	}
 #endif
 }
