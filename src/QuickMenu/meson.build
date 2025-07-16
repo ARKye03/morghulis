@@ -1,16 +1,15 @@
 project_resources += files(
-    'QuickMenu.vala',
-    'QNetwork.vala',
-    'QBluetooth.vala',
-    'QBluetoothItem.vala',
     'BatteryBox.vala',
     'MprisPlayer.vala',
-    'QButton.vala',
     'PowerBox.vala',
-    'Settings.vala',
     'QAudioBox.vala',
     'QAudioItem.vala',
-    'SysInfo.vala',
+    'QBluetooth.vala',
+    'QBluetoothItem.vala',
+    'QButton.vala',
+    'QNetwork.vala',
+    'QuickMenu.vala',
+    'Settings.vala',
 )
 
 if astal_battery_dep.found()

@@ -104,7 +104,7 @@ template $NavBar: Astal.Window {
         }
       }
 
-      $CircularProgressBar {
+      Astal.CircularProgressBar {
         tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
         percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
         line-width: 5;

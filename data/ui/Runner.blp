@@ -60,6 +60,16 @@ template $Runner: Astal.Window {
             }
         }
 
+        Adw.Bin command_bin {
+            visible: false;
+
+            styles [
+                "bottom_left_right_corner_borders",
+                "padding_10",
+                "view",
+            ]
+        }
+
         ScrolledWindow {
             max-content-height: 400;
             propagate-natural-height: true;
