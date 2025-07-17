@@ -9,24 +9,6 @@ public interface CommandHandler : Object {
 	public abstract Gtk.Widget? execute(string[] args);
 }
 
-// Built-in command handlers
-public class SysInfoCommand : Object, CommandHandler {
-	public string get_name() {
-		return "si";
-	}
-
-	public string get_description() {
-		return "System Information Dashboard";
-	}
-
-	public Gtk.Widget? execute(string[] args) {
-		var sysinfo = new SysInfo();
-
-		sysinfo.set_size_request(480, 400);
-		return sysinfo;
-	}
-}
-
 public class WeatherCommand : Object, CommandHandler {
 	public string get_name() {
 		return "w";

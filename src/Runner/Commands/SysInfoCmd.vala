@@ -336,7 +336,7 @@ private class NetworkMonitorBar : Gtk.Box {
 			// Collect all available interfaces
 			while ((info = enumerator.next_file()) != null) {
 				string iface_name = info.get_name();
-				if (iface_name != "lo") {                                                                                                                                                                                                                                                                                                 // Skip loopback
+				if (iface_name != "lo") {                                                                                                                                                                                                                                                                                                                 // Skip loopback
 					found_interfaces += iface_name;
 				}
 			}
@@ -465,7 +465,7 @@ private class DiskMonitorBar : Gtk.Box {
 
 			if (fsusage.blocks > 0) {
 				double percentage = (double)fsusage.bavail / fsusage.blocks;
-				percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                 // Invert to show used space
+				percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // Invert to show used space
 
 				disk_bar.percentage = percentage;
 				disk_details.label = "%.1f GB / %.1f GB".printf(
@@ -578,5 +578,22 @@ private class SystemInfoBox : Gtk.Box {
 
 	public void update() {
 		sys_label.label = sysinfo.ncpu.to_string();
+	}
+}
+
+public class SysInfoCommand : Object, CommandHandler {
+	public string get_name() {
+		return "si";
+	}
+
+	public string get_description() {
+		return "System Information Dashboard";
+	}
+
+	public Gtk.Widget? execute(string[] args) {
+		var sysinfo = new SysInfo();
+
+		sysinfo.set_size_request(480, 400);
+		return sysinfo;
 	}
 }
