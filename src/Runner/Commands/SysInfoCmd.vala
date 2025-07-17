@@ -1,5 +1,6 @@
 public class SysInfo : Gtk.Box {
 	private SystemDashboard dashboard;
+	private uint update_timeout;
 
 	construct {
 		this.orientation = Gtk.Orientation.VERTICAL;
@@ -12,10 +13,17 @@ public class SysInfo : Gtk.Box {
 		dashboard = new SystemDashboard();
 		this.append(dashboard);
 
-		// Start the periodic update
-		GLib.Timeout.add_seconds(2, () => {
-			dashboard.update_all();
-			return true;
+		// Update right when showm, stop timeout when not visible
+		this.notify["visible"].connect(() => {
+			if (visible) {
+				dashboard.update_all();
+				update_timeout = Timeout.add_seconds(3, () => {
+					dashboard.update_all();
+					return true;
+				});
+			} else {
+				Source.remove(update_timeout);
+			}
 		});
 	}
 }
@@ -108,6 +116,10 @@ private class CpuMonitorBar : Gtk.Box {
 		cpu_label.add_css_class("title-4");
 		cpu_details.add_css_class("caption");
 
+		cpu_bar.child = new Gtk.Image.from_icon_name("cpu-symbolic") {
+			icon_size = Gtk.IconSize.LARGE
+		};
+
 		this.append(cpu_bar);
 		this.append(cpu_label);
 		this.append(cpu_details);
@@ -158,6 +170,10 @@ private class MemoryMonitorBar : Gtk.Box {
 		mem_label.add_css_class("title-4");
 		mem_details.add_css_class("caption");
 
+		mem_bar.child = new Gtk.Image.from_icon_name("mem-ram-symbolic") {
+			icon_size = Gtk.IconSize.LARGE
+		};
+
 		this.append(mem_bar);
 		this.append(mem_label);
 		this.append(mem_details);
@@ -199,6 +215,10 @@ private class SwapMonitorBar : Gtk.Box {
 
 		swap_label.add_css_class("title-4");
 		swap_details.add_css_class("caption");
+
+		swap_bar.child = new Gtk.Image.from_icon_name("swap-ram-symbolic") {
+			icon_size = Gtk.IconSize.LARGE
+		};
 
 		this.append(swap_bar);
 		this.append(swap_label);
@@ -272,6 +292,8 @@ private class NetworkMonitorBar : Gtk.Box {
 	private Gtk.Label net_details;
 	private uint64 last_bytes_in = 0;
 	private uint64 last_bytes_out = 0;
+	private string? active_interface = null;
+	private bool interface_found = false;
 
 	construct {
 		this.orientation = Gtk.Orientation.VERTICAL;
@@ -279,7 +301,7 @@ private class NetworkMonitorBar : Gtk.Box {
 
 		net_bar = new CircularProgressBar();
 		net_label = new Gtk.Label("Network");
-		net_details = new Gtk.Label("0 KB/s");
+		net_details = new Gtk.Label("Detecting...");
 
 		net_bar.line_width = 8;
 		net_bar.line_cap = Gsk.LineCap.ROUND;
@@ -289,39 +311,120 @@ private class NetworkMonitorBar : Gtk.Box {
 		net_label.add_css_class("title-4");
 		net_details.add_css_class("caption");
 
+		net_bar.child = new Gtk.Image.from_icon_name("network-symbolic") {
+			icon_size = Gtk.IconSize.LARGE
+		};
+
 		this.append(net_bar);
 		this.append(net_label);
 		this.append(net_details);
+
+		// Find available network interface at startup
+		find_network_interface();
+	}
+
+	private void find_network_interface() {
+		// Check /sys/class/net/ directory for available interfaces
+		try {
+			var net_dir = File.new_for_path("/sys/class/net");
+			var enumerator = net_dir.enumerate_children("standard::name", FileQueryInfoFlags.NONE);
+
+			FileInfo? info = null;
+			string[] preferred_interfaces = { "wlan0", "eth0", "enp0s3", "wlp2s0", "eno1", "wlo1" };
+			string[] found_interfaces = {};
+
+			// Collect all available interfaces
+			while ((info = enumerator.next_file()) != null) {
+				string iface_name = info.get_name();
+				if (iface_name != "lo") {                                                                                                                                                                                                                                                                                                                 // Skip loopback
+					found_interfaces += iface_name;
+				}
+			}
+
+			// Try preferred interfaces first
+			foreach (string preferred in preferred_interfaces) {
+				if (preferred in found_interfaces) {
+					if (is_interface_active(preferred)) {
+						active_interface = preferred;
+						interface_found = true;
+						return;
+					}
+				}
+			}
+
+			// If no preferred interface found, try any available interface
+			foreach (string iface in found_interfaces) {
+				if (is_interface_active(iface)) {
+					active_interface = iface;
+					interface_found = true;
+					return;
+				}
+			}
+
+			// Fallback to loopback if nothing else works
+			active_interface = "lo";
+			interface_found = true;
+		} catch (Error e) {
+			// If we can't read /sys/class/net, fallback to loopback
+			active_interface = "lo";
+			interface_found = true;
+		}
+	}
+
+	private bool is_interface_active(string interface_name) {
+		try {
+			string operstate_path = "/sys/class/net/%s/operstate".printf(interface_name);
+			string contents;
+			FileUtils.get_contents(operstate_path, out contents);
+			return contents.strip() == "up";
+		} catch (Error e) {
+			// If we can't read operstate, assume it might be active
+			return true;
+		}
 	}
 
 	public void update() {
-		GTop.get_netload(out netload, "lo");                                                                         // Get loopback as fallback
-
-		// Try to get main network interface
-		string[] interfaces = { "eth0", "wlan0", "enp0s3", "wlp2s0" };
-		foreach (string iface in interfaces) {
-			try {
-				GTop.get_netload(out netload, iface);
-				break;
-			} catch (Error e) {
-				continue;
-			}
+		if (!interface_found || active_interface == null) {
+			net_details.label = "No interface";
+			net_bar.percentage = 0;
+			return;
 		}
 
-		uint64 current_total = netload.bytes_in + netload.bytes_out;
-		uint64 diff = current_total - (last_bytes_in + last_bytes_out);
+		// Get network stats for the active interface
+		GTop.get_netload(out netload, active_interface);
 
-		// Normalize to percentage based on typical network usage (10MB/s = 100%)
-		double percentage = Math.fmin((double)diff / (10.0 * 1024 * 1024), 1.0);
+		uint64 current_bytes_in = netload.bytes_in;
+		uint64 current_bytes_out = netload.bytes_out;
+
+		// Calculate deltas (only if we have previous values)
+		uint64 diff_in = 0;
+		uint64 diff_out = 0;
+
+		if (last_bytes_in > 0 && last_bytes_out > 0) {
+			diff_in = current_bytes_in - last_bytes_in;
+			diff_out = current_bytes_out - last_bytes_out;
+		}
+
+		// Normalize to percentage based on typical network usage (1MB/s = 100%)
+		uint64 total_diff = diff_in + diff_out;
+		double percentage = Math.fmin((double)total_diff / (1024.0 * 1024.0), 1.0);
 
 		net_bar.percentage = percentage;
-		net_details.label = "↓%.1f KB/s ↑%.1f KB/s".printf(
-			(netload.bytes_in - last_bytes_in) / 1024.0,
-			(netload.bytes_out - last_bytes_out) / 1024.0
-		);
 
-		last_bytes_in = netload.bytes_in;
-		last_bytes_out = netload.bytes_out;
+		// Update display
+		if (diff_in == 0 && diff_out == 0 && last_bytes_in > 0) {
+			net_details.label = "Idle (%s)".printf(active_interface);
+		} else {
+			net_details.label = "↓%.1f KB/s ↑%.1f KB/s\n(%s)".printf(
+				diff_in / 1024.0,
+				diff_out / 1024.0,
+				active_interface
+			);
+		}
+
+		// Update last values
+		last_bytes_in = current_bytes_in;
+		last_bytes_out = current_bytes_out;
 	}
 }
 
@@ -347,6 +450,10 @@ private class DiskMonitorBar : Gtk.Box {
 		disk_label.add_css_class("title-4");
 		disk_details.add_css_class("caption");
 
+		disk_bar.child = new Gtk.Image.from_icon_name("device-floppy-symbolic") {
+			icon_size = Gtk.IconSize.LARGE
+		};
+
 		this.append(disk_bar);
 		this.append(disk_label);
 		this.append(disk_details);
@@ -358,7 +465,7 @@ private class DiskMonitorBar : Gtk.Box {
 
 			if (fsusage.blocks > 0) {
 				double percentage = (double)fsusage.bavail / fsusage.blocks;
-				percentage = 1.0 - percentage;                                                                                                                                                 // Invert to show used space
+				percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // Invert to show used space
 
 				disk_bar.percentage = percentage;
 				disk_details.label = "%.1f GB / %.1f GB".printf(
@@ -394,6 +501,10 @@ private class ProcessCountBar : Gtk.Box {
 
 		proc_label.add_css_class("title-4");
 		proc_details.add_css_class("caption");
+
+		proc_bar.child = new Gtk.Image.from_icon_name("timeline-symbolic") {
+			icon_size = Gtk.IconSize.LARGE
+		};
 
 		this.append(proc_bar);
 		this.append(proc_label);
@@ -445,48 +556,44 @@ private class UptimeInfoBox : Gtk.Box {
 }
 
 private class SystemInfoBox : Gtk.Box {
+	private GTop.SysInfo? sysinfo;
 	private Gtk.Label sys_label;
 	private Gtk.Label sys_details;
-	private uint cpu_count = 0;
 
 	construct {
 		this.orientation = Gtk.Orientation.VERTICAL;
 		this.spacing = 8;
 		this.halign = Gtk.Align.CENTER;
+		sysinfo = GTop.glibtop_get_sysinfo();
 
 		sys_label = new Gtk.Label("System");
-		sys_details = new Gtk.Label("Loading...");
-
+		sys_details = new Gtk.Label("N/A");
 		sys_label.add_css_class("title-4");
-		sys_details.add_css_class("caption");
 
 		this.append(sys_label);
 		this.append(sys_details);
 
-		// Get CPU count once at startup
-		get_cpu_count();
-	}
-
-	private void get_cpu_count() {
-		try {
-			string contents;
-			FileUtils.get_contents("/proc/cpuinfo", out contents);
-
-			string[] lines = contents.split("\n");
-			foreach (string line in lines) {
-				if (line.has_prefix("processor")) {
-					cpu_count++;
-				}
-			}
-		} catch (Error e) {
-			cpu_count = 1;             // Fallback to 1 CPU
-		}
+		update();
 	}
 
 	public void update() {
-		sys_details.label = "%u CPUs\n%s".printf(
-			cpu_count,
-			Environment.get_host_name() ?? "Unknown"
-		);
+		sys_label.label = sysinfo.ncpu.to_string();
+	}
+}
+
+public class SysInfoCommand : Object, CommandHandler {
+	public string get_name() {
+		return "si";
+	}
+
+	public string get_description() {
+		return "System Information Dashboard";
+	}
+
+	public Gtk.Widget? execute(string[] args) {
+		var sysinfo = new SysInfo();
+
+		sysinfo.set_size_request(480, 400);
+		return sysinfo;
 	}
 }

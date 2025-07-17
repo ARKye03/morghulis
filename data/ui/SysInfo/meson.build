@@ -1,0 +1,1 @@
+blps += files('HelpCmd.blp', 'SysInfoCmd.blp')

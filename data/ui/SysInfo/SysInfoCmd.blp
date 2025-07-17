@@ -1,0 +1,28 @@
+using Gtk 4.0;
+
+template $SysInfoCmd: Box {
+    orientation: vertical;
+
+    Label {
+        label: "Available commands";
+        halign: center;
+
+        styles [
+            "title-1",
+        ]
+    }
+
+    Separator {
+        orientation: horizontal;
+    }
+
+    Box commands_box {
+        orientation: vertical;
+        spacing: 10;
+        hexpand: true;
+
+        styles [
+            "padding_10",
+        ]
+    }
+}

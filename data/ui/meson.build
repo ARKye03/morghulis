@@ -1,25 +1,29 @@
+blps = files(
+    'BatteryBox.blp',
+    'MprisPlayer.blp',
+    'NavBar.blp',
+    'NotificationItem.blp',
+    'OnScreenDisplay.blp',
+    'PowerBox.blp',
+    'PowerMenu.blp',
+    'QAudioBox.blp',
+    'QAudioItem.blp',
+    'QBluetooth.blp',
+    'QBluetoothItem.blp',
+    'QButton.blp',
+    'QNetwork.blp',
+    'QNotifications.blp',
+    'QuickMenu.blp',
+    'Runner.blp',
+    'RunnerButton.blp',
+    'Settings.blp',
+)
+
+subdir('SysInfo')
+
 blueprints = custom_target(
     'blueprints',
-    input: files(
-        'MprisPlayer.blp',
-        'NavBar.blp',
-        'NotificationItem.blp',
-        'OnScreenDisplay.blp',
-        'PowerBox.blp',
-        'QBluetooth.blp',
-        'QBluetoothItem.blp',
-        'QButton.blp',
-        'QNetwork.blp',
-        'QNotifications.blp',
-        'BatteryBox.blp',
-        'QuickMenu.blp',
-        'Runner.blp',
-        'RunnerButton.blp',
-        'Settings.blp',
-        'QAudioBox.blp',
-        'QAudioItem.blp',
-        'PowerMenu.blp'
-    ),
+    input: blps,
     output: '.',
     command: [
         find_program('blueprint-compiler'),

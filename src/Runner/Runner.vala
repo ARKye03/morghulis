@@ -5,70 +5,8 @@ public extern double mpars_evaluate(string expression, out string? error);
 public interface CommandHandler : Object {
 	public abstract string get_name();
 	public abstract string get_description();
+
 	public abstract Gtk.Widget? execute(string[] args);
-}
-
-// Built-in command handlers
-public class SysInfoCommand : Object, CommandHandler {
-	public string get_name() {
-		return "si";
-	}
-
-	public string get_description() {
-		return "System Information Dashboard";
-	}
-
-	public Gtk.Widget? execute(string[] args) {
-		var sysinfo = new SysInfo();
-		sysinfo.set_size_request(480, 400);
-		return sysinfo;
-	}
-}
-
-public class HelpCommand : Object, CommandHandler {
-	private GLib.HashTable<string, CommandHandler> commands_ref;
-
-	public HelpCommand(GLib.HashTable<string, CommandHandler> commands) {
-		this.commands_ref = commands;
-	}
-
-	public string get_name() {
-		return "help";
-	}
-
-	public string get_description() {
-		return "Show available commands";
-	}
-
-	public Gtk.Widget? execute(string[] args) {
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 8);
-		box.margin_top = box.margin_bottom = 12;
-		box.margin_start = box.margin_end = 12;
-
-		var title = new Gtk.Label("Available Commands");
-		title.add_css_class("title-2");
-		box.append(title);
-
-		var commands_list = commands_ref.get_values();
-		foreach (var cmd in commands_list) {
-			var cmd_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12);
-			
-			var name_label = new Gtk.Label(":" + cmd.get_name());
-			name_label.add_css_class("title-4");
-			name_label.halign = Gtk.Align.START;
-			name_label.set_size_request(80, -1);
-			
-			var desc_label = new Gtk.Label(cmd.get_description());
-			desc_label.add_css_class("caption");
-			desc_label.halign = Gtk.Align.START;
-			
-			cmd_box.append(name_label);
-			cmd_box.append(desc_label);
-			box.append(cmd_box);
-		}
-
-		return box;
-	}
 }
 
 public class WeatherCommand : Object, CommandHandler {
@@ -82,6 +20,7 @@ public class WeatherCommand : Object, CommandHandler {
 
 	public Gtk.Widget? execute(string[] args) {
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
+
 		box.margin_top = box.margin_bottom = 16;
 		box.margin_start = box.margin_end = 16;
 
@@ -98,101 +37,6 @@ public class WeatherCommand : Object, CommandHandler {
 		note.add_css_class("caption");
 		note.add_css_class("dim-label");
 		box.append(note);
-
-		return box;
-	}
-}
-
-public class BluetoothCommand : Object, CommandHandler {
-	public string get_name() {
-		return "b";
-	}
-
-	public string get_description() {
-		return "Bluetooth devices (placeholder)";
-	}
-
-	public Gtk.Widget? execute(string[] args) {
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
-		box.margin_top = box.margin_bottom = 16;
-		box.margin_start = box.margin_end = 16;
-
-		var title = new Gtk.Label("Bluetooth Devices");
-		title.add_css_class("title-2");
-		box.append(title);
-
-		// Mock bluetooth devices
-		string[] devices = {
-			"🎧 AirPods Pro - Connected",
-			"🖱️ Magic Mouse - Disconnected", 
-			"⌨️ Wireless Keyboard - Connected",
-			"📱 iPhone - Paired"
-		};
-
-		foreach (string device in devices) {
-			var device_label = new Gtk.Label(device);
-			device_label.add_css_class("body");
-			device_label.halign = Gtk.Align.START;
-			box.append(device_label);
-		}
-
-		var note = new Gtk.Label("(This is a placeholder - integrate with BlueZ)");
-		note.add_css_class("caption");
-		note.add_css_class("dim-label");
-		box.append(note);
-
-		return box;
-	}
-}
-
-public class CalculatorCommand : Object, CommandHandler {
-	public string get_name() {
-		return "calc";
-	}
-
-	public string get_description() {
-		return "Calculator with expression evaluation";
-	}
-
-	public Gtk.Widget? execute(string[] args) {
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
-		box.margin_top = box.margin_bottom = 16;
-		box.margin_start = box.margin_end = 16;
-
-		var title = new Gtk.Label("Calculator");
-		title.add_css_class("title-2");
-		box.append(title);
-
-		var entry = new Gtk.Entry();
-		entry.placeholder_text = "Enter mathematical expression...";
-		entry.add_css_class("title-4");
-		box.append(entry);
-
-		var result_label = new Gtk.Label("Result will appear here");
-		result_label.add_css_class("title-3");
-		result_label.add_css_class("numeric-result");
-		box.append(result_label);
-
-		// Connect entry to calculate on change
-		entry.changed.connect(() => {
-			string input = entry.text.strip();
-			if (input.length > 0) {
-				string error;
-				double result = mpars_evaluate(input, out error);
-				if (error == null) {
-					result_label.label = result.to_string();
-				} else {
-					result_label.label = "Invalid expression";
-				}
-			} else {
-				result_label.label = "Result will appear here";
-			}
-		});
-
-		// If args provided, use as initial expression
-		if (args.length > 0) {
-			entry.text = string.joinv(" ", args);
-		}
 
 		return box;
 	}
@@ -239,12 +83,12 @@ public class Runner : Astal.Window {
 	}
 
 	private bool looks_like_math(string text) {
-		return text[0] != ':' &&
-			   (text.contains("+") ||
-				text.contains("-") ||
-				text.contains("*") ||
-				text.contains("/") ||
-				text.contains("^"));
+		return
+			text.contains("+") ||
+			text.contains("-") ||
+			text.contains("*") ||
+			text.contains("/") ||
+			text.contains("^");
 	}
 
 	[GtkCallback]
@@ -311,20 +155,20 @@ public class Runner : Astal.Window {
 
 	private void init_commands() {
 		commands = new GLib.HashTable<string, CommandHandler>(str_hash, str_equal);
-		
+
 		// Register built-in commands
 		var sysinfo_cmd = new SysInfoCommand();
 		commands.insert(sysinfo_cmd.get_name(), sysinfo_cmd);
-		
+
 		var weather_cmd = new WeatherCommand();
 		commands.insert(weather_cmd.get_name(), weather_cmd);
-		
+
 		//  var bluetooth_cmd = new BluetoothCommand();
 		//  commands.insert(bluetooth_cmd.get_name(), bluetooth_cmd);
-		
+
 		//  var calc_cmd = new CalculatorCommand();
 		//  commands.insert(calc_cmd.get_name(), calc_cmd);
-		
+
 		// Help command should be registered last so it has access to all commands
 		var help_cmd = new HelpCommand(commands);
 		commands.insert(help_cmd.get_name(), help_cmd);
@@ -338,14 +182,14 @@ public class Runner : Astal.Window {
 		// Remove the ':' prefix
 		string command_text = input.substring(1);
 		string[] parts = command_text.split(" ");
-		
+
 		if (parts.length == 0) {
 			command_bin.visible = false;
 			return;
 		}
 
 		string command_name = parts[0];
-		string[] args = parts[1:parts.length];
+		string[] args = parts[1 : parts.length];
 
 		CommandHandler? handler = commands.lookup(command_name);
 		if (handler != null) {
