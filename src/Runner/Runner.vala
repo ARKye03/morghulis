@@ -27,53 +27,6 @@ public class SysInfoCommand : Object, CommandHandler {
 	}
 }
 
-public class HelpCommand : Object, CommandHandler {
-	private GLib.HashTable<string, CommandHandler> commands_ref;
-
-	public HelpCommand(GLib.HashTable<string, CommandHandler> commands) {
-		this.commands_ref = commands;
-	}
-
-	public string get_name() {
-		return "help";
-	}
-
-	public string get_description() {
-		return "Show available commands";
-	}
-
-	public Gtk.Widget? execute(string[] args) {
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 8);
-
-		box.margin_top = box.margin_bottom = 12;
-		box.margin_start = box.margin_end = 12;
-
-		var title = new Gtk.Label("Available Commands");
-		title.add_css_class("title-2");
-		box.append(title);
-
-		var commands_list = commands_ref.get_values();
-		foreach (var cmd in commands_list) {
-			var cmd_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12);
-
-			var name_label = new Gtk.Label(":" + cmd.get_name());
-			name_label.add_css_class("title-4");
-			name_label.halign = Gtk.Align.START;
-			name_label.set_size_request(80, -1);
-
-			var desc_label = new Gtk.Label(cmd.get_description());
-			desc_label.add_css_class("caption");
-			desc_label.halign = Gtk.Align.START;
-
-			cmd_box.append(name_label);
-			cmd_box.append(desc_label);
-			box.append(cmd_box);
-		}
-
-		return new HelpCmd(commands_ref.get_values());
-	}
-}
-
 public class WeatherCommand : Object, CommandHandler {
 	public string get_name() {
 		return "w";

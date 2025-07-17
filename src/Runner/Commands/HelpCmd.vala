@@ -45,3 +45,23 @@ public class HelpCmd : Gtk.Box {
 		populate_commands();
 	}
 }
+
+public class HelpCommand : Object, CommandHandler {
+	private GLib.HashTable<string, CommandHandler> commands_ref;
+
+	public HelpCommand(GLib.HashTable<string, CommandHandler> commands) {
+		this.commands_ref = commands;
+	}
+
+	public string get_name() {
+		return "help";
+	}
+
+	public string get_description() {
+		return "Show available commands";
+	}
+
+	public Gtk.Widget? execute(string[] args) {
+		return new HelpCmd(commands_ref.get_values());
+	}
+}
