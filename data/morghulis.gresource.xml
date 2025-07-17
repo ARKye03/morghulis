@@ -18,6 +18,15 @@
         <file alias="shutdown-symbolic.svg">assets/System/shutdown-symbolic.svg</file>
         <file alias="suspend-symbolic.svg">assets/System/suspend-symbolic.svg</file>
         <file alias="lockscreen-symbolic.svg">assets/System/lockscreen-symbolic.svg</file>
+        <!-- System Info -->
+        <file alias="cpu-symbolic.svg">assets/SysInfo/cpu-symbolic.svg</file>
+        <file alias="device-desktop-symbolic.svg">assets/SysInfo/device-desktop-symbolic.svg</file>
+        <file alias="device-floppy-symbolic.svg">assets/SysInfo/device-floppy-symbolic.svg</file>
+        <file alias="mem-ram-symbolic.svg">assets/SysInfo/mem-ram-symbolic.svg</file>
+        <file alias="network-symbolic.svg">assets/SysInfo/network-symbolic.svg</file>
+        <file alias="swap-ram-symbolic.svg">assets/SysInfo/swap-ram-symbolic.svg</file>
+        <file alias="timeline-symbolic.svg">assets/SysInfo/timeline-symbolic.svg</file>
+
     </gresource>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
