@@ -50,5 +50,8 @@
         <file preprocess="xml-stripblanks">ui/QAudioBox.ui</file>
         <file preprocess="xml-stripblanks">ui/QAudioItem.ui</file>
         <file preprocess="xml-stripblanks">ui/PowerMenu.ui</file>
+        <!-- SysInfo -->
+        <file preprocess="xml-stripblanks" alias="ui/HelpCmd.ui">ui/SysInfo/HelpCmd.ui</file>
+
     </gresource>
 </gresources>

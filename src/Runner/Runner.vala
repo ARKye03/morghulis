@@ -70,7 +70,7 @@ public class HelpCommand : Object, CommandHandler {
 			box.append(cmd_box);
 		}
 
-		return box;
+		return new HelpCmd(commands_ref.get_values());
 	}
 }
 
