@@ -1,45 +1,53 @@
 [CCode(cname = "mpars_evaluate")]
 public extern double mpars_evaluate(string expression, out string? error);
 
-// Command handler interface
-public interface CommandHandler : Object {
-	public abstract string get_name();
-	public abstract string get_description();
-
-	public abstract Gtk.Widget? execute(string[] args);
+// Command struct for simple command management
+public struct Command {
+	public string name;
+	public string description;
+	public Gtk.Widget widget;
 }
 
-public class WeatherCommand : Object, CommandHandler {
-	public string get_name() {
-		return "w";
-	}
+// Helper function to create weather widget
+private Gtk.Widget create_weather_widget() {
+	var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
+	box.margin_top = box.margin_bottom = 16;
+	box.margin_start = box.margin_end = 16;
 
-	public string get_description() {
-		return "Weather information (placeholder)";
-	}
+	var title = new Gtk.Label("Weather");
+	title.add_css_class("title-2");
+	box.append(title);
 
-	public Gtk.Widget? execute(string[] args) {
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 12);
+	var weather_info = new Gtk.Label("🌤️ 22°C - Partly Cloudy\n📍 Current Location\n💨 Wind: 5 km/h");
+	weather_info.add_css_class("body");
+	weather_info.justify = Gtk.Justification.CENTER;
+	box.append(weather_info);
 
-		box.margin_top = box.margin_bottom = 16;
-		box.margin_start = box.margin_end = 16;
+	var note = new Gtk.Label("(This is a placeholder - integrate with weather API)");
+	note.add_css_class("caption");
+	note.add_css_class("dim-label");
+	box.append(note);
 
-		var title = new Gtk.Label("Weather");
-		title.add_css_class("title-2");
-		box.append(title);
+	return box;
+}
 
-		var weather_info = new Gtk.Label("🌤️ 22°C - Partly Cloudy\n📍 Current Location\n💨 Wind: 5 km/h");
-		weather_info.add_css_class("body");
-		weather_info.justify = Gtk.Justification.CENTER;
-		box.append(weather_info);
+// Helper function to create math widget
+private Gtk.Widget create_math_widget() {
+	var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 8);
+	box.margin_top = box.margin_bottom = 12;
+	box.margin_start = box.margin_end = 12;
 
-		var note = new Gtk.Label("(This is a placeholder - integrate with weather API)");
-		note.add_css_class("caption");
-		note.add_css_class("dim-label");
-		box.append(note);
+	var result_label = new Gtk.Label("0");
+	result_label.justify = Gtk.Justification.LEFT;
+	result_label.halign = Gtk.Align.START;
+	result_label.valign = Gtk.Align.CENTER;
+	result_label.add_css_class("title-2");
+	result_label.add_css_class("numeric-result");
 
-		return box;
-	}
+	box.append(result_label);
+	box.set_data("result_label", result_label);
+
+	return box;
 }
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
@@ -56,9 +64,9 @@ public class Runner : Astal.Window {
 	[GtkChild]
 	private unowned Gtk.Stack commands_stack;
 
-	// Command system
-	private GLib.HashTable<string, CommandHandler> commands;
-	private Gtk.Widget? current_command_widget = null;
+	// Command system using struct
+	private GLib.HashTable<string, Command?> commands;
+	private Gtk.Widget? math_widget = null;
 
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
 		RunnerButton a = (RunnerButton)la;
@@ -96,20 +104,22 @@ public class Runner : Astal.Window {
 		}
 
 		// Handle math expressions
-		//  if (looks_like_math(input)) {
-		//  	string error;
-		//  	double result = mpars_evaluate(input, out error);
+		if (looks_like_math(input)) {
+			string error;
+			double result = mpars_evaluate(input, out error);
 
-		//  	if (error == null) {
-		//  		math_label.set_text(result.to_string());
-		//  		app_list.visible = false;
-		//  command_bin.visible = false;
-		//  		return;
-		//  	} else {
-		//  	}
-		//  }
+			if (error == null) {
+				// Update the math widget with the result
+				var result_label = math_widget.get_data<Gtk.Label>("result_label");
+				if (result_label != null) {
+					result_label.set_text(result.to_string());
+				}
+				commands_stack.visible_child_name = "math";
+				return;
+			}
+		}
 
-		// Default to app filtering
+		// Default to showing apps
 		commands_stack.visible_child_name = "apps";
 
 		// Update app filtering
@@ -144,25 +154,47 @@ public class Runner : Astal.Window {
 	}
 
 	private void init_commands() {
-		commands = new GLib.HashTable<string, CommandHandler>(str_hash, str_equal);
+		commands = new GLib.HashTable<string, Command?>(str_hash, str_equal);
 
-		// Register built-in commands
-		var sysinfo_cmd = new SysInfoCommand();
-		commands.insert(sysinfo_cmd.get_name(), sysinfo_cmd);
-		commands_stack.add_child(new HelpCmd(commands.get_values()));
+		// Create and register system info command
+		var sysinfo_widget = new SysInfo();
+		Command sysinfo_cmd = {
+			name: "si",
+			description: "System Information Dashboard",
+			widget: sysinfo_widget
+		};
+		commands.insert("si", sysinfo_cmd);
+		commands_stack.add_named(sysinfo_widget, "si");
 
-		var weather_cmd = new WeatherCommand();
-		commands.insert(weather_cmd.get_name(), weather_cmd);
+		// Create and register weather command
+		var weather_widget = create_weather_widget();
+		Command weather_cmd = {
+			name: "w",
+			description: "Weather information (placeholder)",
+			widget: weather_widget
+		};
+		commands.insert("w", weather_cmd);
+		commands_stack.add_named(weather_widget, "w");
 
-		//  var bluetooth_cmd = new BluetoothCommand();
-		//  commands.insert(bluetooth_cmd.get_name(), bluetooth_cmd);
+		// Create and register math command
+		math_widget = create_math_widget();
+		Command math_cmd = {
+			name: "math",
+			description: "Mathematical expression evaluator",
+			widget: math_widget
+		};
+		commands.insert("math", math_cmd);
+		commands_stack.add_named(math_widget, "math");
 
-		//  var calc_cmd = new CalculatorCommand();
-		//  commands.insert(calc_cmd.get_name(), calc_cmd);
-
-		// Help command should be registered last so it has access to all commands
-		var help_cmd = new HelpCommand(commands);
-		commands.insert(help_cmd.get_name(), help_cmd);
+		// Create and register help command
+		var help_widget = new HelpCmd(commands.get_values());
+		Command help_cmd = {
+			name: "help",
+			description: "Show available commands",
+			widget: help_widget
+		};
+		commands.insert("help", help_cmd);
+		commands_stack.add_named(help_widget, "help");
 	}
 
 	private bool is_command(string text) {
@@ -175,33 +207,31 @@ public class Runner : Astal.Window {
 		string[] parts = command_text.split(" ");
 
 		if (parts.length == 0) {
-			//  command_bin.visible = false;
+			commands_stack.visible_child_name = "apps";
 			return;
 		}
 
 		string command_name = parts[0];
 		string[] args = parts[1 : parts.length];
 
-		CommandHandler? handler = commands.lookup(command_name);
-		if (handler != null) {
-			// Clear previous command widget
-			if (current_command_widget != null) {
-				//  command_bin.child = null;
-				current_command_widget = null;
+		Command? cmd = commands.lookup(command_name);
+		if (cmd != null) {
+			// Show the command's widget in the stack
+			commands_stack.visible_child_name = command_name;
+			
+			// Handle special cases for commands that need updates
+			if (command_name == "help") {
+				// Refresh help command to show latest commands
+				var help_widget = cmd.widget as HelpCmd;
+				if (help_widget != null) {
+					help_widget.refresh();
+				}
 			}
-
-			// Execute command and show result
-			current_command_widget = handler.execute(args);
-			if (current_command_widget != null) {
-				//  command_bin.child = current_command_widget;
-				//  command_bin.visible = true;
-				app_list.visible = false;
-				return;
-			}
+			return;
 		}
 
-		// Command not found or failed
-		//  command_bin.visible = false;
+		// Command not found, show apps
+		commands_stack.visible_child_name = "apps";
 	}
 
 	construct {
@@ -224,12 +254,8 @@ public class Runner : Astal.Window {
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				this.entry.text = "";
-				// Clear command widget when hiding
-				if (current_command_widget != null) {
-					//  command_bin.child = null;
-					current_command_widget = null;
-					//  command_bin.visible = false;
-				}
+				// Reset to apps view when hiding
+				commands_stack.visible_child_name = "apps";
 			} else {
 				this.entry.grab_focus();
 			}
