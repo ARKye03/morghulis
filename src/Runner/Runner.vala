@@ -65,15 +65,6 @@ public class Runner : Astal.Window {
 		return app.score >= 0;
 	}
 
-	private bool looks_like_math(string text) {
-		return
-			text.contains("+") ||
-			text.contains("-") ||
-			text.contains("*") ||
-			text.contains("/") ||
-			text.contains("^");
-	}
-
 	[GtkCallback]
 	public void update_list() {
 		string input = this.entry.text.strip();
@@ -150,24 +141,7 @@ public class Runner : Astal.Window {
 		commands.insert(math_cmd.name, math_cmd);
 		commands_stack.add_named(math_cmd_widget, math_cmd.name);
 
-		// Create and register help command
-		var help_widget = new HelpCmd(commands.get_values());
-		Command help_cmd = {
-			name : "help",
-			description : "Show available commands",
-			widget : help_widget
-		};
-		commands.insert(help_cmd.name, help_cmd);
-
-		// Also register 'h' as a shortcut for help
-		Command help_shortcut_cmd = {
-			name : "h",
-			description : "Show available commands (shortcut)",
-			widget : help_widget
-		};
-		commands.insert(help_shortcut_cmd.name, help_shortcut_cmd);
-
-		commands_stack.add_named(help_widget, "help");
+		commands_stack.add_named(new HelpCmd(commands.get_values()), "help");
 	}
 
 	private bool is_command(string text) {
