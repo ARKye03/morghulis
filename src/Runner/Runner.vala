@@ -31,25 +31,6 @@ private Gtk.Widget create_weather_widget() {
 	return box;
 }
 
-// Helper function to create math widget
-private Gtk.Widget create_math_widget() {
-	var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 8);
-	box.margin_top = box.margin_bottom = 12;
-	box.margin_start = box.margin_end = 12;
-
-	var result_label = new Gtk.Label("0");
-	result_label.justify = Gtk.Justification.LEFT;
-	result_label.halign = Gtk.Align.START;
-	result_label.valign = Gtk.Align.CENTER;
-	result_label.add_css_class("title-2");
-	result_label.add_css_class("numeric-result");
-
-	box.append(result_label);
-	box.set_data("result_label", result_label);
-
-	return box;
-}
-
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
 	public static Runner instance { get; private set; }
@@ -66,7 +47,6 @@ public class Runner : Astal.Window {
 
 	// Command system using struct
 	private GLib.HashTable<string, Command?> commands;
-	private Gtk.Widget? math_widget = null;
 	private uint sysinfo_update_timeout = 0;
 
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
@@ -104,23 +84,6 @@ public class Runner : Astal.Window {
 			return;
 		}
 
-		// Handle math expressions (fallback for non-command math)
-		if (looks_like_math(input)) {
-			string error;
-			double result = mpars_evaluate(input, out error);
-
-			if (error == null) {
-				// Use the math command widget for direct expressions too
-				var math_cmd = commands.lookup("m");
-				if (math_cmd != null && math_cmd.widget is MathCmd) {
-					var math_widget = (MathCmd)math_cmd.widget;
-					math_widget.evaluate_expression(input);
-					commands_stack.visible_child_name = "m";
-					return;
-				}
-			}
-		}
-
 		// Default to showing apps
 		commands_stack.visible_child_name = "apps";
 
@@ -149,9 +112,12 @@ public class Runner : Astal.Window {
 	}
 
 	[GtkCallback]
-	public void key_released(uint keyval) {
+	public void key_released(uint keyval, uint _, Gdk.ModifierType state) {
 		if (keyval == Gdk.Key.Escape) {
 			this.visible = false;
+		} else if (keyval == Gdk.Key.c && (state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+			this.entry.text = "";
+			this.entry.grab_focus();
 		}
 	}
 
@@ -159,7 +125,7 @@ public class Runner : Astal.Window {
 		commands = new GLib.HashTable<string, Command?>(str_hash, str_equal);
 
 		Command sysinfo_cmd = {
-			name: "si",
+			name : "si",
 			description : "System Information Dashboard",
 			widget : new SysInfo()
 		};
