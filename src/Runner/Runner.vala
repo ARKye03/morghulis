@@ -156,35 +156,31 @@ public class Runner : Astal.Window {
 	private void init_commands() {
 		commands = new GLib.HashTable<string, Command?>(str_hash, str_equal);
 
-		// Create and register system info command
-		var sysinfo_widget = new SysInfo();
 		Command sysinfo_cmd = {
 			name: "si",
 			description : "System Information Dashboard",
-			widget : sysinfo_widget
+			widget : new SysInfo()
 		};
 		commands.insert(sysinfo_cmd.name, sysinfo_cmd);
-		commands_stack.add_named(sysinfo_widget, "si");
+		commands_stack.add_named(sysinfo_cmd.widget, sysinfo_cmd.name);
 
-		// Create and register weather command
-		var weather_widget = create_weather_widget();
 		Command weather_cmd = {
 			name : "w",
 			description : "Weather information (placeholder)",
-			widget : weather_widget
+			widget : create_weather_widget()
 		};
 		commands.insert(weather_cmd.name, weather_cmd);
-		commands_stack.add_named(weather_widget, "w");
+		commands_stack.add_named(weather_cmd.widget, weather_cmd.name);
 
 		// Create and register math command
 		math_widget = create_math_widget();
 		Command math_cmd = {
-			name : "math",
+			name : "m",
 			description : "Mathematical expression evaluator",
 			widget : math_widget
 		};
 		commands.insert(math_cmd.name, math_cmd);
-		commands_stack.add_named(math_widget, "math");
+		commands_stack.add_named(math_widget, math_cmd.name);
 
 		// Create and register help command
 		var help_widget = new HelpCmd(commands.get_values());
