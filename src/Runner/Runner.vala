@@ -104,19 +104,20 @@ public class Runner : Astal.Window {
 			return;
 		}
 
-		// Handle math expressions
+		// Handle math expressions (fallback for non-command math)
 		if (looks_like_math(input)) {
 			string error;
 			double result = mpars_evaluate(input, out error);
 
 			if (error == null) {
-				// Update the math widget with the result
-				var result_label = math_widget.get_data<Gtk.Label>("result_label");
-				if (result_label != null) {
-					result_label.set_text(result.to_string());
+				// Use the math command widget for direct expressions too
+				var math_cmd = commands.lookup("m");
+				if (math_cmd != null && math_cmd.widget is MathCmd) {
+					var math_widget = (MathCmd)math_cmd.widget;
+					math_widget.evaluate_expression(input);
+					commands_stack.visible_child_name = "m";
+					return;
 				}
-				commands_stack.visible_child_name = "math";
-				return;
 			}
 		}
 
@@ -174,17 +175,33 @@ public class Runner : Astal.Window {
 		commands_stack.add_named(weather_cmd.widget, weather_cmd.name);
 
 		// Create and register math command
-		math_widget = create_math_widget();
+		var math_cmd_widget = new MathCmd();
 		Command math_cmd = {
 			name : "m",
 			description : "Mathematical expression evaluator",
-			widget : math_widget
+			widget : math_cmd_widget
 		};
 		commands.insert(math_cmd.name, math_cmd);
-		commands_stack.add_named(math_widget, math_cmd.name);
+		commands_stack.add_named(math_cmd_widget, math_cmd.name);
 
-		// Create and register help at the end of it all, we will win, we will charm
-		commands_stack.add_named(new HelpCmd(commands.get_values()), "help");
+		// Create and register help command
+		var help_widget = new HelpCmd(commands.get_values());
+		Command help_cmd = {
+			name : "help",
+			description : "Show available commands",
+			widget : help_widget
+		};
+		commands.insert(help_cmd.name, help_cmd);
+
+		// Also register 'h' as a shortcut for help
+		Command help_shortcut_cmd = {
+			name : "h",
+			description : "Show available commands (shortcut)",
+			widget : help_widget
+		};
+		commands.insert(help_shortcut_cmd.name, help_shortcut_cmd);
+
+		commands_stack.add_named(help_widget, "help");
 	}
 
 	private bool is_command(string text) {
@@ -207,8 +224,27 @@ public class Runner : Astal.Window {
 
 		Command? cmd = commands.lookup(command_name);
 		if (cmd != null) {
-			commands_stack.visible_child_name = command_name;
+			// Special handling for math command with arguments
+			if (command_name == "m" && cmd.widget is MathCmd) {
+				var math_cmd = (MathCmd)cmd.widget;
+				if (args.length > 0) {
+					// Join all arguments as the expression
+					string expression = string.joinv(" ", args);
+					math_cmd.evaluate_expression(expression);
+				} else {
+					// No expression provided, show placeholder
+					math_cmd.reset();
+				}
+			}
+
+			// Special case: both 'h' and 'help' should show the help page
+			if (command_name == "h" || command_name == "help") {
+				commands_stack.visible_child_name = "help";
+			} else {
+				commands_stack.visible_child_name = command_name;
+			}
 		} else {
+			// Unknown command, show help
 			commands_stack.visible_child_name = "help";
 		}
 	}
