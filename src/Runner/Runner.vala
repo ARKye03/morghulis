@@ -177,12 +177,7 @@ public class Runner : Astal.Window {
 				}
 			}
 
-			// Special case: both 'h' and 'help' should show the help page
-			if (command_name == "h" || command_name == "help") {
-				commands_stack.visible_child_name = "help";
-			} else {
-				commands_stack.visible_child_name = command_name;
-			}
+			commands_stack.visible_child_name = command_name;
 		} else {
 			// Unknown command, show help
 			commands_stack.visible_child_name = "help";
