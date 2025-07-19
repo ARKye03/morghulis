@@ -1,6 +1,5 @@
 using Gtk 4.0;
 using Astal 4.0;
-using Adw 1;
 
 template $Runner: Astal.Window {
     styles [
@@ -39,49 +38,30 @@ template $Runner: Astal.Window {
             ]
         }
 
-        Adw.Bin math_bin {
-            visible: false;
-
+        Stack commands_stack {
             styles [
                 "bottom_left_right_corner_borders",
                 "padding_10",
                 "view",
             ]
 
-            Label math_label {
-                justify: left;
-                halign: start;
-                valign: center;
+            StackPage {
+                name: "apps";
 
-                styles [
-                    "title-2",
-                    "numeric-result",
-                ]
-            }
-        }
+                child: ScrolledWindow {
+                    max-content-height: 400;
+                    propagate-natural-height: true;
 
-        Adw.Bin command_bin {
-            visible: false;
+                    ListBox app_list {
+                        selection-mode: none;
+                        overflow: hidden;
 
-            styles [
-                "bottom_left_right_corner_borders",
-                "padding_10",
-                "view",
-            ]
-        }
-
-        ScrolledWindow {
-            max-content-height: 400;
-            propagate-natural-height: true;
-
-            ListBox app_list {
-                selection-mode: none;
-                overflow: hidden;
-
-                styles [
-                    "bg_transparent",
-                    "bottom_left_right_corner_borders",
-                ]
+                        styles [
+                            "bg_transparent",
+                            "bottom_left_right_corner_borders",
+                        ]
+                    }
+                };
             }
         }
     }
