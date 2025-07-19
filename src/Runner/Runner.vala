@@ -188,11 +188,6 @@ public class Runner : Astal.Window {
 
 		// Create and register help command
 		var help_widget = new HelpCmd(commands.get_values());
-		Command help_cmd = {
-			name : "help",
-			description : "Show available commands",
-			widget : help_widget
-		};
 		commands_stack.add_named(help_widget, "help");
 	}
 
