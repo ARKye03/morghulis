@@ -31,25 +31,6 @@ private Gtk.Widget create_weather_widget() {
 	return box;
 }
 
-// Helper function to create math widget
-private Gtk.Widget create_math_widget() {
-	var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 8);
-	box.margin_top = box.margin_bottom = 12;
-	box.margin_start = box.margin_end = 12;
-
-	var result_label = new Gtk.Label("0");
-	result_label.justify = Gtk.Justification.LEFT;
-	result_label.halign = Gtk.Align.START;
-	result_label.valign = Gtk.Align.CENTER;
-	result_label.add_css_class("title-2");
-	result_label.add_css_class("numeric-result");
-
-	box.append(result_label);
-	box.set_data("result_label", result_label);
-
-	return box;
-}
-
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
 	public static Runner instance { get; private set; }
@@ -66,7 +47,6 @@ public class Runner : Astal.Window {
 
 	// Command system using struct
 	private GLib.HashTable<string, Command?> commands;
-	private Gtk.Widget? math_widget = null;
 	private uint sysinfo_update_timeout = 0;
 
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
@@ -85,15 +65,6 @@ public class Runner : Astal.Window {
 		return app.score >= 0;
 	}
 
-	private bool looks_like_math(string text) {
-		return
-			text.contains("+") ||
-			text.contains("-") ||
-			text.contains("*") ||
-			text.contains("/") ||
-			text.contains("^");
-	}
-
 	[GtkCallback]
 	public void update_list() {
 		string input = this.entry.text.strip();
@@ -102,22 +73,6 @@ public class Runner : Astal.Window {
 		if (is_command(input)) {
 			handle_command(input);
 			return;
-		}
-
-		// Handle math expressions
-		if (looks_like_math(input)) {
-			string error;
-			double result = mpars_evaluate(input, out error);
-
-			if (error == null) {
-				// Update the math widget with the result
-				var result_label = math_widget.get_data<Gtk.Label>("result_label");
-				if (result_label != null) {
-					result_label.set_text(result.to_string());
-				}
-				commands_stack.visible_child_name = "math";
-				return;
-			}
 		}
 
 		// Default to showing apps
@@ -148,9 +103,12 @@ public class Runner : Astal.Window {
 	}
 
 	[GtkCallback]
-	public void key_released(uint keyval) {
+	public void key_released(uint keyval, uint _, Gdk.ModifierType state) {
 		if (keyval == Gdk.Key.Escape) {
 			this.visible = false;
+		} else if (keyval == Gdk.Key.c && (state & Gdk.ModifierType.CONTROL_MASK) != 0) {
+			this.entry.text = "";
+			this.entry.grab_focus();
 		}
 	}
 
@@ -158,7 +116,7 @@ public class Runner : Astal.Window {
 		commands = new GLib.HashTable<string, Command?>(str_hash, str_equal);
 
 		Command sysinfo_cmd = {
-			name: "si",
+			name : "si",
 			description : "System Information Dashboard",
 			widget : new SysInfo()
 		};
@@ -174,16 +132,15 @@ public class Runner : Astal.Window {
 		commands_stack.add_named(weather_cmd.widget, weather_cmd.name);
 
 		// Create and register math command
-		math_widget = create_math_widget();
+		var math_cmd_widget = new MathCmd();
 		Command math_cmd = {
 			name : "m",
 			description : "Mathematical expression evaluator",
-			widget : math_widget
+			widget : math_cmd_widget
 		};
 		commands.insert(math_cmd.name, math_cmd);
-		commands_stack.add_named(math_widget, math_cmd.name);
+		commands_stack.add_named(math_cmd_widget, math_cmd.name);
 
-		// Create and register help at the end of it all, we will win, we will charm
 		commands_stack.add_named(new HelpCmd(commands.get_values()), "help");
 	}
 
@@ -207,8 +164,27 @@ public class Runner : Astal.Window {
 
 		Command? cmd = commands.lookup(command_name);
 		if (cmd != null) {
-			commands_stack.visible_child_name = command_name;
+			// Special handling for math command with arguments
+			if (command_name == "m" && cmd.widget is MathCmd) {
+				var math_cmd = (MathCmd)cmd.widget;
+				if (args.length > 0) {
+					// Join all arguments as the expression
+					string expression = string.joinv(" ", args);
+					math_cmd.evaluate_expression(expression);
+				} else {
+					// No expression provided, show placeholder
+					math_cmd.reset();
+				}
+			}
+
+			// Special case: both 'h' and 'help' should show the help page
+			if (command_name == "h" || command_name == "help") {
+				commands_stack.visible_child_name = "help";
+			} else {
+				commands_stack.visible_child_name = command_name;
+			}
 		} else {
+			// Unknown command, show help
 			commands_stack.visible_child_name = "help";
 		}
 	}

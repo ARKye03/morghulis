@@ -1,0 +1,39 @@
+using Gtk 4.0;
+
+template $MathCmd: Box {
+    orientation: vertical;
+    spacing: 12;
+    halign: start;
+
+    styles [
+        "padding_10",
+    ]
+
+    Label expression_label {
+        wrap: true;
+
+        styles [
+            "title-3",
+            "dim-label",
+            "numeric",
+        ]
+    }
+
+    Label result_label {
+        selectable: true;
+
+        styles [
+            "title-1",
+            "numeric",
+        ]
+    }
+
+    Label error_label {
+        wrap: true;
+        visible: false;
+
+        styles [
+            "error",
+        ]
+    }
+}
