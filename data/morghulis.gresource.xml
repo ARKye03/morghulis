@@ -26,7 +26,7 @@
         <file alias="network-symbolic.svg">assets/SysInfo/network-symbolic.svg</file>
         <file alias="swap-ram-symbolic.svg">assets/SysInfo/swap-ram-symbolic.svg</file>
         <file alias="timeline-symbolic.svg">assets/SysInfo/timeline-symbolic.svg</file>
-
+        <file alias="linux-symbolic.svg">assets/SysInfo/linux-symbolic.svg</file>
     </gresource>
     <gresource prefix="/com/github/ARKye03/morghulis">
         <file>morghulis.css</file>
@@ -54,6 +54,6 @@
         <file preprocess="xml-stripblanks" >ui/SysInfo/HelpCmd.ui</file>
         <file preprocess="xml-stripblanks" >ui/SysInfo/SysInfoCmd.ui</file>
         <file preprocess="xml-stripblanks" >ui/SysInfo/SysInfoItem.ui</file>
-
+        <file preprocess="xml-stripblanks" >ui/SysInfo/SysInfoData.ui</file>
     </gresource>
 </gresources>

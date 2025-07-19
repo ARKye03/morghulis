@@ -1,1 +1,1 @@
-project_resources += files('HelpCmd.vala', 'SysInfoCmd.vala', 'SysInfoItem.vala')
+project_resources += files('HelpCmd.vala', 'SysInfoCmd.vala', 'SysInfoData.vala', 'SysInfoItem.vala')
