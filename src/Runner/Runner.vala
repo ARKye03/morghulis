@@ -51,16 +51,10 @@ public class Runner : Astal.Window {
 	private unowned Gtk.Entry entry;
 
 	[GtkChild]
-	private unowned Adw.Bin math_bin;
-
-	[GtkChild]
-	private unowned Gtk.Label math_label;
-
-	[GtkChild]
 	private unowned Gtk.ListBox app_list;
 
 	[GtkChild]
-	private unowned Adw.Bin command_bin;
+	private unowned Gtk.Stack commands_stack;
 
 	// Command system
 	private GLib.HashTable<string, CommandHandler> commands;
@@ -102,25 +96,21 @@ public class Runner : Astal.Window {
 		}
 
 		// Handle math expressions
-		if (looks_like_math(input)) {
-			string error;
-			double result = mpars_evaluate(input, out error);
+		//  if (looks_like_math(input)) {
+		//  	string error;
+		//  	double result = mpars_evaluate(input, out error);
 
-			if (error == null) {
-				math_label.set_text(result.to_string());
-				math_bin.visible = true;
-				app_list.visible = false;
-				command_bin.visible = false;
-				return;
-			} else {
-				math_bin.visible = false;
-			}
-		}
+		//  	if (error == null) {
+		//  		math_label.set_text(result.to_string());
+		//  		app_list.visible = false;
+		//  command_bin.visible = false;
+		//  		return;
+		//  	} else {
+		//  	}
+		//  }
 
 		// Default to app filtering
-		app_list.visible = true;
-		math_bin.visible = false;
-		command_bin.visible = false;
+		commands_stack.visible_child_name = "apps";
 
 		// Update app filtering
 		var child = this.app_list.get_first_child();
@@ -140,7 +130,7 @@ public class Runner : Astal.Window {
 	public void launch_first_runner_button() {
 		RunnerButton selected_button = (RunnerButton)this.app_list.get_first_child();
 
-		if (selected_button != null && app_list.visible) {
+		if (selected_button != null && commands_stack.visible_child_name == "apps") {
 			selected_button.activate();
 			this.visible = false;
 		}
@@ -159,6 +149,7 @@ public class Runner : Astal.Window {
 		// Register built-in commands
 		var sysinfo_cmd = new SysInfoCommand();
 		commands.insert(sysinfo_cmd.get_name(), sysinfo_cmd);
+		commands_stack.add_child(new HelpCmd(commands.get_values()));
 
 		var weather_cmd = new WeatherCommand();
 		commands.insert(weather_cmd.get_name(), weather_cmd);
@@ -184,7 +175,7 @@ public class Runner : Astal.Window {
 		string[] parts = command_text.split(" ");
 
 		if (parts.length == 0) {
-			command_bin.visible = false;
+			//  command_bin.visible = false;
 			return;
 		}
 
@@ -195,23 +186,22 @@ public class Runner : Astal.Window {
 		if (handler != null) {
 			// Clear previous command widget
 			if (current_command_widget != null) {
-				command_bin.child = null;
+				//  command_bin.child = null;
 				current_command_widget = null;
 			}
 
 			// Execute command and show result
 			current_command_widget = handler.execute(args);
 			if (current_command_widget != null) {
-				command_bin.child = current_command_widget;
-				command_bin.visible = true;
+				//  command_bin.child = current_command_widget;
+				//  command_bin.visible = true;
 				app_list.visible = false;
-				math_bin.visible = false;
 				return;
 			}
 		}
 
 		// Command not found or failed
-		command_bin.visible = false;
+		//  command_bin.visible = false;
 	}
 
 	construct {
@@ -236,9 +226,9 @@ public class Runner : Astal.Window {
 				this.entry.text = "";
 				// Clear command widget when hiding
 				if (current_command_widget != null) {
-					command_bin.child = null;
+					//  command_bin.child = null;
 					current_command_widget = null;
-					command_bin.visible = false;
+					//  command_bin.visible = false;
 				}
 			} else {
 				this.entry.grab_focus();
