@@ -183,31 +183,30 @@ public class Runner : Astal.Window {
 		commands.insert(math_cmd.name, math_cmd);
 		commands_stack.add_named(math_widget, math_cmd.name);
 
-		// Create and register help command
-		var help_widget = new HelpCmd(commands.get_values());
-		commands_stack.add_named(help_widget, "help");
+		// Create and register help at the end of it all, we will win, we will charm
+		commands_stack.add_named(new HelpCmd(commands.get_values()), "help");
 	}
 
 	private bool is_command(string text) {
-		return text.length > 1 && text[0] == ':';
+		return text.length >= 1 && text[0] == ':';
 	}
 
 	private void handle_command(string input) {
 		// Remove the ':' prefix
-		string command_text = input.substring(1);
-		string[] parts = command_text.split(" ");
+		string command_text = input.substring(1).strip();
 
-		if (parts.length == 0) {
-			commands_stack.visible_child_name = "apps";
+		// If just ':' was entered, show help
+		if (command_text == "") {
+			commands_stack.visible_child_name = "help";
 			return;
 		}
 
+		string[] parts = command_text.split(" ");
 		string command_name = parts[0];
 		string[] args = parts[1 : parts.length];
 
 		Command? cmd = commands.lookup(command_name);
 		if (cmd != null) {
-			// Show the command's widget in the stack
 			commands_stack.visible_child_name = command_name;
 		} else {
 			commands_stack.visible_child_name = "help";

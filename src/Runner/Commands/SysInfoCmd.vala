@@ -1,49 +1,48 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/SysInfo/SysInfoCmd.ui")]
 public class SysInfo : Gtk.Box {
+	private CpuMonitorItem _cpu_monitor;
+	private MemoryMonitorItem _memory_monitor;
+	private SwapMonitorItem _swap_monitor;
+	private LoadAverageItem _load_monitor;
+	private NetworkMonitorItem _network_monitor;
+	private DiskMonitorItem _disk_monitor;
+	private ProcessCountItem _process_monitor;
+	private SysInfoData _system_info;
+
 	[GtkChild]
 	private unowned Gtk.Grid main_grid;
 
-	private CpuMonitorItem cpu_monitor;
-	private MemoryMonitorItem memory_monitor;
-	private SwapMonitorItem swap_monitor;
-	private LoadAverageItem load_monitor;
-	private NetworkMonitorItem network_monitor;
-	private DiskMonitorItem disk_monitor;
-	private ProcessCountItem process_monitor;
-	private SysInfoData system_info;
-
 	construct {
-		// Initialize all monitors
-		cpu_monitor = new CpuMonitorItem();
-		memory_monitor = new MemoryMonitorItem();
-		swap_monitor = new SwapMonitorItem();
-		load_monitor = new LoadAverageItem();
-		network_monitor = new NetworkMonitorItem();
-		disk_monitor = new DiskMonitorItem();
-		process_monitor = new ProcessCountItem();
-		system_info = new SysInfoData();
+		_cpu_monitor = new CpuMonitorItem();
+		_memory_monitor = new MemoryMonitorItem();
+		_swap_monitor = new SwapMonitorItem();
+		_load_monitor = new LoadAverageItem();
+		_network_monitor = new NetworkMonitorItem();
+		_disk_monitor = new DiskMonitorItem();
+		_process_monitor = new ProcessCountItem();
+		_system_info = new SysInfoData();
 
 		// Layout in grid - 3 columns
-		main_grid.attach(system_info, 0, 0, 2, 1);
-		main_grid.attach(cpu_monitor, 2, 0, 1, 1);
+		main_grid.attach(_system_info, 0, 0, 2, 1);
+		main_grid.attach(_cpu_monitor, 2, 0, 1, 1);
 
-		main_grid.attach(memory_monitor, 0, 1, 1, 1);
-		main_grid.attach(swap_monitor, 1, 1, 1, 1);
-		main_grid.attach(disk_monitor, 2, 1, 1, 1);
+		main_grid.attach(_memory_monitor, 0, 1, 1, 1);
+		main_grid.attach(_swap_monitor, 1, 1, 1, 1);
+		main_grid.attach(_disk_monitor, 2, 1, 1, 1);
 
-		main_grid.attach(load_monitor, 0, 2, 1, 1);
-		main_grid.attach(network_monitor, 1, 2, 1, 1);
-		main_grid.attach(process_monitor, 2, 2, 1, 1);
+		main_grid.attach(_load_monitor, 0, 2, 1, 1);
+		main_grid.attach(_network_monitor, 1, 2, 1, 1);
+		main_grid.attach(_process_monitor, 2, 2, 1, 1);
 	}
 
 	public void update_all() {
-		cpu_monitor.update();
-		memory_monitor.update();
-		swap_monitor.update();
-		load_monitor.update();
-		network_monitor.update();
-		disk_monitor.update();
-		process_monitor.update();
+		_cpu_monitor.update();
+		_memory_monitor.update();
+		_swap_monitor.update();
+		_load_monitor.update();
+		_network_monitor.update();
+		_disk_monitor.update();
+		_process_monitor.update();
 	}
 }
 
@@ -150,11 +149,13 @@ private class LoadAverageItem : SysInfoItem {
 }
 
 private class NetworkMonitorItem : SysInfoItem {
-	private GTop.NetLoad? netload;
-	private uint64 last_bytes_in = 0;
-	private uint64 last_bytes_out = 0;
-	private string? active_interface = null;
-	private bool interface_found = false;
+	private GTop.NetLoad? _netload;
+	private uint64 _last_bytes_in = 0;
+	private uint64 _last_bytes_out = 0;
+	private string? _active_interface = null;
+	private bool _interface_found = false;
+	private double _max_bytes_per_second = 1024.0 * 1024.0;
+	private const double UPDATE_INTERVAL = 3.0;
 
 	public NetworkMonitorItem() {
 		base("Network", "network-symbolic");
@@ -181,8 +182,8 @@ private class NetworkMonitorItem : SysInfoItem {
 			foreach (string preferred in preferred_interfaces) {
 				if (preferred in found_interfaces) {
 					if (is_interface_active(preferred)) {
-						active_interface = preferred;
-						interface_found = true;
+						_active_interface = preferred;
+						_interface_found = true;
 						return;
 					}
 				}
@@ -190,17 +191,17 @@ private class NetworkMonitorItem : SysInfoItem {
 
 			foreach (string iface in found_interfaces) {
 				if (is_interface_active(iface)) {
-					active_interface = iface;
-					interface_found = true;
+					_active_interface = iface;
+					_interface_found = true;
 					return;
 				}
 			}
 
-			active_interface = "lo";
-			interface_found = true;
+			_active_interface = "lo";
+			_interface_found = true;
 		} catch (Error e) {
-			active_interface = "lo";
-			interface_found = true;
+			_active_interface = "lo";
+			_interface_found = true;
 		}
 	}
 
@@ -216,42 +217,60 @@ private class NetworkMonitorItem : SysInfoItem {
 	}
 
 	public override void update() {
-		if (!interface_found || active_interface == null) {
+		if (!_interface_found || _active_interface == null) {
 			set_details("No interface");
 			set_percentage(0);
 			return;
 		}
 
-		GTop.get_netload(out netload, active_interface);
+		GTop.get_netload(out _netload, _active_interface);
 
-		uint64 current_bytes_in = netload.bytes_in;
-		uint64 current_bytes_out = netload.bytes_out;
+		uint64 current_bytes_in = _netload.bytes_in;
+		uint64 current_bytes_out = _netload.bytes_out;
 
 		uint64 diff_in = 0;
 		uint64 diff_out = 0;
 
-		if (last_bytes_in > 0 && last_bytes_out > 0) {
-			diff_in = current_bytes_in - last_bytes_in;
-			diff_out = current_bytes_out - last_bytes_out;
+		if (_last_bytes_in > 0 && _last_bytes_out > 0) {
+			diff_in = current_bytes_in - _last_bytes_in;
+			diff_out = current_bytes_out - _last_bytes_out;
 		}
 
+		// Calculate current bytes per second
 		uint64 total_diff = diff_in + diff_out;
-		double percentage = Math.fmin((double)total_diff / (1024.0 * 1024.0), 1.0);
+		double current_bytes_per_second = (double)total_diff / UPDATE_INTERVAL;
+
+		// Update maximum if current activity is higher
+		if (current_bytes_per_second > _max_bytes_per_second) {
+			_max_bytes_per_second = current_bytes_per_second;
+		}
+
+		// Calculate percentage based on adaptive maximum
+		double percentage = 0.0;
+		if (_max_bytes_per_second > 0) {
+			percentage = Math.fmin(current_bytes_per_second / _max_bytes_per_second, 1.0);
+		}
 
 		set_percentage(percentage);
 
-		if (diff_in == 0 && diff_out == 0 && last_bytes_in > 0) {
-			set_details("Idle (%s)".printf(active_interface));
+		if (diff_in == 0 && diff_out == 0 && _last_bytes_in > 0) {
+			set_details("Idle (%s)".printf(_active_interface));
 		} else {
-			set_details("↓%.1f KB/s ↑%.1f KB/s\n(%s)".printf(
+			// Show current speed and peak speed
+			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                             // Convert to Mbps
+			double peak_mbps = _max_bytes_per_second * 8.0 / (1024.0 * 1024.0);
+
+			set_details("↓%.1f KB/s ↑%.1f KB/s\n%.1f/%.1f Mbps (%s)".printf(
 							diff_in / 1024.0,
 							diff_out / 1024.0,
-							active_interface
+							current_mbps,
+							peak_mbps,
+							_active_interface
 			));
 		}
 
-		last_bytes_in = current_bytes_in;
-		last_bytes_out = current_bytes_out;
+		_last_bytes_in = current_bytes_in;
+		_last_bytes_out = current_bytes_out;
 	}
 }
 
@@ -267,7 +286,7 @@ private class DiskMonitorItem : SysInfoItem {
 
 		if (fsusage.blocks > 0) {
 			double percentage = (double)fsusage.bavail / fsusage.blocks;
-			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                     // Invert to show used space
+			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // Invert to show used space
 
 			set_percentage(percentage);
 			set_details("%.1f GB / %.1f GB".printf(
