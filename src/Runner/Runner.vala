@@ -163,7 +163,7 @@ public class Runner : Astal.Window {
 			description : "System Information Dashboard",
 			widget : sysinfo_widget
 		};
-		commands.insert("si", sysinfo_cmd);
+		commands.insert(sysinfo_cmd.name, sysinfo_cmd);
 		commands_stack.add_named(sysinfo_widget, "si");
 
 		// Create and register weather command
@@ -173,7 +173,7 @@ public class Runner : Astal.Window {
 			description : "Weather information (placeholder)",
 			widget : weather_widget
 		};
-		commands.insert("w", weather_cmd);
+		commands.insert(weather_cmd.name, weather_cmd);
 		commands_stack.add_named(weather_widget, "w");
 
 		// Create and register math command
@@ -183,7 +183,7 @@ public class Runner : Astal.Window {
 			description : "Mathematical expression evaluator",
 			widget : math_widget
 		};
-		commands.insert("math", math_cmd);
+		commands.insert(math_cmd.name, math_cmd);
 		commands_stack.add_named(math_widget, "math");
 
 		// Create and register help command
@@ -193,7 +193,6 @@ public class Runner : Astal.Window {
 			description : "Show available commands",
 			widget : help_widget
 		};
-		commands.insert("help", help_cmd);
 		commands_stack.add_named(help_widget, "help");
 	}
 
