@@ -160,8 +160,8 @@ public class Runner : Astal.Window {
 		var sysinfo_widget = new SysInfo();
 		Command sysinfo_cmd = {
 			name: "si",
-			description: "System Information Dashboard",
-			widget: sysinfo_widget
+			description : "System Information Dashboard",
+			widget : sysinfo_widget
 		};
 		commands.insert("si", sysinfo_cmd);
 		commands_stack.add_named(sysinfo_widget, "si");
@@ -169,9 +169,9 @@ public class Runner : Astal.Window {
 		// Create and register weather command
 		var weather_widget = create_weather_widget();
 		Command weather_cmd = {
-			name: "w",
-			description: "Weather information (placeholder)",
-			widget: weather_widget
+			name : "w",
+			description : "Weather information (placeholder)",
+			widget : weather_widget
 		};
 		commands.insert("w", weather_cmd);
 		commands_stack.add_named(weather_widget, "w");
@@ -179,9 +179,9 @@ public class Runner : Astal.Window {
 		// Create and register math command
 		math_widget = create_math_widget();
 		Command math_cmd = {
-			name: "math",
-			description: "Mathematical expression evaluator",
-			widget: math_widget
+			name : "math",
+			description : "Mathematical expression evaluator",
+			widget : math_widget
 		};
 		commands.insert("math", math_cmd);
 		commands_stack.add_named(math_widget, "math");
@@ -189,9 +189,9 @@ public class Runner : Astal.Window {
 		// Create and register help command
 		var help_widget = new HelpCmd(commands.get_values());
 		Command help_cmd = {
-			name: "help",
-			description: "Show available commands",
-			widget: help_widget
+			name : "help",
+			description : "Show available commands",
+			widget : help_widget
 		};
 		commands.insert("help", help_cmd);
 		commands_stack.add_named(help_widget, "help");
@@ -218,20 +218,9 @@ public class Runner : Astal.Window {
 		if (cmd != null) {
 			// Show the command's widget in the stack
 			commands_stack.visible_child_name = command_name;
-			
-			// Handle special cases for commands that need updates
-			if (command_name == "help") {
-				// Refresh help command to show latest commands
-				var help_widget = cmd.widget as HelpCmd;
-				if (help_widget != null) {
-					help_widget.refresh();
-				}
-			}
-			return;
+		} else {
+			commands_stack.visible_child_name = "help";
 		}
-
-		// Command not found, show apps
-		commands_stack.visible_child_name = "apps";
 	}
 
 	construct {
