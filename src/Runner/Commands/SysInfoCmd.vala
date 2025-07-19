@@ -10,7 +10,6 @@ public class SysInfo : Gtk.Box {
 	private NetworkMonitorItem network_monitor;
 	private DiskMonitorItem disk_monitor;
 	private ProcessCountItem process_monitor;
-	private UptimeInfoBox uptime_info;
 	private SystemInfoBox system_info;
 
 	construct {
@@ -22,23 +21,21 @@ public class SysInfo : Gtk.Box {
 		network_monitor = new NetworkMonitorItem();
 		disk_monitor = new DiskMonitorItem();
 		process_monitor = new ProcessCountItem();
-		uptime_info = new UptimeInfoBox();
 		system_info = new SystemInfoBox();
 
 		// Layout in grid - 3 columns
-		main_grid.attach(cpu_monitor, 0, 0, 1, 1);
-		main_grid.attach(memory_monitor, 1, 0, 1, 1);
-		main_grid.attach(swap_monitor, 2, 0, 1, 1);
+		main_grid.attach(system_info, 0, 0, 2, 1);
+		main_grid.attach(cpu_monitor, 2, 0, 1, 1);
 
-		main_grid.attach(load_monitor, 0, 1, 1, 1);
-		main_grid.attach(network_monitor, 1, 1, 1, 1);
+		main_grid.attach(memory_monitor, 0, 1, 1, 1);
+		main_grid.attach(swap_monitor, 1, 1, 1, 1);
 		main_grid.attach(disk_monitor, 2, 1, 1, 1);
 
-		main_grid.attach(process_monitor, 0, 2, 1, 1);
-		main_grid.attach(uptime_info, 1, 2, 1, 1);
-		main_grid.attach(system_info, 2, 2, 1, 1);
+		main_grid.attach(load_monitor, 0, 2, 1, 1);
+		main_grid.attach(network_monitor, 1, 2, 1, 1);
+		main_grid.attach(process_monitor, 2, 2, 1, 1);
 
-		// Note: Update timing will be handled by the Runner class
+		system_info.update();
 	}
 
 	public void update_all() {
@@ -49,8 +46,6 @@ public class SysInfo : Gtk.Box {
 		network_monitor.update();
 		disk_monitor.update();
 		process_monitor.update();
-		uptime_info.update();
-		system_info.update();
 	}
 }
 
@@ -274,7 +269,7 @@ private class DiskMonitorItem : SysInfoItem {
 
 		if (fsusage.blocks > 0) {
 			double percentage = (double)fsusage.bavail / fsusage.blocks;
-			percentage = 1.0 - percentage;                                                                                                                                                                                     // Invert to show used space
+			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                     // Invert to show used space
 
 			set_percentage(percentage);
 			set_details("%.1f GB / %.1f GB".printf(
@@ -304,60 +299,143 @@ private class ProcessCountItem : SysInfoItem {
 	}
 }
 
-private class UptimeInfoBox : Gtk.Box {
-	private GTop.Uptime? uptime;
-	private Gtk.Label uptime_label;
-	private Gtk.Label uptime_details;
-
-	construct {
-		this.orientation = Gtk.Orientation.VERTICAL;
-		this.spacing = 8;
-		this.halign = Gtk.Align.CENTER;
-
-		uptime_label = new Gtk.Label("Uptime");
-		uptime_details = new Gtk.Label("0d 0h 0m");
-
-		uptime_label.add_css_class("title-4");
-		uptime_details.add_css_class("caption");
-
-		this.append(uptime_label);
-		this.append(uptime_details);
-	}
-
-	public void update() {
-		GTop.get_uptime(out uptime);
-
-		uint64 seconds = (uint64)uptime.uptime;
-		uint64 days = seconds / 86400;
-		uint64 hours = (seconds % 86400) / 3600;
-		uint64 minutes = (seconds % 3600) / 60;
-
-		uptime_details.label = "%llud %lluh %llum".printf(days, hours, minutes);
-	}
-}
-
 private class SystemInfoBox : Gtk.Box {
-	private GTop.SysInfo? sysinfo;
 	private Gtk.Label sys_label;
 	private Gtk.Label sys_details;
+	private string distro_info = "";
+	private string kernel_info = "";
+	private string display_info = "";
+	private string hostname_info = "";
+	private string desktop_info = "";
 
 	construct {
 		this.orientation = Gtk.Orientation.VERTICAL;
 		this.spacing = 8;
 		this.halign = Gtk.Align.CENTER;
-		sysinfo = GTop.glibtop_get_sysinfo();
 
-		sys_label = new Gtk.Label("System");
-		sys_details = new Gtk.Label("N/A");
+		sys_label = new Gtk.Label("System Information");
+		sys_details = new Gtk.Label("Loading...");
+
 		sys_label.add_css_class("title-4");
+		sys_details.add_css_class("caption");
+		sys_details.justify = Gtk.Justification.CENTER;
+		sys_details.wrap = true;
 
 		this.append(sys_label);
 		this.append(sys_details);
 
+		// Gather system info once at startup
+		gather_system_info();
 		update();
 	}
 
+	private void gather_system_info() {
+		// Get hostname
+		try {
+			string contents;
+			FileUtils.get_contents("/etc/hostname", out contents);
+			hostname_info = contents.strip();
+		} catch (Error e) {
+			hostname_info = Environment.get_host_name();
+		}
+
+		// Get distro info
+		try {
+			string contents;
+			if (FileUtils.get_contents("/etc/os-release", out contents)) {
+				string[] lines = contents.split("\n");
+				foreach (string line in lines) {
+					if (line.has_prefix("PRETTY_NAME=")) {
+						distro_info = line.substring(12).replace("\"", "");
+						break;
+					}
+				}
+			}
+		} catch (Error e) {
+			distro_info = "Unknown Linux";
+		}
+
+		// Get kernel info
+		try {
+			string output;
+			Process.spawn_command_line_sync("uname -r", out output);
+			kernel_info = output.strip();
+		} catch (Error e) {
+			kernel_info = "Unknown";
+		}
+
+		// Detect display server and desktop environment
+		detect_display_environment();
+	}
+
+	private void detect_display_environment() {
+		string display_server = "Unknown";
+		string desktop_env = "";
+
+		// Check for Wayland
+		if (Environment.get_variable("WAYLAND_DISPLAY") != null) {
+			display_server = "Wayland";
+
+			// Try to detect Wayland compositor
+			string? compositor = Environment.get_variable("XDG_CURRENT_DESKTOP");
+			if (compositor == null) {
+				compositor = Environment.get_variable("DESKTOP_SESSION");
+			}
+
+			if (compositor != null) {
+				desktop_env = compositor;
+			} else {
+				// Try to detect specific compositors
+				if (Environment.get_variable("HYPRLAND_INSTANCE_SIGNATURE") != null) {
+					desktop_env = "Hyprland";
+				} else if (Environment.get_variable("SWAYSOCK") != null) {
+					desktop_env = "Sway";
+				}
+			}
+		}
+		// Check for X11
+		else if (Environment.get_variable("DISPLAY") != null) {
+			display_server = "X11";
+
+			string? desktop = Environment.get_variable("XDG_CURRENT_DESKTOP");
+			if (desktop == null) {
+				desktop = Environment.get_variable("DESKTOP_SESSION");
+			}
+
+			if (desktop != null) {
+				desktop_env = desktop;
+			}
+		}
+
+		display_info = display_server;
+		if (desktop_env != "") {
+			desktop_info = desktop_env;
+		}
+	}
+
 	public void update() {
-		sys_label.label = sysinfo.ncpu.to_string();
+		var info_parts = new string[] {};
+
+		if (hostname_info != "") {
+			info_parts += "🖥️ " + hostname_info;
+		}
+
+		if (distro_info != "") {
+			info_parts += "🐧 " + distro_info;
+		}
+
+		if (kernel_info != "") {
+			info_parts += "⚙️ " + kernel_info;
+		}
+
+		if (display_info != "") {
+			string display_line = "🖼️ " + display_info;
+			if (desktop_info != "") {
+				display_line += " (" + desktop_info + ")";
+			}
+			info_parts += display_line;
+		}
+
+		sys_details.label = string.joinv("\n", info_parts);
 	}
 }
