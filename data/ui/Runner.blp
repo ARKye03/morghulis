@@ -1,6 +1,5 @@
 using Gtk 4.0;
 using Astal 4.0;
-using Adw 1;
 
 template $Runner: Astal.Window {
     styles [
@@ -18,7 +17,7 @@ template $Runner: Astal.Window {
 
     Box {
         orientation: vertical;
-        width-request: 500;
+        width-request: 512;
         overflow: hidden;
 
         styles [
@@ -30,7 +29,7 @@ template $Runner: Astal.Window {
             primary-icon-name: "system-search-symbolic";
             changed => $update_list();
             activate => $launch_first_runner_button();
-            placeholder-text: "Search...";
+            placeholder-text: "Search... or type \":\" for commands";
 
             styles [
                 "background",
@@ -39,39 +38,35 @@ template $Runner: Astal.Window {
             ]
         }
 
-        Adw.Bin math_bin {
-            visible: false;
+        Stack commands_stack {
+            interpolate-size: true;
+            hhomogeneous: false;
+            vhomogeneous: false;
+            transition-duration: 250;
+            transition-type: crossfade;
 
             styles [
                 "bottom_left_right_corner_borders",
-                "padding_10",
                 "view",
             ]
 
-            Label math_label {
-                justify: left;
-                halign: start;
-                valign: center;
+            StackPage {
+                name: "apps";
 
-                styles [
-                    "title-2",
-                    "numeric-result",
-                ]
-            }
-        }
+                child: ScrolledWindow {
+                    max-content-height: 400;
+                    propagate-natural-height: true;
 
-        ScrolledWindow {
-            max-content-height: 400;
-            propagate-natural-height: true;
+                    ListBox app_list {
+                        selection-mode: none;
+                        overflow: hidden;
 
-            ListBox app_list {
-                selection-mode: none;
-                overflow: hidden;
-
-                styles [
-                    "bg_transparent",
-                    "bottom_left_right_corner_borders",
-                ]
+                        styles [
+                            "bg_transparent",
+                            "bottom_left_right_corner_borders",
+                        ]
+                    }
+                };
             }
         }
     }

@@ -1,0 +1,32 @@
+using Gtk 4.0;
+
+template $HelpCmd: Box {
+    orientation: vertical;
+
+    styles [
+        "padding_10",
+    ]
+
+    Label {
+        label: "Available commands";
+        halign: center;
+
+        styles [
+            "title-1",
+        ]
+    }
+
+    Separator {
+        orientation: horizontal;
+    }
+
+    Box commands_box {
+        orientation: vertical;
+        spacing: 10;
+        hexpand: true;
+
+        styles [
+            "padding_10",
+        ]
+    }
+}

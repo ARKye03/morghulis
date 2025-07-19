@@ -1,0 +1,45 @@
+using Gtk 4.0;
+
+template $SysInfoItem: Box {
+    orientation: vertical;
+    spacing: 8;
+
+    styles [
+        "rounded",
+        "background",
+        "padding_5",
+    ]
+
+    $CircularProgressBar {
+        line-width: 8;
+        line-cap: round;
+        percentage: bind template.percentage_value;
+        width-request: 70;
+        height-request: 70;
+        radius-filled: true;
+
+        Image {
+            icon-size: large;
+            icon-name: bind template.icon;
+        }
+    }
+
+    Label {
+        label: bind template.title;
+
+        styles [
+            "title-4",
+            "numeric",
+        ]
+    }
+
+    Label {
+        label: bind template.details_value;
+        justify: center;
+
+        styles [
+            "caption",
+            "numeric",
+        ]
+    }
+}

@@ -14,7 +14,6 @@ private void init_types() {
 #endif
 	typeof(QuickMenu).ensure();
 	typeof(Backlight).ensure();
-	typeof(SysInfo).ensure();
 	typeof(QButton).ensure();
 	typeof(QNetwork).ensure();
 	typeof(QBluetooth).ensure();
@@ -25,6 +24,7 @@ private void init_types() {
 	typeof(OnScreenDisplay).ensure();
 	typeof(NotificationItem).ensure();
 	typeof(QNotifications).ensure();
-	typeof(CircularProgressBar).ensure();
 	typeof(Tray).ensure();
+	typeof(SysInfoItem).ensure();
+	typeof(CircularProgressBar).ensure();
 }
