@@ -67,6 +67,7 @@ public class Runner : Astal.Window {
 	// Command system using struct
 	private GLib.HashTable<string, Command?> commands;
 	private Gtk.Widget? math_widget = null;
+	private uint sysinfo_update_timeout = 0;
 
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
 		RunnerButton a = (RunnerButton)la;
@@ -213,6 +214,31 @@ public class Runner : Astal.Window {
 		}
 	}
 
+	private void on_stack_page_changed() {
+		// Stop any existing sysinfo updates
+		if (sysinfo_update_timeout > 0) {
+			Source.remove(sysinfo_update_timeout);
+			sysinfo_update_timeout = 0;
+		}
+
+		// If system info page is now visible, start updates
+		if (commands_stack.visible_child_name == "si") {
+			var sysinfo_cmd = commands.lookup("si");
+			if (sysinfo_cmd != null && sysinfo_cmd.widget is SysInfo) {
+				var sysinfo = (SysInfo)sysinfo_cmd.widget;
+
+				// Update immediately
+				sysinfo.update_all();
+
+				// Start periodic updates every 3 seconds
+				sysinfo_update_timeout = Timeout.add_seconds(3, () => {
+					sysinfo.update_all();
+					return true;
+				});
+			}
+		}
+	}
+
 	construct {
 		if (instance == null) {
 			instance = this;
@@ -230,9 +256,17 @@ public class Runner : Astal.Window {
 			this.app_list.append(new RunnerButton(app));
 		});
 
+		// Connect to stack page changes to handle sysinfo updates
+		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
+
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				this.entry.text = "";
+				// Stop any running updates when hiding
+				if (sysinfo_update_timeout > 0) {
+					Source.remove(sysinfo_update_timeout);
+					sysinfo_update_timeout = 0;
+				}
 				// Reset to apps view when hiding
 				commands_stack.visible_child_name = "apps";
 			} else {

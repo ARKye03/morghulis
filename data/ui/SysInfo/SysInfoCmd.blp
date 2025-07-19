@@ -1,28 +1,16 @@
 using Gtk 4.0;
 
-template $SysInfoCmd: Box {
+template $SysInfo: Box {
     orientation: vertical;
+    spacing: 12;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
 
-    Label {
-        label: "Available commands";
-        halign: center;
-
-        styles [
-            "title-1",
-        ]
-    }
-
-    Separator {
-        orientation: horizontal;
-    }
-
-    Box commands_box {
-        orientation: vertical;
-        spacing: 10;
-        hexpand: true;
-
-        styles [
-            "padding_10",
-        ]
+    Grid main_grid {
+        row-spacing: 16;
+        column-spacing: 16;
+        column-homogeneous: true;
     }
 }

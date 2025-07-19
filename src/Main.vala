@@ -25,4 +25,6 @@ private void init_types() {
 	typeof(NotificationItem).ensure();
 	typeof(QNotifications).ensure();
 	typeof(Tray).ensure();
+	typeof(SysInfoItem).ensure();
+	typeof(CircularProgressBar).ensure();
 }
