@@ -26,7 +26,7 @@ template $Runner: Astal.Window {
 
         Entry entry {
             height-request: 50;
-            primary-icon-name: "system-search-symbolic";
+            primary-icon-name: bind template.active_mode;
             changed => $update_list();
             activate => $launch_first_runner_button();
             placeholder-text: "Search... or type \":\" for commands";

@@ -33,8 +33,12 @@ private Gtk.Widget create_weather_widget() {
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
+	private GLib.HashTable<string, Command?> _commands;
+	private uint _sysinfo_update_timeout = 0;
+
 	public static Runner instance { get; private set; }
 	public AstalApps.Apps apps { get; construct set; }
+	public string active_mode { get; private set; default = "system-search-symbolic"; }
 
 	[GtkChild]
 	private unowned Gtk.Entry entry;
@@ -45,24 +49,40 @@ public class Runner : Astal.Window {
 	[GtkChild]
 	private unowned Gtk.Stack commands_stack;
 
-	// Command system using struct
-	private GLib.HashTable<string, Command?> commands;
-	private uint sysinfo_update_timeout = 0;
-
-	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
-		RunnerButton a = (RunnerButton)la;
-		RunnerButton b = (RunnerButton)lb;
-
-		if (a.score == b.score) {
-			return b.app.frequency - a.app.frequency;
+	construct {
+		if (instance == null) {
+			instance = this;
+		} else {
+			this.destroy();
 		}
-		return (a.score > b.score) ? -1 : 1;
-	}
 
-	private bool filter_func(Gtk.ListBoxRow row) {
-		RunnerButton app = (RunnerButton)row;
+		this.apps = new AstalApps.Apps();
+		init_commands();
 
-		return app.score >= 0;
+		this.app_list.set_sort_func(sort_func);
+		this.app_list.set_filter_func(filter_func);
+
+		this.apps.list.@foreach(app => {
+			this.app_list.append(new RunnerButton(app));
+		});
+
+		// Connect to stack page changes to handle sysinfo updates
+		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
+
+		this.notify["visible"].connect(() => {
+			if (!this.visible) {
+				this.entry.text = "";
+				// Stop any running updates when hiding
+				if (_sysinfo_update_timeout > 0) {
+					Source.remove(_sysinfo_update_timeout);
+					_sysinfo_update_timeout = 0;
+				}
+				commands_stack.visible_child_name = "apps";
+			} else {
+				this.entry.grab_focus();
+			}
+		});
+		this.margin_top = Morghulis.primary_monitor.get_geometry().height / 4;
 	}
 
 	[GtkCallback]
@@ -113,14 +133,14 @@ public class Runner : Astal.Window {
 	}
 
 	private void init_commands() {
-		commands = new GLib.HashTable<string, Command?>(str_hash, str_equal);
+		_commands = new GLib.HashTable<string, Command?>(str_hash, str_equal);
 
 		Command sysinfo_cmd = {
 			name : "si",
 			description : "System Information Dashboard",
 			widget : new SysInfo()
 		};
-		commands.insert(sysinfo_cmd.name, sysinfo_cmd);
+		_commands.insert(sysinfo_cmd.name, sysinfo_cmd);
 		commands_stack.add_named(sysinfo_cmd.widget, sysinfo_cmd.name);
 
 		Command weather_cmd = {
@@ -128,7 +148,7 @@ public class Runner : Astal.Window {
 			description : "Weather information (placeholder)",
 			widget : create_weather_widget()
 		};
-		commands.insert(weather_cmd.name, weather_cmd);
+		_commands.insert(weather_cmd.name, weather_cmd);
 		commands_stack.add_named(weather_cmd.widget, weather_cmd.name);
 
 		// Create and register math command
@@ -138,10 +158,10 @@ public class Runner : Astal.Window {
 			description : "Mathematical expression evaluator",
 			widget : math_cmd_widget
 		};
-		commands.insert(math_cmd.name, math_cmd);
+		_commands.insert(math_cmd.name, math_cmd);
 		commands_stack.add_named(math_cmd_widget, math_cmd.name);
 
-		commands_stack.add_named(new HelpCmd(commands.get_values()), "help");
+		commands_stack.add_named(new HelpCmd(_commands.get_values()), "help");
 	}
 
 	private bool is_command(string text) {
@@ -162,7 +182,7 @@ public class Runner : Astal.Window {
 		string command_name = parts[0];
 		string[] args = parts[1 : parts.length];
 
-		Command? cmd = commands.lookup(command_name);
+		Command? cmd = _commands.lookup(command_name);
 		if (cmd != null) {
 			// Special handling for math command with arguments
 			if (command_name == "m" && cmd.widget is MathCmd) {
@@ -186,14 +206,14 @@ public class Runner : Astal.Window {
 
 	private void on_stack_page_changed() {
 		// Stop any existing sysinfo updates
-		if (sysinfo_update_timeout > 0) {
-			Source.remove(sysinfo_update_timeout);
-			sysinfo_update_timeout = 0;
+		if (_sysinfo_update_timeout > 0) {
+			Source.remove(_sysinfo_update_timeout);
+			_sysinfo_update_timeout = 0;
 		}
 
 		// If system info page is now visible, start updates
 		if (commands_stack.visible_child_name == "si") {
-			var sysinfo_cmd = commands.lookup("si");
+			var sysinfo_cmd = _commands.lookup("si");
 			if (sysinfo_cmd != null && sysinfo_cmd.widget is SysInfo) {
 				var sysinfo = (SysInfo)sysinfo_cmd.widget;
 
@@ -201,7 +221,7 @@ public class Runner : Astal.Window {
 				sysinfo.update_all();
 
 				// Start periodic updates every 3 seconds
-				sysinfo_update_timeout = Timeout.add_seconds(3, () => {
+				_sysinfo_update_timeout = Timeout.add_seconds(3, () => {
 					sysinfo.update_all();
 					return true;
 				});
@@ -209,40 +229,19 @@ public class Runner : Astal.Window {
 		}
 	}
 
-	construct {
-		if (instance == null) {
-			instance = this;
-		} else {
-			this.destroy();
+	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
+		RunnerButton a = (RunnerButton)la;
+		RunnerButton b = (RunnerButton)lb;
+
+		if (a.score == b.score) {
+			return b.app.frequency - a.app.frequency;
 		}
+		return (a.score > b.score) ? -1 : 1;
+	}
 
-		this.apps = new AstalApps.Apps();
-		init_commands();
+	private bool filter_func(Gtk.ListBoxRow row) {
+		RunnerButton app = (RunnerButton)row;
 
-		this.app_list.set_sort_func(sort_func);
-		this.app_list.set_filter_func(filter_func);
-
-		this.apps.list.@foreach(app => {
-			this.app_list.append(new RunnerButton(app));
-		});
-
-		// Connect to stack page changes to handle sysinfo updates
-		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
-
-		this.notify["visible"].connect(() => {
-			if (!this.visible) {
-				this.entry.text = "";
-				// Stop any running updates when hiding
-				if (sysinfo_update_timeout > 0) {
-					Source.remove(sysinfo_update_timeout);
-					sysinfo_update_timeout = 0;
-				}
-				// Reset to apps view when hiding
-				commands_stack.visible_child_name = "apps";
-			} else {
-				this.entry.grab_focus();
-			}
-		});
-		this.margin_top = Morghulis.primary_monitor.get_geometry().height / 4;
+		return app.score >= 0;
 	}
 }
