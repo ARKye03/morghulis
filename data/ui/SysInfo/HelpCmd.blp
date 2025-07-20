@@ -23,10 +23,18 @@ template $HelpCmd: Box {
     Box commands_box {
         orientation: vertical;
         spacing: 10;
-        hexpand: true;
 
         styles [
             "padding_10",
         ]
+
+        Label {
+            label: _("Press ctrl + c to reset the Entry");
+            halign: start;
+
+            styles [
+                "title-3",
+            ]
+        }
     }
 }
