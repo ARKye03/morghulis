@@ -149,10 +149,8 @@ public class Runner : Astal.Window {
 	}
 
 	private void handle_command(string input) {
-		// Remove the ':' prefix
 		string command_text = input.substring(1).strip();
 
-		// If just ':' was entered, show help
 		if (command_text == "") {
 			commands_stack.visible_child_name = "help";
 			return;

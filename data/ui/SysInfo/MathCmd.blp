@@ -3,13 +3,13 @@ using Gtk 4.0;
 template $MathCmd: Box {
     orientation: vertical;
     spacing: 12;
-    halign: start;
 
     styles [
         "padding_10",
     ]
 
     Label expression_label {
+        halign: start;
         wrap: true;
 
         styles [
@@ -20,6 +20,7 @@ template $MathCmd: Box {
     }
 
     Label result_label {
+        halign: start;
         selectable: true;
 
         styles [
@@ -29,6 +30,7 @@ template $MathCmd: Box {
     }
 
     Label error_label {
+        halign: start;
         wrap: true;
         visible: false;
 
