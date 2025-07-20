@@ -16,6 +16,10 @@ button {
     }
 }
 
+.zero_padding {
+    padding: 0;
+}
+
 .flats button {
     background-color: unset;
 
@@ -98,6 +102,8 @@ button {
 }
 
 circularprogress {
+    background-color: transparent;
+
     & progress {
         color: adw.$accent_color;
     }
