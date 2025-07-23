@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QBluetooth.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QBluetooth.ui")]
 public class QBluetooth : Gtk.Box {
 	public AstalBluetooth.Bluetooth bluetooth { get; set; }
 

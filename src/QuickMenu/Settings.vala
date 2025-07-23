@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Settings.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/Settings.ui")]
 public class Settings : Adw.Bin {
 	private AstalMpris.Mpris _mpris;
 
@@ -10,7 +10,7 @@ public class Settings : Adw.Bin {
 	public static Adw.NavigationView settings_navigation { get; private set; }
 
 	[GtkChild]
-	public unowned Adw.NavigationView quick_settings_navigation_view;
+	private unowned Adw.NavigationView quick_settings_navigation_view;
 
 	construct {
 		network = AstalNetwork.get_default();

@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/BatteryBox.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/BatteryBox.ui")]
 class BatteryBox : Gtk.Box {
 	public static Gtk.Stack bb_stack_ref;
 	public AstalPowerProfiles.PowerProfiles power_profiles { get; private set; }

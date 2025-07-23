@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QAudioItem.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QAudioItem.ui")]
 public class QAudioItem : Gtk.ListBoxRow {
 	public AstalWp.Node endpoint { get; construct; }
 

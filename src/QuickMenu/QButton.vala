@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QButton.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QButton.ui")]
 public class QButton : Gtk.Box {
 	public signal void clicked();
 	public signal void clicked_extras();

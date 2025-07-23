@@ -1,5 +1,5 @@
 //This file if complete garbage
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QNetwork.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
 	public AstalNetwork.Network network { get; set; }
 	private GLib.ListStore wifi_store;

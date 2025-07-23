@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QuickMenu.ui")]
 public class QuickMenu : Astal.Window {
 	public AstalWp.Endpoint speaker { get; set; }
 	public static QuickMenu instance { get; private set; }

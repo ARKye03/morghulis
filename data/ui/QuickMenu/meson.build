@@ -1,0 +1,14 @@
+blps += files(
+    'BatteryBox.blp',
+    'MprisPlayer.blp',
+    'PowerBox.blp',
+    'QAudioBox.blp',
+    'QAudioItem.blp',
+    'QBluetooth.blp',
+    'QBluetoothItem.blp',
+    'QButton.blp',
+    'QNetwork.blp',
+    'QNotifications.blp',
+    'QuickMenu.blp',
+    'Settings.blp',
+)

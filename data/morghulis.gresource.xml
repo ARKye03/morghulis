@@ -33,23 +33,24 @@
         <file>assets/colloid-notif-sound.opus</file>
         <file>assets/wyvern-svgrepo-com.svg</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
-        <file preprocess="xml-stripblanks">ui/MprisPlayer.ui</file>
-        <file preprocess="xml-stripblanks">ui/QuickMenu.ui</file>
-        <file preprocess="xml-stripblanks">ui/QButton.ui</file>
-        <file preprocess="xml-stripblanks">ui/QNetwork.ui</file>
-        <file preprocess="xml-stripblanks">ui/QBluetooth.ui</file>
-        <file preprocess="xml-stripblanks">ui/QBluetoothItem.ui</file>
-        <file preprocess="xml-stripblanks">ui/BatteryBox.ui</file>
-        <file preprocess="xml-stripblanks">ui/PowerBox.ui</file>
-        <file preprocess="xml-stripblanks">ui/Settings.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner.ui</file>
         <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>
         <file preprocess="xml-stripblanks">ui/NotificationItem.ui</file>
-        <file preprocess="xml-stripblanks">ui/QNotifications.ui</file>
-        <file preprocess="xml-stripblanks">ui/QAudioBox.ui</file>
-        <file preprocess="xml-stripblanks">ui/QAudioItem.ui</file>
         <file preprocess="xml-stripblanks">ui/PowerMenu.ui</file>
+        <!-- QuickMenu -->
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QuickMenu.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QButton.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QNetwork.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QBluetooth.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QBluetoothItem.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/BatteryBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/PowerBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/Settings.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QNotifications.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QAudioBox.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QAudioItem.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/MprisPlayer.ui</file>
         <!-- SysInfo -->
         <file preprocess="xml-stripblanks" >ui/SysInfo/HelpCmd.ui</file>
         <file preprocess="xml-stripblanks" >ui/SysInfo/MathCmd.ui</file>

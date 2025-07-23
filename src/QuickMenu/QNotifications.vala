@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QNotifications.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNotifications.ui")]
 public class QNotifications : Gtk.Box {
 	private AstalNotifd.Notifd notifd { get; set; }
 

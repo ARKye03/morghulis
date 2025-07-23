@@ -5,7 +5,7 @@ private enum PowerOption {
 	LOGOUT
 }
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerBox.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/PowerBox.ui")]
 public class PowerBox : Gtk.Box {
 	private PowerOption _option;
 

@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/MprisPlayer.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/MprisPlayer.ui")]
 public class MprisPlayer : Gtk.Box {
 	public AstalMpris.Player player { get; set; }
 

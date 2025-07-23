@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QAudioBox.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QAudioBox.ui")]
 public class QAudioBox : Gtk.Box {
 	public AstalWp.Wp? wp { get; private set; }
 	public AstalWp.Endpoint speaker { get; private set; }
