@@ -19,6 +19,7 @@ public class NavBar : Astal.Window {
 		"settings-symbolic",
 		"gaming-symbolic",
 	};
+	public Astal.WindowAnchor vanchor { get; construct; }
 
 	[GtkChild]
 	private unowned Adw.Bin workspaces;
@@ -29,7 +30,8 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	private unowned Adw.Bin active_submap;
 
-	public NavBar() {
+	public NavBar(Astal.WindowAnchor vanchor = Astal.WindowAnchor.BOTTOM) {
+		Object(anchor: Astal.WindowAnchor.LEFT | vanchor | Astal.WindowAnchor.RIGHT, vanchor: vanchor);
 		battery = AstalBattery.Device.get_default();
 		speaker = AstalWp.get_default().audio.default_speaker;
 

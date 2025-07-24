@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="com.arkye.morghulis" path="/com/arkye/morghulis/">
+    <key name="navbar-anchor" type="s">
+      <default>"bottom"</default>
+      <summary>NavBar anchor position</summary>
+      <description>The anchor position for NavBar ("top" or "bottom")</description>
+      <choices>
+        <choice value="top"/>
+        <choice value="bottom"/>
+      </choices>
+    </key>
+  </schema>
+</schemalist>

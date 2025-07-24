@@ -5,6 +5,7 @@ public class Morghulis : Astal.Application {
 	private GTop.Uptime _g_uptime;
 
 	public static Morghulis instance { get; private set; }
+	public static GLib.Settings gsettings { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
 	public static string clock_format { get; private set; default = "%H:%M %b %d"; }
@@ -31,6 +32,7 @@ public class Morghulis : Astal.Application {
 	construct {
 		Adw.init();
 		instance_name = "morghulis";
+		gsettings = new GLib.Settings("com.arkye.morghulis");
 
 		try {
 			acquire_socket();
@@ -77,7 +79,21 @@ public class Morghulis : Astal.Application {
 			apply_css(_css_file.get_path(), true);
 		}
 
-		add_window(new NavBar());
+		string navbar_position = gsettings.get_string("navbar-anchor");
+		Astal.WindowAnchor navbar_anchor;
+
+		switch (navbar_position.down()) {
+			case "top":
+				navbar_anchor = Astal.WindowAnchor.TOP;
+			break;
+
+			case "bottom":
+			default:
+				navbar_anchor = Astal.WindowAnchor.BOTTOM;
+			break;
+		}
+
+		add_window(new NavBar(navbar_anchor));
 		add_window(new Runner());
 		add_window(new QuickMenu());
 		add_window(new OnScreenDisplay());

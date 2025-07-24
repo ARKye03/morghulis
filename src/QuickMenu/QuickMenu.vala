@@ -10,6 +10,12 @@ public class QuickMenu : Astal.Window {
 			this.destroy();
 		}
 
+		if (NavBar.instance.vanchor == Astal.WindowAnchor.TOP) {
+			this.anchor = Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.TOP;
+		} else {
+			this.anchor = Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM;
+		}
+
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				Settings.settings_navigation.pop();
