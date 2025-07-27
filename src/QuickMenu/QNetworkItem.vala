@@ -39,13 +39,8 @@ public class QNetworkItem : Gtk.ListBoxRow {
 		}
 	}
 
-	public void update_active_state(AstalNetwork.AccessPoint? active_ap) {
-		if (access_point == null) {
-			active = false;
-			return;
-		}
-
-		active = active_ap != null && active_ap.ssid == access_point.ssid;
+	public void update_active_state(string? active_ap_ssid) {
+		active = active_ap_ssid == access_point.ssid;
 	}
 
 	[GtkCallback]
