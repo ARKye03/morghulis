@@ -2,18 +2,17 @@
 public class QNetworkItem : Gtk.ListBoxRow {
 	public AstalNetwork.AccessPoint access_point { get; construct; }
 	public AstalNetwork.Network network { get; construct; }
-	public bool is_active { get; private set; default = false; }
-	public bool is_protected { get; private set; default = false; }
-
+	private bool _active = false;
 	public bool active {
 		get {
-			return has_css_class("button_accent_bg");
+			return _active;
 		}
 		set {
+			_active = value;
 			if (value) {
-				this.add_css_class("button_accent_bg");
+				this.add_css_class("success");
 			} else {
-				this.remove_css_class("button_accent_bg");
+				this.remove_css_class("success");
 			}
 		}
 	}
@@ -23,7 +22,6 @@ public class QNetworkItem : Gtk.ListBoxRow {
 	}
 
 	construct {
-		is_protected = access_point.flags != NM .80211ApFlags.NONE;
 		check_active_connection();
 
 		// Listen for connection changes
@@ -37,7 +35,11 @@ public class QNetworkItem : Gtk.ListBoxRow {
 
 	[GtkCallback]
 	public void switch_connection() {
-		if (is_active) {
+		if (access_point == null) {
+			return;
+		}
+
+		if (active) {
 			network.wifi.deactivate_connection.begin();
 		} else {
 			access_point.activate.begin();
@@ -45,15 +47,20 @@ public class QNetworkItem : Gtk.ListBoxRow {
 	}
 
 	private void check_active_connection() {
-		is_active = network.wifi.active_access_point != null &&
-					network.wifi.active_access_point.ssid == access_point.ssid;
+		if (access_point == null) {
+			active = false;
+			return;
+		}
+
+		active = network.wifi.active_access_point != null &&
+				 network.wifi.active_access_point.ssid == access_point.ssid;
 	}
 
 	[GtkCallback]
-	private string status_label(bool is_active) {
-		if (is_active) {
+	private string status_label(bool active) {
+		if (active) {
 			return "Connected";
-		} else if (access_point.flags != NM .80211ApFlags.NONE) {
+		} else if (access_point != null && access_point.requires_password) {
 			return "Secured";
 		} else {
 			return "Open";
@@ -63,10 +70,10 @@ public class QNetworkItem : Gtk.ListBoxRow {
 	// For sorting - active connections should be at top
 	public int compare_to(QNetworkItem other) {
 		// Active connections first
-		if (this.is_active && !other.is_active) {
+		if (this.active && !other.active) {
 			return -1;
 		}
-		if (!this.is_active && other.is_active) {
+		if (!this.active && other.active) {
 			return 1;
 		}
 

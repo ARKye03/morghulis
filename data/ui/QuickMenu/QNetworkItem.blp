@@ -3,18 +3,16 @@ using AstalNetwork 0.1;
 using Adw 1;
 
 template $QNetworkItem: ListBoxRow {
-    active: bind template.is_active;
-
     GestureClick {
         released => $switch_connection();
     }
 
+    styles [
+        "padding_10",
+    ]
+
     Box {
         spacing: 10;
-        margin-start: 10;
-        margin-end: 10;
-        margin-top: 8;
-        margin-bottom: 8;
 
         Image {
             pixel-size: 24;
@@ -38,7 +36,7 @@ template $QNetworkItem: ListBoxRow {
                 halign: start;
                 ellipsize: end;
                 max-width-chars: 30;
-                label: bind $status_label(template.is_active) as <string>;
+                label: bind $status_label(template.active) as <string>;
 
                 styles [
                     "caption",
@@ -54,7 +52,7 @@ template $QNetworkItem: ListBoxRow {
             Image lock_icon {
                 pixel-size: 16;
                 icon-name: "network-wireless-encrypted-symbolic";
-                visible: bind template.is_protected;
+                visible: bind template.access_point as <AstalNetwork.AccessPoint>.requires-password;
             }
 
             Revealer {
