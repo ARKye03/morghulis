@@ -14,7 +14,7 @@ public class QNetwork : Gtk.Box {
 		wifi_list.set_sort_func(sort_network_items);
 
 		// Listen for access point changes
-		network.wifi.notify["access-points"].connect(refresh_items);
+		//  network.wifi.notify["access-points"].connect(refresh_items);
 
 		// Listen for active connection changes and update all items
 		network.wifi.notify["active-access-point"].connect(update_active_states);
@@ -30,6 +30,7 @@ public class QNetwork : Gtk.Box {
 		return item1.compare_to(item2);
 	}
 
+	// Absolute rubbish
 	private void refresh_items() {
 		wifi_list.remove_all();
 		network_items.remove_range(0, network_items.length);
@@ -64,5 +65,6 @@ public class QNetwork : Gtk.Box {
 	[GtkCallback]
 	public void refresh() {
 		network.wifi.scan();
+		refresh_items();
 	}
 }
