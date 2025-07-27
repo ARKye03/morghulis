@@ -16,6 +16,9 @@ public class QNetwork : Gtk.Box {
 		// Listen for access point changes
 		network.wifi.notify["access-points"].connect(refresh_items);
 
+		// Listen for active connection changes and update all items
+		network.wifi.notify["active-access-point"].connect(update_active_states);
+
 		// Initial population
 		refresh_items();
 	}
@@ -40,6 +43,9 @@ public class QNetwork : Gtk.Box {
 			}
 		});
 
+		// Update active states for all items
+		update_active_states();
+
 		// Trigger resort
 		wifi_list.invalidate_sort();
 	}
@@ -56,6 +62,17 @@ public class QNetwork : Gtk.Box {
 
 		// Clear our tracking list
 		network_items.remove_range(0, network_items.length);
+	}
+
+	private void update_active_states() {
+		var active_ap = network.wifi.active_access_point;
+
+		for (uint i = 0; i < network_items.length; i++) {
+			network_items[i].update_active_state(active_ap);
+		}
+
+		// Trigger resort since active state affects sorting
+		wifi_list.invalidate_sort();
 	}
 
 	[GtkCallback]

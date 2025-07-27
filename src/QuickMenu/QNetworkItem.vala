@@ -21,13 +21,6 @@ public class QNetworkItem : Gtk.ListBoxRow {
 		Object(access_point: ap, network: net);
 	}
 
-	construct {
-		check_active_connection();
-
-		// Listen for connection changes
-		network.wifi.notify["active-access-point"].connect(check_active_connection);
-	}
-
 	[GtkCallback]
 	public string ssid_name(string ssid) {
 		return ssid ?? "Unknown Network";
@@ -46,14 +39,13 @@ public class QNetworkItem : Gtk.ListBoxRow {
 		}
 	}
 
-	private void check_active_connection() {
+	public void update_active_state(AstalNetwork.AccessPoint? active_ap) {
 		if (access_point == null) {
 			active = false;
 			return;
 		}
 
-		active = network.wifi.active_access_point != null &&
-				 network.wifi.active_access_point.ssid == access_point.ssid;
+		active = active_ap != null && active_ap.ssid == access_point.ssid;
 	}
 
 	[GtkCallback]
