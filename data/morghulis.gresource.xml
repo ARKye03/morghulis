@@ -42,6 +42,7 @@
         <file preprocess="xml-stripblanks">ui/QuickMenu/QuickMenu.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/QButton.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/QNetwork.ui</file>
+        <file preprocess="xml-stripblanks">ui/QuickMenu/QNetworkItem.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/QBluetooth.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/QBluetoothItem.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/BatteryBox.ui</file>

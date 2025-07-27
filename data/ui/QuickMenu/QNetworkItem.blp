@@ -1,0 +1,69 @@
+using Gtk 4.0;
+using AstalNetwork 0.1;
+using Adw 1;
+
+template $QNetworkItem: ListBoxRow {
+    active: bind template.is_active;
+
+    GestureClick {
+        released => $switch_connection();
+    }
+
+    Box {
+        spacing: 10;
+        margin-start: 10;
+        margin-end: 10;
+        margin-top: 8;
+        margin-bottom: 8;
+
+        Image {
+            pixel-size: 24;
+            icon-name: bind template.access_point as <AstalNetwork.AccessPoint>.icon-name;
+        }
+
+        Box {
+            orientation: vertical;
+            spacing: 2;
+            hexpand: true;
+            valign: center;
+
+            Label {
+                halign: start;
+                ellipsize: end;
+                max-width-chars: 25;
+                label: bind $ssid_name(template.access_point as <AstalNetwork.AccessPoint>.ssid) as <string>;
+            }
+
+            Label status_label {
+                halign: start;
+                ellipsize: end;
+                max-width-chars: 30;
+                label: bind $status_label(template.is_active) as <string>;
+
+                styles [
+                    "caption",
+                    "dim-label",
+                ]
+            }
+        }
+
+        Box {
+            spacing: 5;
+            valign: center;
+
+            Image lock_icon {
+                pixel-size: 16;
+                icon-name: "network-wireless-encrypted-symbolic";
+                visible: bind template.is_protected;
+            }
+
+            Revealer {
+                transition-type: slide_left;
+                transition-duration: 250;
+                reveal-child: false;
+
+                Adw.Spinner {}
+            }
+        }
+    }
+}

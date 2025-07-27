@@ -1,74 +1,65 @@
-//This file if complete garbage
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
 	public AstalNetwork.Network network { get; set; }
-	private GLib.ListStore wifi_store;
+	private GenericArray<QNetworkItem> network_items;
 
 	[GtkChild]
-	private unowned Gtk.ListView wifi_list;
+	private unowned Gtk.ListBox wifi_list;
 
 	construct {
 		network = AstalNetwork.get_default();
-		wifi_store = new GLib.ListStore(typeof(WifiItem));
+		network_items = new GenericArray<QNetworkItem>();
 
-		var factory = setup_factory();
-		var selection = new Gtk.NoSelection(wifi_store);
-		wifi_list.set_factory(factory);
-		wifi_list.set_model(selection);
+		// Set up sorting function for ListBox
+		wifi_list.set_sort_func(sort_network_items);
 
+		// Listen for access point changes
 		network.wifi.notify["access-points"].connect(refresh_items);
+
+		// Initial population
 		refresh_items();
 	}
 
-	private Gtk.SignalListItemFactory setup_factory() {
-		var factory = new Gtk.SignalListItemFactory();
+	private int sort_network_items(Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {
+		var item1 = (QNetworkItem)row1;
+		var item2 = (QNetworkItem)row2;
 
-		factory.setup.connect((factory, obj) => {
-			var list_item = (Gtk.ListItem)obj;
-			var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 5);
-			box.append(new Gtk.Image());
-			box.append(new Gtk.Label(null));
-			box.add_css_class("padding_10");
-			list_item.child = box;
-		});
-
-		factory.bind.connect((factory, obj) => {
-			var list_item = (Gtk.ListItem)obj;
-			var box = (Gtk.Box)list_item.get_child();
-			var image = (Gtk.Image)box.get_first_child();
-			var label = (Gtk.Label)box.get_last_child();
-			var item = (WifiItem)list_item.get_item();
-
-			image.set_from_icon_name(item.icon_name);
-			image.pixel_size = 25;
-			label.label = item.ssid;
-		});
-
-		return factory;
+		return item1.compare_to(item2);
 	}
 
 	private void refresh_items() {
-		wifi_store.remove_all();
+		// Clear existing items
+		clear_list();
+
+		// Add new items
 		network.wifi.access_points.foreach((ap) => {
-			wifi_store.append(new WifiItem(ap));
+			if (ap.ssid != null && ap.ssid != "") {
+				var item = new QNetworkItem(ap, network);
+				network_items.add(item);
+				wifi_list.append(item);
+			}
 		});
+
+		// Trigger resort
+		wifi_list.invalidate_sort();
+	}
+
+	private void clear_list() {
+		// Remove all children from ListBox
+		var child = wifi_list.get_first_child();
+
+		while (child != null) {
+			var next = child.get_next_sibling();
+			wifi_list.remove(child);
+			child = next;
+		}
+
+		// Clear our tracking list
+		network_items.remove_range(0, network_items.length);
 	}
 
 	[GtkCallback]
 	public void refresh() {
 		network.wifi.scan();
-	}
-}
-
-public class WifiItem : Object {
-	public string ssid { get; set; }
-	public string icon_name { get; set; }
-	public AstalNetwork.AccessPoint access_point { get; set; }
-
-	public WifiItem(AstalNetwork.AccessPoint ap) {
-		Object();
-		this.ssid = ap.ssid;
-		this.icon_name = ap.icon_name;
-		this.access_point = ap;
 	}
 }
