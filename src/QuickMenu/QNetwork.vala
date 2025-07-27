@@ -14,7 +14,10 @@ public class QNetwork : Gtk.Box {
 		wifi_list.set_sort_func(sort_network_items);
 
 		// Listen for access point changes
-		network.wifi.notify["access-points"].connect(refresh_items);
+		//  network.wifi.notify["access-points"].connect(refresh_items);
+
+		// Listen for active connection changes and update all items
+		network.wifi.notify["active-access-point"].connect(update_active_states);
 
 		// Initial population
 		refresh_items();
@@ -27,9 +30,10 @@ public class QNetwork : Gtk.Box {
 		return item1.compare_to(item2);
 	}
 
+	// Absolute rubbish
 	private void refresh_items() {
-		// Clear existing items
-		clear_list();
+		wifi_list.remove_all();
+		network_items.remove_range(0, network_items.length);
 
 		// Add new items
 		network.wifi.access_points.foreach((ap) => {
@@ -40,26 +44,27 @@ public class QNetwork : Gtk.Box {
 			}
 		});
 
+		// Update active states for all items
+		update_active_states();
+
 		// Trigger resort
 		wifi_list.invalidate_sort();
 	}
 
-	private void clear_list() {
-		// Remove all children from ListBox
-		var child = wifi_list.get_first_child();
+	private void update_active_states() {
+		var active_ap = network.wifi.active_access_point;
 
-		while (child != null) {
-			var next = child.get_next_sibling();
-			wifi_list.remove(child);
-			child = next;
+		for (uint i = 0; i < network_items.length; i++) {
+			network_items[i].update_active_state(active_ap);
 		}
 
-		// Clear our tracking list
-		network_items.remove_range(0, network_items.length);
+		// Trigger resort since active state affects sorting
+		wifi_list.invalidate_sort();
 	}
 
 	[GtkCallback]
 	public void refresh() {
 		network.wifi.scan();
+		refresh_items();
 	}
 }
