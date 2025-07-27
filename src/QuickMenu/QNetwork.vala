@@ -31,8 +31,8 @@ public class QNetwork : Gtk.Box {
 	}
 
 	private void refresh_items() {
-		// Clear existing items
-		clear_list();
+		wifi_list.remove_all();
+		network_items.remove_range(0, network_items.length);
 
 		// Add new items
 		network.wifi.access_points.foreach((ap) => {
@@ -48,20 +48,6 @@ public class QNetwork : Gtk.Box {
 
 		// Trigger resort
 		wifi_list.invalidate_sort();
-	}
-
-	private void clear_list() {
-		// Remove all children from ListBox
-		var child = wifi_list.get_first_child();
-
-		while (child != null) {
-			var next = child.get_next_sibling();
-			wifi_list.remove(child);
-			child = next;
-		}
-
-		// Clear our tracking list
-		network_items.remove_range(0, network_items.length);
 	}
 
 	private void update_active_states() {
