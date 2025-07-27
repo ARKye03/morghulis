@@ -22,7 +22,7 @@ public class QNetworkItem : Gtk.ListBoxRow {
 	}
 
 	[GtkCallback]
-	public string ssid_name(string ssid) {
+	public string ssid_name(string? ssid) {
 		return ssid ?? "Unknown Network";
 	}
 
