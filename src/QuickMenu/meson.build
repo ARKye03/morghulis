@@ -8,6 +8,7 @@ project_resources += files(
     'QBluetoothItem.vala',
     'QButton.vala',
     'QNetwork.vala',
+    'QNetworkItem.vala',
     'QNotifications.vala',
     'QuickMenu.vala',
     'Settings.vala',

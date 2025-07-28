@@ -122,7 +122,9 @@ nix run github:ARKye03/morghulis#fhs -- --help
   - [x] Power Buttons
   - [x] Power Profiles
   - [x] Bluetooth
-  - [x] (WIP) Network
+  - [x] Network
+    - [x] Wifi
+    - [ ] Ethernet
   - [x] Audio
 - [x] Battery Support
 - [x] Runner

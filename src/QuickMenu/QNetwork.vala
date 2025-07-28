@@ -1,74 +1,86 @@
-//This file if complete garbage
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
+	private NM.DeviceWifi _net_dev;
+	private HashTable<string, QNetworkItem> _network_items;
+
 	public AstalNetwork.Network network { get; set; }
-	private GLib.ListStore wifi_store;
 
 	[GtkChild]
-	private unowned Gtk.ListView wifi_list;
+	private unowned Gtk.ListBox wifi_list;
 
 	construct {
 		network = AstalNetwork.get_default();
-		wifi_store = new GLib.ListStore(typeof(WifiItem));
+		_net_dev = network.wifi.device;
+		_network_items = new HashTable<string, QNetworkItem>(str_hash, str_equal);
 
-		var factory = setup_factory();
-		var selection = new Gtk.NoSelection(wifi_store);
-		wifi_list.set_factory(factory);
-		wifi_list.set_model(selection);
+		// Set up sorting function for ListBox
+		wifi_list.set_sort_func(sort_network_items);
 
-		network.wifi.notify["access-points"].connect(refresh_items);
-		refresh_items();
+		_net_dev.access_point_added.connect(on_added_ap);
+		_net_dev.access_point_removed.connect(on_removed_ap);
+		network.wifi.notify["active-access-point"].connect(update_active_states);
+
+		network.wifi.access_points.foreach(add_astal_ap);
+		update_active_states();
 	}
 
-	private Gtk.SignalListItemFactory setup_factory() {
-		var factory = new Gtk.SignalListItemFactory();
-
-		factory.setup.connect((factory, obj) => {
-			var list_item = (Gtk.ListItem)obj;
-			var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 5);
-			box.append(new Gtk.Image());
-			box.append(new Gtk.Label(null));
-			box.add_css_class("padding_10");
-			list_item.child = box;
-		});
-
-		factory.bind.connect((factory, obj) => {
-			var list_item = (Gtk.ListItem)obj;
-			var box = (Gtk.Box)list_item.get_child();
-			var image = (Gtk.Image)box.get_first_child();
-			var label = (Gtk.Label)box.get_last_child();
-			var item = (WifiItem)list_item.get_item();
-
-			image.set_from_icon_name(item.icon_name);
-			image.pixel_size = 25;
-			label.label = item.ssid;
-		});
-
-		return factory;
-	}
-
-	private void refresh_items() {
-		wifi_store.remove_all();
+	private void on_added_ap(Object ap) {
+		if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
+			return;
+		}
+		var nap = (NM.AccessPoint)ap;
+		var nap_ssid = (string)nap.ssid.get_data();
+		debug(@"Adding AP $(nap_ssid)");
 		network.wifi.access_points.foreach((ap) => {
-			wifi_store.append(new WifiItem(ap));
+			if (ap.ssid == nap_ssid) {
+				add_astal_ap(ap);
+			}
 		});
+	}
+
+	private void add_astal_ap(AstalNetwork.AccessPoint ap) {
+		var item = new QNetworkItem(ap, network);
+
+		_network_items.set(ap.ssid, item);
+		wifi_list.append(item);
+	}
+
+	private void on_removed_ap(Object ap) {
+		if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
+			return;
+		}
+		var nap_ssid = (string)((NM.AccessPoint)ap).ssid.get_data();
+		debug(@"Removing AP $(nap_ssid)");
+		wifi_list.remove(_network_items.get(nap_ssid));
+		_network_items.remove(nap_ssid);
+	}
+
+	private int sort_network_items(Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {
+		var item1 = (QNetworkItem)row1;
+		var item2 = (QNetworkItem)row2;
+
+		return item1.compare_to(item2);
+	}
+
+	private void update_active_states() {
+		var active_ap_ssid = network.wifi.active_access_point.ssid;
+
+		if (active_ap_ssid == null || active_ap_ssid == "") {
+			return;
+		}
+
+		_network_items.foreach((ssid, item) => {
+			if (ssid == active_ap_ssid) {
+				item.active = true;
+			} else {
+				item.active = false;
+			}
+		});
+		wifi_list.invalidate_sort();
 	}
 
 	[GtkCallback]
 	public void refresh() {
 		network.wifi.scan();
-	}
-}
-
-public class WifiItem : Object {
-	public string ssid { get; set; }
-	public string icon_name { get; set; }
-	public AstalNetwork.AccessPoint access_point { get; set; }
-
-	public WifiItem(AstalNetwork.AccessPoint ap) {
-		Object();
-		this.ssid = ap.ssid;
-		this.icon_name = ap.icon_name;
-		this.access_point = ap;
 	}
 }

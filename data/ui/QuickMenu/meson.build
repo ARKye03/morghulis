@@ -8,6 +8,7 @@ blps += files(
     'QBluetoothItem.blp',
     'QButton.blp',
     'QNetwork.blp',
+    'QNetworkItem.blp',
     'QNotifications.blp',
     'QuickMenu.blp',
     'Settings.blp',
