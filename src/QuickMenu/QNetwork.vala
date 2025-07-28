@@ -1,7 +1,7 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
 	private NM.DeviceWifi _net_dev;
-	private HashTable<string, QNetworkItem> _network_items;
+	private List<QNetworkItem> _network_items;
 
 	public AstalNetwork.Network network { get; set; }
 
@@ -11,9 +11,8 @@ public class QNetwork : Gtk.Box {
 	construct {
 		network = AstalNetwork.get_default();
 		_net_dev = network.wifi.device;
-		_network_items = new HashTable<string, QNetworkItem>(str_hash, str_equal);
+		_network_items = new List<QNetworkItem>();
 
-		// Set up sorting function for ListBox
 		wifi_list.set_sort_func(sort_network_items);
 
 		_net_dev.access_point_added.connect(on_added_ap);
@@ -41,7 +40,7 @@ public class QNetwork : Gtk.Box {
 	private void add_astal_ap(AstalNetwork.AccessPoint ap) {
 		var item = new QNetworkItem(ap, network);
 
-		_network_items.set(ap.ssid, item);
+		_network_items.append(item);
 		wifi_list.append(item);
 	}
 
@@ -51,8 +50,17 @@ public class QNetwork : Gtk.Box {
 		}
 		var nap_ssid = (string)((NM.AccessPoint)ap).ssid.get_data();
 		debug(@"Removing AP $(nap_ssid)");
-		wifi_list.remove(_network_items.get(nap_ssid));
-		_network_items.remove(nap_ssid);
+
+		var current = (QNetworkItem)wifi_list.get_first_child();
+
+		while (current != null) {
+			if (current.access_point.ssid == nap_ssid) {
+				wifi_list.remove(current);
+				_network_items.remove(current);
+				return;
+			}
+			current = (QNetworkItem)current.get_next_sibling();
+		}
 	}
 
 	private int sort_network_items(Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {
@@ -69,8 +77,8 @@ public class QNetwork : Gtk.Box {
 			return;
 		}
 
-		_network_items.foreach((ssid, item) => {
-			if (ssid == active_ap_ssid) {
+		_network_items.foreach((item) => {
+			if (item.access_point.ssid == active_ap_ssid) {
 				item.active = true;
 			} else {
 				item.active = false;
