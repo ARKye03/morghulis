@@ -76,6 +76,7 @@ public class QNetwork : Gtk.Box {
 				item.active = false;
 			}
 		});
+		wifi_list.invalidate_sort();
 	}
 
 	[GtkCallback]
