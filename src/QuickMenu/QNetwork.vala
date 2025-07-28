@@ -1,26 +1,58 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
+	private NM.DeviceWifi _net_dev;
+	private HashTable<string, QNetworkItem> _network_items;
+
 	public AstalNetwork.Network network { get; set; }
-	private GenericArray<QNetworkItem> network_items;
 
 	[GtkChild]
 	private unowned Gtk.ListBox wifi_list;
 
 	construct {
 		network = AstalNetwork.get_default();
-		network_items = new GenericArray<QNetworkItem>();
+		_net_dev = network.wifi.device;
+		_network_items = new HashTable<string, QNetworkItem>(str_hash, str_equal);
 
 		// Set up sorting function for ListBox
 		wifi_list.set_sort_func(sort_network_items);
 
-		// Listen for access point changes
-		//  network.wifi.notify["access-points"].connect(refresh_items);
-
-		// Listen for active connection changes and update all items
+		_net_dev.access_point_added.connect(on_added_ap);
+		_net_dev.access_point_removed.connect(on_removed_ap);
 		network.wifi.notify["active-access-point"].connect(update_active_states);
 
-		// Initial population
-		refresh_items();
+		network.wifi.access_points.foreach(add_astal_ap);
+		update_active_states();
+	}
+
+	private void on_added_ap(Object ap) {
+		if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
+			return;
+		}
+		var nap = (NM.AccessPoint)ap;
+		var nap_ssid = (string)nap.ssid.get_data();
+		debug(@"Adding AP $(nap_ssid)");
+		network.wifi.access_points.foreach((ap) => {
+			if (ap.ssid == nap_ssid) {
+				add_astal_ap(ap);
+			}
+		});
+	}
+
+	private void add_astal_ap(AstalNetwork.AccessPoint ap) {
+		var item = new QNetworkItem(ap, network);
+
+		_network_items.set(ap.ssid, item);
+		wifi_list.append(item);
+	}
+
+	private void on_removed_ap(Object ap) {
+		if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
+			return;
+		}
+		var nap_ssid = (string)((NM.AccessPoint)ap).ssid.get_data();
+		debug(@"Removing AP $(nap_ssid)");
+		wifi_list.remove(_network_items.get(nap_ssid));
+		_network_items.remove(nap_ssid);
 	}
 
 	private int sort_network_items(Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {
@@ -30,41 +62,24 @@ public class QNetwork : Gtk.Box {
 		return item1.compare_to(item2);
 	}
 
-	// Absolute rubbish
-	private void refresh_items() {
-		wifi_list.remove_all();
-		network_items.remove_range(0, network_items.length);
-
-		// Add new items
-		network.wifi.access_points.foreach((ap) => {
-			if (ap.ssid != null && ap.ssid != "") {
-				var item = new QNetworkItem(ap, network);
-				network_items.add(item);
-				wifi_list.append(item);
-			}
-		});
-
-		// Update active states for all items
-		update_active_states();
-
-		// Trigger resort
-		wifi_list.invalidate_sort();
-	}
-
 	private void update_active_states() {
-		var active_ap = network.wifi.active_access_point;
+		var active_ap_ssid = network.wifi.active_access_point.ssid;
 
-		for (uint i = 0; i < network_items.length; i++) {
-			network_items[i].update_active_state(active_ap);
+		if (active_ap_ssid == null || active_ap_ssid == "") {
+			return;
 		}
 
-		// Trigger resort since active state affects sorting
-		wifi_list.invalidate_sort();
+		_network_items.foreach((ssid, item) => {
+			if (ssid == active_ap_ssid) {
+				item.active = true;
+			} else {
+				item.active = false;
+			}
+		});
 	}
 
 	[GtkCallback]
 	public void refresh() {
 		network.wifi.scan();
-		refresh_items();
 	}
 }
