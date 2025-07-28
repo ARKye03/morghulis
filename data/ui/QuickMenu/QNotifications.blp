@@ -14,23 +14,67 @@ template $QNotifications: Box {
         }
     }
 
-    ScrolledWindow {
-        overflow: hidden;
-        vexpand: true;
-        hscrollbar-policy: never;
+    Stack {
+        transition-duration: 250;
+        transition-type: slide_up_down;
+        visible-child-name: bind $get_stack_page_to_show(template.at_least_one_notification) as <string>;
 
         styles [
             "background",
-            "padding_10",
         ]
 
-        ListBox notifications {
-            selection-mode: none;
-            show-separators: true;
+        StackPage {
+            name: "notifications";
+            title: "Notifications";
 
-            styles [
-                "boxed-list",
-            ]
+            child: ScrolledWindow {
+                overflow: hidden;
+                vexpand: true;
+                hscrollbar-policy: never;
+
+                styles [
+                    "background",
+                    "padding_10",
+                ]
+
+                ListBox notifications {
+                    selection-mode: none;
+                    show-separators: true;
+
+                    styles [
+                        "boxed-list",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "no_notifications";
+
+            child: Box {
+                orientation: vertical;
+                spacing: 10;
+                vexpand: true;
+                halign: center;
+                valign: center;
+
+                styles [
+                    "background",
+                ]
+
+                Image {
+                    icon-name: "bell-minus-symbolic";
+                    pixel-size: 120;
+                }
+
+                Label {
+                    label: "No notifications";
+
+                    styles [
+                        "title-1",
+                    ]
+                }
+            };
         }
     }
 }

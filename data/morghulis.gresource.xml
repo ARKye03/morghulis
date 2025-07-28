@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/com/github/ARKye03/morghulis/icons/scalable/actions">
+        <file alias="bell-minus-symbolic.svg">assets/bell-minus-symbolic.svg</file>
         <!-- NavBar -->
         <file alias="terminal-symbolic.svg">assets/NavBar/terminal-symbolic.svg</file>
         <file alias="browser-symbolic.svg">assets/NavBar/browser-symbolic.svg</file>
