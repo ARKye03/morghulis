@@ -1,7 +1,6 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
 	private NM.DeviceWifi _net_dev;
-	private List<QNetworkItem> _network_items;
 
 	public AstalNetwork.Network network { get; set; }
 
@@ -11,7 +10,6 @@ public class QNetwork : Gtk.Box {
 	construct {
 		network = AstalNetwork.get_default();
 		_net_dev = network.wifi.device;
-		_network_items = new List<QNetworkItem>();
 
 		wifi_list.set_sort_func(sort_network_items);
 
@@ -40,7 +38,6 @@ public class QNetwork : Gtk.Box {
 	private void add_astal_ap(AstalNetwork.AccessPoint ap) {
 		var item = new QNetworkItem(ap, network);
 
-		_network_items.append(item);
 		wifi_list.append(item);
 	}
 
@@ -56,7 +53,6 @@ public class QNetwork : Gtk.Box {
 		while (current != null) {
 			if (current.access_point.ssid == nap_ssid) {
 				wifi_list.remove(current);
-				_network_items.remove(current);
 				return;
 			}
 			current = (QNetworkItem)current.get_next_sibling();
@@ -77,13 +73,18 @@ public class QNetwork : Gtk.Box {
 			return;
 		}
 
-		_network_items.foreach((item) => {
-			if (item.access_point.ssid == active_ap_ssid) {
-				item.active = true;
+		var current = (QNetworkItem)wifi_list.get_first_child();
+
+		while (current != null) {
+			if (current.access_point.ssid == active_ap_ssid) {
+				current.active = true;
+				break;
 			} else {
-				item.active = false;
+				current.active = false;
 			}
-		});
+			current = (QNetworkItem)current.get_next_sibling();
+		}
+
 		wifi_list.invalidate_sort();
 	}
 

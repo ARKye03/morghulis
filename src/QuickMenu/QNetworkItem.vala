@@ -2,17 +2,16 @@
 public class QNetworkItem : Gtk.ListBoxRow {
 	public AstalNetwork.AccessPoint access_point { get; construct; }
 	public AstalNetwork.Network network { get; construct; }
-	private bool _active = false;
+
 	public bool active {
 		get {
-			return _active;
+			return this.has_css_class("accent");
 		}
 		set {
-			_active = value;
 			if (value) {
-				this.add_css_class("success");
+				this.add_css_class("accent");
 			} else {
-				this.remove_css_class("success");
+				this.remove_css_class("accent");
 			}
 		}
 	}
@@ -68,7 +67,15 @@ public class QNetworkItem : Gtk.ListBoxRow {
 			return 1;
 		}
 
-		// Finally by SSID alphabetically
-		return this.access_point.ssid.collate(other.access_point.ssid);
+		// Then by SSID alphabetically
+		bool both_ssids_are_valid =
+			(this.access_point.ssid != null && this.access_point.ssid != "") &&
+			(other.access_point.ssid != null && other.access_point.ssid != "");
+
+		if (both_ssids_are_valid) {
+			return this.access_point.ssid.collate(other.access_point.ssid);
+		} else {
+			return 1;
+		}
 	}
 }
