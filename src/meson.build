@@ -62,6 +62,7 @@ executable(
         '--vapidir=' + vapidir,
     ]
     + project_args,
+    c_args: '-w',
     dependencies: deps,
     link_args: ['-lm'], # Link math library
     install: true,
