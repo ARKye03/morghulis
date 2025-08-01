@@ -9,7 +9,6 @@ project_resources += files(
     'QButton.vala',
     'QNetwork.vala',
     'QNetworkItem.vala',
-    'QNotifications.vala',
     'QuickMenu.vala',
     'Settings.vala',
 )
