@@ -49,6 +49,11 @@ public class NotifPopItemsCenter : Astal.Window {
 		}
 
 		var notification = _notifd.get_notification(notification_id);
+
+		if (_notifd.dont_disturb && notification.urgency != AstalNotifd.Urgency.CRITICAL) {
+			return;
+		}
+
 		var notif_item = new PopupNotificationItem(notification);
 		this._notif_list_box.prepend(notif_item);
 		this._notif_count++;
