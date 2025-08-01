@@ -8,7 +8,6 @@ public class MorghulCTL {
 	private static bool quit = false;
 	private static bool show_version = false;
 	private static string? autostart = null;
-	private static string version = "1.0-alpha";
 
 	public static int main(string[] args) {
 		var options = new OptionEntry[] {
@@ -33,7 +32,7 @@ public class MorghulCTL {
 		}
 
 		if (show_version) {
-			stdout.printf("Morghulis version %s\n", version);
+			stdout.printf("Morghulis version %s\n", MorghulVersion.VERSION);
 			return 0;
 		} else if (start) {
 			return start_morghulis();
