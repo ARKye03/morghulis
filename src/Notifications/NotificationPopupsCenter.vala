@@ -7,7 +7,12 @@ public class NotifPopItemsCenter : Astal.Window {
 	public NotifPopItemsCenter(Astal.WindowAnchor x_anchor = Astal.WindowAnchor.RIGHT) {
 		Object(
 			title: "Notifications",
-			anchor: Astal.WindowAnchor.TOP | x_anchor
+			anchor: Astal.WindowAnchor.TOP | x_anchor,
+			default_width: 330,
+			default_height: 0,
+			margin: 5,
+			css_classes: new string[] { "all_unset" },
+			overflow: Gtk.Overflow.HIDDEN
 		);
 
 		setup_sound();
@@ -16,11 +21,6 @@ public class NotifPopItemsCenter : Astal.Window {
 	}
 
 	private void setup_window() {
-		this.default_width = 330;
-		this.default_height = 0;
-		this.margin = 5;
-		this.css_classes = { "all_unset", "rounded" };
-		this.overflow = Gtk.Overflow.HIDDEN;
 		this.notify["visible"].connect(() => {
 			if (visible) {
 				this.default_height = -1;
@@ -49,13 +49,13 @@ public class NotifPopItemsCenter : Astal.Window {
 		}
 
 		var notification = _notifd.get_notification(notification_id);
-		var notif_item = new NotificationItem(notification);
+		var notif_item = new PopupNotificationItem(notification);
 		this._notif_list_box.prepend(notif_item);
 		this._notif_count++;
 
 		uint timeout_ms = notification.expire_timeout > 0 ? notification.expire_timeout * 1000 : 3000;
 		Timeout.add(timeout_ms, () => {
-			remove_notification(notification_id);
+			remove_notification_timeout(notification_id);
 			return Source.REMOVE;
 		});
 		this.visible = true;
@@ -85,19 +85,47 @@ public class NotifPopItemsCenter : Astal.Window {
 		}
 	}
 
-	private void remove_notification(uint notification_id) {
-		NotificationItem? notif_popup = (NotificationItem)_notif_list_box.get_first_child();
+	private void remove_notification_timeout(uint notification_id) {
+		PopupNotificationItem? notif_popup = (PopupNotificationItem)_notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {
-				this._notif_list_box.remove(notif_popup);
-				this._notif_count--;
+				// Don't dismiss from daemon for timeout - let it expire naturally
+				notif_popup.dismiss_with_animation(false);
+				// Remove from ListBox after animation completes
+				Timeout.add(notif_popup.transition_duration + 50, () => {
+					this._notif_list_box.remove(notif_popup);
+					this._notif_count--;
+					if (this._notif_count == 0) {
+						this.visible = false;
+					}
+					return Source.REMOVE;
+				});
 				break;
 			}
-			notif_popup = (NotificationItem)notif_popup.get_next_sibling();
+			notif_popup = (PopupNotificationItem)notif_popup.get_next_sibling();
 		}
-		if (this._notif_count == 0) {
-			this.visible = false;
+	}
+
+	private void remove_notification(uint notification_id) {
+		PopupNotificationItem? notif_popup = (PopupNotificationItem)_notif_list_box.get_first_child();
+
+		while (notif_popup != null) {
+			if (notif_popup.notification.id == notification_id) {
+				// For daemon-resolved notifications, just remove immediately with animation
+				notif_popup.dismiss_with_animation(false);
+				// Remove from ListBox after animation completes
+				Timeout.add(notif_popup.transition_duration + 50, () => {
+					this._notif_list_box.remove(notif_popup);
+					this._notif_count--;
+					if (this._notif_count == 0) {
+						this.visible = false;
+					}
+					return Source.REMOVE;
+				});
+				break;
+			}
+			notif_popup = (PopupNotificationItem)notif_popup.get_next_sibling();
 		}
 	}
 }
