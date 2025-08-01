@@ -55,7 +55,7 @@ public class NotifPopItemsCenter : Astal.Window {
 
 		uint timeout_ms = notification.expire_timeout > 0 ? notification.expire_timeout * 1000 : 3000;
 		Timeout.add(timeout_ms, () => {
-			remove_notification_timeout(notification_id);
+			remove_notification(notification_id);
 			return Source.REMOVE;
 		});
 		this.visible = true;
@@ -85,36 +85,12 @@ public class NotifPopItemsCenter : Astal.Window {
 		}
 	}
 
-	private void remove_notification_timeout(uint notification_id) {
-		PopupNotificationItem? notif_popup = (PopupNotificationItem)_notif_list_box.get_first_child();
-
-		while (notif_popup != null) {
-			if (notif_popup.notification.id == notification_id) {
-				// Don't dismiss from daemon for timeout - let it expire naturally
-				notif_popup.dismiss_with_animation(false);
-				// Remove from ListBox after animation completes
-				Timeout.add(notif_popup.transition_duration + 50, () => {
-					this._notif_list_box.remove(notif_popup);
-					this._notif_count--;
-					if (this._notif_count == 0) {
-						this.visible = false;
-					}
-					return Source.REMOVE;
-				});
-				break;
-			}
-			notif_popup = (PopupNotificationItem)notif_popup.get_next_sibling();
-		}
-	}
-
 	private void remove_notification(uint notification_id) {
 		PopupNotificationItem? notif_popup = (PopupNotificationItem)_notif_list_box.get_first_child();
 
 		while (notif_popup != null) {
 			if (notif_popup.notification.id == notification_id) {
-				// For daemon-resolved notifications, just remove immediately with animation
-				notif_popup.dismiss_with_animation(false);
-				// Remove from ListBox after animation completes
+				notif_popup.dismiss_notif(false);
 				Timeout.add(notif_popup.transition_duration + 50, () => {
 					this._notif_list_box.remove(notif_popup);
 					this._notif_count--;

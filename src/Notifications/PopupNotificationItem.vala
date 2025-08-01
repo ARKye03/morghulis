@@ -33,7 +33,7 @@ public class PopupNotificationItem : Gtk.ListBoxRow {
 		});
 	}
 
-	public void dismiss_with_animation(bool dismiss_from_daemon = true) {
+	public void dismiss_notif(bool dismiss_from_daemon = true) {
 		_revealer.reveal_child = false;
 		if (dismiss_from_daemon) {
 			Timeout.add(_revealer.transition_duration, () => {
