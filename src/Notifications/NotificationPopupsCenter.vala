@@ -31,7 +31,7 @@ public class NotifPopItemsCenter : Astal.Window {
 
 		this._notif_list_box = new Gtk.ListBox() {
 			selection_mode = Gtk.SelectionMode.NONE,
-			css_classes = { "boxed-list" }
+			css_classes = { "boxed-list-separate" }
 		};
 
 		this.child = _notif_list_box;
@@ -56,7 +56,7 @@ public class NotifPopItemsCenter : Astal.Window {
 		uint timeout_ms = notification.expire_timeout > 0 ? notification.expire_timeout * 1000 : 3000;
 		Timeout.add(timeout_ms, () => {
 			remove_notification(notification_id);
-			return false;
+			return Source.REMOVE;
 		});
 		this.visible = true;
 		this.play_notification_sound.begin();
