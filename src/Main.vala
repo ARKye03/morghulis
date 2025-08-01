@@ -23,6 +23,7 @@ private void init_types() {
 	typeof(Settings).ensure();
 	typeof(OnScreenDisplay).ensure();
 	typeof(NotificationItem).ensure();
+	typeof(NotificationContent).ensure();
 	typeof(QNotifications).ensure();
 	typeof(Tray).ensure();
 	typeof(SysInfoItem).ensure();

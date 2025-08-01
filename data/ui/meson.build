@@ -1,6 +1,6 @@
 blps = files(
     'NavBar.blp',
-    'NotificationItem.blp',
+    'NotificationContent.blp',
     'OnScreenDisplay.blp',
     'PowerMenu.blp',
     'Runner.blp',
