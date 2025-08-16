@@ -4,4 +4,5 @@ project_resources += files(
     'SysInfoCmd.vala',
     'SysInfoData.vala',
     'SysInfoItem.vala',
+    'WeatherCmd.vala'
 )
