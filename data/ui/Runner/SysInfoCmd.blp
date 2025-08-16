@@ -12,5 +12,82 @@ template $SysInfo: Box {
         row-spacing: 8;
         column-spacing: 8;
         column-homogeneous: true;
+
+        Box {
+            layout {
+                column: 0;
+                row: 0;
+                column-span: 2;
+            }
+
+            orientation: vertical;
+            spacing: 8;
+            hexpand: true;
+
+            styles [
+                "background",
+                "padding_5",
+                "rounded",
+            ]
+
+            Label {
+                label: _("System Information");
+                halign: center;
+
+                styles [
+                    "title-3",
+                ]
+            }
+
+            Separator {}
+
+            Box {
+                spacing: 10;
+
+                Image {
+                    icon-name: "video-display-symbolic";
+                }
+
+                Label hostname_label {
+                    label: bind template.hostname;
+                }
+            }
+
+            Box {
+                spacing: 10;
+
+                Image {
+                    icon-name: "linux-symbolic";
+                }
+
+                Label distro_label {
+                    label: bind template.distro;
+                }
+            }
+
+            Box {
+                spacing: 10;
+
+                Image {
+                    icon-name: "emblem-system-symbolic";
+                }
+
+                Label kernel_label {
+                    label: bind template.kernel;
+                }
+            }
+
+            Box {
+                spacing: 10;
+
+                Image {
+                    icon-name: "preferences-desktop-remote-desktop-symbolic";
+                }
+
+                Label display_label {
+                    label: bind template.display;
+                }
+            }
+        }
     }
 }

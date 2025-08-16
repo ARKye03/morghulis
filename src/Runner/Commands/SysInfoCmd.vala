@@ -1,5 +1,13 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/SysInfoCmd.ui")]
 public class SysInfo : Gtk.Box {
+	// System info properties
+	public string hostname { get; set; }
+	public string kernel { get; set; }
+	public string distro { get; set; }
+	public string desktop { get; set; }
+	public string display { get; set; }
+
+	// Monitor items
 	private CpuMonitorItem _cpu_monitor;
 	private MemoryMonitorItem _memory_monitor;
 	private SwapMonitorItem _swap_monitor;
@@ -7,12 +15,15 @@ public class SysInfo : Gtk.Box {
 	private NetworkMonitorItem _network_monitor;
 	private DiskMonitorItem _disk_monitor;
 	private ProcessCountItem _process_monitor;
-	private SysInfoData _system_info;
 
 	[GtkChild]
 	private unowned Gtk.Grid main_grid;
 
 	construct {
+		// Gather system information first
+		gather_system_info();
+
+		// Create monitor items
 		_cpu_monitor = new CpuMonitorItem();
 		_memory_monitor = new MemoryMonitorItem();
 		_swap_monitor = new SwapMonitorItem();
@@ -20,10 +31,8 @@ public class SysInfo : Gtk.Box {
 		_network_monitor = new NetworkMonitorItem();
 		_disk_monitor = new DiskMonitorItem();
 		_process_monitor = new ProcessCountItem();
-		_system_info = new SysInfoData();
 
-		// Layout in grid - 3 columns
-		main_grid.attach(_system_info, 0, 0, 2, 1);
+		// Layout in grid - system info takes 2 columns in first row
 		main_grid.attach(_cpu_monitor, 2, 0, 1, 1);
 
 		main_grid.attach(_memory_monitor, 0, 1, 1, 1);
@@ -33,6 +42,89 @@ public class SysInfo : Gtk.Box {
 		main_grid.attach(_load_monitor, 0, 2, 1, 1);
 		main_grid.attach(_network_monitor, 1, 2, 1, 1);
 		main_grid.attach(_process_monitor, 2, 2, 1, 1);
+	}
+
+	private void gather_system_info() {
+		try {
+			string contents;
+			FileUtils.get_contents("/etc/hostname", out contents);
+			hostname = contents.strip();
+		} catch (Error e) {
+			hostname = Environment.get_host_name();
+		}
+
+		// Get distro info
+		try {
+			string contents;
+			if (FileUtils.get_contents("/etc/os-release", out contents)) {
+				string[] lines = contents.split("\n");
+				foreach (string line in lines) {
+					if (line.has_prefix("PRETTY_NAME=")) {
+						distro = line.substring(12).replace("\"", "");
+						break;
+					}
+				}
+			}
+		} catch (Error e) {
+			distro = "Unknown Linux";
+		}
+
+		// Get kernel info
+		try {
+			string output;
+			Process.spawn_command_line_sync("uname -r", out output);
+			kernel = output.strip();
+		} catch (Error e) {
+			kernel = "Unknown";
+		}
+
+		// Detect display server and desktop environment
+		detect_display_environment();
+	}
+
+	private void detect_display_environment() {
+		string display_server = "Unknown";
+		string desktop_env = "";
+
+		// Check for Wayland
+		if (Environment.get_variable("WAYLAND_DISPLAY") != null) {
+			display_server = "Wayland";
+
+			// Try to detect Wayland compositor
+			string? compositor = Environment.get_variable("XDG_CURRENT_DESKTOP");
+			if (compositor == null) {
+				compositor = Environment.get_variable("DESKTOP_SESSION");
+			}
+
+			if (compositor != null) {
+				desktop_env = compositor;
+			} else {
+				// Try to detect specific compositors
+				if (Environment.get_variable("HYPRLAND_INSTANCE_SIGNATURE") != null) {
+					desktop_env = "Hyprland";
+				} else if (Environment.get_variable("SWAYSOCK") != null) {
+					desktop_env = "Sway";
+				}
+			}
+		}
+		// Check for X11
+		else if (Environment.get_variable("DISPLAY") != null) {
+			display_server = "X11";
+
+			string? desktop = Environment.get_variable("XDG_CURRENT_DESKTOP");
+			if (desktop == null) {
+				desktop = Environment.get_variable("DESKTOP_SESSION");
+			}
+
+			if (desktop != null) {
+				desktop_env = desktop;
+			}
+		}
+
+		display = display_server;
+		if (desktop_env != "") {
+			desktop = desktop_env;
+		}
 	}
 
 	public void update_all() {
@@ -46,7 +138,7 @@ public class SysInfo : Gtk.Box {
 	}
 }
 
-private class CpuMonitorItem : SysInfoItem {
+public class CpuMonitorItem : SysInfoItem {
 	private GTop.Cpu? cpu;
 	private uint64 last_used;
 	private uint64 last_total;
@@ -79,7 +171,7 @@ private class CpuMonitorItem : SysInfoItem {
 	}
 }
 
-private class MemoryMonitorItem : SysInfoItem {
+public class MemoryMonitorItem : SysInfoItem {
 	private GTop.Memory? mem;
 
 	public MemoryMonitorItem() {
@@ -101,7 +193,7 @@ private class MemoryMonitorItem : SysInfoItem {
 	}
 }
 
-private class SwapMonitorItem : SysInfoItem {
+public class SwapMonitorItem : SysInfoItem {
 	private GTop.Swap? swap;
 
 	public SwapMonitorItem() {
@@ -125,7 +217,7 @@ private class SwapMonitorItem : SysInfoItem {
 	}
 }
 
-private class LoadAverageItem : SysInfoItem {
+public class LoadAverageItem : SysInfoItem {
 	private GTop.LoadAvg? loadavg;
 
 	public LoadAverageItem() {
@@ -148,7 +240,7 @@ private class LoadAverageItem : SysInfoItem {
 	}
 }
 
-private class NetworkMonitorItem : SysInfoItem {
+public class NetworkMonitorItem : SysInfoItem {
 	private GTop.NetLoad? _netload;
 	private uint64 _last_bytes_in = 0;
 	private uint64 _last_bytes_out = 0;
@@ -257,7 +349,7 @@ private class NetworkMonitorItem : SysInfoItem {
 			set_details("Idle (%s)".printf(_active_interface));
 		} else {
 			// Show current speed and peak speed
-			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                                         // Convert to Mbps
+			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                                                                 // Convert to Mbps
 			double peak_mbps = _max_bytes_per_second * 8.0 / (1024.0 * 1024.0);
 
 			set_details("↓%.1f KB/s ↑%.1f KB/s\n%.1f/%.1f Mbps (%s)".printf(
@@ -274,7 +366,7 @@ private class NetworkMonitorItem : SysInfoItem {
 	}
 }
 
-private class DiskMonitorItem : SysInfoItem {
+public class DiskMonitorItem : SysInfoItem {
 	private GTop.FsUsage? fsusage;
 
 	public DiskMonitorItem() {
@@ -286,7 +378,7 @@ private class DiskMonitorItem : SysInfoItem {
 
 		if (fsusage.blocks > 0) {
 			double percentage = (double)fsusage.bavail / fsusage.blocks;
-			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // Invert to show used space
+			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // Invert to show used space
 
 			set_percentage(percentage);
 			set_details("%.1f GB / %.1f GB".printf(
@@ -297,7 +389,7 @@ private class DiskMonitorItem : SysInfoItem {
 	}
 }
 
-private class ProcessCountItem : SysInfoItem {
+public class ProcessCountItem : SysInfoItem {
 	private GTop.ProcList? proclist;
 
 	public ProcessCountItem() {
