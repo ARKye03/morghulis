@@ -10,7 +10,7 @@ public struct Command {
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
 public class Runner : Astal.Window {
-	private FileMonitor _data_dirs_applications;
+	private List<FileMonitor> _data_dirs_monitors;
 	private GLib.HashTable<string, Command?> _commands;
 	private uint _sysinfo_update_timeout = 0;
 
@@ -35,13 +35,12 @@ public class Runner : Astal.Window {
 
 		this.apps = new AstalApps.Apps();
 		init_commands();
+		setup_desktop_file_monitors();
 
 		this.app_list.set_sort_func(sort_func);
 		this.app_list.set_filter_func(filter_func);
 
-		this.apps.list.@foreach(app => {
-			this.app_list.append(new RunnerButton(app));
-		});
+		populate_list();
 
 		// Connect to stack page changes to handle sysinfo updates
 		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
@@ -77,6 +76,15 @@ public class Runner : Astal.Window {
 		RunnerButton app = (RunnerButton)row;
 
 		return app.score >= 0;
+	}
+
+	private void populate_list() {
+		if (apps.list == null) {
+			return;
+		}
+		apps.list.foreach(app => {
+			this.app_list.append(new RunnerButton(app));
+		});
 	}
 
 	[GtkCallback]
@@ -196,6 +204,89 @@ public class Runner : Astal.Window {
 		}
 	}
 
+	private void setup_desktop_file_monitors() {
+		_data_dirs_monitors = new List<FileMonitor>();
+
+		string? xdg_data_dirs = Environment.get_variable("XDG_DATA_DIRS");
+		// This shouldn't happen right?
+		if (xdg_data_dirs == null || xdg_data_dirs == "") {
+			xdg_data_dirs = "/usr/local/share:/usr/share";
+		}
+
+		// Also include XDG_DATA_HOME (usually ~/.local/share)
+		string? xdg_data_home = Environment.get_variable("XDG_DATA_HOME");
+		if (xdg_data_home == null) {
+			xdg_data_home = Path.build_filename(Environment.get_home_dir(), ".local", "share");
+		}
+
+		// Combine all data directories
+		string all_dirs = @"$xdg_data_home:$xdg_data_dirs";
+		string[] data_dirs = all_dirs.split(":");
+
+		foreach (string data_dir in data_dirs) {
+			if (data_dir.strip() == "") {
+				continue;
+			}
+
+			string applications_dir = Path.build_filename(data_dir.strip(), "applications");
+
+			if (!FileUtils.test(applications_dir, FileTest.IS_DIR)) {
+				continue;
+			}
+
+			try {
+				var file = File.new_for_path(applications_dir);
+				var monitor = file.monitor_directory(FileMonitorFlags.NONE);
+
+				monitor.changed.connect(on_desktop_files_changed);
+				_data_dirs_monitors.append(monitor);
+
+				debug(@"Monitoring desktop files in: $applications_dir");
+			} catch (Error e) {
+				warning(@"Failed to monitor directory $applications_dir: $(e.message)");
+			}
+		}
+	}
+
+	private void on_desktop_files_changed(File file, File? other_file, FileMonitorEvent event_type) {
+		switch (event_type) {
+			case FileMonitorEvent.CREATED:
+			case FileMonitorEvent.DELETED:
+			case FileMonitorEvent.CHANGED:
+				// Check if it's a .desktop file
+				string filename = file.get_basename();
+				if (filename.has_suffix(".desktop")) {
+					debug(@"Desktop file changed: $filename, reloading apps...");
+					// Debounce the reload to avoid excessive reloads
+					debounce_apps_reload();
+				}
+			break;
+
+			default:
+			break;
+		}
+	}
+
+	private uint _reload_timeout = 0;
+
+	private void debounce_apps_reload() {
+		if (_reload_timeout > 0) {
+			Source.remove(_reload_timeout);
+		}
+
+		_reload_timeout = Timeout.add(500, () => {
+			apps.reload();
+
+			app_list.remove_all();
+
+			populate_list();
+			this.app_list.invalidate_filter();
+			this.app_list.invalidate_sort();
+			_reload_timeout = 0;
+			return false;
+		});
+	}
+
 	private void on_stack_page_changed() {
 		// Stop any existing sysinfo updates
 		if (_sysinfo_update_timeout > 0) {
@@ -218,6 +309,18 @@ public class Runner : Astal.Window {
 					return true;
 				});
 			}
+		}
+	}
+
+	~Runner() {
+		if (_data_dirs_monitors != null) {
+			_data_dirs_monitors.foreach(monitor => {
+				monitor.cancel();
+			});
+		}
+
+		if (_reload_timeout > 0) {
+			Source.remove(_reload_timeout);
 		}
 	}
 }
