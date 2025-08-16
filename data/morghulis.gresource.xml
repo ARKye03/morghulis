@@ -34,11 +34,17 @@
         <file>assets/colloid-notif-sound.opus</file>
         <file>assets/wyvern-svgrepo-com.svg</file>
         <file preprocess="xml-stripblanks">ui/NavBar.ui</file>
-        <file preprocess="xml-stripblanks">ui/Runner.ui</file>
-        <file preprocess="xml-stripblanks">ui/RunnerButton.ui</file>
         <file preprocess="xml-stripblanks">ui/OnScreenDisplay.ui</file>
         <file preprocess="xml-stripblanks">ui/NotificationContent.ui</file>
         <file preprocess="xml-stripblanks">ui/PowerMenu.ui</file>
+        <!-- Runner -->
+        <file preprocess="xml-stripblanks">ui/Runner/Runner.ui</file>
+        <file preprocess="xml-stripblanks">ui/Runner/RunnerButton.ui</file>
+        <file preprocess="xml-stripblanks" >ui/Runner/HelpCmd.ui</file>
+        <file preprocess="xml-stripblanks" >ui/Runner/MathCmd.ui</file>
+        <file preprocess="xml-stripblanks" >ui/Runner/SysInfoCmd.ui</file>
+        <file preprocess="xml-stripblanks" >ui/Runner/SysInfoItem.ui</file>
+        <file preprocess="xml-stripblanks" >ui/Runner/SysInfoData.ui</file>
         <!-- QuickMenu -->
         <file preprocess="xml-stripblanks">ui/QuickMenu/QuickMenu.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/QButton.ui</file>
@@ -54,10 +60,5 @@
         <file preprocess="xml-stripblanks">ui/QuickMenu/QAudioItem.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/MprisPlayer.ui</file>
         <!-- SysInfo -->
-        <file preprocess="xml-stripblanks" >ui/SysInfo/HelpCmd.ui</file>
-        <file preprocess="xml-stripblanks" >ui/SysInfo/MathCmd.ui</file>
-        <file preprocess="xml-stripblanks" >ui/SysInfo/SysInfoCmd.ui</file>
-        <file preprocess="xml-stripblanks" >ui/SysInfo/SysInfoItem.ui</file>
-        <file preprocess="xml-stripblanks" >ui/SysInfo/SysInfoData.ui</file>
     </gresource>
 </gresources>

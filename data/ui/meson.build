@@ -3,12 +3,10 @@ blps = files(
     'NotificationContent.blp',
     'OnScreenDisplay.blp',
     'PowerMenu.blp',
-    'Runner.blp',
-    'RunnerButton.blp',
 )
 
-subdir('SysInfo')
 subdir('QuickMenu')
+subdir('Runner')
 
 blueprints = custom_target(
     'blueprints',

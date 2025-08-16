@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/SysInfo/MathCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/MathCmd.ui")]
 public class MathCmd : Gtk.Box {
 	[GtkChild]
 	private unowned Gtk.Label expression_label;

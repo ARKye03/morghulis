@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/SysInfo/SysInfoCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/SysInfoCmd.ui")]
 public class SysInfo : Gtk.Box {
 	private CpuMonitorItem _cpu_monitor;
 	private MemoryMonitorItem _memory_monitor;
@@ -257,7 +257,7 @@ private class NetworkMonitorItem : SysInfoItem {
 			set_details("Idle (%s)".printf(_active_interface));
 		} else {
 			// Show current speed and peak speed
-			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                             // Convert to Mbps
+			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                                         // Convert to Mbps
 			double peak_mbps = _max_bytes_per_second * 8.0 / (1024.0 * 1024.0);
 
 			set_details("↓%.1f KB/s ↑%.1f KB/s\n%.1f/%.1f Mbps (%s)".printf(
@@ -286,7 +286,7 @@ private class DiskMonitorItem : SysInfoItem {
 
 		if (fsusage.blocks > 0) {
 			double percentage = (double)fsusage.bavail / fsusage.blocks;
-			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // Invert to show used space
+			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 // Invert to show used space
 
 			set_percentage(percentage);
 			set_details("%.1f GB / %.1f GB".printf(

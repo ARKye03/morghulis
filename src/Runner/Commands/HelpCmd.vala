@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/SysInfo/HelpCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/HelpCmd.ui")]
 public class HelpCmd : Gtk.Box {
 	private unowned GLib.List<weak Command?> commands;
 

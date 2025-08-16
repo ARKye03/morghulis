@@ -8,7 +8,7 @@ public struct Command {
 	public Gtk.Widget widget;
 }
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Runner.ui")]
 public class Runner : Astal.Window {
 	private List<FileMonitor> _data_dirs_monitors;
 	private GLib.HashTable<string, Command?> _commands;
