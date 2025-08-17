@@ -10,11 +10,15 @@
   - [Development](#development)
     - [Nix](#nix)
   - [Features](#features)
-  - [Preview](#preview)
     - [Thanks to](#thanks-to)
   - [License](#license)
 
-Desktop Shell created with GTK4, Libadwaita, and Astal.
+A Wayland desktop shell created with GTK4, Libadwaita, and Astal.
+
+![Morghulis](public/morghulis.webp)
+
+> [!NOTE]
+> The preview uses custom Adwaita colours, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
 
 ## Requirements
 
@@ -62,15 +66,13 @@ just install
 
 ### Arch Linux
 
-Build and install using my `PKGBUILD` file:
+It's on AUR so, using yay or any other helper:
 
 ```sh
-mkdir /tmp/morghulis && cd /tmp/morghulis
-wget https://raw.githubusercontent.com/ARKye03/PKGBUILDS/refs/heads/main/morghulis-git/PKGBUILD
-makepkg -si
+yay -S morghulis-git
 ```
 
-Alternatively, use a binary from [releases](https://github.com/ARKye03/morghulis/releases).
+Alternatively, use this [PKGBUILD](https://raw.githubusercontent.com/ARKye03/PKGBUILDS/refs/heads/trunk/morghulis-bin/PKGBUILD), that will install latest [release](https://github.com/ARKye03/morghulis/releases).
 
 ## Usage
 
@@ -152,13 +154,6 @@ nix run github:ARKye03/morghulis#fhs -- --help
 > ```hyprlang
 > binde=, XF86MonBrightnessUp, exec, brightnessctl set +10% & morghulctl -r change_brightness
 > ```
-
-## Preview
-
-![Morghulis](public/morghulis.webp)
-
-> [!NOTE]
-> The preview uses a custom Adwaita theme, loaded directly from `$XDG_CONFIG_HOME/morghulis/main.css`. This allows custom shell colors without affecting the system-wide GTK theme.
 
 ### Thanks to
 
