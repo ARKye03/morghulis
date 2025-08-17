@@ -5,7 +5,7 @@ on:
     tags:
       - "v*"
 jobs:
-  tests:
+  build_and_release:
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -163,10 +163,6 @@
           powerprofiles
           bluetooth
         ];
-        gstPlugins = with pkgs.gst_all_1; [
-          gstreamer
-          gst-plugins-base
-        ];
         shell =
           pkgs.mkShell.override
             {
@@ -192,9 +188,7 @@
                   networkmanager
                   glib
                   gdk-pixbuf
-                  json-glib
-                ]
-                ++ gstPlugins;
+                ];
               GTK_THEME = "adw-gtk3:dark";
               XCURSOR_THEME = "Bibata-Modern-Classic";
               XCURSOR_SIZE = "20";
