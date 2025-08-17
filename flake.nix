@@ -124,6 +124,8 @@
                   --owner=0 --group=0 \
                   --mtime='1970-01-01 00:00:00' \
                   -cJf "$out/morghulis-${version}.tar.xz" .
+
+              sha256sum "$out/morghulis-${version}.tar.xz" > "$out/morghulis-${version}.tar.xz.sha256"
             '';
         gtk-utils = with pkgs; [
           gtk4
