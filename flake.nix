@@ -63,7 +63,7 @@
 
           meta = with pkgs.lib; {
             description = "A Desktop Shell for Wayland";
-            license = licenses.wtfpl;
+            license = licenses.mit;
             homepage = "https://github.com/ARKye03/morghulis";
             maintainers = with maintainers; [ ARKye03 ];
           };
