@@ -10,11 +10,11 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5.0.0
     - uses: cachix/install-nix-action@v30
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - uses: cachix/cachix-action@v15
+    - uses: cachix/cachix-action@v16
       with:
         name: nixarkye03
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -23,9 +23,9 @@ jobs:
       run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
     - run: nix build .#tarball
     - run: nix flake check
-    - uses: ncipollo/release-action@v1.14.0
+    - uses: ncipollo/release-action@v1.18.0
       with:
         prerelease: true
         artifactErrorsFailBuild: true
-        artifacts: "result/morghulis-${{ steps.get_version.outputs.VERSION }}.tar.xz"
+        artifacts: "result/morghulis-${{ steps.get_version.outputs.VERSION }}.tar.xz,result/morghulis-${{ steps.get_version.outputs.VERSION }}.tar.xz.sha256"
         bodyFile: "CHANGELOG.md"
