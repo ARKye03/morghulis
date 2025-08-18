@@ -103,36 +103,38 @@ template $NavBar: Astal.Window {
         }
       }
 
-      Button {
-        clicked => $toggle_volume();
-
-        Gtk.EventControllerScroll {
-          scroll => $scroll_volume();
-          flags: vertical;
-        }
-
+      Adw.Bin {
         styles [
-          "zero_padding",
+          "master_border",
+          "view",
+          "rounded",
         ]
 
-        $CircularProgressBar {
-          tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
-          percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
-          line-width: 5;
-          line-cap: round;
-          radius-filled: true;
-          inverted: true;
-          start-at: -0.25;
-          end-at: 0.75;
+        Button {
+          clicked => $toggle_volume();
 
           styles [
-            "master_border",
-            "view",
-            "rounded",
+            "zero_padding",
           ]
 
-          Image {
-            icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+          Gtk.EventControllerScroll {
+            scroll => $scroll_volume();
+            flags: vertical;
+          }
+
+          $CircularProgressBar {
+            tooltip-text: bind $current_volume(template.speaker as <AstalWp.Endpoint>.volume) as <string>;
+            percentage: bind template.speaker as <AstalWp.Endpoint>.volume;
+            line-width: 5;
+            line-cap: round;
+            radius-filled: true;
+            inverted: true;
+            start-at: -0.25;
+            end-at: 0.75;
+
+            Image {
+              icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+            }
           }
         }
       }
