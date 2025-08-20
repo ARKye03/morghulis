@@ -11,7 +11,7 @@ public struct Command {
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Runner.ui")]
 public class Runner : Astal.Window {
 	private GLib.HashTable<string, Command?> _commands;
-	private AppsCmd apps_cmd;
+	private AppsCmd _apps_cmd;
 	private string? _previous_page = null;
 
 	public static Runner instance { get; private set; }
@@ -29,7 +29,7 @@ public class Runner : Astal.Window {
 			this.destroy();
 		}
 
-		apps_cmd = new AppsCmd();
+		_apps_cmd = new AppsCmd();
 		init_commands();
 
 		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
@@ -41,8 +41,8 @@ public class Runner : Astal.Window {
 			} else {
 				this.entry.grab_focus();
 				if (commands_stack.visible_child_name == "apps") {
-					if (apps_cmd is ICommand) {
-						((ICommand)apps_cmd).on_activate();
+					if (_apps_cmd is ICommand) {
+						((ICommand)_apps_cmd).on_activate();
 					}
 				}
 			}
@@ -152,8 +152,8 @@ public class Runner : Astal.Window {
 	private void on_stack_page_changed() {
 		if (_previous_page != null) {
 			if (_previous_page == "apps") {
-				if (apps_cmd is ICommand) {
-					((ICommand)apps_cmd).on_deactivate();
+				if (_apps_cmd is ICommand) {
+					((ICommand)_apps_cmd).on_deactivate();
 				}
 			} else {
 				Command? prev_cmd = _commands.lookup(_previous_page);
@@ -165,8 +165,8 @@ public class Runner : Astal.Window {
 
 		string current_page = commands_stack.visible_child_name;
 		if (current_page == "apps") {
-			if (apps_cmd is ICommand) {
-				((ICommand)apps_cmd).on_activate();
+			if (_apps_cmd is ICommand) {
+				((ICommand)_apps_cmd).on_activate();
 			}
 		} else {
 			Command? current_cmd = _commands.lookup(current_page);
