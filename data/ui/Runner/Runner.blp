@@ -24,18 +24,46 @@ template $Runner: Astal.Window {
             "bottom_left_right_corner_borders",
         ]
 
-        Entry entry {
-            height-request: 50;
-            primary-icon-name: "system-search-symbolic";
-            changed => $update_list();
-            activate => $launch_first_runner_button();
-            placeholder-text: "Search... or type \":\" for commands";
+        Box {
+            overflow: hidden;
 
             styles [
                 "background",
-                "title-4",
                 "top_left_right_corner_borders",
             ]
+
+            Revealer {
+                transition-type: slide_right;
+                transition-duration: 250;
+                reveal-child: bind template.cmd_active;
+
+                styles [
+                    "padding_5",
+                ]
+
+                Image {
+                    icon-name: bind template.active_cmd_icon;
+                    icon-size: large;
+
+                    styles [
+                        "view",
+                    ]
+                }
+            }
+
+            Entry entry {
+                height-request: 50;
+                hexpand: true;
+                primary-icon-name: "system-search-symbolic";
+                changed => $update_list();
+                activate => $launch_first_runner_button();
+                placeholder-text: "Search... or type \":\" for commands";
+
+                styles [
+                    "title-4",
+                    "squared",
+                ]
+            }
         }
 
         Stack commands_stack {

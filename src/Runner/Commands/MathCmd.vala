@@ -8,6 +8,8 @@ public class MathCmd : Gtk.Box, ICommand {
 	private unowned Gtk.Label error_label;
 
 	// ICommand interface implementation
+	public string icon_name { get { return "math-symbolic"; } }
+
 	public void handle_input(string input) {
 		if (input.strip() != "") {
 			evaluate_expression(input);

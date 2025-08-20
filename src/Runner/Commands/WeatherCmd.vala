@@ -1,5 +1,13 @@
 // Temporary
-public class WeatherBox : Gtk.Box {
+public class WeatherBox : Gtk.Box, ICommand {
+	// ICommand interface implementation
+	public string icon_name { get { return "weather-symbolic"; } }
+
+	public void handle_input(string input) {
+		// Weather doesn't need input handling yet
+		// Could potentially search for location here
+	}
+
 	construct {
 		this.orientation = Gtk.Orientation.VERTICAL;
 		this.spacing = 12;

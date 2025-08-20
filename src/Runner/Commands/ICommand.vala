@@ -1,5 +1,8 @@
 // Interface for commands that can handle input from the entry
 public interface ICommand : Object {
+	// Icon name for this command when it's manually invoked
+	public abstract string icon_name { get; }
+
 	// Called when the entry text changes and this command is active
 	public abstract void handle_input(string input);
 

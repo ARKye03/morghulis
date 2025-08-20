@@ -12,6 +12,9 @@
         <file alias="media-symbolic.svg">assets/NavBar/media-symbolic.svg</file>
         <file alias="settings-symbolic.svg">assets/NavBar/settings-symbolic.svg</file>
         <file alias="gaming-symbolic.svg">assets/NavBar/gaming-symbolic.svg</file>
+        <!-- Runner -->
+        <file alias="math-symbolic.svg">assets/Runner/math-symbolic.svg</file>
+        <file alias="weather-symbolic.svg">assets/Runner/weather-symbolic.svg</file>
         <!-- System -->
         <file alias="hibernate-symbolic.svg">assets/System/hibernate-symbolic.svg</file>
         <file alias="logout-symbolic.svg">assets/System/logout-symbolic.svg</file>

@@ -4,6 +4,9 @@ public class AppsCmd : Gtk.Widget, ICommand {
 	private uint _reload_timeout = 0;
 	public AstalApps.Apps apps { get; construct set; }
 
+	// ICommand interface implementation - not used for apps but required
+	public string icon_name { get { return "applications-all-symbolic"; } }
+
 	[GtkChild]
 	private unowned Gtk.ListBox app_list;
 

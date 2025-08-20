@@ -16,6 +16,28 @@ public class Runner : Astal.Window {
 
 	public static Runner instance { get; private set; }
 
+	private bool _cmd_active = false;
+	public bool cmd_active {
+		get { return _cmd_active; }
+		private set {
+			if (_cmd_active != value) {
+				_cmd_active = value;
+				notify_property("cmd_active");
+			}
+		}
+	}
+
+	private string? _active_cmd_icon = null;
+	public string? active_cmd_icon {
+		get { return _active_cmd_icon; }
+		private set {
+			if (_active_cmd_icon != value) {
+				_active_cmd_icon = value;
+				notify_property("active_cmd_icon");
+			}
+		}
+	}
+
 	[GtkChild]
 	private unowned Gtk.Entry entry;
 
@@ -164,6 +186,20 @@ public class Runner : Astal.Window {
 		}
 
 		string current_page = commands_stack.visible_child_name;
+
+		// Update cmd_active and active_cmd_icon based on current page
+		if (current_page == "apps" || current_page == "help") {
+			cmd_active = false;
+			active_cmd_icon = null;
+		} else {
+			// This is a manually invoked command (like :m, :si, :w)
+			Command? current_cmd = _commands.lookup(current_page);
+			if (current_cmd != null && current_cmd.widget is ICommand) {
+				cmd_active = true;
+				active_cmd_icon = ((ICommand)current_cmd.widget).icon_name;
+			}
+		}
+
 		if (current_page == "apps") {
 			if (_apps_cmd is ICommand) {
 				((ICommand)_apps_cmd).on_activate();
