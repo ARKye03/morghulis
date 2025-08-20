@@ -57,15 +57,7 @@ template $Runner: Astal.Window {
                     max-content-height: 400;
                     propagate-natural-height: true;
 
-                    ListBox app_list {
-                        selection-mode: none;
-                        overflow: hidden;
-
-                        styles [
-                            "bg_transparent",
-                            "bottom_left_right_corner_borders",
-                        ]
-                    }
+                    $AppsCmd {}
                 };
             }
         }

@@ -20,9 +20,6 @@ public class Runner : Astal.Window {
 	private unowned Gtk.Entry entry;
 
 	[GtkChild]
-	private unowned Gtk.ListBox app_list;
-
-	[GtkChild]
 	private unowned Gtk.Stack commands_stack;
 
 	construct {
@@ -32,7 +29,7 @@ public class Runner : Astal.Window {
 			this.destroy();
 		}
 
-		apps_cmd = new AppsCmd(this.app_list);
+		apps_cmd = new AppsCmd();
 		init_commands();
 
 		// Connect to stack page changes to handle sysinfo updates

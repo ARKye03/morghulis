@@ -4,8 +4,14 @@ public class AppsCmd : Gtk.Widget {
 	private uint _reload_timeout = 0;
 	public AstalApps.Apps apps { get; construct set; }
 
-	public AppsCmd(Gtk.ListBox app_list) {
-		this._app_list = app_list;
+	construct {
+		this.layout_manager = new Gtk.BinLayout();
+		this._app_list = new Gtk.ListBox() {
+			selection_mode = Gtk.SelectionMode.NONE,
+			overflow = Gtk.Overflow.HIDDEN,
+			css_classes = new string[] { "bg_transparent", "bottom_left_right_corner_borders" }
+		};
+		this._app_list.set_parent(this);
 		this.apps = new AstalApps.Apps();
 
 		setup_desktop_file_monitors();
@@ -44,7 +50,6 @@ public class AppsCmd : Gtk.Widget {
 	}
 
 	public void update_apps(string input) {
-		// Update app filtering
 		var child = this._app_list.get_first_child();
 
 		while (child != null) {
