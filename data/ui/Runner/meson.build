@@ -1,6 +1,6 @@
 blps += files(
     'Runner.blp',
-    'RunnerButton.blp',
+    'AppsCmdButton.blp',
     'HelpCmd.blp',
     'MathCmd.blp',
     'SysInfoCmd.blp',

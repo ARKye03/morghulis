@@ -1,5 +1,5 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/RunnerButton.ui")]
-public class RunnerButton : Gtk.ListBoxRow {
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/AppsCmdButton.ui")]
+public class AppsCmdButton : Gtk.ListBoxRow {
 	public AstalApps.Application app { get; construct; }
 	public double score { get; set; }
 
@@ -13,7 +13,7 @@ public class RunnerButton : Gtk.ListBoxRow {
 		app.launch();
 	}
 
-	public RunnerButton(AstalApps.Application app) {
+	public AppsCmdButton(AstalApps.Application app) {
 		Object(app: app);
 	}
 }

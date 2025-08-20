@@ -28,4 +28,5 @@ private void init_types() {
 	typeof(Tray).ensure();
 	typeof(SysInfoItem).ensure();
 	typeof(CircularProgressBar).ensure();
+	typeof(AppsCmd).ensure();
 }
