@@ -13,6 +13,7 @@ public class Runner : Astal.Window {
 	private GLib.HashTable<string, Command?> _commands;
 	private uint _sysinfo_update_timeout = 0;
 	private AppsCmd apps_cmd;
+	private string? _previous_page = null;
 
 	public static Runner instance { get; private set; }
 
@@ -32,7 +33,7 @@ public class Runner : Astal.Window {
 		apps_cmd = new AppsCmd();
 		init_commands();
 
-		// Connect to stack page changes to handle sysinfo updates
+		// Connect to stack page changes to handle command activation
 		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
 
 		this.notify["visible"].connect(() => {
@@ -65,17 +66,19 @@ public class Runner : Astal.Window {
 		// Default to showing apps
 		commands_stack.visible_child_name = "apps";
 
-		// Delegate app filtering to AppsCmd
-		apps_cmd.update_apps(input);
+		// Notify the current command about input changes
+		var current_widget = commands_stack.visible_child;
+		if (current_widget is ICommand) {
+			((ICommand)current_widget).handle_input(input);
+		}
 	}
 
 	[GtkCallback]
 	public void launch_first_runner_button() {
-		AppsCmdButton? selected_button = apps_cmd.get_first_app();
-
-		if (selected_button != null && commands_stack.visible_child_name == "apps") {
-			selected_button.activate();
-			this.visible = false;
+		// Notify the current command about Enter press
+		var current_widget = commands_stack.visible_child;
+		if (current_widget is ICommand) {
+			((ICommand)current_widget).on_enter();
 		}
 	}
 
@@ -108,15 +111,13 @@ public class Runner : Astal.Window {
 		_commands.insert(weather_cmd.name, weather_cmd);
 		commands_stack.add_named(weather_cmd.widget, weather_cmd.name);
 
-		// Create and register math command
-		var math_cmd_widget = new MathCmd();
 		Command math_cmd = {
 			name : "m",
 			description : "Mathematical expression evaluator",
-			widget : math_cmd_widget
+			widget : new MathCmd()
 		};
 		_commands.insert(math_cmd.name, math_cmd);
-		commands_stack.add_named(math_cmd_widget, math_cmd.name);
+		commands_stack.add_named(math_cmd.widget, math_cmd.name);
 
 		commands_stack.add_named(new HelpCmd(_commands.get_values()), "help");
 	}
@@ -139,20 +140,13 @@ public class Runner : Astal.Window {
 
 		Command? cmd = _commands.lookup(command_name);
 		if (cmd != null) {
-			// Special handling for math command with arguments
-			if (command_name == "m" && cmd.widget is MathCmd) {
-				var math_cmd = (MathCmd)cmd.widget;
-				if (args.length > 0) {
-					// Join all arguments as the expression
-					string expression = string.joinv(" ", args);
-					math_cmd.evaluate_expression(expression);
-				} else {
-					// No expression provided, show placeholder
-					math_cmd.reset();
-				}
-			}
-
 			commands_stack.visible_child_name = command_name;
+
+			// If the command can handle input and has arguments, pass them
+			if (cmd.widget is ICommand && args.length > 0) {
+				string command_input = string.joinv(" ", args);
+				((ICommand)cmd.widget).handle_input(command_input);
+			}
 		} else {
 			// Unknown command, show help
 			commands_stack.visible_child_name = "help";
@@ -160,28 +154,41 @@ public class Runner : Astal.Window {
 	}
 
 	private void on_stack_page_changed() {
-		// Stop any existing sysinfo updates
+		// Handle deactivation of previous command
+		if (_previous_page != null) {
+			Command? prev_cmd = _commands.lookup(_previous_page);
+			if (prev_cmd != null && prev_cmd.widget is ICommand) {
+				((ICommand)prev_cmd.widget).on_deactivate();
+			}
+		}
+
+		// Stop any existing sysinfo updates (legacy support)
 		if (_sysinfo_update_timeout > 0) {
 			Source.remove(_sysinfo_update_timeout);
 			_sysinfo_update_timeout = 0;
 		}
 
-		// If system info page is now visible, start updates
-		if (commands_stack.visible_child_name == "si") {
+		// Handle activation of current command
+		string current_page = commands_stack.visible_child_name;
+		Command? current_cmd = _commands.lookup(current_page);
+		if (current_cmd != null && current_cmd.widget is ICommand) {
+			((ICommand)current_cmd.widget).on_activate();
+		}
+
+		// Legacy sysinfo special handling (to be removed when SysInfo implements ICommand)
+		if (current_page == "si") {
 			var sysinfo_cmd = _commands.lookup("si");
 			if (sysinfo_cmd != null && sysinfo_cmd.widget is SysInfo) {
 				var sysinfo = (SysInfo)sysinfo_cmd.widget;
-
-				// Update immediately
 				sysinfo.update_all();
-
-				// Start periodic updates every 3 seconds
 				_sysinfo_update_timeout = Timeout.add_seconds(3, () => {
 					sysinfo.update_all();
 					return true;
 				});
 			}
 		}
+
+		_previous_page = current_page;
 	}
 
 	~Runner() {
