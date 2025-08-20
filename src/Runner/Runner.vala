@@ -16,27 +16,8 @@ public class Runner : Astal.Window {
 
 	public static Runner instance { get; private set; }
 
-	private bool _cmd_active = false;
-	public bool cmd_active {
-		get { return _cmd_active; }
-		private set {
-			if (_cmd_active != value) {
-				_cmd_active = value;
-				notify_property("cmd_active");
-			}
-		}
-	}
-
-	private string? _active_cmd_icon = null;
-	public string? active_cmd_icon {
-		get { return _active_cmd_icon; }
-		private set {
-			if (_active_cmd_icon != value) {
-				_active_cmd_icon = value;
-				notify_property("active_cmd_icon");
-			}
-		}
-	}
+	public bool cmd_active { get; private set; }
+	public string? active_cmd_icon { get; private set; }
 
 	[GtkChild]
 	private unowned Gtk.Entry entry;
@@ -95,6 +76,7 @@ public class Runner : Astal.Window {
 	[GtkCallback]
 	public void launch_first_runner_button() {
 		var current_widget = commands_stack.visible_child;
+
 		if (current_widget is ICommand) {
 			((ICommand)current_widget).on_enter();
 		}
