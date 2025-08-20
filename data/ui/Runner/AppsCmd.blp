@@ -1,0 +1,21 @@
+using Gtk 4.0;
+
+template $AppsCmd: Gtk.Widget {
+    layout-manager: BinLayout {};
+
+    ScrolledWindow {
+        max-content-height: 400;
+        propagate-natural-height: true;
+        hscrollbar-policy: never;
+
+        ListBox app_list {
+            selection-mode: none;
+            overflow: hidden;
+
+            styles [
+                "bg_transparent",
+                "bottom_left_right_corner_borders",
+            ]
+        }
+    }
+}

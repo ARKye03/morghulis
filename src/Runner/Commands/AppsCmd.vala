@@ -1,24 +1,13 @@
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/AppsCmd.ui")]
 public class AppsCmd : Gtk.Widget, ICommand {
-	private Gtk.ScrolledWindow _scrolled_window;
-	private Gtk.ListBox _app_list;
 	private List<FileMonitor> _data_dirs_monitors;
 	private uint _reload_timeout = 0;
 	public AstalApps.Apps apps { get; construct set; }
 
-	construct {
-		this.layout_manager = new Gtk.BinLayout();
-		this._app_list = new Gtk.ListBox() {
-			selection_mode = Gtk.SelectionMode.NONE,
-			overflow = Gtk.Overflow.HIDDEN,
-			css_classes = new string[] { "bg_transparent", "bottom_left_right_corner_borders" }
-		};
-		this._scrolled_window = new Gtk.ScrolledWindow() {
-			max_content_height = 400,
-			propagate_natural_height = true,
-			child = this._app_list
-		};
+	[GtkChild]
+	private unowned Gtk.ListBox app_list;
 
-		this._scrolled_window.set_parent(this);
+	construct {
 		this.apps = new AstalApps.Apps();
 
 		setup_desktop_file_monitors();
@@ -27,8 +16,8 @@ public class AppsCmd : Gtk.Widget, ICommand {
 	}
 
 	private void setup_list_behavior() {
-		this._app_list.set_sort_func(sort_func);
-		this._app_list.set_filter_func(filter_func);
+		app_list.set_sort_func(sort_func);
+		app_list.set_filter_func(filter_func);
 	}
 
 	private int sort_func(Gtk.ListBoxRow la, Gtk.ListBoxRow lb) {
@@ -52,18 +41,15 @@ public class AppsCmd : Gtk.Widget, ICommand {
 			return;
 		}
 		apps.list.foreach(app => {
-			this._app_list.append(new AppsCmdButton(app));
+			app_list.append(new AppsCmdButton(app));
 		});
 	}
 
-	// ICommand interface implementation
 	public void handle_input(string input) {
 		update_apps(input);
 	}
 
 	public void on_activate() {
-		// When the apps command becomes active, make sure we have the latest data
-		// and trigger an initial filter with empty input to show all apps
 		update_apps("");
 	}
 
@@ -72,11 +58,10 @@ public class AppsCmd : Gtk.Widget, ICommand {
 	}
 
 	public void on_enter() {
-		var first_app = (AppsCmdButton)this._app_list.get_first_child();
-
-		message("Launching application: " + first_app.app.name);
+		var first_app = (AppsCmdButton)app_list.get_first_child();
 
 		if (first_app != null) {
+			debug("Launching application: " + first_app.app.name);
 			first_app.activate();
 			// Hide the runner window
 			Runner.instance.visible = false;
@@ -84,7 +69,7 @@ public class AppsCmd : Gtk.Widget, ICommand {
 	}
 
 	public void update_apps(string input) {
-		var child = this._app_list.get_first_child();
+		var child = app_list.get_first_child();
 
 		while (child != null) {
 			if (child is AppsCmdButton) {
@@ -94,8 +79,8 @@ public class AppsCmd : Gtk.Widget, ICommand {
 			child = child.get_next_sibling();
 		}
 
-		this._app_list.invalidate_sort();
-		this._app_list.invalidate_filter();
+		app_list.invalidate_sort();
+		app_list.invalidate_filter();
 	}
 
 	private void setup_desktop_file_monitors() {
@@ -169,11 +154,11 @@ public class AppsCmd : Gtk.Widget, ICommand {
 		_reload_timeout = Timeout.add(500, () => {
 			apps.reload();
 
-			_app_list.remove_all();
+			app_list.remove_all();
 
 			populate_list();
-			this._app_list.invalidate_filter();
-			this._app_list.invalidate_sort();
+			app_list.invalidate_filter();
+			app_list.invalidate_sort();
 			_reload_timeout = 0;
 			return Source.REMOVE;
 		});
