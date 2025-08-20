@@ -39,6 +39,7 @@
         <file preprocess="xml-stripblanks">ui/PowerMenu.ui</file>
         <!-- Runner -->
         <file preprocess="xml-stripblanks">ui/Runner/Runner.ui</file>
+        <file preprocess="xml-stripblanks">ui/Runner/AppsCmd.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/AppsCmdButton.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/HelpCmd.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/MathCmd.ui</file>
