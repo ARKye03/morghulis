@@ -75,7 +75,6 @@ public class Runner : Astal.Window {
 
 	[GtkCallback]
 	public void launch_first_runner_button() {
-		// Notify the current command about Enter press
 		var current_widget = commands_stack.visible_child;
 		if (current_widget is ICommand) {
 			((ICommand)current_widget).on_enter();
