@@ -12,6 +12,9 @@
         <file alias="media-symbolic.svg">assets/NavBar/media-symbolic.svg</file>
         <file alias="settings-symbolic.svg">assets/NavBar/settings-symbolic.svg</file>
         <file alias="gaming-symbolic.svg">assets/NavBar/gaming-symbolic.svg</file>
+        <!-- Runner -->
+        <file alias="math-symbolic.svg">assets/Runner/math-symbolic.svg</file>
+        <file alias="weather-symbolic.svg">assets/Runner/weather-symbolic.svg</file>
         <!-- System -->
         <file alias="hibernate-symbolic.svg">assets/System/hibernate-symbolic.svg</file>
         <file alias="logout-symbolic.svg">assets/System/logout-symbolic.svg</file>
@@ -39,7 +42,8 @@
         <file preprocess="xml-stripblanks">ui/PowerMenu.ui</file>
         <!-- Runner -->
         <file preprocess="xml-stripblanks">ui/Runner/Runner.ui</file>
-        <file preprocess="xml-stripblanks">ui/Runner/RunnerButton.ui</file>
+        <file preprocess="xml-stripblanks">ui/Runner/AppsCmd.ui</file>
+        <file preprocess="xml-stripblanks">ui/Runner/AppsCmdButton.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/HelpCmd.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/MathCmd.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/SysInfoCmd.ui</file>

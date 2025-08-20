@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/SysInfoCmd.ui")]
-public class SysInfo : Gtk.Box {
+public class SysInfo : Gtk.Box, ICommand {
 	// System info properties
 	public string hostname { get; set; }
 	public string kernel { get; set; }
@@ -15,6 +15,9 @@ public class SysInfo : Gtk.Box {
 	private NetworkMonitorItem _network_monitor;
 	private DiskMonitorItem _disk_monitor;
 	private ProcessCountItem _process_monitor;
+
+	// Update timeout for periodic updates
+	private uint _update_timeout = 0;
 
 	[GtkChild]
 	private unowned Gtk.Grid main_grid;
@@ -135,6 +138,47 @@ public class SysInfo : Gtk.Box {
 		_network_monitor.update();
 		_disk_monitor.update();
 		_process_monitor.update();
+	}
+
+	// ICommand interface implementation
+	public string icon_name { get { return "linux-symbolic"; } }
+
+	public void handle_input(string input) {
+		// SysInfo doesn't need to handle input filtering
+		// but we could potentially add search functionality here
+	}
+
+	public void on_activate() {
+		// Update immediately when activated
+		update_all();
+
+		// Start periodic updates every 3 seconds
+		if (_update_timeout == 0) {
+			_update_timeout = Timeout.add_seconds(3, () => {
+				update_all();
+				return true;                                                 // Continue the timeout
+			});
+		}
+	}
+
+	public void on_deactivate() {
+		// Stop periodic updates when deactivated
+		if (_update_timeout > 0) {
+			Source.remove(_update_timeout);
+			_update_timeout = 0;
+		}
+	}
+
+	public void on_enter() {
+		// SysInfo doesn't need special Enter handling
+		// Could potentially copy system info to clipboard here
+	}
+
+	~SysInfo() {
+		// Clean up timeout on destruction
+		if (_update_timeout > 0) {
+			Source.remove(_update_timeout);
+		}
 	}
 }
 
@@ -349,7 +393,7 @@ public class NetworkMonitorItem : SysInfoItem {
 			set_details("Idle (%s)".printf(_active_interface));
 		} else {
 			// Show current speed and peak speed
-			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                                                                 // Convert to Mbps
+			double current_mbps = current_bytes_per_second * 8.0 / (1024.0 * 1024.0);                                                                                                                                     // Convert to Mbps
 			double peak_mbps = _max_bytes_per_second * 8.0 / (1024.0 * 1024.0);
 
 			set_details("↓%.1f KB/s ↑%.1f KB/s\n%.1f/%.1f Mbps (%s)".printf(
@@ -378,7 +422,7 @@ public class DiskMonitorItem : SysInfoItem {
 
 		if (fsusage.blocks > 0) {
 			double percentage = (double)fsusage.bavail / fsusage.blocks;
-			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // Invert to show used space
+			percentage = 1.0 - percentage;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             // Invert to show used space
 
 			set_percentage(percentage);
 			set_details("%.1f GB / %.1f GB".printf(

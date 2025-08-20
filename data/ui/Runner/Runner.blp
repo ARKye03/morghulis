@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using Adw 1;
 
 template $Runner: Astal.Window {
     styles [
@@ -24,18 +25,45 @@ template $Runner: Astal.Window {
             "bottom_left_right_corner_borders",
         ]
 
-        Entry entry {
-            height-request: 50;
-            primary-icon-name: "system-search-symbolic";
-            changed => $update_list();
-            activate => $launch_first_runner_button();
-            placeholder-text: "Search... or type \":\" for commands";
+        Box {
+            overflow: hidden;
 
             styles [
                 "background",
-                "title-4",
                 "top_left_right_corner_borders",
             ]
+
+            Revealer {
+                transition-type: slide_left;
+                transition-duration: 250;
+                reveal-child: bind template.cmd_active;
+
+                Adw.Bin {
+                    styles [
+                        "padding_5",
+                        "view",
+                    ]
+
+                    Image {
+                        icon-name: bind template.active_cmd_icon;
+                        icon-size: large;
+                    }
+                }
+            }
+
+            Entry entry {
+                height-request: 50;
+                hexpand: true;
+                primary-icon-name: "system-search-symbolic";
+                changed => $update_list();
+                activate => $launch_first_runner_button();
+                placeholder-text: "Search... or type \":\" for commands";
+
+                styles [
+                    "title-4",
+                    "squared",
+                ]
+            }
         }
 
         Stack commands_stack {
@@ -53,20 +81,7 @@ template $Runner: Astal.Window {
             StackPage {
                 name: "apps";
 
-                child: ScrolledWindow {
-                    max-content-height: 400;
-                    propagate-natural-height: true;
-
-                    ListBox app_list {
-                        selection-mode: none;
-                        overflow: hidden;
-
-                        styles [
-                            "bg_transparent",
-                            "bottom_left_right_corner_borders",
-                        ]
-                    }
-                };
+                child: $AppsCmd {};
             }
         }
     }
