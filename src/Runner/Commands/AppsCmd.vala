@@ -1,4 +1,4 @@
-public class AppsCmd : Gtk.Widget {
+public class AppsCmd : Gtk.Widget, ICommand {
 	private Gtk.ListBox _app_list;
 	private List<FileMonitor> _data_dirs_monitors;
 	private uint _reload_timeout = 0;
@@ -47,6 +47,21 @@ public class AppsCmd : Gtk.Widget {
 		apps.list.foreach(app => {
 			this._app_list.append(new AppsCmdButton(app));
 		});
+	}
+
+	// ICommand interface implementation
+	public void handle_input(string input) {
+		update_apps(input);
+	}
+
+	public void on_enter() {
+		var first_app = get_first_app();
+
+		if (first_app != null) {
+			first_app.activate();
+			// Hide the runner window
+			Runner.instance.visible = false;
+		}
 	}
 
 	public void update_apps(string input) {

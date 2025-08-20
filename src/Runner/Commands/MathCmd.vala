@@ -1,11 +1,20 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/MathCmd.ui")]
-public class MathCmd : Gtk.Box {
+public class MathCmd : Gtk.Box, ICommand {
 	[GtkChild]
 	private unowned Gtk.Label expression_label;
 	[GtkChild]
 	private unowned Gtk.Label result_label;
 	[GtkChild]
 	private unowned Gtk.Label error_label;
+
+	// ICommand interface implementation
+	public void handle_input(string input) {
+		if (input.strip() != "") {
+			evaluate_expression(input);
+		} else {
+			reset();
+		}
+	}
 
 	public void evaluate_expression(string expression) {
 		if (expression.strip() == "") {

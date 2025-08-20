@@ -1,4 +1,5 @@
 project_resources += files(
+    'ICommand.vala',
     'AppsCmd.vala',
     'AppsCmdButton.vala',
     'HelpCmd.vala',
