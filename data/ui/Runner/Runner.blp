@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using Adw 1;
 
 template $Runner: Astal.Window {
     styles [
@@ -33,21 +34,20 @@ template $Runner: Astal.Window {
             ]
 
             Revealer {
-                transition-type: slide_right;
+                transition-type: slide_left;
                 transition-duration: 250;
                 reveal-child: bind template.cmd_active;
 
-                styles [
-                    "padding_5",
-                ]
-
-                Image {
-                    icon-name: bind template.active_cmd_icon;
-                    icon-size: large;
-
+                Adw.Bin {
                     styles [
+                        "padding_5",
                         "view",
                     ]
+
+                    Image {
+                        icon-name: bind template.active_cmd_icon;
+                        icon-size: large;
+                    }
                 }
             }
 
