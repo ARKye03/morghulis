@@ -11,7 +11,6 @@ public struct Command {
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Runner.ui")]
 public class Runner : Astal.Window {
 	private GLib.HashTable<string, Command?> _commands;
-	private uint _sysinfo_update_timeout = 0;
 	private AppsCmd apps_cmd;
 	private string? _previous_page = null;
 
@@ -39,15 +38,16 @@ public class Runner : Astal.Window {
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				this.entry.text = "";
-				// Stop any running updates when hiding
-				if (_sysinfo_update_timeout > 0) {
-					Source.remove(_sysinfo_update_timeout);
-					_sysinfo_update_timeout = 0;
-				}
 				// Reset to apps view when hiding
 				commands_stack.visible_child_name = "apps";
 			} else {
 				this.entry.grab_focus();
+				// Ensure the apps command is activated when showing
+				if (commands_stack.visible_child_name == "apps") {
+					if (apps_cmd is ICommand) {
+						((ICommand)apps_cmd).on_activate();
+					}
+				}
 			}
 		});
 		this.margin_top = Morghulis.primary_monitor.get_geometry().height / 4;
@@ -155,44 +155,35 @@ public class Runner : Astal.Window {
 	private void on_stack_page_changed() {
 		// Handle deactivation of previous command
 		if (_previous_page != null) {
-			Command? prev_cmd = _commands.lookup(_previous_page);
-			if (prev_cmd != null && prev_cmd.widget is ICommand) {
-				((ICommand)prev_cmd.widget).on_deactivate();
+			if (_previous_page == "apps") {
+				// Handle apps page deactivation
+				if (apps_cmd is ICommand) {
+					((ICommand)apps_cmd).on_deactivate();
+				}
+			} else {
+				// Handle regular command deactivation
+				Command? prev_cmd = _commands.lookup(_previous_page);
+				if (prev_cmd != null && prev_cmd.widget is ICommand) {
+					((ICommand)prev_cmd.widget).on_deactivate();
+				}
 			}
-		}
-
-		// Stop any existing sysinfo updates (legacy support)
-		if (_sysinfo_update_timeout > 0) {
-			Source.remove(_sysinfo_update_timeout);
-			_sysinfo_update_timeout = 0;
 		}
 
 		// Handle activation of current command
 		string current_page = commands_stack.visible_child_name;
-		Command? current_cmd = _commands.lookup(current_page);
-		if (current_cmd != null && current_cmd.widget is ICommand) {
-			((ICommand)current_cmd.widget).on_activate();
-		}
-
-		// Legacy sysinfo special handling (to be removed when SysInfo implements ICommand)
-		if (current_page == "si") {
-			var sysinfo_cmd = _commands.lookup("si");
-			if (sysinfo_cmd != null && sysinfo_cmd.widget is SysInfo) {
-				var sysinfo = (SysInfo)sysinfo_cmd.widget;
-				sysinfo.update_all();
-				_sysinfo_update_timeout = Timeout.add_seconds(3, () => {
-					sysinfo.update_all();
-					return true;
-				});
+		if (current_page == "apps") {
+			// Handle apps page activation
+			if (apps_cmd is ICommand) {
+				((ICommand)apps_cmd).on_activate();
+			}
+		} else {
+			// Handle regular command activation
+			Command? current_cmd = _commands.lookup(current_page);
+			if (current_cmd != null && current_cmd.widget is ICommand) {
+				((ICommand)current_cmd.widget).on_activate();
 			}
 		}
 
 		_previous_page = current_page;
-	}
-
-	~Runner() {
-		if (_sysinfo_update_timeout > 0) {
-			Source.remove(_sysinfo_update_timeout);
-		}
 	}
 }

@@ -175,7 +175,7 @@ public class AppsCmd : Gtk.Widget, ICommand {
 			this._app_list.invalidate_filter();
 			this._app_list.invalidate_sort();
 			_reload_timeout = 0;
-			return false;
+			return Source.REMOVE;
 		});
 	}
 
