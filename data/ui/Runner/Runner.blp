@@ -53,12 +53,7 @@ template $Runner: Astal.Window {
             StackPage {
                 name: "apps";
 
-                child: ScrolledWindow {
-                    max-content-height: 400;
-                    propagate-natural-height: true;
-
-                    $AppsCmd {}
-                };
+                child: $AppsCmd {};
             }
         }
     }

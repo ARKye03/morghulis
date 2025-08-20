@@ -1,4 +1,5 @@
 public class AppsCmd : Gtk.Widget, ICommand {
+	private Gtk.ScrolledWindow _scrolled_window;
 	private Gtk.ListBox _app_list;
 	private List<FileMonitor> _data_dirs_monitors;
 	private uint _reload_timeout = 0;
@@ -11,7 +12,13 @@ public class AppsCmd : Gtk.Widget, ICommand {
 			overflow = Gtk.Overflow.HIDDEN,
 			css_classes = new string[] { "bg_transparent", "bottom_left_right_corner_borders" }
 		};
-		this._app_list.set_parent(this);
+		this._scrolled_window = new Gtk.ScrolledWindow() {
+			max_content_height = 400,
+			propagate_natural_height = true,
+			child = this._app_list
+		};
+
+		this._scrolled_window.set_parent(this);
 		this.apps = new AstalApps.Apps();
 
 		setup_desktop_file_monitors();
@@ -54,8 +61,20 @@ public class AppsCmd : Gtk.Widget, ICommand {
 		update_apps(input);
 	}
 
+	public void on_activate() {
+		// When the apps command becomes active, make sure we have the latest data
+		// and trigger an initial filter with empty input to show all apps
+		update_apps("");
+	}
+
+	public void on_deactivate() {
+		// Nothing special needed when deactivating
+	}
+
 	public void on_enter() {
-		var first_app = get_first_app();
+		var first_app = (AppsCmdButton)this._app_list.get_first_child();
+
+		message("Launching application: " + first_app.app.name);
 
 		if (first_app != null) {
 			first_app.activate();
@@ -77,10 +96,6 @@ public class AppsCmd : Gtk.Widget, ICommand {
 
 		this._app_list.invalidate_sort();
 		this._app_list.invalidate_filter();
-	}
-
-	public AppsCmdButton? get_first_app() {
-		return (AppsCmdButton)this._app_list.get_first_child();
 	}
 
 	private void setup_desktop_file_monitors() {
