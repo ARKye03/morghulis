@@ -32,17 +32,14 @@ public class Runner : Astal.Window {
 		apps_cmd = new AppsCmd();
 		init_commands();
 
-		// Connect to stack page changes to handle command activation
 		commands_stack.notify["visible-child"].connect(on_stack_page_changed);
 
 		this.notify["visible"].connect(() => {
 			if (!this.visible) {
 				this.entry.text = "";
-				// Reset to apps view when hiding
 				commands_stack.visible_child_name = "apps";
 			} else {
 				this.entry.grab_focus();
-				// Ensure the apps command is activated when showing
 				if (commands_stack.visible_child_name == "apps") {
 					if (apps_cmd is ICommand) {
 						((ICommand)apps_cmd).on_activate();
@@ -153,15 +150,12 @@ public class Runner : Astal.Window {
 	}
 
 	private void on_stack_page_changed() {
-		// Handle deactivation of previous command
 		if (_previous_page != null) {
 			if (_previous_page == "apps") {
-				// Handle apps page deactivation
 				if (apps_cmd is ICommand) {
 					((ICommand)apps_cmd).on_deactivate();
 				}
 			} else {
-				// Handle regular command deactivation
 				Command? prev_cmd = _commands.lookup(_previous_page);
 				if (prev_cmd != null && prev_cmd.widget is ICommand) {
 					((ICommand)prev_cmd.widget).on_deactivate();
@@ -169,15 +163,12 @@ public class Runner : Astal.Window {
 			}
 		}
 
-		// Handle activation of current command
 		string current_page = commands_stack.visible_child_name;
 		if (current_page == "apps") {
-			// Handle apps page activation
 			if (apps_cmd is ICommand) {
 				((ICommand)apps_cmd).on_activate();
 			}
 		} else {
-			// Handle regular command activation
 			Command? current_cmd = _commands.lookup(current_page);
 			if (current_cmd != null && current_cmd.widget is ICommand) {
 				((ICommand)current_cmd.widget).on_activate();
