@@ -1,3 +1,6 @@
+[CCode(cname = "mpars_evaluate")]
+public extern double mpars_evaluate(string expression, out string? error);
+
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/MathCmd.ui")]
 public class MathCmd : Gtk.Box, ICommand {
 	[GtkChild]

@@ -1,7 +1,3 @@
-[CCode(cname = "mpars_evaluate")]
-public extern double mpars_evaluate(string expression, out string? error);
-
-// Command struct for simple command management
 public struct Command {
 	public string name;
 	public string description;

@@ -66,7 +66,6 @@ public class AppsCmd : Gtk.Widget, ICommand {
 		if (first_app != null) {
 			debug("Launching application: " + first_app.app.name);
 			first_app.activate();
-			// Hide the runner window
 			Runner.instance.visible = false;
 		}
 	}
