@@ -1,3 +1,4 @@
+// Taken from https://github.com/Aylur/astal/blob/main/lib/astal/gtk4/src/widget/window.vala
 using GtkLayerShell;
 
 [Flags]
