@@ -73,7 +73,6 @@ public class Morghulis : Gtk.Application {
 		context.set_summary("A GTK4 desktop shell built with Vala");
 		context.set_description("Examples:\n\tmorghulis -t runner\t# Toggle runner window\n\tmorghulis -r change_volume\t# Trigger volume change OSD");
 		context.set_help_enabled(false);
-
 		context.add_main_entries(options, null);
 
 		try {
@@ -85,7 +84,7 @@ public class Morghulis : Gtk.Application {
 		}
 
 		if (show_version) {
-			command_line.print("Morghulis version 0.1.0\n");
+			command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
 			return 0;
 		}
 
