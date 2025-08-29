@@ -1,5 +1,4 @@
 public class Morghulis : Gtk.Application {
-	private bool _css_loaded;
 	private File _css_file;
 	private FileMonitor _css_file_monitor;
 	private GTop.Uptime _g_uptime;
@@ -14,11 +13,9 @@ public class Morghulis : Gtk.Application {
 
 	public string uptime { get; private set; }
 
-	public Morghulis() {
-		Object(
-			application_id: "com.arkye.morghulis",
-			flags: ApplicationFlags.HANDLES_COMMAND_LINE
-		);
+	construct {
+		this.application_id = "com.arkye.morghulis";
+		this.flags = ApplicationFlags.HANDLES_COMMAND_LINE;
 
 		instance = this;
 		_windows = new List<MorghulWindow>();
@@ -108,9 +105,13 @@ public class Morghulis : Gtk.Application {
 			return 0;
 		}
 
-		// If no specific options were provided, activate normally
-		activate();
-		return 0;
+		if (_windows.length() > 0) {
+			command_line.printerr("Application is already running");
+			return 1;
+		} else {
+			activate();
+			return 0;
+		}
 	}
 
 	private void handle_request(string request) {
@@ -155,18 +156,9 @@ public class Morghulis : Gtk.Application {
 	}
 
 	protected override void activate() {
-		if (_windows.length() > 0) {
-			message("Application is already running");
-			return;
-		}
-
 		setup_display_and_monitor();
 		Gtk.IconTheme.get_for_display(display).add_resource_path("/com/github/ARKye03/morghulis/icons");
-
-		if (!_css_loaded) {
-			load_css();
-			_css_loaded = true;
-		}
+		load_css();
 
 		if (_css_file.query_exists()) {
 			apply_css(_css_file.get_path(), true);
