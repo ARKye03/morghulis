@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
-public class OnScreenDisplay : Astal.Window {
+public class OnScreenDisplay : Window {
 	private uint _hide_timeout_id = 0;
 
 	public static OnScreenDisplay instance { get; private set; }
