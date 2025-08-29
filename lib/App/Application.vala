@@ -3,7 +3,7 @@ public class Morghulis : Gtk.Application {
 	private File _css_file;
 	private FileMonitor _css_file_monitor;
 	private GTop.Uptime _g_uptime;
-	private List<Astal.Window> _windows;
+	private List<Window> _windows;
 
 	public static Morghulis instance { get; private set; }
 	public static GLib.Settings gsettings { get; private set; }
@@ -21,7 +21,7 @@ public class Morghulis : Gtk.Application {
 		);
 
 		instance = this;
-		_windows = new List<Astal.Window>();
+		_windows = new List<Window>();
 
 		Adw.init();
 		gsettings = new GLib.Settings("com.arkye.morghulis");
@@ -73,7 +73,6 @@ public class Morghulis : Gtk.Application {
 		context.set_summary("A GTK4 desktop shell built with Vala");
 		context.set_description("Examples:\n\tmorghulis -t runner\t# Toggle runner window\n\tmorghulis -r change_volume\t# Trigger volume change OSD");
 		context.set_help_enabled(false);
-
 		context.add_main_entries(options, null);
 
 		try {
@@ -85,7 +84,7 @@ public class Morghulis : Gtk.Application {
 		}
 
 		if (show_version) {
-			command_line.print("Morghulis version 0.1.0\n");
+			command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
 			return 0;
 		}
 
@@ -150,7 +149,7 @@ public class Morghulis : Gtk.Application {
 		Gtk.Window.set_interactive_debugging(true);
 	}
 
-	public new void add_window(Astal.Window window) {
+	public new void add_window(Window window) {
 		_windows.append(window);
 		window.set_application(this);
 	}
@@ -174,16 +173,16 @@ public class Morghulis : Gtk.Application {
 		}
 
 		string navbar_position = gsettings.get_string("navbar-anchor");
-		Astal.WindowAnchor navbar_anchor;
+		WindowAnchor navbar_anchor;
 
 		switch (navbar_position.down()) {
 			case "top":
-				navbar_anchor = Astal.WindowAnchor.TOP;
+				navbar_anchor = WindowAnchor.TOP;
 			break;
 
 			case "bottom":
 			default:
-				navbar_anchor = Astal.WindowAnchor.BOTTOM;
+				navbar_anchor = WindowAnchor.BOTTOM;
 			break;
 		}
 

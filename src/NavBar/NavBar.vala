@@ -1,7 +1,7 @@
 using GtkLayerShell;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
-public class NavBar : Astal.Window {
+public class NavBar : Window {
 	private GLib.DateTime _clock_time;
 
 	public static NavBar instance { get; private set; }
@@ -19,7 +19,7 @@ public class NavBar : Astal.Window {
 		"settings-symbolic",
 		"gaming-symbolic",
 	};
-	public Astal.WindowAnchor vanchor { get; construct; }
+	public WindowAnchor vanchor { get; construct; }
 
 	[GtkChild]
 	private unowned Adw.Bin workspaces;
@@ -30,8 +30,8 @@ public class NavBar : Astal.Window {
 	[GtkChild]
 	private unowned Adw.Bin active_submap;
 
-	public NavBar(Astal.WindowAnchor vanchor = Astal.WindowAnchor.BOTTOM) {
-		Object(anchor: Astal.WindowAnchor.LEFT | vanchor | Astal.WindowAnchor.RIGHT, vanchor: vanchor);
+	public NavBar(WindowAnchor vanchor = WindowAnchor.BOTTOM) {
+		Object(anchor: WindowAnchor.LEFT | vanchor | WindowAnchor.RIGHT, vanchor: vanchor);
 		battery = AstalBattery.Device.get_default();
 		speaker = AstalWp.get_default().audio.default_speaker;
 
