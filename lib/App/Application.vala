@@ -33,6 +33,27 @@ public class Morghulis : Gtk.Application {
 	public override int command_line(ApplicationCommandLine command_line) {
 		var args = command_line.get_arguments();
 
+		// Check for help flag before option parsing to avoid issues with running instance
+		foreach (string arg in args) {
+			if (arg == "--help" || arg == "-h" || arg == "-?") {
+				command_line.print("Usage:\n");
+				command_line.print("  morghulis [OPTION…] - Morghulis Desktop Shell\n\n");
+				command_line.print("A GTK4 desktop shell built with Vala\n\n");
+				command_line.print("Help Options:\n");
+				command_line.print("  -?, --help                Show help options\n\n");
+				command_line.print("Application Options:\n");
+				command_line.print("  -v, --version             Show version information\n");
+				command_line.print("  -q, --quit                Quit the application\n");
+				command_line.print("  -i, --inspector           Toggle GTK inspector\n");
+				command_line.print("  -t, --toggle=WINDOW       Toggle window visibility\n");
+				command_line.print("  -r, --request=REQUEST     Send custom request\n\n");
+				command_line.print("Examples:\n");
+				command_line.print("\tmorghulis -t runner\t# Toggle runner window\n");
+				command_line.print("\tmorghulis -r change_volume\t# Trigger volume change OSD\n");
+				return 0;
+			}
+		}
+
 		// Option variables
 		bool show_version = false;
 		bool quit_app = false;
@@ -40,7 +61,6 @@ public class Morghulis : Gtk.Application {
 		string? toggle_window_name = null;
 		string? request_type = null;
 
-		// Define command line options
 		var options = new OptionEntry[] {
 			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, out show_version, "Show version information", null },
 			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, out quit_app, "Quit the application", null },
@@ -52,6 +72,7 @@ public class Morghulis : Gtk.Application {
 		var context = new OptionContext("- Morghulis Desktop Shell");
 		context.set_summary("A GTK4 desktop shell built with Vala");
 		context.set_description("Examples:\n\tmorghulis -t runner\t# Toggle runner window\n\tmorghulis -r change_volume\t# Trigger volume change OSD");
+		context.set_help_enabled(false);
 
 		context.add_main_entries(options, null);
 
