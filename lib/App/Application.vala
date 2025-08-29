@@ -54,11 +54,7 @@ public class Morghulis : Gtk.Application {
 
 		var context = new OptionContext("- Morghulis Desktop Shell");
 		context.set_summary("A GTK4 desktop shell built with Vala");
-		context.set_description(
-			"""Examples:
-                morghulis -t runner         # Toggle runner window
-                morghulis -r change_volume  # Trigger volume change OSD
-            """);
+		context.set_description("Examples:\n\tmorghulis -t runner\t# Toggle runner window\n\tmorghulis -r change_volume\t# Trigger volume change OSD");
 
 		context.add_main_entries(options, null);
 
@@ -70,19 +66,13 @@ public class Morghulis : Gtk.Application {
 			return 1;
 		}
 
-		// Handle the parsed options
-		if (show_help) {
-			command_line.print("%s", context.get_help(true, null));
-			return 0;
-		}
-
 		if (show_version) {
 			command_line.print("Morghulis version 0.1.0\n");
 			return 0;
 		}
 
 		if (quit_app) {
-			quit_application();
+			quit();
 			return 0;
 		}
 
@@ -173,26 +163,14 @@ public class Morghulis : Gtk.Application {
 		Gtk.Window.set_interactive_debugging(true);
 	}
 
-	private void quit_application() {
-		// Clean up windows
-		foreach (var window in _windows) {
-			window.destroy();
-		}
-		quit();
-	}
-
-	public new void add_window(Gtk.Window window) {
-		_windows.append((Astal.Window)window);
-		add_window_to_app(window);
-	}
-
-	private void add_window_to_app(Gtk.Window window) {
+	public new void add_window(Astal.Window window) {
+		_windows.append(window);
 		window.set_application(this);
 	}
 
 	protected override void activate() {
 		if (_windows.length() > 0) {
-			// Application is already running
+			message("Application is already running");
 			return;
 		}
 
@@ -231,7 +209,7 @@ public class Morghulis : Gtk.Application {
 
 		Timeout.add_seconds(60, () => {
 			sync_uptime();
-			return true;
+			return Source.CONTINUE;
 		});
 		sync_uptime();
 
@@ -282,7 +260,6 @@ public class Morghulis : Gtk.Application {
 	}
 
 	// Function made to HAVE ONLY ONE: `Gtk.StyleContext' has been deprecated since 4.10
-	[Version(deprecated = true, deprecated_since = "4.10", replacement = "")]
 	private void add_css_provider(Gtk.CssProvider provider) {
 		Gtk.StyleContext.add_provider_for_display(
 			Gdk.Display.get_default(),
