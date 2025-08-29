@@ -14,9 +14,7 @@ public class QButton : Gtk.Box {
 		set {
 			if (value) {
 				this.add_css_class("qbutton");
-				this.add_css_class("qbutton");
 			} else {
-				this.remove_css_class("qbutton");
 				this.remove_css_class("qbutton");
 			}
 		}
@@ -28,18 +26,10 @@ public class QButton : Gtk.Box {
 		set {
 			if (!value) {
 				this.add_css_class("qbutton");
-				this.add_css_class("qbutton");
 			} else {
-				this.remove_css_class("qbutton");
 				this.remove_css_class("qbutton");
 			}
 		}
-	}
-
-	QButton() {
-		Object(
-			name: "Button"
-		);
 	}
 
 	[GtkCallback]
