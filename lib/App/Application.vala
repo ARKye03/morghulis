@@ -3,6 +3,7 @@ public class Morghulis : Gtk.Application {
 	private FileMonitor _css_file_monitor;
 	private GTop.Uptime _g_uptime;
 	private List<MorghulWindow> _windows;
+	private Gtk.CssProvider? _user_css_provider;
 
 	public static Morghulis instance { get; private set; }
 	public static GLib.Settings gsettings { get; private set; }
@@ -132,7 +133,7 @@ public class Morghulis : Gtk.Application {
 				}
 			break;
 
-			default:
+				default:
 				warning("Unknown request: %s", request);
 			break;
 		}
@@ -242,8 +243,17 @@ public class Morghulis : Gtk.Application {
 		Gtk.StyleContext.add_provider_for_display(
 			Gdk.Display.get_default(),
 			provider,
-			Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+			Gtk.STYLE_PROVIDER_PRIORITY_USER
 		);
+	}
+
+	private void remove_css_provider(Gtk.CssProvider? provider) {
+		if (provider != null) {
+			Gtk.StyleContext.remove_provider_for_display(
+				Gdk.Display.get_default(),
+				provider
+			);
+		}
 	}
 
 	private void load_css() {
@@ -253,11 +263,15 @@ public class Morghulis : Gtk.Application {
 	}
 
 	public void apply_css(string css_path, bool user_css = false) {
-		var provider = new Gtk.CssProvider();
-
 		if (user_css && FileUtils.test(css_path, FileTest.EXISTS)) {
-			provider.load_from_path(css_path);
-			add_css_provider(provider);
+			// Remove old user CSS provider if it exists
+
+			remove_css_provider(_user_css_provider);
+
+			// Create and add new user CSS provider
+			_user_css_provider = new Gtk.CssProvider();
+			_user_css_provider.load_from_path(css_path);
+			add_css_provider(_user_css_provider);
 		}
 	}
 
