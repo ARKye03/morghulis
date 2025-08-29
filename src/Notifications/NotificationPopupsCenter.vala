@@ -1,4 +1,4 @@
-public class NotifPopItemsCenter : Window {
+public class NotifPopItemsCenter : MorghulWindow {
 	private AstalNotifd.Notifd _notifd;
 	private Gtk.ListBox _notif_list_box;
 	private GSound.Context _scontext;

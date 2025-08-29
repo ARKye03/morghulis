@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QuickMenu.ui")]
-public class QuickMenu : Window {
+public class QuickMenu : MorghulWindow {
 	public AstalWp.Endpoint speaker { get; set; }
 	public static QuickMenu instance { get; private set; }
 

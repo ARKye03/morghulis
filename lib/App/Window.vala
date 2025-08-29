@@ -50,7 +50,7 @@ public enum Keymode {
 /**
  * Subclass of [class@Gtk.Window] which integrates GtkLayerShell as class fields.
  */
-public class Window : Gtk.Window {
+public class MorghulWindow : Gtk.Window {
 	/**
 	 * Get the current [class@Gdk.Monitor] this window resides in.
 	 */

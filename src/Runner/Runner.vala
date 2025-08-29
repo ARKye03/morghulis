@@ -5,7 +5,7 @@ public struct Command {
 }
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Runner.ui")]
-public class Runner : Window {
+public class Runner : MorghulWindow {
 	private GLib.HashTable<string, Command?> _commands;
 	private AppsCmd _apps_cmd;
 	private string? _previous_page = null;
