@@ -1,13 +1,13 @@
-public class NotifPopItemsCenter : Astal.Window {
+public class NotifPopItemsCenter : MorghulWindow {
 	private AstalNotifd.Notifd _notifd;
 	private Gtk.ListBox _notif_list_box;
 	private GSound.Context _scontext;
 	private uint _notif_count = 0;
 
-	public NotifPopItemsCenter(Astal.WindowAnchor x_anchor = Astal.WindowAnchor.RIGHT) {
+	public NotifPopItemsCenter(WindowAnchor x_anchor = WindowAnchor.RIGHT) {
 		Object(
 			title: "Notifications",
-			anchor: Astal.WindowAnchor.TOP | x_anchor,
+			anchor: WindowAnchor.TOP | x_anchor,
 			default_width: 330,
 			default_height: 0,
 			margin: 5,

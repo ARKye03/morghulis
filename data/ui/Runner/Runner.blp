@@ -1,8 +1,7 @@
 using Gtk 4.0;
-using Astal 4.0;
 using Adw 1;
 
-template $Runner: Astal.Window {
+template $Runner: $MorghulWindow {
     styles [
         "all_unset",
     ]
@@ -10,7 +9,7 @@ template $Runner: Astal.Window {
     title: "Runner";
     namespace: "Morghulis.Runner";
     anchor: top;
-    keymode: on_demand;
+    keymode: on-demand;
 
     EventControllerKey {
         key-released => $key_released();

@@ -8,13 +8,4 @@ version_vala = configure_file(
     configuration: version_conf,
 )
 
-executable(
-    'morghulctl',
-    ['cli.vala', version_vala],
-    dependencies: [
-        dependency('gio-unix-2.0'),
-        dependency('gio-2.0'),
-    ],
-    c_args: '-w',
-    install: true,
-)
+project_resources += [version_vala, files('Application.vala', 'Window.vala', 'CssManager.vala', 'Options.vala')]

@@ -1,4 +1,4 @@
-project_resources += ['Main.vala', 'App.vala']
+project_resources += ['Main.vala']
 project_args = []
 
 vapidir = meson.current_source_dir() + '/vapi/'
@@ -14,8 +14,6 @@ deps = [
     dependency('gtk4-layer-shell-0'),
     dependency('gsound'),
     dependency('libnm'),
-    dependency('astal-4-4.0'),
-    dependency('astal-io-0.1'),
     dependency('astal-wireplumber-0.1'),
     dependency('astal-mpris-0.1'),
     dependency('astal-tray-0.1'),

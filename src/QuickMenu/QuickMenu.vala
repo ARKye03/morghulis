@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QuickMenu.ui")]
-public class QuickMenu : Astal.Window {
+public class QuickMenu : MorghulWindow {
 	public AstalWp.Endpoint speaker { get; set; }
 	public static QuickMenu instance { get; private set; }
 
@@ -10,10 +10,10 @@ public class QuickMenu : Astal.Window {
 			this.destroy();
 		}
 
-		if (NavBar.instance.vanchor == Astal.WindowAnchor.TOP) {
-			this.anchor = Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.TOP;
+		if (NavBar.instance.vanchor == WindowAnchor.TOP) {
+			this.anchor = WindowAnchor.RIGHT | WindowAnchor.TOP;
 		} else {
-			this.anchor = Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM;
+			this.anchor = WindowAnchor.RIGHT | WindowAnchor.BOTTOM;
 		}
 
 		this.notify["visible"].connect(() => {

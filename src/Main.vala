@@ -6,6 +6,7 @@ public static void main(string[] args) {
 }
 
 private void init_types() {
+	typeof(MorghulWindow).ensure();
 #if river
 	typeof(RiverTags).ensure();
 #endif

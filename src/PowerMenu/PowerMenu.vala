@@ -7,7 +7,7 @@ private enum PMOption {
 	LOGOUT
 }
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerMenu.ui")]
-public class PowerMenu : Astal.Window {
+public class PowerMenu : MorghulWindow {
 	private PMOption _option;
 	public string uptime { get; set; }
 
