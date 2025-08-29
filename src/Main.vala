@@ -1,5 +1,5 @@
 public static void main(string[] args) {
-	var app = new MorghulisApplication();
+	var app = new Morghulis();
 
 	init_types();
 	app.run(args);

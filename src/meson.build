@@ -1,4 +1,4 @@
-project_resources += ['Main.vala', 'App.vala']
+project_resources += ['Main.vala']
 project_args = []
 
 vapidir = meson.current_source_dir() + '/vapi/'

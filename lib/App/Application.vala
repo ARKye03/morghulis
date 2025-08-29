@@ -1,11 +1,11 @@
-public class MorghulisApplication : Gtk.Application {
+public class Morghulis : Gtk.Application {
 	private bool _css_loaded;
 	private File _css_file;
 	private FileMonitor _css_file_monitor;
 	private GTop.Uptime _g_uptime;
 	private List<Astal.Window> _windows;
 
-	public static MorghulisApplication instance { get; private set; }
+	public static Morghulis instance { get; private set; }
 	public static GLib.Settings gsettings { get; private set; }
 	public static Gdk.Display? display { get; private set; }
 	public static Gdk.Monitor? primary_monitor { get; private set; }
@@ -14,7 +14,7 @@ public class MorghulisApplication : Gtk.Application {
 
 	public string uptime { get; private set; }
 
-	public MorghulisApplication() {
+	public Morghulis() {
 		Object(
 			application_id: "com.arkye.morghulis",
 			flags: ApplicationFlags.HANDLES_COMMAND_LINE
@@ -56,8 +56,8 @@ public class MorghulisApplication : Gtk.Application {
 		context.set_summary("A GTK4 desktop shell built with Vala");
 		context.set_description(
 			"""Examples:
-                    morghulis -t runner         # Toggle runner window
-                    morghulis -r change_volume  # Trigger volume change OSD
+                morghulis -t runner         # Toggle runner window
+                morghulis -r change_volume  # Trigger volume change OSD
             """);
 
 		context.add_main_entries(options, null);
@@ -111,12 +111,16 @@ public class MorghulisApplication : Gtk.Application {
 			case "change_volume":
 				if (OnScreenDisplay.instance != null) {
 					OnScreenDisplay.instance.change_volume();
+				} else {
+					warning("OnScreenDisplay not available");
 				}
 			break;
 
 			case "change_brightness":
 				if (OnScreenDisplay.instance != null) {
 					OnScreenDisplay.instance.change_brightness();
+				} else {
+					warning("OnScreenDisplay not available");
 				}
 			break;
 
@@ -131,18 +135,24 @@ public class MorghulisApplication : Gtk.Application {
 			case "navbar":
 				if (NavBar.instance != null) {
 					NavBar.instance.visible = !NavBar.instance.visible;
+				} else {
+					warning("NavBar not available");
 				}
 			break;
 
 			case "runner":
 				if (Runner.instance != null) {
 					Runner.instance.visible = !Runner.instance.visible;
+				} else {
+					warning("Runner not available");
 				}
 			break;
 
 			case "quickmenu":
 				if (QuickMenu.instance != null) {
 					QuickMenu.instance.visible = !QuickMenu.instance.visible;
+				} else {
+					warning("QuickMenu not available");
 				}
 			break;
 
@@ -150,6 +160,7 @@ public class MorghulisApplication : Gtk.Application {
 				//  if (PowerMenu.instance != null) {
 				//  	PowerMenu.instance.visible = !PowerMenu.instance.visible;
 				//  }
+				warning("PowerMenu toggle not implemented yet");
 			break;
 
 			default:
