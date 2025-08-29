@@ -23,8 +23,6 @@
         version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile ./version);
         buildName = "morghulis";
         appName = "${buildName}-${version}";
-        cliBuildName = "morghulctl";
-        cliAppName = "morghulctl-${version}";
         stdenv = pkgs.gcc14Stdenv;
 
         nix-utils = with pkgs; [
@@ -57,8 +55,7 @@
           installPhase = ''
             mkdir -p $out/bin
             cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
-            cp -r $TMPDIR/buildNix/cli/${cliBuildName} $out/bin/${cliAppName}
-            chmod +x $out/bin/${appName} $out/bin/${cliAppName}
+            chmod +x $out/bin/${appName}
           '';
 
           meta = with pkgs.lib; {
@@ -72,18 +69,11 @@
           installPhase = ''
             mkdir -p $out/bin
             cp -r $TMPDIR/buildNix/src/${buildName} $out/bin/${appName}
-            cp -r $TMPDIR/buildNix/cli/${cliBuildName} $out/bin/${cliAppName}
 
             # Patch the binary
             ${pkgs.patchelf}/bin/patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 $out/bin/${appName}
             ${pkgs.patchelf}/bin/patchelf --set-rpath /lib:/usr/lib $out/bin/${appName}
             ${pkgs.patchelf}/bin/patchelf --shrink-rpath $out/bin/${appName}
-
-            # Patch the cli binary
-            ${pkgs.patchelf}/bin/patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 $out/bin/${cliAppName}
-            ${pkgs.patchelf}/bin/patchelf --set-rpath /lib:/usr/lib $out/bin/${cliAppName}
-            ${pkgs.patchelf}/bin/patchelf --shrink-rpath $out/bin/${cliAppName}
-            chmod +x $out/bin/${appName} $out/bin/${cliAppName}
           '';
         };
         pkg-tarball =
@@ -107,7 +97,6 @@
 
               # Copy binaries to staging
               cp ${fhs-morghulis}/bin/${appName} "$staging/"
-              cp ${fhs-morghulis}/bin/${cliAppName} "$staging/"
 
               # Copy assets to staging with directory structure
               for filename in "''${filenames[@]}"; do
