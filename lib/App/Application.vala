@@ -34,7 +34,6 @@ public class Morghulis : Gtk.Application {
 		var args = command_line.get_arguments();
 
 		// Option variables
-		bool show_help = false;
 		bool show_version = false;
 		bool quit_app = false;
 		bool inspector = false;
@@ -43,13 +42,11 @@ public class Morghulis : Gtk.Application {
 
 		// Define command line options
 		var options = new OptionEntry[] {
-			{ "help", 'h', OptionFlags.NONE, OptionArg.NONE, out show_help, "Show this help message", null },
 			{ "version", 'v', OptionFlags.NONE, OptionArg.NONE, out show_version, "Show version information", null },
 			{ "quit", 'q', OptionFlags.NONE, OptionArg.NONE, out quit_app, "Quit the application", null },
 			{ "inspector", 'i', OptionFlags.NONE, OptionArg.NONE, out inspector, "Toggle GTK inspector", null },
 			{ "toggle", 't', OptionFlags.NONE, OptionArg.STRING, out toggle_window_name, "Toggle window visibility", "WINDOW" },
-			{ "request", 'r', OptionFlags.NONE, OptionArg.STRING, out request_type, "Send custom request", "REQUEST" },
-			{ null }
+			{ "request", 'r', OptionFlags.NONE, OptionArg.STRING, out request_type, "Send custom request", "REQUEST" }
 		};
 
 		var context = new OptionContext("- Morghulis Desktop Shell");
@@ -121,42 +118,11 @@ public class Morghulis : Gtk.Application {
 	}
 
 	private void toggle_window(string window_name) {
-		switch (window_name.down()) {
-			case "navbar":
-				if (NavBar.instance != null) {
-					NavBar.instance.visible = !NavBar.instance.visible;
-				} else {
-					warning("NavBar not available");
-				}
-			break;
-
-			case "runner":
-				if (Runner.instance != null) {
-					Runner.instance.visible = !Runner.instance.visible;
-				} else {
-					warning("Runner not available");
-				}
-			break;
-
-			case "quickmenu":
-				if (QuickMenu.instance != null) {
-					QuickMenu.instance.visible = !QuickMenu.instance.visible;
-				} else {
-					warning("QuickMenu not available");
-				}
-			break;
-
-			case "powermenu":
-				//  if (PowerMenu.instance != null) {
-				//  	PowerMenu.instance.visible = !PowerMenu.instance.visible;
-				//  }
-				warning("PowerMenu toggle not implemented yet");
-			break;
-
-			default:
-				warning("Unknown window: %s", window_name);
-			break;
-		}
+		_windows.foreach(w => {
+			if (w.title == window_name) {
+				w.visible = !w.visible;
+			}
+		});
 	}
 
 	private void toggle_inspector() {
