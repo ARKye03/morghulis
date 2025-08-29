@@ -31,9 +31,7 @@ A Wayland desktop shell created with GTK4, Libadwaita, and Astal.
   - [gtk4-layer-shell](https://github.com/wmww/gtk4-layer-shell)
 - [GSound](https://gitlab.gnome.org/GNOME/gsound)
 - [Astal](https://github.com/Aylur/astal)
-  - 4
   - Tray
-  - IO
   - Wireplumber
   - Mpris
   - NotifD
@@ -76,10 +74,10 @@ Alternatively, use this [PKGBUILD](https://raw.githubusercontent.com/ARKye03/PKG
 
 ## Usage
 
-Morghulis is a desktop shell that uses Astal under the hood, so the Astal CLI is available to use via `astal -i morghulis <command>`; nevertheless, the `morghulis-cli` called `morghulctl` is dedicated to this project itself.
+Morghulis is a desktop shell that handles also cli.
 
 ```shell
-morghulctl --help
+morghulis --help
 ```
 
 > [!NOTE]
@@ -148,11 +146,11 @@ nix run github:ARKye03/morghulis#fhs -- --help
 > [!WARNING]
 > **Users must be part of the `video` group to use backlight services.**
 >
-> For OSD to work, you need to append `"morghulctl -r change_volume" and/or" morghulctl -r change_brightness"` to whatever keybinding you want to use to raise/lower the volume/brightness.
+> For OSD to work, you need to append `"morghulis -r change_volume" and/or" morghulis -r change_brightness"` to whatever keybinding you want to use to raise/lower the volume/brightness.
 > Example:
 >
 > ```hyprlang
-> binde=, XF86MonBrightnessUp, exec, brightnessctl set +10% & morghulctl -r change_brightness
+> binde=, XF86MonBrightnessUp, exec, brightnessctl set +10% & morghulis -r change_brightness
 > ```
 
 ### Thanks to
