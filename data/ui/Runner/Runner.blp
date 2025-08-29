@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $Runner: $Window {
+template $Runner: $MorghulWindow {
     styles [
         "all_unset",
     ]
@@ -9,7 +9,7 @@ template $Runner: $Window {
     title: "Runner";
     namespace: "Morghulis.Runner";
     anchor: top;
-    keymode: on_demand;
+    keymode: on-demand;
 
     EventControllerKey {
         key-released => $key_released();
