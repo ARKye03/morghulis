@@ -17,63 +17,59 @@ public class Morghulis : Gtk.Application {
 		this.flags = ApplicationFlags.HANDLES_COMMAND_LINE;
 
 		instance = this;
-		_windows = new List<MorghulWindow>();
-
-		Adw.init();
-		gsettings = new GLib.Settings("com.arkye.morghulis");
-		user_name = Environment.get_user_name();
-
-		_css_manager = new CssManager();
-		setup_css_signals();
 	}
 
 	public override int command_line(ApplicationCommandLine command_line) {
 		var args = command_line.get_arguments();
 
-		// Check for help flag before option parsing to avoid issues with running instance
-		if (HelpDisplay.should_show_help(args)) {
-			HelpDisplay.show_help(command_line);
-			return 0;
-		}
+		if (command_line.is_remote) {
+			// Check for help flag before option parsing to avoid issues with running instance
+			if (HelpDisplay.should_show_help(args)) {
+				HelpDisplay.show_help(command_line);
+				return 0;
+			}
 
-		var parser = new CommandLineParser();
-		var result = parser.parse(args, command_line);
+			var parser = new CommandLineParser();
+			var result = parser.parse(args, command_line);
 
-		if (result.should_exit) {
-			return result.exit_code;
-		}
+			if (result.should_exit) {
+				return result.exit_code;
+			}
 
-		if (result.show_version) {
-			command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
-			return 0;
-		}
+			if (result.show_version) {
+				command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
+				return 0;
+			}
 
-		if (result.quit_app) {
-			quit();
-			return 0;
-		}
+			if (result.quit_app) {
+				quit();
+				return 0;
+			}
 
-		if (result.inspector) {
-			toggle_inspector();
-			return 0;
-		}
+			if (result.inspector) {
+				toggle_inspector();
+				return 0;
+			}
 
-		if (result.toggle_window_name != null) {
-			toggle_window(result.toggle_window_name);
-			return 0;
-		}
+			if (result.toggle_window_name != null) {
+				toggle_window(result.toggle_window_name);
+				return 0;
+			}
 
-		if (result.request_type != null) {
-			handle_request(result.request_type);
-			return 0;
-		}
+			if (result.request_type != null) {
+				handle_request(result.request_type);
+				return 0;
+			}
 
-		if (_windows.length() > 0) {
-			command_line.printerr("Application is already running");
 			return 1;
 		} else {
-			activate();
-			return 0;
+			if (_windows.length() > 0) {
+				command_line.printerr("Application is already running");
+				return 1;
+			} else {
+				activate();
+				return 0;
+			}
 		}
 	}
 
@@ -129,6 +125,15 @@ public class Morghulis : Gtk.Application {
 	}
 
 	protected override void activate() {
+		_windows = new List<MorghulWindow>();
+
+		Adw.init();
+		gsettings = new GLib.Settings("com.arkye.morghulis");
+		user_name = Environment.get_user_name();
+
+		_css_manager = new CssManager();
+		setup_css_signals();
+
 		setup_display_and_monitor();
 		setup_ui();
 		setup_timers();
