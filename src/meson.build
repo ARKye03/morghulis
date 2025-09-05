@@ -43,7 +43,6 @@ if astal_power_profiles_dep.found()
     deps += astal_power_profiles_dep
 endif
 
-subdir('Modules')
 subdir('NavBar')
 subdir('PowerMenu')
 subdir('Tray')

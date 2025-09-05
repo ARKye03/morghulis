@@ -8,4 +8,14 @@ version_vala = configure_file(
     configuration: version_conf,
 )
 
-project_resources += [version_vala, files('Application.vala', 'Window.vala', 'CssManager.vala', 'Options.vala')]
+project_resources += [
+    version_vala,
+    files(
+        'Application.vala',
+        'CircularProgress.vala',
+        'CssManager.vala',
+        'Gizmo.vala',
+        'Options.vala',
+        'Window.vala',
+    ),
+]
