@@ -10,7 +10,7 @@
 
 .occupied {
     @extend .focused;
-    filter: hue-rotate(90deg) brightness(0.7);
+    filter: hue-rotate(90deg) brightness(0.5);
 }
 
 .urgent {
