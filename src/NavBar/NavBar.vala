@@ -1,5 +1,3 @@
-using GtkLayerShell;
-
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NavBar.ui")]
 public class NavBar : MorghulWindow {
 	private GLib.DateTime _clock_time;
