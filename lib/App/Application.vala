@@ -57,7 +57,7 @@ public class Morghulis : Gtk.Application {
 			}
 
 			if (result.request_type != null) {
-				handle_request(result.request_type);
+				handle_request(result.request_type, command_line);
 				return 0;
 			}
 
@@ -83,26 +83,28 @@ public class Morghulis : Gtk.Application {
 		});
 	}
 
-	private void handle_request(string request) {
+	private void handle_request(string request, ApplicationCommandLine command_line) {
 		switch (request) {
 			case "change_volume":
 				if (OnScreenDisplay.instance != null) {
 					OnScreenDisplay.instance.change_volume();
+					command_line.print("Volume changed\n");
 				} else {
-					warning("OnScreenDisplay not available");
+					command_line.print("OnScreenDisplay not available\n");
 				}
 			break;
 
 			case "change_brightness":
 				if (OnScreenDisplay.instance != null) {
 					OnScreenDisplay.instance.change_brightness();
+					command_line.print("Brightness changed\n");
 				} else {
-					warning("OnScreenDisplay not available");
+					command_line.print("OnScreenDisplay not available\n");
 				}
 			break;
 
 			default:
-				warning("Unknown request: %s", request);
+				command_line.print(@"Unknown request: $request\n");
 			break;
 		}
 	}
