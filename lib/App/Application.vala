@@ -2,6 +2,7 @@ public class Morghulis : Gtk.Application {
 	private GTop.Uptime _g_uptime;
 	private List<MorghulWindow> _windows;
 	private CssManager _css_manager;
+	private ApplicationCommandLine _command_line;
 
 	public static Morghulis instance { get; private set; }
 	public static GLib.Settings gsettings { get; private set; }
@@ -20,24 +21,25 @@ public class Morghulis : Gtk.Application {
 	}
 
 	public override int command_line(ApplicationCommandLine command_line) {
-		var args = command_line.get_arguments();
+		_command_line = command_line;
+		var args = _command_line.get_arguments();
 
-		if (command_line.is_remote) {
+		if (_command_line.is_remote) {
 			// Check for help flag before option parsing to avoid issues with running instance
 			if (HelpDisplay.should_show_help(args)) {
-				HelpDisplay.show_help(command_line);
+				HelpDisplay.show_help(_command_line);
 				return 0;
 			}
 
 			var parser = new CommandLineParser();
-			var result = parser.parse(args, command_line);
+			var result = parser.parse(args, _command_line);
 
 			if (result.should_exit) {
 				return result.exit_code;
 			}
 
 			if (result.show_version) {
-				command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
+				_command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
 				return 0;
 			}
 
@@ -64,7 +66,7 @@ public class Morghulis : Gtk.Application {
 			return 1;
 		} else {
 			if (_windows.length() > 0) {
-				command_line.printerr("Application is already running");
+				_command_line.printerr("Application is already running");
 				return 1;
 			} else {
 				activate();
@@ -89,7 +91,7 @@ public class Morghulis : Gtk.Application {
 				if (OnScreenDisplay.instance != null) {
 					OnScreenDisplay.instance.change_volume();
 				} else {
-					warning("OnScreenDisplay not available");
+					_command_line.printerr("OnScreenDisplay not available");
 				}
 			break;
 
@@ -97,12 +99,12 @@ public class Morghulis : Gtk.Application {
 				if (OnScreenDisplay.instance != null) {
 					OnScreenDisplay.instance.change_brightness();
 				} else {
-					warning("OnScreenDisplay not available");
+					_command_line.printerr("OnScreenDisplay not available");
 				}
 			break;
 
 			default:
-				warning("Unknown request: %s", request);
+				_command_line.printerr("Unknown request: %s", request);
 			break;
 		}
 	}
