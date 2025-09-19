@@ -175,11 +175,7 @@ public class Morghulis : Gtk.Application {
 	}
 
 	private void create_windows() {
-		string navbar_position = gsettings.get_string("navbar-anchor");
-		WindowAnchor navbar_anchor = navbar_position.down() == "top" ?
-									 WindowAnchor.TOP : WindowAnchor.BOTTOM;
-
-		add_window(new NavBar(navbar_anchor));
+		add_window(new NavBar());
 		add_window(new Runner());
 		add_window(new QuickMenu());
 		add_window(new OnScreenDisplay());

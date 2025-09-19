@@ -30,8 +30,12 @@ public class NavBar : MorghulWindow {
 	[GtkChild]
 	private unowned Adw.Bin active_submap;
 
-	public NavBar(WindowAnchor vanchor = WindowAnchor.BOTTOM) {
-		Object(anchor: WindowAnchor.LEFT | vanchor | WindowAnchor.RIGHT, vanchor: vanchor);
+	public NavBar() {
+		string navbar_position = Morghulis.gsettings.get_string("navbar-anchor");
+		WindowAnchor navbar_anchor = navbar_position.down() == "top" ?
+									 WindowAnchor.TOP : WindowAnchor.BOTTOM;
+
+		Object(anchor: WindowAnchor.LEFT | navbar_anchor | WindowAnchor.RIGHT, vanchor: navbar_anchor);
 		battery = AstalBattery.Device.get_default();
 		speaker = AstalWp.get_default().audio.default_speaker;
 
