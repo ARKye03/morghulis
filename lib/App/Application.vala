@@ -52,7 +52,7 @@ public class Morghulis : Gtk.Application {
 			}
 
 			if (result.toggle_window_name != null) {
-				toggle_window(result.toggle_window_name);
+				toggle_window(result.toggle_window_name, command_line);
 				return 0;
 			}
 
@@ -90,7 +90,7 @@ public class Morghulis : Gtk.Application {
 					OnScreenDisplay.instance.change_volume();
 					command_line.print("Volume changed\n");
 				} else {
-					command_line.print("OnScreenDisplay not available\n");
+					command_line.printerr("OnScreenDisplay not available\n");
 				}
 			break;
 
@@ -99,22 +99,27 @@ public class Morghulis : Gtk.Application {
 					OnScreenDisplay.instance.change_brightness();
 					command_line.print("Brightness changed\n");
 				} else {
-					command_line.print("OnScreenDisplay not available\n");
+					command_line.printerr("OnScreenDisplay not available\n");
 				}
 			break;
 
 			default:
-				command_line.print(@"Unknown request: $request\n");
+				command_line.printerr(@"Unknown request: $request\n");
 			break;
 		}
 	}
 
-	private void toggle_window(string window_name) {
+	private void toggle_window(string window_name, ApplicationCommandLine command_line) {
+		bool found = false;
 		_windows.foreach(w => {
 			if (w.title == window_name) {
 				w.visible = !w.visible;
+				found = true;
 			}
 		});
+		if (!found) {
+			command_line.printerr(@"No window found with name: $window_name\n");
+		}
 	}
 
 	private void toggle_inspector() {
