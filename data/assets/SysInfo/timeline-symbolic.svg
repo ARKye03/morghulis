@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-    class="icon icon-tabler icons-tabler-outline icon-tabler-timeline" viewBox="0 0 24 24">
-    <path class="transparent-fill foreground-stroke" stroke="none" d="M0 0h24v24H0z" />
-    <path class="transparent-fill foreground-stroke" d="m4 16 6-7 5 5 5-6" />
-    <path class="transparent-fill foreground-stroke"
-        d="M14 14a1 1 0 1 0 2 0 1 1 0 1 0-2 0M9 9a1 1 0 1 0 2 0 1 1 0 1 0-2 0M3 16a1 1 0 1 0 2 0 1 1 0 1 0-2 0M19 8a1 1 0 1 0 2 0 1 1 0 1 0-2 0" />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-timeline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" class="transparent-fill foreground-stroke"/><path d="m4 16 6-7 5 5 5-6" class="transparent-fill foreground-stroke"/><path d="M14 14a1 1 0 1 0 2 0 1 1 0 1 0-2 0M9 9a1 1 0 1 0 2 0 1 1 0 1 0-2 0m-6 7a1 1 0 1 0 2 0 1 1 0 1 0-2 0m16-8a1 1 0 1 0 2 0 1 1 0 1 0-2 0" class="transparent-fill foreground-stroke"/></svg>

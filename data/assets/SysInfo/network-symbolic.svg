@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-    class="icon icon-tabler icons-tabler-outline icon-tabler-network" viewBox="0 0 24 24">
-    <path class="transparent-fill foreground-stroke" stroke="none" d="M0 0h24v24H0z" />
-    <path class="transparent-fill foreground-stroke" d="M6 9a6 6 0 1 0 12 0A6 6 0 0 0 6 9" />
-    <path class="transparent-fill foreground-stroke"
-        d="M12 3q2 .5 2 6c0 5.5-.667 5.667-2 6M12 3q-2 .5-2 6c0 5.5.667 5.667 2 6M6 9h12M3 20h7M14 20h7M10 20a2 2 0 1 0 4 0 2 2 0 0 0-4 0M12 15v3" />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-network" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" class="transparent-fill foreground-stroke"/><path d="M6 9a6 6 0 1 0 12 0A6 6 0 0 0 6 9" class="transparent-fill foreground-stroke"/><path d="M12 3q2 .5 2 6c0 5.5-.667 5.667-2 6m0-12q-2 .5-2 6c0 5.5.667 5.667 2 6M6 9h12M3 20h7m4 0h7m-11 0a2 2 0 1 0 4 0 2 2 0 0 0-4 0m2-5v3" class="transparent-fill foreground-stroke"/></svg>
