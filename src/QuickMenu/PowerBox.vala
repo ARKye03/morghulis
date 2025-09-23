@@ -20,12 +20,9 @@ public class PowerBox : Gtk.Box {
 	construct {
 		_option = PowerOption.NONE;
 		user_name = Morghulis.user_name;
-		var user_image_path = Environment.get_home_dir() + "/user.png";
+		var user_image_path = Environment.get_home_dir() + "/.face.icon";
 		try {
-			var pixbuf = new Gdk.Pixbuf.from_file(user_image_path);
-			if (pixbuf != null) {
-				user_image_paintable = Gdk.Texture.for_pixbuf(pixbuf);
-			}
+			user_image_paintable = Gdk.Texture.from_filename(user_image_path);
 		} catch (Error e) {
 			critical("Error loading paintable: %s\n", e.message);
 		}
