@@ -65,7 +65,9 @@ public class HyprWorkspaces : Gtk.Box {
 		});
 		button.add_controller(middle_click);
 		button.clicked.connect(() => {
-			_hyprland.dispatch("workspace", workspace_number.to_string());
+			if (!(workspace_number == _hyprland.focused_workspace.id)) {
+				_hyprland.dispatch("workspace", workspace_number.to_string());
+			}
 		});
 	}
 
