@@ -26,7 +26,6 @@
         stdenv = pkgs.gcc14Stdenv;
 
         nix-utils = with pkgs; [
-          nixd
           nixfmt-rfc-style
         ];
         nix-morghulis = stdenv.mkDerivation {
