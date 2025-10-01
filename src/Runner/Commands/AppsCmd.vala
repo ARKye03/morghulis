@@ -2,6 +2,7 @@
 public class AppsCmd : Gtk.Widget, ICommand {
 	private List<FileMonitor> _data_dirs_monitors;
 	private uint _reload_timeout = 0;
+	private bool _is_uwsm_session = false;
 	public AstalApps.Apps apps { get; construct set; }
 
 	// ICommand interface implementation - not used for apps but required
@@ -12,6 +13,7 @@ public class AppsCmd : Gtk.Widget, ICommand {
 
 	construct {
 		this.apps = new AstalApps.Apps();
+		_is_uwsm_session = Environment.get_variable("IS_UWSM_ACTIVE") == "1";
 
 		setup_desktop_file_monitors();
 		setup_list_behavior();
@@ -44,7 +46,7 @@ public class AppsCmd : Gtk.Widget, ICommand {
 			return;
 		}
 		apps.list.foreach(app => {
-			app_list.append(new AppsCmdButton(app));
+			app_list.append(new AppsCmdButton(app, _is_uwsm_session));
 		});
 	}
 
