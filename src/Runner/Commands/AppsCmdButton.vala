@@ -24,7 +24,7 @@ public class AppsCmdButton : Gtk.ListBoxRow {
 				var app_executable_field = app.executable;
 				if (app_executable_field != null) {
 					// Extract just the binary name, removing parameters like %U, %F, etc.
-					string binary_name = app_executable_field.split(" ")[0];
+					string binary_name = app_executable_field.split("%")[0];
 					try {
 						Process.spawn_command_line_async(@"uwsm app -- $binary_name");
 					} catch (SpawnError e) {
