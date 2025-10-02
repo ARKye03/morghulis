@@ -33,16 +33,25 @@ template $AppsCmd: Gtk.Widget {
             child: Box {
                 orientation: vertical;
                 spacing: 12;
-                valign: center;
                 halign: center;
 
                 styles [
                     "bg_transparent",
                     "bottom_left_right_corner_borders",
+                    "padding_10",
                 ]
 
+                Image {
+                    icon-name: "face-crying-symbolic";
+                    pixel-size: 216;
+                }
+
                 Label {
-                    label: "XDDDD";
+                    label: "No matching applications found";
+
+                    styles [
+                        "title-1",
+                    ]
                 }
             };
         }
