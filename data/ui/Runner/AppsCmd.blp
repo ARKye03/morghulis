@@ -3,19 +3,48 @@ using Gtk 4.0;
 template $AppsCmd: Gtk.Widget {
     layout-manager: BinLayout {};
 
-    ScrolledWindow {
-        max-content-height: 400;
-        propagate-natural-height: true;
-        hscrollbar-policy: never;
+    Stack apps_stack {
+        transition-type: crossfade;
+        transition-duration: 200;
 
-        ListBox app_list {
-            selection-mode: none;
-            overflow: hidden;
+        StackPage {
+            name: "apps-list";
 
-            styles [
-                "bg_transparent",
-                "bottom_left_right_corner_borders",
-            ]
+            child: ScrolledWindow {
+                max-content-height: 400;
+                propagate-natural-height: true;
+                hscrollbar-policy: never;
+
+                ListBox app_list {
+                    selection-mode: none;
+                    overflow: hidden;
+
+                    styles [
+                        "bg_transparent",
+                        "bottom_left_right_corner_borders",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "no-results";
+
+            child: Box {
+                orientation: vertical;
+                spacing: 12;
+                valign: center;
+                halign: center;
+
+                styles [
+                    "bg_transparent",
+                    "bottom_left_right_corner_borders",
+                ]
+
+                Label {
+                    label: "XDDDD";
+                }
+            };
         }
     }
 }

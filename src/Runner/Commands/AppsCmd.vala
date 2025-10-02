@@ -11,6 +11,9 @@ public class AppsCmd : Gtk.Widget, ICommand {
 	[GtkChild]
 	private unowned Gtk.ListBox app_list;
 
+	[GtkChild]
+	private unowned Gtk.Stack apps_stack;
+
 	construct {
 		this.apps = new AstalApps.Apps();
 		_is_uwsm_session = Environment.get_variable("IS_UWSM_ACTIVE") == "1";
@@ -46,7 +49,10 @@ public class AppsCmd : Gtk.Widget, ICommand {
 			return;
 		}
 		apps.list.foreach(app => {
-			app_list.append(new AppsCmdButton(app, _is_uwsm_session));
+			var button = new AppsCmdButton(app, _is_uwsm_session);
+			// Initialize with a positive score so all apps are visible by default
+			button.score = 1.0;
+			app_list.append(button);
 		});
 	}
 
@@ -73,18 +79,27 @@ public class AppsCmd : Gtk.Widget, ICommand {
 	}
 
 	public void update_apps(string input) {
+		bool has_visible_apps = false;
 		var child = app_list.get_first_child();
 
 		while (child != null) {
 			if (child is AppsCmdButton) {
 				var app = (AppsCmdButton)child;
 				app.score = apps.fuzzy_score(input, app.app);
+
+				if (!has_visible_apps && app.score >= 0) {
+					has_visible_apps = true;
+				}
 			}
 			child = child.get_next_sibling();
 		}
 
 		app_list.invalidate_sort();
 		app_list.invalidate_filter();
+
+		string target_page = has_visible_apps ? "apps-list" : "no-results";
+		debug(@"Switching to page: $target_page (has_visible_apps: $has_visible_apps)");
+		apps_stack.visible_child_name = target_page;
 	}
 
 	private void setup_desktop_file_monitors() {
