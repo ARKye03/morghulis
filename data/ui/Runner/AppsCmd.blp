@@ -6,6 +6,9 @@ template $AppsCmd: Gtk.Widget {
     Stack apps_stack {
         transition-type: crossfade;
         transition-duration: 200;
+        interpolate-size: true;
+        hhomogeneous: false;
+        vhomogeneous: false;
 
         StackPage {
             name: "apps-list";
