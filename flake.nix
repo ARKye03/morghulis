@@ -119,6 +119,7 @@
           gtk4
           gtk4-layer-shell
           libadwaita
+          appstream
         ];
         runtime-utils = with pkgs; [
           gsound
@@ -179,7 +180,6 @@
                   glib
                   gdk-pixbuf
                 ];
-              GTK_THEME = "adw-gtk3:dark";
               XCURSOR_THEME = "Bibata-Modern-Classic";
               XCURSOR_SIZE = "20";
             };
