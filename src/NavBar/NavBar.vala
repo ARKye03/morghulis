@@ -118,6 +118,7 @@ public class NavBar : MorghulWindow {
 
 #if hyprland
 	private AstalHyprland.Hyprland _hyprland;
+	private Binding? _client_title_binding = null;
 
 	private void setup_hyprland() {
 		message("Setting up Hyprland");
@@ -149,15 +150,29 @@ public class NavBar : MorghulWindow {
 			tooltip_text = "Active client",
 		};
 
-		_hyprland.bind_property("focused_client", client_label, "label", BindingFlags.SYNC_CREATE, (binding, srcval, ref targetval) => {
-			var client = (AstalHyprland.Client)srcval;
-			if (client != null && client.title != null && client.title != "") {
-				targetval = client.title;
-				active_client.visible = true;
+		_hyprland.bind_property("focused_client", client_label, "label", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+			// Clean up previous title binding
+			if (_client_title_binding != null) {
+				_client_title_binding.unbind();
+				_client_title_binding = null;
+			}
+
+			var client = (AstalHyprland.Client)src;
+			if (client != null) {
+				_client_title_binding = client.bind_property("title", client_label, "label", BindingFlags.SYNC_CREATE, (_, src, ref trgt) => {
+					var title = (string)src;
+					if (title != null && title != "") {
+						trgt = title;
+						active_client.visible = true;
+					} else {
+						active_client.visible = false;
+					}
+					return true;
+				});
 			} else {
 				active_client.visible = false;
 			}
-			return true;
+			return false;
 		});
 
 		active_client.child = client_label;
