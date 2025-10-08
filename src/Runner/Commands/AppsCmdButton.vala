@@ -21,12 +21,10 @@ public class AppsCmdButton : Gtk.ListBoxRow {
 		Object(app: app);
 		if (is_uwsm_session) {
 			app_launch_handler = () => {
-				var app_executable_field = app.executable;
+				var app_executable_field = app.entry;
 				if (app_executable_field != null) {
-					// Extract just the binary name, removing parameters like %U, %F, etc.
-					string binary_name = app_executable_field.split("%")[0];
 					try {
-						Process.spawn_command_line_async(@"uwsm app -- $binary_name");
+						Process.spawn_command_line_async(@"uwsm app -- $app_executable_field");
 					} catch (SpawnError e) {
 						warning("Failed to launch app: %s\n", e.message);
 					}
