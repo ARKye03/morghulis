@@ -9,7 +9,16 @@ public class QNetwork : Gtk.Box {
 
 	construct {
 		network = AstalNetwork.get_default();
+		if (network == null || network.wifi == null) {
+			warning("Network or WiFi interface not available");
+			return;
+		}
+
 		_net_dev = network.wifi.device;
+		if (_net_dev == null) {
+			warning("WiFi device not available");
+			return;
+		}
 
 		wifi_list.set_sort_func(sort_network_items);
 
@@ -26,7 +35,15 @@ public class QNetwork : Gtk.Box {
 			return;
 		}
 		var nap = (NM.AccessPoint)ap;
+		if (nap.ssid == null) {
+			debug("Skipping AP with null SSID");
+			return;
+		}
 		var nap_ssid = (string)nap.ssid.get_data();
+		if (nap_ssid == null || nap_ssid == "") {
+			debug("Skipping AP with empty SSID");
+			return;
+		}
 		debug(@"Adding AP $(nap_ssid)");
 		network.wifi.access_points.foreach((ap) => {
 			if (ap.ssid == nap_ssid) {
@@ -45,7 +62,16 @@ public class QNetwork : Gtk.Box {
 		if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
 			return;
 		}
-		var nap_ssid = (string)((NM.AccessPoint)ap).ssid.get_data();
+		var nap = (NM.AccessPoint)ap;
+		if (nap.ssid == null) {
+			debug("Skipping removal of AP with null SSID");
+			return;
+		}
+		var nap_ssid = (string)nap.ssid.get_data();
+		if (nap_ssid == null || nap_ssid == "") {
+			debug("Skipping removal of AP with empty SSID");
+			return;
+		}
 		debug(@"Removing AP $(nap_ssid)");
 
 		var current = (QNetworkItem)wifi_list.get_first_child();
@@ -67,6 +93,10 @@ public class QNetwork : Gtk.Box {
 	}
 
 	private void update_active_states() {
+		if (network.wifi.active_access_point == null) {
+			return;
+		}
+
 		var active_ap_ssid = network.wifi.active_access_point.ssid;
 
 		if (active_ap_ssid == null || active_ap_ssid == "") {
