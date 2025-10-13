@@ -22,8 +22,9 @@ public class QNotifications : Gtk.Box {
 	}
 
 	[GtkCallback]
-	public void clear_notifications() {
-		this._notifd.notifications.@foreach(n => n.dismiss());
+	public async void clear_notifications() {
+		// Dismiss all notifications, using a copy of the list to avoid modification during iteration
+		this._notifd.notifications.copy().@foreach(n => n.dismiss());
 	}
 
 	[GtkCallback]
