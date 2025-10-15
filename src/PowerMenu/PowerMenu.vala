@@ -36,8 +36,9 @@ public class PowerMenu : MorghulWindow {
 
 	[GtkCallback]
 	private void confirm() {
+		var current_option = _option;
 		this.visible = false;
-		switch (_option) {
+		switch (current_option) {
 			case PMOption.SHUTDOWN:
 				try {
 					Process.spawn_command_line_async("systemctl poweroff");
