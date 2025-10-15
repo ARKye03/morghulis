@@ -80,6 +80,9 @@ public class PowerMenu : MorghulWindow {
 			break;
 
 			default:
+				// Funny fact, this line is actually reachable, if current_option is NONE
+				// However, at no point in the code can current_option be NONE when confirm is called
+				// Nevertheless, some bloody how it happened
 				message("Unreachable code reached");
 			break;
 		}
