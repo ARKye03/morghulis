@@ -36,6 +36,7 @@ public class PowerMenu : MorghulWindow {
 
 	[GtkCallback]
 	private void confirm() {
+		this.visible = false;
 		switch (_option) {
 			case PMOption.SHUTDOWN:
 				try {
