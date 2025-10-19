@@ -14,12 +14,14 @@ public abstract class Rolltop : Gtk.Box {
 
 		_underline = new Gtk.DrawingArea() {
 			height_request = 3,
-			css_classes = { "accent", "background" }
+			css_classes = { "accent" }
 		};
 
 		_underline.set_draw_func((area, context, width, height) => {
 			if (_item_width > 0) {
-				context.set_source_rgb(1.0, 1.0, 1.0);
+				var color = _underline.get_color();
+
+				context.set_source_rgba(color.red, color.green, color.blue, color.alpha);
 				context.rectangle(_current_x - 5, 0, _item_width + 10, height);
 				context.fill();
 			}
@@ -55,18 +57,25 @@ public abstract class Rolltop : Gtk.Box {
 			return;
 		}
 
-		double x_pos = 0;
-		Graphene.Point point = { 0, 0 };
-		bool success = current_child.compute_point(items_container, point, out point);
+		Idle.add(() => {
+			double x_pos = 0;
+			Graphene.Point point = { 0, 0 };
+			bool success = current_child.compute_point(items_container, point, out point);
 
-		if (success) {
-			x_pos = point.x;
-		}
+			if (success) {
+				x_pos = point.x;
+			}
 
-		_item_width = current_child.get_width();
-		_target_x = x_pos;
+			int width = current_child.get_width();
 
-		start_animation();
+			if (width > 0) {
+				_item_width = width;
+				_target_x = x_pos;
+				start_animation();
+			}
+
+			return false;
+		});
 	}
 
 	private Gtk.Box get_items_container() {
