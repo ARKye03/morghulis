@@ -2,16 +2,17 @@ public class RiverTags : Rolltop {
 	private AstalRiver.River _river;
 	private AstalRiver.Output _output;
 	private uint _total_tags;
-	private List<WorkspaceItem> _tags;
+	private List<WorkspaceItem> _tags = new List<WorkspaceItem>();
 	private const string SHIFTTAGS_PREV = "river-shifttags --occupied --shifts -1";
 	private const string SHIFTTAGS_NEXT = "river-shifttags --occupied";
 
 	public RiverTags(AstalRiver.River river, uint max_tags = 9) {
 		this._river = river;
+		this._total_tags = max_tags;
 		string focused_output = river.get_focused_output();
 		this._output = river.get_output(focused_output);
-		this._tags = new List<WorkspaceItem>();
-		this._total_tags = max_tags;
+
+		initialize_items();
 
 		_output.changed.connect(update_css);
 		update_css();

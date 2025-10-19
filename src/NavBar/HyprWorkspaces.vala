@@ -4,6 +4,8 @@ public class HyprWorkspaces : Rolltop {
 	public HyprWorkspaces(AstalHyprland.Hyprland hyprland) {
 		this._hyprland = hyprland;
 
+		initialize_items();
+
 		update_workspaces();
 		setup_workspace_event_handlers();
 		setup_workspace_scroll();

@@ -29,6 +29,10 @@ public abstract class Rolltop : Gtk.Box {
 
 		this.append(items_box);
 		this.append(_underline);
+	}
+
+	protected void initialize_items() {
+		var items_box = get_items_container();
 
 		setup_items_container(items_box);
 	}
