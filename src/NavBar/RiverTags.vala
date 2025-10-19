@@ -1,4 +1,4 @@
-public class RiverTags : Gtk.Box {
+public class RiverTags : Rolltop {
 	private AstalRiver.River _river;
 	private AstalRiver.Output _output;
 	private uint _total_tags;
@@ -13,8 +13,13 @@ public class RiverTags : Gtk.Box {
 		this._tags = new List<WorkspaceItem>();
 		this._total_tags = max_tags;
 
-		spacing = 5;
+		_output.changed.connect(update_css);
+		update_css();
 
+		setup_scroll_handler();
+	}
+
+	protected override void setup_items_container(Gtk.Box container) {
 		for (int i = 0; i < _total_tags; i++) {
 			int tag_index = i;
 
@@ -33,14 +38,9 @@ public class RiverTags : Gtk.Box {
 			};
 			tag_button.add_css_class("empty");
 
-			this.append(tag_button);
+			add_workspace_item(container, tag_button);
 			_tags.append(tag_button);
 		}
-
-		_output.changed.connect(update_css);
-		update_css();
-
-		setup_scroll_handler();
 	}
 
 	private void setup_scroll_handler() {
@@ -81,6 +81,7 @@ public class RiverTags : Gtk.Box {
 
 	private void update_css() {
 		int index = 0;
+		int focused_index = -1;
 
 		foreach (var tag_button in _tags) {
 			uint occupied_tags = _output.occupied_tags;
@@ -89,6 +90,7 @@ public class RiverTags : Gtk.Box {
 
 			if ((focused_tags & (1 << index)) != 0) {
 				tag_button.set_css_classes({ "focused" });
+				focused_index = index;
 			} else if ((urgent_tags & (1 << index)) != 0) {
 				tag_button.set_css_classes({ "urgent" });
 			} else if ((occupied_tags & (1 << index)) != 0) {
@@ -97,6 +99,10 @@ public class RiverTags : Gtk.Box {
 				tag_button.set_css_classes({ "empty" });
 			}
 			index++;
+		}
+
+		if (focused_index >= 0) {
+			update_underline_position(focused_index);
 		}
 	}
 }

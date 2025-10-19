@@ -1,17 +1,15 @@
-public class HyprWorkspaces : Gtk.Box {
+public class HyprWorkspaces : Rolltop {
 	private AstalHyprland.Hyprland _hyprland;
 
 	public HyprWorkspaces(AstalHyprland.Hyprland hyprland) {
 		this._hyprland = hyprland;
-		this.spacing = 5;
 
-		populate_workspace_items();
 		update_workspaces();
 		setup_workspace_event_handlers();
 		setup_workspace_scroll();
 	}
 
-	private void populate_workspace_items() {
+	protected override void setup_items_container(Gtk.Box container) {
 		for (var i = 1; i <= 9; i++) {
 			int workspace_number = i;
 
@@ -32,7 +30,7 @@ public class HyprWorkspaces : Gtk.Box {
 				},
 			};
 
-			this.append(workspace_button);
+			add_workspace_item(container, workspace_button);
 		}
 	}
 
@@ -56,12 +54,15 @@ public class HyprWorkspaces : Gtk.Box {
 
 	private void update_workspaces() {
 		int index = 0;
-		var current = (WorkspaceItem)this.get_first_child();
+		var items_container = (Gtk.Box)this.get_first_child();
+		var current = (WorkspaceItem)items_container.get_first_child();
 		var focused_workspace_id = this._hyprland.focused_workspace.id;
+		int focused_index = -1;
 
 		while (current != null) {
 			if (index + 1 == focused_workspace_id) {
 				current.set_css_classes({ "focused" });
+				focused_index = index;
 			} else if (workspace_exists(index + 1)) {
 				current.set_css_classes({ "occupied" });
 			} else {
@@ -69,6 +70,10 @@ public class HyprWorkspaces : Gtk.Box {
 			}
 			current = (WorkspaceItem)current.get_next_sibling();
 			index++;
+		}
+
+		if (focused_index >= 0) {
+			update_underline_position(focused_index);
 		}
 	}
 
