@@ -1,50 +1,8 @@
-public class TagButton : Gtk.Button {
-	private AstalRiver.Output _output;
-	private Gtk.GestureClick _rclick;
-	private int _index;
-
-	public TagButton(AstalRiver.Output output, int index, string icon) {
-		this._output = output;
-		this._index = index;
-		child = new Gtk.Image.from_icon_name(icon) {
-			pixel_size = 20
-		};
-		add_css_class("empty");
-		this._rclick = new Gtk.GestureClick() {
-			button = Gdk.BUTTON_SECONDARY,
-		};
-
-		clicked.connect(() => {
-			this._output.focused_tags = 1 << this._index;
-		});
-		_rclick.pressed.connect(() => {
-			this._output.focused_tags ^= 1 << this._index;
-		});
-		add_controller(_rclick);
-	}
-
-	public void update_css() {
-		uint occupied_tags = _output.occupied_tags;
-		uint focused_tags = _output.focused_tags;
-		uint urgent_tags = _output.urgent_tags;
-
-		if ((focused_tags & (1 << _index)) != 0) {
-			set_css_classes({ "focused" });
-		} else if ((urgent_tags & (1 << _index)) != 0) {
-			set_css_classes({ "urgent" });
-		} else if ((occupied_tags & (1 << _index)) != 0) {
-			set_css_classes({ "occupied" });
-		} else {
-			set_css_classes({ "empty" });
-		}
-	}
-}
-
 public class RiverTags : Gtk.Box {
 	private AstalRiver.River _river;
 	private AstalRiver.Output _output;
 	private uint _total_tags;
-	private List<TagButton> _tags;
+	private List<WorkspaceItem> _tags;
 	private const string SHIFTTAGS_PREV = "river-shifttags --occupied --shifts -1";
 	private const string SHIFTTAGS_NEXT = "river-shifttags --occupied";
 
@@ -52,13 +10,29 @@ public class RiverTags : Gtk.Box {
 		this._river = river;
 		string focused_output = river.get_focused_output();
 		this._output = river.get_output(focused_output);
-		this._tags = new List<TagButton>();
+		this._tags = new List<WorkspaceItem>();
 		this._total_tags = max_tags;
 
 		spacing = 5;
 
 		for (int i = 0; i < _total_tags; i++) {
-			var tag_button = new TagButton(_output, i, NavBar.icon_names[i]);
+			int tag_index = i;
+
+			var tag_button = new WorkspaceItem(
+				() => {
+				this._output.focused_tags = 1 << tag_index;
+			},
+				null,
+				() => {
+				this._output.focused_tags ^= 1 << tag_index;
+			}
+							 ) {
+				child = new Gtk.Image.from_icon_name(NavBar.icon_names[i]) {
+					pixel_size = 20
+				}
+			};
+			tag_button.add_css_class("empty");
+
 			this.append(tag_button);
 			_tags.append(tag_button);
 		}
@@ -106,8 +80,23 @@ public class RiverTags : Gtk.Box {
 	}
 
 	private void update_css() {
+		int index = 0;
+
 		foreach (var tag_button in _tags) {
-			tag_button.update_css();
+			uint occupied_tags = _output.occupied_tags;
+			uint focused_tags = _output.focused_tags;
+			uint urgent_tags = _output.urgent_tags;
+
+			if ((focused_tags & (1 << index)) != 0) {
+				tag_button.set_css_classes({ "focused" });
+			} else if ((urgent_tags & (1 << index)) != 0) {
+				tag_button.set_css_classes({ "urgent" });
+			} else if ((occupied_tags & (1 << index)) != 0) {
+				tag_button.set_css_classes({ "occupied" });
+			} else {
+				tag_button.set_css_classes({ "empty" });
+			}
+			index++;
 		}
 	}
 }
