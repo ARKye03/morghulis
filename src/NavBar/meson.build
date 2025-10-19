@@ -1,4 +1,4 @@
-project_resources += files('NavBar.vala')
+project_resources += files('NavBar.vala', 'WorkspaceItem.vala')
 
 if astal_hyprland_dep.found()
     project_resources += files('HyprWorkspaces.vala')
