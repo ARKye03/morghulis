@@ -65,7 +65,7 @@ public class ScreenRecorder : Object {
 			Process.spawn_command_line_sync("slurp", out geometry);
 			geometry = geometry.strip();
 
-			string[] args = { "wf-recorder", "-g", geometry, "--pixel-format", "yuv420p", "-f", path };
+			string[] args = { "wl-screenrec", "--geometry", geometry, "--filename", path };
 			this.recorder = new Subprocess.newv(args, SubprocessFlags.NONE);
 			this.recording = true;
 		} catch (Error e) {
