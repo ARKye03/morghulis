@@ -6,8 +6,45 @@ template $ScreenRecord: $MorghulWindow {
         "screen_rec_overlay",
     ]
 
-    title: "OnScreenDisplay";
-    namespace: "Morghulis.OnScreenDisplay";
+    title: "ScreenRecord";
+    namespace: "Morghulis.ScreenRecord";
     layer: overlay;
     exclusivity: ignore;
+    keymode: exclusive;
+
+    GestureClick {
+        pressed => $on_close();
+    }
+
+    EventControllerKey {
+        key-released => $key_released();
+    }
+
+    Overlay {
+        [overlay]
+        Box {
+            orientation: vertical;
+            valign: end;
+            margin-bottom: 40;
+
+            Box {
+                halign: center;
+                spacing: 12;
+
+                Button {
+                    icon-name: "";
+                    clicked => $on_screenshot_interactive();
+                }
+
+                Button {
+                    icon-name: "computer-symbolic";
+                    clicked => $on_screenshot_full();
+                }
+
+                Button record_btn {
+                    clicked => $on_toggle_record();
+                }
+            }
+        }
+    }
 }

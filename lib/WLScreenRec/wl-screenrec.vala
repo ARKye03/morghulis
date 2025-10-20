@@ -17,7 +17,7 @@ public class ScreenRecorder : Object {
 		this.recording = false;
 	}
 
-	public async string? take_region_screenshot(bool is_region, string? filepath) {
+	public async string? take_screenshot(bool is_region, string? filepath) {
 		string path = filepath;
 		if (path == null || path == "") {
 			string picture_dir = Environment.get_user_special_dir(UserDirectory.PICTURES);
