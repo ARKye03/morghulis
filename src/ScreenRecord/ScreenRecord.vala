@@ -43,7 +43,7 @@ public class ScreenRecord : MorghulWindow {
 	}
 
 	[GtkCallback]
-	private void on_screenshot_full() {
+	private async void on_screenshot_full() {
 		this.visible = false;
 		_screen_rec.take_screenshot.begin(false, null, (obj, res) => {
 			string? path = _screen_rec.take_screenshot.end(res);
@@ -60,7 +60,7 @@ public class ScreenRecord : MorghulWindow {
 	}
 
 	[GtkCallback]
-	private void on_toggle_record() {
+	private async void on_toggle_record() {
 		if (_screen_rec.recording) {
 			_screen_rec.stop_record();
 			AstalNotifd.send_notification.begin(new AstalNotifd.Notification() {
@@ -75,10 +75,10 @@ public class ScreenRecord : MorghulWindow {
 		}
 	}
 
-	[GtkCallback]
-	private void on_close() {
-		this.visible = false;
-	}
+	//  [GtkCallback]
+	//  private void on_close() {
+	//  	this.visible = false;
+	//  }
 
 	[GtkCallback]
 	public void key_released(uint keyval, uint _, Gdk.ModifierType __) {

@@ -12,10 +12,6 @@ template $ScreenRecord: $MorghulWindow {
     exclusivity: ignore;
     keymode: exclusive;
 
-    GestureClick {
-        pressed => $on_close();
-    }
-
     EventControllerKey {
         key-released => $key_released();
     }
