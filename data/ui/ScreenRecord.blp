@@ -1,0 +1,13 @@
+using Gtk 4.0;
+
+template $ScreenRecord: $MorghulWindow {
+    styles [
+        "all_unset",
+        "screen_rec_overlay",
+    ]
+
+    title: "OnScreenDisplay";
+    namespace: "Morghulis.OnScreenDisplay";
+    layer: overlay;
+    exclusivity: ignore;
+}
