@@ -70,8 +70,7 @@ public class ScreenRecord : MorghulWindow {
 			});
 		} else {
 			this.visible = false;
-			_screen_rec.start_record(null);
-			this.visible = true;
+			_screen_rec.start_record(false, null);
 		}
 	}
 

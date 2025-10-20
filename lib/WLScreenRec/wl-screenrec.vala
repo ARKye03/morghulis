@@ -43,7 +43,7 @@ public class ScreenRecorder : Object {
 		}
 	}
 
-	public void start_record(string? file_path) {
+	public void start_record(bool is_region, string? file_path) {
 		if (this.recording) {
 			return;
 		}
@@ -61,11 +61,20 @@ public class ScreenRecorder : Object {
 				parent.make_directory_with_parents();
 			}
 
-			string geometry;
-			Process.spawn_command_line_sync("slurp", out geometry);
-			geometry = geometry.strip();
+			string[] args;
+			if (is_region) {
+				string geometry;
+				int exit_status;
+				Process.spawn_command_line_sync("slurp", out geometry, null, out exit_status);
+				geometry = geometry.strip();
+				if (geometry == "" || exit_status != 0) {
+					return;
+				}
+				args = { "wl-screenrec", "--geometry", geometry, "--filename", path };
+			} else {
+				args = { "wl-screenrec", "--filename", path };
+			}
 
-			string[] args = { "wl-screenrec", "--geometry", geometry, "--filename", path };
 			this.recorder = new Subprocess.newv(args, SubprocessFlags.NONE);
 			this.recording = true;
 		} catch (Error e) {
