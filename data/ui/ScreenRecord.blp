@@ -1,0 +1,103 @@
+using Gtk 4.0;
+
+template $ScreenRecord: $MorghulWindow {
+    styles [
+        "all_unset",
+        "screen_rec_overlay",
+    ]
+
+    title: "ScreenRecord";
+    namespace: "Morghulis.ScreenRecord";
+    layer: overlay;
+    exclusivity: ignore;
+    keymode: exclusive;
+
+    EventControllerKey {
+        key-released => $key_released();
+    }
+
+    Overlay {
+        [overlay]
+        Box main_box {
+            orientation: vertical;
+            valign: end;
+            halign: center;
+            margin-bottom: 70;
+            spacing: 10;
+
+            styles [
+                "background",
+                "padding_10",
+                "rounded",
+                "screen_rec_box",
+            ]
+
+            Box button_container {
+                halign: center;
+                spacing: 12;
+
+                Button screenshot_interactive_btn {
+                    tooltip-text: _("Select Area");
+                    clicked => $on_screenshot_interactive();
+                    can-focus: false;
+
+                    Image {
+                        icon-name: "edit-cut-symbolic";
+                        icon-size: large;
+                    }
+                }
+
+                Button screenshot_full_btn {
+                    tooltip-text: _("Full Screen");
+                    clicked => $on_screenshot_full();
+                    can-focus: false;
+
+                    Image {
+                        icon-name: "computer-symbolic";
+                        icon-size: large;
+                    }
+                }
+
+                Button toggle_record_btn {
+                    tooltip-text: _("Start/Stop Recording");
+                    clicked => $on_toggle_record();
+                    can-focus: false;
+
+                    Image {
+                        icon-name: bind $get_status_icon(template.screen_rec as <$ScreenRecorder>.is_recording) as <string>;
+                        icon-size: large;
+                    }
+                }
+            }
+
+            Revealer {
+                reveal-child: bind template.screen_rec as <$ScreenRecorder>.is_recording;
+                transition-duration: 250;
+                transition-type: slide_down;
+
+                Box {
+                    halign: center;
+                    spacing: 10;
+
+                    Image status_icon {
+                        icon-name: "media-record-symbolic";
+                        icon-size: large;
+
+                        styles [
+                            "is_recording",
+                        ]
+                    }
+
+                    Label status_label {
+                        label: "00:00";
+
+                        styles [
+                            "title-3",
+                            "numeric",
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

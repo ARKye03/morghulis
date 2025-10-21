@@ -2,6 +2,7 @@ blps = files(
     'NavBar.blp',
     'NotificationContent.blp',
     'OnScreenDisplay.blp',
+    'ScreenRecord.blp',
     'PowerMenu.blp',
 )
 

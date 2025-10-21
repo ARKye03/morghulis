@@ -1,0 +1,1 @@
+project_resources += files('wl-screenrec.vala')

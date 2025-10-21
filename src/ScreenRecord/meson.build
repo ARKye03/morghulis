@@ -1,0 +1,1 @@
+project_resources += files('ScreenRecord.vala')

@@ -167,3 +167,42 @@ circularprogress {
         }
     }
 }
+
+.screen_rec_overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+@keyframes recording_pulse {
+    0% {
+        color: #ffffff;
+        transform: scale(1);
+    }
+
+    50% {
+        color: #ff0000;
+        transform: scale(1.15);
+    }
+
+    100% {
+        color: #ffffff;
+        transform: scale(1);
+    }
+}
+
+.is_recording {
+    animation: recording_pulse 1.5s ease-in-out infinite;
+}
+
+// Probably the most unnecessary CSS class I've ever stolen taken from <https://polypane.app/css-3d-transform-examples/>
+.screen_rec_box {
+    transform:
+        perspective(900px) rotateX(60deg) scale(0.7);
+    box-shadow: 0px 8px 20px #000000;
+    transition: 200ms ease all;
+
+    &:hover,
+    &.keyboard-focused {
+        transform:
+            rotate(0deg) scale(1) translateY(10px);
+    }
+}

@@ -24,6 +24,7 @@ deps = [
     dependency('gio-unix-2.0'),
     dependency('libadwaita-1', version: '>= 1.6.0'),
     dependency('libgtop-2.0'),
+    dependency('libportal'),
 ]
 
 # Add optional dependencies if found
@@ -50,6 +51,7 @@ subdir('Notifications')
 subdir('OnScreenDisplay')
 subdir('QuickMenu')
 subdir('Runner')
+subdir('ScreenRecord')
 
 executable(
     project_name,
