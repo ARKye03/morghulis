@@ -38,11 +38,7 @@ public class ScreenRecord : MorghulWindow {
 			string? path = screen_rec.take_screenshot.end(res);
 			if (path != null) {
 				debug("Screenshot saved to: %s", path);
-				AstalNotifd.send_notification.begin(new AstalNotifd.Notification() {
-					app_name = "Morghulis ScreenRecord",
-					body = "Screenshot saved to: %s".printf(path),
-					app_icon = APP_ICON_NAME,
-				});
+				send_screenshot_notification(path);
 			}
 		});
 	}
@@ -54,13 +50,58 @@ public class ScreenRecord : MorghulWindow {
 			string? path = screen_rec.take_screenshot.end(res);
 			if (path != null) {
 				debug("Screenshot saved to: %s", path);
-				AstalNotifd.send_notification.begin(new AstalNotifd.Notification() {
-					app_name = "Morghulis ScreenRecord",
-					body = "Screenshot saved to: %s".printf(path),
-					app_icon = APP_ICON_NAME,
-				});
+				send_screenshot_notification(path);
 			}
 		});
+	}
+
+	private void send_screenshot_notification(string path) {
+		var n = new AstalNotifd.Notification() {
+			app_name = "Morghulis ScreenRecord",
+			body = "Screenshot saved to: %s".printf(path),
+			app_icon = APP_ICON_NAME,
+		};
+
+		var copy_action = new AstalNotifd.Action("copy", "Copy");
+
+		copy_action.invoked.connect(() => {
+			copy_image_to_clipboard(path);
+		});
+
+		var open_action = new AstalNotifd.Action("open", "Open Directory");
+		open_action.invoked.connect(() => {
+			open_image_directory(path);
+		});
+
+		n.add_action(copy_action);
+		n.add_action(open_action);
+
+		AstalNotifd.send_notification.begin(n);
+	}
+
+	private void copy_image_to_clipboard(string path) {
+		try {
+			var file = File.new_for_path(path);
+			var texture = Gdk.Texture.from_file(file);
+			var clipboard = Gdk.Display.get_default().get_clipboard();
+			clipboard.set_texture(texture);
+			debug("Image copied to clipboard: %s", path);
+		} catch (Error e) {
+			critical("Failed to copy image to clipboard: %s", e.message);
+		}
+	}
+
+	private void open_image_directory(string path) {
+		try {
+			var file = File.new_for_path(path);
+			var parent = file.get_parent();
+			if (parent != null) {
+				AppInfo.launch_default_for_uri(parent.get_uri(), null);
+				debug("Opened directory: %s", parent.get_path());
+			}
+		} catch (Error e) {
+			critical("Failed to open directory: %s", e.message);
+		}
 	}
 
 	[GtkCallback]
