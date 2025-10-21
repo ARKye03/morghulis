@@ -18,7 +18,7 @@ template $ScreenRecord: $MorghulWindow {
 
     Overlay {
         [overlay]
-        Box {
+        Box main_box {
             orientation: vertical;
             valign: end;
             halign: center;
@@ -32,13 +32,14 @@ template $ScreenRecord: $MorghulWindow {
                 "screen_rec_box",
             ]
 
-            Box {
+            Box button_container {
                 halign: center;
                 spacing: 12;
 
-                Button {
+                Button screenshot_interactive_btn {
                     tooltip-text: _("Select Area");
                     clicked => $on_screenshot_interactive();
+                    can-focus: false;
 
                     Image {
                         icon-name: "edit-cut-symbolic";
@@ -46,9 +47,10 @@ template $ScreenRecord: $MorghulWindow {
                     }
                 }
 
-                Button {
+                Button screenshot_full_btn {
                     tooltip-text: _("Full Screen");
                     clicked => $on_screenshot_full();
+                    can-focus: false;
 
                     Image {
                         icon-name: "computer-symbolic";
@@ -56,9 +58,10 @@ template $ScreenRecord: $MorghulWindow {
                     }
                 }
 
-                Button {
+                Button toggle_record_btn {
                     tooltip-text: _("Start/Stop Recording");
                     clicked => $on_toggle_record();
+                    can-focus: false;
 
                     Image {
                         icon-name: bind $get_status_icon(template.screen_rec as <$ScreenRecorder>.is_recording) as <string>;

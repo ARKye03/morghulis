@@ -2,7 +2,10 @@
 public class ScreenRecord : MorghulWindow {
 	private AstalNotifd.Notifd _notifd;
 	private uint _timer_id = 0;
+	private uint _focus_timeout_id = 0;
 	private const string APP_ICON_NAME = "dialog-information-symbolic";
+	private int _focused_button_index = 0;
+	private Gtk.Button[] _buttons;
 
 	public ScreenRecorder screen_rec { get; private set; }
 
@@ -12,6 +15,18 @@ public class ScreenRecord : MorghulWindow {
 	[GtkChild]
 	private unowned Gtk.Image status_icon;
 
+	[GtkChild]
+	private unowned Gtk.Button screenshot_interactive_btn;
+
+	[GtkChild]
+	private unowned Gtk.Button screenshot_full_btn;
+
+	[GtkChild]
+	private unowned Gtk.Button toggle_record_btn;
+
+	[GtkChild]
+	private unowned Gtk.Box main_box;
+
 	construct {
 		this.screen_rec = ScreenRecorder.get_default();
 		this._notifd = AstalNotifd.Notifd.get_default();
@@ -20,6 +35,8 @@ public class ScreenRecord : MorghulWindow {
 		this.default_width = monitor_geometry.width;
 		this.default_height = monitor_geometry.height;
 
+		_buttons = { screenshot_interactive_btn, screenshot_full_btn, toggle_record_btn };
+
 		screen_rec.notify["is-recording"].connect(() => {
 			if (screen_rec.is_recording) {
 				start_timer();
@@ -27,6 +44,12 @@ public class ScreenRecord : MorghulWindow {
 			} else {
 				status_icon.remove_css_class("is_recording");
 				stop_timer();
+			}
+		});
+
+		this.notify["visible"].connect(() => {
+			if (this.visible) {
+				focus_button(0);
 			}
 		});
 	}
@@ -161,10 +184,55 @@ public class ScreenRecord : MorghulWindow {
 		}
 	}
 
+	private void focus_button(int index) {
+		if (index < 0 || index >= _buttons.length) {
+			return;
+		}
+
+		for (int i = 0; i < _buttons.length; i++) {
+			_buttons[i].remove_css_class("suggested-action");
+		}
+
+		_focused_button_index = index;
+		_buttons[index].add_css_class("suggested-action");
+		main_box.add_css_class("keyboard-focused");
+
+		reset_focus_timeout();
+	}
+
+	private void reset_focus_timeout() {
+		if (_focus_timeout_id != 0) {
+			Source.remove(_focus_timeout_id);
+		}
+
+		_focus_timeout_id = Timeout.add_seconds(5, () => {
+			main_box.remove_css_class("keyboard-focused");
+			_focus_timeout_id = 0;
+			return false;
+		});
+	}
+
 	[GtkCallback]
 	public void key_released(uint keyval, uint _, Gdk.ModifierType __) {
 		if (keyval == Gdk.Key.Escape) {
 			this.visible = false;
+		} else if (keyval == Gdk.Key.Left) {
+			int new_index = _focused_button_index - 1;
+			if (new_index < 0) {
+				new_index = _buttons.length - 1;
+			}
+			focus_button(new_index);
+		} else if (keyval == Gdk.Key.Right) {
+			int new_index = (_focused_button_index + 1) % _buttons.length;
+			focus_button(new_index);
+		} else if (keyval == Gdk.Key.Return || keyval == Gdk.Key.space) {
+			_buttons[_focused_button_index].activate();
+		}
+	}
+
+	~ScreenRecord() {
+		if (_focus_timeout_id != 0) {
+			Source.remove(_focus_timeout_id);
 		}
 	}
 }
