@@ -10,11 +10,11 @@ public class ScreenRecorder : Object {
 	private Xdp.Portal portal;
 	private Subprocess recorder;
 
-	public bool recording { get; private set; }
+	public bool is_recording { get; private set; }
 
 	construct {
 		this.portal = new Xdp.Portal();
-		this.recording = false;
+		this.is_recording = false;
 	}
 
 	public async string? take_screenshot(bool is_region, string? filepath) {
@@ -44,7 +44,7 @@ public class ScreenRecorder : Object {
 	}
 
 	public void start_record(bool is_region, string? file_path) {
-		if (this.recording) {
+		if (this.is_recording) {
 			return;
 		}
 		string path = file_path;
@@ -76,18 +76,18 @@ public class ScreenRecorder : Object {
 			}
 
 			this.recorder = new Subprocess.newv(args, SubprocessFlags.NONE);
-			this.recording = true;
+			this.is_recording = true;
 		} catch (Error e) {
 			critical("%s\n", e.message);
 		}
 	}
 
 	public void stop_record() {
-		if (!this.recording) {
+		if (!this.is_recording) {
 			return;
 		}
 		this.recorder.send_signal(15);
 		this.recorder = null;
-		this.recording = false;
+		this.is_recording = false;
 	}
 }

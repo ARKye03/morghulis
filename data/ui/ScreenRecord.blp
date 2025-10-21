@@ -23,6 +23,7 @@ template $ScreenRecord: $MorghulWindow {
             valign: end;
             halign: center;
             margin-bottom: 70;
+            spacing: 10;
 
             styles [
                 "background",
@@ -35,17 +36,39 @@ template $ScreenRecord: $MorghulWindow {
                 spacing: 12;
 
                 Button {
-                    icon-name: "";
+                    icon-name: "edit-cut-symbolic";
+                    tooltip-text: _("Select Area");
                     clicked => $on_screenshot_interactive();
                 }
 
                 Button {
                     icon-name: "computer-symbolic";
+                    tooltip-text: _("Full Screen");
                     clicked => $on_screenshot_full();
                 }
 
-                Button record_btn {
+                Button {
+                    icon-name: bind $get_status_icon(template.screen_rec as <$ScreenRecorder>.is_recording) as <string>;
+                    tooltip-text: _("Start/Stop Recording");
                     clicked => $on_toggle_record();
+                }
+            }
+
+            Revealer {
+                reveal-child: bind template.screen_rec as <$ScreenRecorder>.is_recording;
+                transition-duration: 250;
+                transition-type: slide_down;
+
+                Box {
+                    halign: center;
+
+                    Image {
+                        icon-name: bind $get_status_icon() as <string>;
+                    }
+
+                    Label {
+                        label: bind $get_status_label(template.screen_rec as <$ScreenRecorder>.is_recording) as <string>;
+                    }
                 }
             }
         }
