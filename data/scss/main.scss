@@ -171,3 +171,24 @@ circularprogress {
 .screen_rec_overlay {
     background-color: rgba(0, 0, 0, 0.3);
 }
+
+@keyframes recording_pulse {
+    0% {
+        color: #ffffff;
+        transform: scale(1);
+    }
+
+    50% {
+        color: #ff0000;
+        transform: scale(1.15);
+    }
+
+    100% {
+        color: #ffffff;
+        transform: scale(1);
+    }
+}
+
+.is_recording {
+    animation: recording_pulse 1.5s ease-in-out infinite;
+}

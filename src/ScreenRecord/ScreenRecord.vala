@@ -1,9 +1,16 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/ScreenRecord.ui")]
 public class ScreenRecord : MorghulWindow {
 	private AstalNotifd.Notifd _notifd;
+	private uint _timer_id = 0;
 	private const string APP_ICON_NAME = "dialog-information-symbolic";
 
 	public ScreenRecorder screen_rec { get; private set; }
+
+	[GtkChild]
+	private unowned Gtk.Label status_label;
+
+	[GtkChild]
+	private unowned Gtk.Image status_icon;
 
 	construct {
 		this.screen_rec = ScreenRecorder.get_default();
@@ -12,6 +19,16 @@ public class ScreenRecord : MorghulWindow {
 
 		this.default_width = monitor_geometry.width;
 		this.default_height = monitor_geometry.height;
+
+		screen_rec.notify["is-recording"].connect(() => {
+			if (screen_rec.is_recording) {
+				start_timer();
+				status_icon.add_css_class("is_recording");
+			} else {
+				status_icon.remove_css_class("is_recording");
+				stop_timer();
+			}
+		});
 	}
 
 	[GtkCallback]
@@ -61,12 +78,36 @@ public class ScreenRecord : MorghulWindow {
 		}
 	}
 
-	[GtkCallback]
-	private string get_status_label(bool is_recording) {
-		if (is_recording) {
-			return "Recording...";
+	private void start_timer() {
+		if (_timer_id != 0) {
+			Source.remove(_timer_id);
+		}
+		_timer_id = Timeout.add(100, () => {
+			update_status_label();
+			return true;
+		});
+		update_status_label();
+	}
+
+	private void stop_timer() {
+		if (_timer_id != 0) {
+			Source.remove(_timer_id);
+			_timer_id = 0;
+		}
+		status_label.label = "00:00";
+	}
+
+	private void update_status_label() {
+		double duration = screen_rec.get_recording_duration();
+		int total_seconds = (int)duration;
+		int hours = total_seconds / 3600;
+		int minutes = (total_seconds % 3600) / 60;
+		int seconds = total_seconds % 60;
+
+		if (hours > 0) {
+			status_label.label = "%02d:%02d:%02d".printf(hours, minutes, seconds);
 		} else {
-			return "Not Recording";
+			status_label.label = "%02d:%02d".printf(minutes, seconds);
 		}
 	}
 

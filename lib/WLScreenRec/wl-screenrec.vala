@@ -9,12 +9,22 @@ public class ScreenRecorder : Object {
 
 	private Xdp.Portal portal;
 	private Subprocess recorder;
+	private int64 recording_start_time;
 
 	public bool is_recording { get; private set; }
 
 	construct {
 		this.portal = new Xdp.Portal();
 		this.is_recording = false;
+		this.recording_start_time = 0;
+	}
+
+	public double get_recording_duration() {
+		if (!this.is_recording || this.recording_start_time == 0) {
+			return 0.0;
+		}
+		int64 current_time = GLib.get_monotonic_time();
+		return (current_time - this.recording_start_time) / 1000000.0;
 	}
 
 	public async string? take_screenshot(bool is_region, string? filepath) {
@@ -70,12 +80,13 @@ public class ScreenRecorder : Object {
 				if (geometry == "" || exit_status != 0) {
 					return;
 				}
-				args = { "wl-screenrec", "--geometry", geometry, "--filename", path };
+				args = { "wl-screenrec", "--audio", "--geometry", geometry, "--filename", path };
 			} else {
-				args = { "wl-screenrec", "--filename", path };
+				args = { "wl-screenrec", "--audio", "--filename", path };
 			}
 
 			this.recorder = new Subprocess.newv(args, SubprocessFlags.NONE);
+			this.recording_start_time = GLib.get_monotonic_time();
 			this.is_recording = true;
 		} catch (Error e) {
 			critical("%s\n", e.message);
@@ -88,6 +99,7 @@ public class ScreenRecorder : Object {
 		}
 		this.recorder.send_signal(15);
 		this.recorder = null;
+		this.recording_start_time = 0;
 		this.is_recording = false;
 	}
 }
