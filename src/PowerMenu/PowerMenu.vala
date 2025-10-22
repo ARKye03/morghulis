@@ -183,10 +183,9 @@ public class PowerMenu : MorghulWindow {
 		if (keyval == Gdk.Key.Escape) {
 			this.visible = false;
 		} else if (keyval == Gdk.Key.Left) {
-			uint new_index = _focused_button_index - 1;
-			if (new_index < 0) {
-				new_index = current_buttons.length() - 1;
-			}
+			uint new_index = _focused_button_index == 0
+							 ? current_buttons.length() - 1
+							 : _focused_button_index - 1;
 			focus_button(new_index);
 		} else if (keyval == Gdk.Key.Right) {
 			uint new_index = (_focused_button_index + 1) % current_buttons.length();
