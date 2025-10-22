@@ -46,13 +46,6 @@ public class PowerMenu : MorghulWindow {
 			}
 		}
 
-		foreach (var btn in _action_buttons) {
-			btn.can_focus = false;
-		}
-		foreach (var btn in _confirm_buttons) {
-			btn.can_focus = false;
-		}
-
 		this.notify["visible"].connect(() => {
 			if (!visible) {
 				stapel.visible_child_name = "actions";
