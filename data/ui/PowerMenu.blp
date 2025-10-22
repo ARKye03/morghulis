@@ -16,7 +16,7 @@ template $PowerMenu: $MorghulWindow {
         key-released => $key_released();
     }
 
-    Box main_box {
+    Box {
         orientation: vertical;
         spacing: 10;
 
@@ -42,12 +42,12 @@ template $PowerMenu: $MorghulWindow {
             StackPage {
                 name: "actions";
 
-                child: Box {
+                child: Box actions_box {
                     orientation: horizontal;
                     spacing: 10;
                     homogeneous: true;
 
-                    Button lock_btn {
+                    Button {
                         tooltip-text: _("Lock Screen");
                         clicked => $just_lock();
                         can-focus: false;
@@ -58,7 +58,7 @@ template $PowerMenu: $MorghulWindow {
                         }
                     }
 
-                    Button shutdown_btn {
+                    Button {
                         tooltip-text: _("Shutdown");
                         clicked => $set_shutdown();
                         can-focus: false;
@@ -69,7 +69,7 @@ template $PowerMenu: $MorghulWindow {
                         }
                     }
 
-                    Button reboot_btn {
+                    Button {
                         tooltip-text: _("Restart");
                         clicked => $set_reboot();
                         can-focus: false;
@@ -80,7 +80,7 @@ template $PowerMenu: $MorghulWindow {
                         }
                     }
 
-                    Button suspend_btn {
+                    Button {
                         tooltip-text: _("Suspend");
                         clicked => $set_suspend();
                         can-focus: false;
@@ -92,18 +92,6 @@ template $PowerMenu: $MorghulWindow {
                     }
 
                     Button {
-                        visible: false;
-                        tooltip-text: _("Hibernate");
-                        clicked => $set_hibernate();
-                        can-focus: false;
-
-                        Image {
-                            icon-name: "hibernate-symbolic";
-                            pixel-size: 64;
-                        }
-                    }
-
-                    Button logout_btn {
                         tooltip-text: _("Logout");
                         clicked => $set_logout();
                         can-focus: false;
@@ -119,13 +107,13 @@ template $PowerMenu: $MorghulWindow {
             StackPage {
                 name: "confirmation";
 
-                child: Box {
+                child: Box dialog_box {
                     spacing: 10;
                     halign: center;
                     hexpand: true;
                     homogeneous: true;
 
-                    Button cancel_btn {
+                    Button {
                         valign: center;
                         clicked => $cancel();
                         can-focus: false;
@@ -136,7 +124,7 @@ template $PowerMenu: $MorghulWindow {
                         }
                     }
 
-                    Button confirm_btn {
+                    Button {
                         valign: center;
                         clicked => $confirm();
                         can-focus: false;

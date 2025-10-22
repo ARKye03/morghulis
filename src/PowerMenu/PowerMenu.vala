@@ -3,52 +3,48 @@ private enum PMOption {
 	SHUTDOWN,
 	REBOOT,
 	SUSPEND,
-	HIBERNATE,
 	LOGOUT
 }
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerMenu.ui")]
 public class PowerMenu : MorghulWindow {
 	private PMOption _option;
-	private int _focused_button_index = 0;
-	private Gtk.Button[] _action_buttons;
-	private Gtk.Button[] _confirm_buttons;
-	private uint _focus_timeout_id = 0;
+	private uint _focused_button_index = 0;
+	private List<Gtk.Button> _action_buttons;
+	private List<Gtk.Button> _confirm_buttons;
 	public string uptime { get; set; }
 
 	[GtkChild]
 	private unowned Gtk.Stack stapel;
 
 	[GtkChild]
-	private unowned Gtk.Button lock_btn;
+	private unowned Gtk.Box actions_box;
 
 	[GtkChild]
-	private unowned Gtk.Button shutdown_btn;
-
-	[GtkChild]
-	private unowned Gtk.Button reboot_btn;
-
-	[GtkChild]
-	private unowned Gtk.Button suspend_btn;
-
-	[GtkChild]
-	private unowned Gtk.Button logout_btn;
-
-	[GtkChild]
-	private unowned Gtk.Button cancel_btn;
-
-	[GtkChild]
-	private unowned Gtk.Button confirm_btn;
-
-	[GtkChild]
-	private unowned Gtk.Box main_box;
+	private unowned Gtk.Box dialog_box;
 
 	construct {
 		_option = PMOption.NONE;
+		_action_buttons = new List<Gtk.Button>();
+		_confirm_buttons = new List<Gtk.Button>();
 
 		Morghulis.instance.bind_property("uptime", this, "uptime", BindingFlags.SYNC_CREATE);
 
-		_action_buttons = { lock_btn, shutdown_btn, reboot_btn, suspend_btn, logout_btn };
-		_confirm_buttons = { cancel_btn, confirm_btn };
+		{
+			var current_action_button = (Gtk.Button)actions_box.get_first_child();
+
+			while (current_action_button != null) {
+				_action_buttons.append(current_action_button);
+				current_action_button = (Gtk.Button)current_action_button.get_next_sibling();
+			}
+		}
+		{
+			var current_confirm_button = (Gtk.Button)dialog_box.get_first_child();
+
+			while (current_confirm_button != null) {
+				_confirm_buttons.append(current_confirm_button);
+				current_confirm_button = (Gtk.Button)current_confirm_button.get_next_sibling();
+			}
+		}
 
 		foreach (var btn in _action_buttons) {
 			btn.can_focus = false;
@@ -61,11 +57,6 @@ public class PowerMenu : MorghulWindow {
 			if (!visible) {
 				stapel.visible_child_name = "actions";
 				_option = PMOption.NONE;
-				if (_focus_timeout_id != 0) {
-					Source.remove(_focus_timeout_id);
-					_focus_timeout_id = 0;
-				}
-				main_box.remove_css_class("keyboard-focused");
 			} else {
 				focus_button(0);
 			}
@@ -115,14 +106,6 @@ public class PowerMenu : MorghulWindow {
 				}
 			break;
 
-			case PMOption.HIBERNATE:
-				try {
-					Process.spawn_command_line_async("systemctl hibernate");
-				} catch (SpawnError e) {
-					warning("Failed to hibernate: %s", e.message);
-				}
-			break;
-
 			case PMOption.LOGOUT:
 				try {
 					Process.spawn_command_line_async(@"loginctl terminate-user $(Morghulis.user_name)");
@@ -162,13 +145,6 @@ public class PowerMenu : MorghulWindow {
 	}
 
 	[GtkCallback]
-	private void set_hibernate() {
-		debug("Set Hibernate");
-		_option = PMOption.HIBERNATE;
-		stapel.visible_child_name = "confirmation";
-	}
-
-	[GtkCallback]
 	private void set_logout() {
 		debug("Set Logout");
 		_option = PMOption.LOGOUT;
@@ -185,12 +161,12 @@ public class PowerMenu : MorghulWindow {
 		}
 	}
 
-	private void focus_button(int index) {
-		var current_buttons = stapel.visible_child_name == "actions"
-							  ? _action_buttons
-							  : _confirm_buttons;
+	private void focus_button(uint index) {
+		unowned List<Gtk.Button> current_buttons = stapel.visible_child_name == "actions"
+												   ? _action_buttons
+												   : _confirm_buttons;
 
-		if (index < 0 || index >= current_buttons.length) {
+		if (index < 0 || index >= current_buttons.length()) {
 			return;
 		}
 
@@ -202,49 +178,28 @@ public class PowerMenu : MorghulWindow {
 		}
 
 		_focused_button_index = index;
-		current_buttons[index].add_css_class("suggested-action");
-		main_box.add_css_class("keyboard-focused");
-
-		reset_focus_timeout();
-	}
-
-	private void reset_focus_timeout() {
-		if (_focus_timeout_id != 0) {
-			Source.remove(_focus_timeout_id);
-		}
-
-		_focus_timeout_id = Timeout.add_seconds(5, () => {
-			main_box.remove_css_class("keyboard-focused");
-			_focus_timeout_id = 0;
-			return false;
-		});
+		current_buttons.nth_data(index).add_css_class("suggested-action");
 	}
 
 	[GtkCallback]
 	public void key_released(uint keyval, uint _, Gdk.ModifierType __) {
-		var current_buttons = stapel.visible_child_name == "actions"
-							  ? _action_buttons
-							  : _confirm_buttons;
+		unowned List<Gtk.Button> current_buttons = stapel.visible_child_name == "actions"
+												   ? _action_buttons
+												   : _confirm_buttons;
 
 		if (keyval == Gdk.Key.Escape) {
 			this.visible = false;
 		} else if (keyval == Gdk.Key.Left) {
-			int new_index = _focused_button_index - 1;
+			uint new_index = _focused_button_index - 1;
 			if (new_index < 0) {
-				new_index = current_buttons.length - 1;
+				new_index = current_buttons.length() - 1;
 			}
 			focus_button(new_index);
 		} else if (keyval == Gdk.Key.Right) {
-			int new_index = (_focused_button_index + 1) % current_buttons.length;
+			uint new_index = (_focused_button_index + 1) % current_buttons.length();
 			focus_button(new_index);
 		} else if (keyval == Gdk.Key.Return || keyval == Gdk.Key.space) {
-			current_buttons[_focused_button_index].activate();
-		}
-	}
-
-	~PowerMenu() {
-		if (_focus_timeout_id != 0) {
-			Source.remove(_focus_timeout_id);
+			current_buttons.nth_data(_focused_button_index).activate();
 		}
 	}
 }
