@@ -5,14 +5,18 @@ template $PowerMenu: $MorghulWindow {
     namespace: "Morghulis.PowerMenu";
     anchor: bottom;
     margin-bottom: 20;
-    keymode: on-demand;
+    keymode: exclusive;
     layer: overlay;
 
     styles [
         "all_unset",
     ]
 
-    Box {
+    EventControllerKey {
+        key-released => $key_released();
+    }
+
+    Box main_box {
         orientation: vertical;
         spacing: 10;
 
@@ -25,6 +29,10 @@ template $PowerMenu: $MorghulWindow {
         Label {
             label: bind template.uptime;
             halign: center;
+
+            styles [
+                "title-2",
+            ]
         }
 
         Stack stapel {
@@ -39,43 +47,47 @@ template $PowerMenu: $MorghulWindow {
                     spacing: 10;
                     homogeneous: true;
 
-                    Button {
+                    Button lock_btn {
                         tooltip-text: _("Lock Screen");
                         clicked => $just_lock();
+                        can-focus: false;
 
                         Image {
                             icon-name: "lockscreen-symbolic";
-                            icon-size: large;
+                            pixel-size: 64;
                         }
                     }
 
-                    Button {
+                    Button shutdown_btn {
                         tooltip-text: _("Shutdown");
                         clicked => $set_shutdown();
+                        can-focus: false;
 
                         Image {
                             icon-name: "shutdown-symbolic";
-                            icon-size: large;
+                            pixel-size: 64;
                         }
                     }
 
-                    Button {
+                    Button reboot_btn {
                         tooltip-text: _("Restart");
                         clicked => $set_reboot();
+                        can-focus: false;
 
                         Image {
                             icon-name: "reboot-symbolic";
-                            icon-size: large;
+                            pixel-size: 64;
                         }
                     }
 
-                    Button {
+                    Button suspend_btn {
                         tooltip-text: _("Suspend");
                         clicked => $set_suspend();
+                        can-focus: false;
 
                         Image {
                             icon-name: "suspend-symbolic";
-                            icon-size: large;
+                            pixel-size: 64;
                         }
                     }
 
@@ -83,20 +95,22 @@ template $PowerMenu: $MorghulWindow {
                         visible: false;
                         tooltip-text: _("Hibernate");
                         clicked => $set_hibernate();
+                        can-focus: false;
 
                         Image {
                             icon-name: "hibernate-symbolic";
-                            icon-size: large;
+                            pixel-size: 64;
                         }
                     }
 
-                    Button {
+                    Button logout_btn {
                         tooltip-text: _("Logout");
                         clicked => $set_logout();
+                        can-focus: false;
 
                         Image {
                             icon-name: "logout-symbolic";
-                            icon-size: large;
+                            pixel-size: 64;
                         }
                     }
                 };
@@ -111,18 +125,30 @@ template $PowerMenu: $MorghulWindow {
                     hexpand: true;
                     homogeneous: true;
 
-                    Button {
-                        icon-name: "window-close-symbolic";
+                    Button cancel_btn {
+                        valign: center;
                         clicked => $cancel();
+                        can-focus: false;
+
+                        Image {
+                            icon-name: "window-close-symbolic";
+                            pixel-size: 64;
+                        }
                     }
 
-                    Button {
-                        icon-name: "object-select-symbolic";
+                    Button confirm_btn {
+                        valign: center;
                         clicked => $confirm();
+                        can-focus: false;
 
                         styles [
                             "destructive-action",
                         ]
+
+                        Image {
+                            icon-name: "object-select-symbolic";
+                            pixel-size: 64;
+                        }
                     }
                 };
             }
