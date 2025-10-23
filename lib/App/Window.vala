@@ -3,301 +3,301 @@ using GtkLayerShell;
 
 [Flags]
 public enum WindowAnchor {
-	NONE,
-	TOP,
-	RIGHT,
-	LEFT,
-	BOTTOM,
+    NONE,
+    TOP,
+    RIGHT,
+    LEFT,
+    BOTTOM,
 }
 
 public enum Exclusivity {
-	NORMAL,
+    NORMAL,
 
-	/**
-	 * Request the compositor to allocate space for this window.
-	 */
-	EXCLUSIVE,
+    /**
+     * Request the compositor to allocate space for this window.
+     */
+    EXCLUSIVE,
 
-	/**
-	 * Request the compositor to stack layers on top of each other.
-	 */
-	IGNORE,
+    /**
+     * Request the compositor to stack layers on top of each other.
+     */
+    IGNORE,
 }
 
 public enum Layer {
-	BACKGROUND = 0,
-	BOTTOM = 1,
-	TOP = 2,
-	OVERLAY = 3,
+    BACKGROUND = 0,
+    BOTTOM = 1,
+    TOP = 2,
+    OVERLAY = 3,
 }
 
 public enum Keymode {
-	/**
-	 * Window should not receive keyboard events.
-	 */
-	NONE = 0,
+    /**
+     * Window should not receive keyboard events.
+     */
+    NONE = 0,
 
-	/**
-	 * Window should have exclusive focus if it is on the top or overlay layer.
-	 */
-	EXCLUSIVE = 1,
+    /**
+     * Window should have exclusive focus if it is on the top or overlay layer.
+     */
+    EXCLUSIVE = 1,
 
-	/**
-	 * Focus and Unfocues the window as needed.
-	 */
-	ON_DEMAND = 2,
+    /**
+     * Focus and Unfocues the window as needed.
+     */
+    ON_DEMAND = 2,
 }
 
 /**
  * Subclass of [class@Gtk.Window] which integrates GtkLayerShell as class fields.
  */
 public class MorghulWindow : Gtk.Window {
-	/**
-	 * Get the current [class@Gdk.Monitor] this window resides in.
-	 */
-	public Gdk.Monitor get_current_monitor() {
-		return Gdk.Display.get_default().get_monitor_at_surface(base.get_surface());
-	}
+    /**
+     * Get the current [class@Gdk.Monitor] this window resides in.
+     */
+    public Gdk.Monitor get_current_monitor() {
+        return Gdk.Display.get_default().get_monitor_at_surface(base.get_surface());
+    }
 
-	private bool check(string action) {
-		if (!is_supported()) {
-			critical(@"can not $action on window: layer shell not supported");
-			return true;
-		}
-		if (!is_layer_window(this)) {
-			init_for_window(this);
-		}
-		return false;
-	}
+    private bool check(string action) {
+        if (!is_supported()) {
+            critical(@"can not $action on window: layer shell not supported");
+            return true;
+        }
+        if (!is_layer_window(this)) {
+            init_for_window(this);
+        }
+        return false;
+    }
 
-	construct {
-		// If the window has no size allocatoted when it gets mapped.
-		// It won't show up later either when it size changes by adding children.
-		height_request = 1;
-		width_request = 1;
-		check("initialize layer shell");
-	}
+    construct {
+        // If the window has no size allocatoted when it gets mapped.
+        // It won't show up later either when it size changes by adding children.
+        height_request = 1;
+        width_request = 1;
+        check("initialize layer shell");
+    }
 
-	/**
-	 * Namespace of this window. This can be used to target the layer in compositor rules.
-	 */
-	public string namespace {
-		get { return get_namespace(this); }
-		set {
-			if (check("set namespace")) {
-				return;
-			}
+    /**
+     * Namespace of this window. This can be used to target the layer in compositor rules.
+     */
+    public string namespace {
+        get { return get_namespace(this); }
+        set {
+            if (check("set namespace")) {
+                return;
+            }
 
-			set_namespace(this, value);
-		}
-	}
+            set_namespace(this, value);
+        }
+    }
 
-	/**
-	 * Edges to anchor the window to.
-	 *
-	 * If two perpendicular edges are anchored, the surface will be anchored to that corner.
-	 * If two opposite edges are anchored, the window will be stretched across the screen in that direction.
-	 */
-	public WindowAnchor anchor {
-		set {
-			if (check("set anchor")) {
-				return;
-			}
+    /**
+     * Edges to anchor the window to.
+     *
+     * If two perpendicular edges are anchored, the surface will be anchored to that corner.
+     * If two opposite edges are anchored, the window will be stretched across the screen in that direction.
+     */
+    public WindowAnchor anchor {
+        set {
+            if (check("set anchor")) {
+                return;
+            }
 
-			set_anchor(this, Edge.TOP, WindowAnchor.TOP in value);
-			set_anchor(this, Edge.BOTTOM, WindowAnchor.BOTTOM in value);
-			set_anchor(this, Edge.LEFT, WindowAnchor.LEFT in value);
-			set_anchor(this, Edge.RIGHT, WindowAnchor.RIGHT in value);
-		}
-		get {
-			var a = 0;
-			if (get_anchor(this, Edge.TOP)) {
-				a = a | WindowAnchor.TOP;
-			}
+            set_anchor(this, Edge.TOP, WindowAnchor.TOP in value);
+            set_anchor(this, Edge.BOTTOM, WindowAnchor.BOTTOM in value);
+            set_anchor(this, Edge.LEFT, WindowAnchor.LEFT in value);
+            set_anchor(this, Edge.RIGHT, WindowAnchor.RIGHT in value);
+        }
+        get {
+            var a = 0;
+            if (get_anchor(this, Edge.TOP)) {
+                a = a | WindowAnchor.TOP;
+            }
 
-			if (get_anchor(this, Edge.RIGHT)) {
-				a = a | WindowAnchor.RIGHT;
-			}
+            if (get_anchor(this, Edge.RIGHT)) {
+                a = a | WindowAnchor.RIGHT;
+            }
 
-			if (get_anchor(this, Edge.LEFT)) {
-				a = a | WindowAnchor.LEFT;
-			}
+            if (get_anchor(this, Edge.LEFT)) {
+                a = a | WindowAnchor.LEFT;
+            }
 
-			if (get_anchor(this, Edge.BOTTOM)) {
-				a = a | WindowAnchor.BOTTOM;
-			}
+            if (get_anchor(this, Edge.BOTTOM)) {
+                a = a | WindowAnchor.BOTTOM;
+            }
 
-			if (a == 0) {
-				return WindowAnchor.NONE;
-			}
+            if (a == 0) {
+                return WindowAnchor.NONE;
+            }
 
-			return a;
-		}
-	}
+            return a;
+        }
+    }
 
-	/**
-	 * Exclusivity of this window.
-	 */
-	public Exclusivity exclusivity {
-		set {
-			if (check("set exclusivity")) {
-				return;
-			}
+    /**
+     * Exclusivity of this window.
+     */
+    public Exclusivity exclusivity {
+        set {
+            if (check("set exclusivity")) {
+                return;
+            }
 
-			switch (value) {
-				case Exclusivity.NORMAL:
-					set_exclusive_zone(this, 0);
-				break;
+            switch (value) {
+                case Exclusivity.NORMAL:
+                    set_exclusive_zone(this, 0);
+                break;
 
-				case Exclusivity.EXCLUSIVE:
-					auto_exclusive_zone_enable(this);
-				break;
+                case Exclusivity.EXCLUSIVE:
+                    auto_exclusive_zone_enable(this);
+                break;
 
-				case Exclusivity.IGNORE:
-					set_exclusive_zone(this, -1);
-				break;
-			}
-		}
-		get {
-			if (auto_exclusive_zone_is_enabled(this)) {
-				return Exclusivity.EXCLUSIVE;
-			}
+                case Exclusivity.IGNORE:
+                    set_exclusive_zone(this, -1);
+                break;
+            }
+        }
+        get {
+            if (auto_exclusive_zone_is_enabled(this)) {
+                return Exclusivity.EXCLUSIVE;
+            }
 
-			if (get_exclusive_zone(this) == -1) {
-				return Exclusivity.IGNORE;
-			}
+            if (get_exclusive_zone(this) == -1) {
+                return Exclusivity.IGNORE;
+            }
 
-			return Exclusivity.NORMAL;
-		}
-	}
+            return Exclusivity.NORMAL;
+        }
+    }
 
-	/**
-	 * Which layer to appear this window on.
-	 */
-	public Layer layer {
-		get { return (Layer)get_layer(this); }
-		set {
-			if (check("set layer")) {
-				return;
-			}
+    /**
+     * Which layer to appear this window on.
+     */
+    public Layer layer {
+        get { return (Layer)get_layer(this); }
+        set {
+            if (check("set layer")) {
+                return;
+            }
 
-			set_layer(this, (GtkLayerShell.Layer)value);
-		}
-	}
+            set_layer(this, (GtkLayerShell.Layer)value);
+        }
+    }
 
-	/**
-	 * Keyboard mode of this window.
-	 */
-	public Keymode keymode {
-		get { return (Keymode)get_keyboard_mode(this); }
-		set {
-			if (check("set keymode")) {
-				return;
-			}
+    /**
+     * Keyboard mode of this window.
+     */
+    public Keymode keymode {
+        get { return (Keymode)get_keyboard_mode(this); }
+        set {
+            if (check("set keymode")) {
+                return;
+            }
 
-			set_keyboard_mode(this, (GtkLayerShell.KeyboardMode)value);
-		}
-	}
+            set_keyboard_mode(this, (GtkLayerShell.KeyboardMode)value);
+        }
+    }
 
-	/**
-	 * Which monitor to appear this window on.
-	 */
-	public Gdk.Monitor gdkmonitor {
-		get { return get_monitor(this); }
-		set {
-			if (check("set gdkmonitor")) {
-				return;
-			}
+    /**
+     * Which monitor to appear this window on.
+     */
+    public Gdk.Monitor gdkmonitor {
+        get { return get_monitor(this); }
+        set {
+            if (check("set gdkmonitor")) {
+                return;
+            }
 
-			set_monitor(this, value);
-		}
-	}
+            set_monitor(this, value);
+        }
+    }
 
-	public new int margin_top {
-		get { return GtkLayerShell.get_margin(this, Edge.TOP); }
-		set {
-			if (check("set margin_top")) {
-				return;
-			}
+    public new int margin_top {
+        get { return GtkLayerShell.get_margin(this, Edge.TOP); }
+        set {
+            if (check("set margin_top")) {
+                return;
+            }
 
-			GtkLayerShell.set_margin(this, Edge.TOP, value);
-		}
-	}
+            GtkLayerShell.set_margin(this, Edge.TOP, value);
+        }
+    }
 
-	public new int margin_bottom {
-		get { return GtkLayerShell.get_margin(this, Edge.BOTTOM); }
-		set {
-			if (check("set margin_bottom")) {
-				return;
-			}
+    public new int margin_bottom {
+        get { return GtkLayerShell.get_margin(this, Edge.BOTTOM); }
+        set {
+            if (check("set margin_bottom")) {
+                return;
+            }
 
-			GtkLayerShell.set_margin(this, Edge.BOTTOM, value);
-		}
-	}
+            GtkLayerShell.set_margin(this, Edge.BOTTOM, value);
+        }
+    }
 
-	public new int margin_left {
-		get { return GtkLayerShell.get_margin(this, Edge.LEFT); }
-		set {
-			if (check("set margin_left")) {
-				return;
-			}
+    public new int margin_left {
+        get { return GtkLayerShell.get_margin(this, Edge.LEFT); }
+        set {
+            if (check("set margin_left")) {
+                return;
+            }
 
-			GtkLayerShell.set_margin(this, Edge.LEFT, value);
-		}
-	}
+            GtkLayerShell.set_margin(this, Edge.LEFT, value);
+        }
+    }
 
-	public new int margin_right {
-		get { return GtkLayerShell.get_margin(this, Edge.RIGHT); }
-		set {
-			if (check("set margin_right")) {
-				return;
-			}
+    public new int margin_right {
+        get { return GtkLayerShell.get_margin(this, Edge.RIGHT); }
+        set {
+            if (check("set margin_right")) {
+                return;
+            }
 
-			GtkLayerShell.set_margin(this, Edge.RIGHT, value);
-		}
-	}
+            GtkLayerShell.set_margin(this, Edge.RIGHT, value);
+        }
+    }
 
-	public new int margin {
-		set {
-			if (check("set margin")) {
-				return;
-			}
+    public new int margin {
+        set {
+            if (check("set margin")) {
+                return;
+            }
 
-			margin_top = value;
-			margin_right = value;
-			margin_bottom = value;
-			margin_left = value;
-		}
-	}
+            margin_top = value;
+            margin_right = value;
+            margin_bottom = value;
+            margin_left = value;
+        }
+    }
 
-	/**
-	 * Which monitor to appear this window on.
-	 *
-	 * CAUTION: the id might not be the same mapped by the compositor.
-	 */
-	public int monitor {
-		set {
-			if (check("set monitor")) {
-				return;
-			}
+    /**
+     * Which monitor to appear this window on.
+     *
+     * CAUTION: the id might not be the same mapped by the compositor.
+     */
+    public int monitor {
+        set {
+            if (check("set monitor")) {
+                return;
+            }
 
-			if (value < 0) {
-				set_monitor(this, (Gdk.Monitor)null);
-			}
+            if (value < 0) {
+                set_monitor(this, (Gdk.Monitor)null);
+            }
 
-			var m = (Gdk.Monitor)Gdk.Display.get_default().get_monitors().get_item(value);
-			set_monitor(this, m);
-		}
-		get {
-			var m = get_monitor(this);
-			var mons = Gdk.Display.get_default().get_monitors();
-			for (var i = 0; i < mons.get_n_items(); ++i) {
-				if (m == mons.get_item(i)) {
-					return i;
-				}
-			}
+            var m = (Gdk.Monitor)Gdk.Display.get_default().get_monitors().get_item(value);
+            set_monitor(this, m);
+        }
+        get {
+            var m = get_monitor(this);
+            var mons = Gdk.Display.get_default().get_monitors();
+            for (var i = 0; i < mons.get_n_items(); ++i) {
+                if (m == mons.get_item(i)) {
+                    return i;
+                }
+            }
 
-			return -1;
-		}
-	}
+            return -1;
+        }
+    }
 }

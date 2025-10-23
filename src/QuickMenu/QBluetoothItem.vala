@@ -1,53 +1,53 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QBluetoothItem.ui")]
 public class QBluetoothItem : Gtk.ListBoxRow {
-	public AstalBluetooth.Device device { get; construct set; }
+    public AstalBluetooth.Device device { get; construct set; }
 
-	[GtkChild]
-	public unowned Gtk.Label battery_label;
+    [GtkChild]
+    public unowned Gtk.Label battery_label;
 
-	public QBluetoothItem(AstalBluetooth.Device? device) {
-		Object(
-			device: device
-		);
-	}
+    public QBluetoothItem(AstalBluetooth.Device? device) {
+        Object(
+            device: device
+        );
+    }
 
-	[GtkCallback]
-	public void switch_connection() {
-		if (this.device.connected) {
-			this.device.disconnect_device.begin();
-		} else {
-			this.device.connect_device.begin();
-		}
-	}
+    [GtkCallback]
+    public void switch_connection() {
+        if (this.device.connected) {
+            this.device.disconnect_device.begin();
+        } else {
+            this.device.connect_device.begin();
+        }
+    }
 
-	[GtkCallback]
-	public string device_icon(string? icon) {
-		if (icon == null) {
-			return "bluetooth-active";
-		}
-		return icon;
-	}
+    [GtkCallback]
+    public string device_icon(string? icon) {
+        if (icon == null) {
+            return "bluetooth-active";
+        }
+        return icon;
+    }
 
-	[GtkCallback]
-	public string battery_percent(double percent) {
-		return @"$(Math.round(percent * 100))%";
-	}
+    [GtkCallback]
+    public string battery_percent(double percent) {
+        return @"$(Math.round(percent * 100))%";
+    }
 
-	[GtkCallback]
-	public bool is_battery_a_real_thing(double percent) {
-		return percent != -1;
-	}
+    [GtkCallback]
+    public bool is_battery_a_real_thing(double percent) {
+        return percent != -1;
+    }
 
-	public bool active {
-		get {
-			return has_css_class("button_accent_bg");
-		}
-		set {
-			if (value) {
-				this.add_css_class("button_accent_bg");
-			} else {
-				this.remove_css_class("button_accent_bg");
-			}
-		}
-	}
+    public bool active {
+        get {
+            return has_css_class("button_accent_bg");
+        }
+        set {
+            if (value) {
+                this.add_css_class("button_accent_bg");
+            } else {
+                this.remove_css_class("button_accent_bg");
+            }
+        }
+    }
 }
