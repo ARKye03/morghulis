@@ -12,7 +12,8 @@ public class NotifPopItemsCenter : MorghulWindow {
 			default_height: 0,
 			margin: 5,
 			css_classes: new string[] { "all_unset" },
-			overflow: Gtk.Overflow.HIDDEN
+			overflow: Gtk.Overflow.HIDDEN,
+			namespace: "Morghulis.Notifications"
 		);
 
 		setup_sound();
@@ -58,7 +59,9 @@ public class NotifPopItemsCenter : MorghulWindow {
 		this._notif_list_box.prepend(notif_item);
 		this._notif_count++;
 
-		uint timeout_ms = notification.expire_timeout > 0 ? notification.expire_timeout * 1000 : 3000;
+		uint timeout_ms = notification.expire_timeout > 0
+						  ? notification.expire_timeout * 1000
+						  : 3000;
 		Timeout.add(timeout_ms, () => {
 			remove_notification(notification_id);
 			return Source.REMOVE;
