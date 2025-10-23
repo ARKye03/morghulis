@@ -13,6 +13,9 @@ template $OnScreenDisplay: $MorghulWindow {
     margin-bottom: 5;
 
     Stack stack_osd { // Stack for volume and brightness
+        transition-duration: 200;
+        transition-type: over_right_left;
+
         StackPage {
             name: "volume_osd";
 
@@ -21,11 +24,12 @@ template $OnScreenDisplay: $MorghulWindow {
                 vexpand: true;
                 width-request: 300;
 
-                ProgressBar {
+                $MorghulProgressBar {
                     hexpand: true;
-                    orientation: horizontal;
-                    fraction: bind template.speaker as <AstalWp.Endpoint>.volume;
                     vexpand: true;
+                    animate: true;
+                    animation-duration: 200;
+                    fraction: bind template.speaker as <AstalWp.Endpoint>.volume;
 
                     styles [
                         "osd_slider",
@@ -56,11 +60,12 @@ template $OnScreenDisplay: $MorghulWindow {
                 vexpand: true;
                 width-request: 300;
 
-                ProgressBar {
+                $MorghulProgressBar {
                     hexpand: true;
-                    orientation: horizontal;
-                    fraction: bind template.backlight as <$Backlight>.percentage;
                     vexpand: true;
+                    animate: true;
+                    animation-duration: 200;
+                    fraction: bind template.backlight as <$Backlight>.percentage;
 
                     styles [
                         "osd_slider",

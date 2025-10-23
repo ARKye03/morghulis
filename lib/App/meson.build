@@ -14,6 +14,7 @@ project_resources += [
         'Application.vala',
         'CircularProgress.vala',
         'CssManager.vala',
+        'MorghulProgressBar.vala',
         'Gizmo.vala',
         'Options.vala',
         'Window.vala',
