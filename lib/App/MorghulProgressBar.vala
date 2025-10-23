@@ -56,8 +56,7 @@ public class MorghulProgressBar : Gtk.Widget {
 			_current_fraction,
 			target_fraction,
 			animation_duration,
-			target
-			) {
+			target) {
 			easing = this.easing
 		};
 
