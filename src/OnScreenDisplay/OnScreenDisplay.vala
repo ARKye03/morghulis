@@ -17,7 +17,47 @@ public class OnScreenDisplay : MorghulWindow {
         }
         speaker = AstalWp.get_default().audio.default_speaker;
         backlight = Backlight.get_default();
+
+#if hyprland
+        // "Long ass name" ahh function name
+        setup_hypr_keyboard_layout_osd();
+#endif
     }
+
+    #if hyprland
+    private void setup_hypr_keyboard_layout_osd() {
+        var _hyprland = AstalHyprland.get_default();
+        var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10) {
+            css_classes = { "background", "rounded", "padding_10" }
+        };
+
+        var keyboard_layout_variant_label = new Gtk.Label("Variant") {
+            halign = Gtk.Align.CENTER,
+            css_classes = { "title-2" }
+        };
+        var keyboard_layout_label = new Gtk.Label("Keyboard Layout") {
+            halign = Gtk.Align.CENTER,
+            css_classes = { "title-4", "dim-label" }
+        };
+
+        box.append(keyboard_layout_variant_label);
+        box.append(keyboard_layout_label);
+
+        _hyprland.keyboard_layout.connect((layout, variant) => {
+            keyboard_layout_label.label = layout ?? "";
+            // Tweak to show us-intl correctly as it is named incorrectly in Hyprland?
+            keyboard_layout_variant_label.label = variant == "English (US"
+                        ? "English (us-intl)"
+                        : variant ?? "";
+
+            stack_osd.visible_child_name = "keyboard_layout_osd";
+            this.visible = true;
+            handle_timeout();
+        });
+
+        this.stack_osd.add_named(box, "keyboard_layout_osd");
+    }
+    #endif
 
     private void handle_timeout() {
         // Remove the existing timeout if it exists

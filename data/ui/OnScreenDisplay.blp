@@ -13,8 +13,11 @@ template $OnScreenDisplay: $MorghulWindow {
     margin-bottom: 5;
 
     Stack stack_osd { // Stack for volume and brightness
+        interpolate-size: true;
+        hhomogeneous: false;
+        vhomogeneous: false;
+        transition-type: crossfade;
         transition-duration: 200;
-        transition-type: over_right_left;
 
         StackPage {
             name: "volume_osd";
