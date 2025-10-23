@@ -154,7 +154,7 @@ public class AppsCmd : Gtk.Widget, ICommand {
                 // Check if it's a .desktop file
                 string filename = file.get_basename();
                 if (filename.has_suffix(".desktop")) {
-                    debug(@"Desktop file changed: $filename, reloading apps...");
+                    debug(@"Desktop file changed: $filename, reloading apps…");
                     // Debounce the reload to avoid excessive reloads
                     debounce_apps_reload();
                 }

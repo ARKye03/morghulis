@@ -156,7 +156,7 @@ public class Backlight : Object {
             _brightness_monitor.changed.connect((file, other_file, event_type) => {
                 if (event_type == FileMonitorEvent.CHANGED ||
                     event_type == FileMonitorEvent.CREATED) {
-                    debug("Brightness file changed externally, syncing...");
+                    debug("Brightness file changed externally, syncing…");
                     sync_brightness.begin(brightness_file);
                 }
             });

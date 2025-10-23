@@ -295,7 +295,7 @@ public class NetworkMonitorItem : SysInfoItem {
 
     public NetworkMonitorItem() {
         base("Network", "network-symbolic");
-        set_details("Detecting...");
+        set_details("Detecting…");
         find_network_interface();
     }
 
