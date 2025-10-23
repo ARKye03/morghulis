@@ -30,6 +30,7 @@ template $OnScreenDisplay: $MorghulWindow {
                     animate: true;
                     animation-duration: 200;
                     fraction: bind template.speaker as <AstalWp.Endpoint>.volume;
+                    easing: ease-in-out-cubic;
 
                     styles [
                         "osd_slider",
@@ -66,6 +67,7 @@ template $OnScreenDisplay: $MorghulWindow {
                     animate: true;
                     animation-duration: 200;
                     fraction: bind template.backlight as <$Backlight>.percentage;
+                    easing: ease-in-out-cubic;
 
                     styles [
                         "osd_slider",
