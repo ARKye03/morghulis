@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using AstalWp 0.1;
+using AstalBattery 0.1;
 
 template $OnScreenDisplay: $MorghulWindow {
     styles [
@@ -88,6 +89,46 @@ template $OnScreenDisplay: $MorghulWindow {
 
                     styles [
                         "osd_icon",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "battery_osd";
+
+            child: Box {
+                width-request: 200;
+                orientation: vertical;
+                spacing: 10;
+
+                styles [
+                    "background",
+                    "padding_10",
+                    "rounded",
+                ]
+
+                $CircularProgressBar {
+                    percentage: bind template.battery as <AstalBattery.Device>.percentage;
+                    line-width: 10;
+                    line-cap: round;
+                    radius-filled: true;
+                    inverted: true;
+                    start-at: -0.25;
+                    end-at: 0.75;
+
+                    Image {
+                        icon-name: bind template.battery as <AstalBattery.Device>.icon-name;
+                        pixel-size: 48;
+                    }
+                }
+
+                Label {
+                    label: bind $get_battery_state(template.battery as <AstalBattery.Device>.state) as <string>;
+                    halign: center;
+
+                    styles [
+                        "title-2",
                     ]
                 }
             };

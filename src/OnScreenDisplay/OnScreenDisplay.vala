@@ -4,6 +4,7 @@ public class OnScreenDisplay : MorghulWindow {
 
     public static OnScreenDisplay instance { get; private set; }
     public AstalWp.Endpoint speaker { get; private set; }
+    public AstalBattery.Device battery { get; private set; }
     public Backlight backlight { get; private set; }
 
     [GtkChild]
@@ -17,6 +18,14 @@ public class OnScreenDisplay : MorghulWindow {
         }
         speaker = AstalWp.get_default().audio.default_speaker;
         backlight = Backlight.get_default();
+        battery = AstalBattery.Device.get_default();
+        if (battery.is_present) {
+            battery.notify["state"].connect(() => {
+                stack_osd.visible_child_name = "battery_osd";
+                this.visible = true;
+                handle_timeout();
+            });
+        }
 
 #if hyprland
         // "Long ass name" ahh function name
@@ -24,7 +33,7 @@ public class OnScreenDisplay : MorghulWindow {
 #endif
     }
 
-    #if hyprland
+#if hyprland
     private void setup_hypr_keyboard_layout_osd() {
         var _hyprland = AstalHyprland.get_default();
         var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10) {
@@ -57,7 +66,7 @@ public class OnScreenDisplay : MorghulWindow {
 
         this.stack_osd.add_named(box, "keyboard_layout_osd");
     }
-    #endif
+#endif
 
     private void handle_timeout() {
         // Remove the existing timeout if it exists
@@ -84,5 +93,45 @@ public class OnScreenDisplay : MorghulWindow {
         this.visible = true;
         this.stack_osd.visible_child_name = "brightness_osd";
         handle_timeout();
+    }
+
+    [GtkCallback]
+    public string get_battery_state(AstalBattery.State bstate) {
+        string state;
+
+        switch (bstate) {
+            case AstalBattery.State.CHARGING:
+                state = "Charging";
+            break;
+
+            case AstalBattery.State.DISCHARGING:
+                state = "Discharging";
+            break;
+
+            case AstalBattery.State.FULLY_CHARGED:
+                state = "Fully Charged";
+            break;
+
+            case AstalBattery.State.PENDING_CHARGE:
+                state = "Pending Charge";
+            break;
+
+            case AstalBattery.State.PENDING_DISCHARGE:
+                state = "Pending Discharge";
+            break;
+
+            default:
+                state = "Unknown";
+            break;
+        }
+        return state;
+    }
+
+    ~OnScreenDisplay() {
+        if (_hide_timeout_id != 0) {
+            GLib.Source.remove(_hide_timeout_id);
+            _hide_timeout_id = 0;
+        }
+        instance = null;
     }
 }
