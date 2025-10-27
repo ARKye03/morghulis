@@ -17,6 +17,21 @@ public class WorkspaceItem : Gtk.Button {
         this.right_click_callback = (owned)on_right_click;
 
         setup_click_handlers();
+        setup_drag_and_drop();
+    }
+
+    private void setup_drag_and_drop() {
+        var drop_target = new Gtk.DropTarget(typeof(File), Gdk.DragAction.MOVE);
+
+        drop_target.enter.connect(() => {
+            if (left_click_callback != null) {
+                left_click_callback();
+            }
+
+            return Gdk.DragAction.MOVE;
+        });
+
+        this.add_controller(drop_target);
     }
 
     private void setup_click_handlers() {
