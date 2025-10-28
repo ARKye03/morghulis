@@ -86,13 +86,18 @@ public class OnScreenDisplay : MorghulWindow {
     }
 
     public void change_volume() {
-        this.visible = true;
+        if (!this.visible) {
+            this.visible = true;
+        }
+
         this.stack_osd.visible_child_name = "volume_osd";
         handle_timeout();
     }
 
     public void change_brightness() {
-        this.visible = true;
+        if (!this.visible) {
+            this.visible = true;
+        }
         this.stack_osd.visible_child_name = "brightness_osd";
         handle_timeout();
     }

@@ -32,6 +32,7 @@ public enum Keymode {
 public class MorghulWindow : Gtk.Window {
     private bool _is_not_hyprland;
     private Adw.TimedAnimation? _animation = null;
+    private Adw.CallbackAnimationTarget? _animation_target = null;
     private Adw.Easing _easing = Adw.Easing.EASE_IN_OUT_CUBIC;
 
     public Gdk.Monitor get_current_monitor() {
@@ -65,37 +66,30 @@ public class MorghulWindow : Gtk.Window {
             _animation.skip();
         }
         if (to_visible) {
-            var target = new Adw.CallbackAnimationTarget((value) => {
-                this.opacity = value;
-            });
-
             _animation = new Adw.TimedAnimation(
                 this,
-                this.opacity,
-                1,
+                0, // Start value
+                1, // End value
                 200,
-                target) {
+                _animation_target) {
                 easing = this._easing
             };
             base.visible = true;
             _animation.play();
         } else {
-            var target = new Adw.CallbackAnimationTarget((value) => {
-                this.opacity = value;
-            });
-
             _animation = new Adw.TimedAnimation(
                 this,
-                this.opacity,
-                0,
+                1, // Start value
+                0, // End value
                 200,
-                target) {
+                _animation_target) {
                 easing = this._easing
             };
-            _animation.play();
             _animation.done.connect(() => {
                 base.visible = false;
+                _animation = null;
             });
+            _animation.play();
         }
     }
 
@@ -105,6 +99,9 @@ public class MorghulWindow : Gtk.Window {
         // I don't know rick, is this safe? I'm scared
         if (_is_not_hyprland) {
             opacity = 0;
+            _animation_target = new Adw.CallbackAnimationTarget((value) => {
+                this.opacity = value;
+            });
         }
 
         height_request = 1;
