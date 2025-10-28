@@ -41,7 +41,11 @@ public class NavBar : MorghulWindow {
         init_clock();
 
         instance = this;
-        present();
+
+        // Because I wanted to add animations to River natively from GTK, all windows
+        // start with `opacity = 0`, but this one we want to be visible immediately
+        this.opacity = 1;
+        this.present();
     }
 
     [GtkCallback]

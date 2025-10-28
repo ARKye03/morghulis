@@ -29,7 +29,9 @@ public class OnScreenDisplay : MorghulWindow {
 
 #if hyprland
         // "Long ass name" ahh function name
-        setup_hypr_keyboard_layout_osd();
+        if (Morghulis.is_hyprland) {
+            setup_hypr_keyboard_layout_osd();
+        }
 #endif
     }
 

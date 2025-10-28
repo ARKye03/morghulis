@@ -12,15 +12,7 @@ public enum WindowAnchor {
 
 public enum Exclusivity {
     NORMAL,
-
-    /**
-     * Request the compositor to allocate space for this window.
-     */
     EXCLUSIVE,
-
-    /**
-     * Request the compositor to stack layers on top of each other.
-     */
     IGNORE,
 }
 
@@ -32,29 +24,16 @@ public enum Layer {
 }
 
 public enum Keymode {
-    /**
-     * Window should not receive keyboard events.
-     */
     NONE = 0,
-
-    /**
-     * Window should have exclusive focus if it is on the top or overlay layer.
-     */
     EXCLUSIVE = 1,
-
-    /**
-     * Focus and Unfocues the window as needed.
-     */
     ON_DEMAND = 2,
 }
 
-/**
- * Subclass of [class@Gtk.Window] which integrates GtkLayerShell as class fields.
- */
 public class MorghulWindow : Gtk.Window {
-    /**
-     * Get the current [class@Gdk.Monitor] this window resides in.
-     */
+    private bool _is_not_hyprland;
+    private Adw.TimedAnimation? _animation = null;
+    private Adw.Easing _easing = Adw.Easing.EASE_IN_OUT_CUBIC;
+
     public Gdk.Monitor get_current_monitor() {
         return Gdk.Display.get_default().get_monitor_at_surface(base.get_surface());
     }
@@ -70,17 +49,70 @@ public class MorghulWindow : Gtk.Window {
         return false;
     }
 
+    public new bool visible {
+        get { return base.get_visible(); }
+        set {
+            if (_is_not_hyprland) {
+                animate_to(value);
+            } else {
+                base.visible = value;
+            }
+        }
+    }
+
+    private void animate_to(bool to_visible) {
+        if (_animation != null) {
+            _animation.skip();
+        }
+        if (to_visible) {
+            var target = new Adw.CallbackAnimationTarget((value) => {
+                this.opacity = value;
+            });
+
+            _animation = new Adw.TimedAnimation(
+                this,
+                this.opacity,
+                1,
+                200,
+                target) {
+                easing = this._easing
+            };
+            base.visible = true;
+            _animation.play();
+        } else {
+            var target = new Adw.CallbackAnimationTarget((value) => {
+                this.opacity = value;
+            });
+
+            _animation = new Adw.TimedAnimation(
+                this,
+                this.opacity,
+                0,
+                200,
+                target) {
+                easing = this._easing
+            };
+            _animation.play();
+            _animation.done.connect(() => {
+                base.visible = false;
+            });
+        }
+    }
+
     construct {
-        // If the window has no size allocatoted when it gets mapped.
-        // It won't show up later either when it size changes by adding children.
+        // Best boolean of all times
+        _is_not_hyprland = !Morghulis.is_hyprland;
+        // I don't know rick, is this safe? I'm scared
+        if (_is_not_hyprland) {
+            opacity = 0;
+        }
+
         height_request = 1;
         width_request = 1;
+
         check("initialize layer shell");
     }
 
-    /**
-     * Namespace of this window. This can be used to target the layer in compositor rules.
-     */
     public string namespace {
         get { return get_namespace(this); }
         set {
@@ -92,12 +124,6 @@ public class MorghulWindow : Gtk.Window {
         }
     }
 
-    /**
-     * Edges to anchor the window to.
-     *
-     * If two perpendicular edges are anchored, the surface will be anchored to that corner.
-     * If two opposite edges are anchored, the window will be stretched across the screen in that direction.
-     */
     public WindowAnchor anchor {
         set {
             if (check("set anchor")) {
@@ -135,9 +161,6 @@ public class MorghulWindow : Gtk.Window {
         }
     }
 
-    /**
-     * Exclusivity of this window.
-     */
     public Exclusivity exclusivity {
         set {
             if (check("set exclusivity")) {
@@ -171,9 +194,6 @@ public class MorghulWindow : Gtk.Window {
         }
     }
 
-    /**
-     * Which layer to appear this window on.
-     */
     public Layer layer {
         get { return (Layer)get_layer(this); }
         set {
@@ -185,9 +205,6 @@ public class MorghulWindow : Gtk.Window {
         }
     }
 
-    /**
-     * Keyboard mode of this window.
-     */
     public Keymode keymode {
         get { return (Keymode)get_keyboard_mode(this); }
         set {
@@ -199,9 +216,6 @@ public class MorghulWindow : Gtk.Window {
         }
     }
 
-    /**
-     * Which monitor to appear this window on.
-     */
     public Gdk.Monitor gdkmonitor {
         get { return get_monitor(this); }
         set {
@@ -270,11 +284,6 @@ public class MorghulWindow : Gtk.Window {
         }
     }
 
-    /**
-     * Which monitor to appear this window on.
-     *
-     * CAUTION: the id might not be the same mapped by the compositor.
-     */
     public int monitor {
         set {
             if (check("set monitor")) {
@@ -298,6 +307,12 @@ public class MorghulWindow : Gtk.Window {
             }
 
             return -1;
+        }
+    }
+
+    ~MorghulWindow() {
+        if (_animation != null) {
+            _animation.skip();
         }
     }
 }

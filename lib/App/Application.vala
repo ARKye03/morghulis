@@ -9,6 +9,7 @@ public class Morghulis : Gtk.Application {
     public static Gdk.Monitor? primary_monitor { get; private set; }
     public static string clock_format { get; private set; default = "%H:%M %b %d"; }
     public static string user_name { get; private set; }
+    public static bool is_hyprland { get; private set; }
 
     public string uptime { get; private set; }
 
@@ -137,6 +138,7 @@ public class Morghulis : Gtk.Application {
         Adw.init();
         gsettings = new GLib.Settings("com.arkye.morghulis");
         user_name = Environment.get_user_name();
+        is_hyprland = Environment.get_variable("XDG_CURRENT_DESKTOP") == "Hyprland";
 
         _css_manager = new CssManager();
         setup_css_signals();
