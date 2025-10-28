@@ -10,5 +10,11 @@
         <choice value="bottom"/>
       </choices>
     </key>
+    
+    <key name="notifications-default-timeout" type="u">
+      <default>5000</default>
+      <summary>Default notification timeout</summary>
+      <description>The default timeout (in milliseconds) for notifications before they disappear.</description>
+    </key>
   </schema>
 </schemalist>

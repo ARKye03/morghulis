@@ -3,6 +3,7 @@ public class NotifPopItemsCenter : MorghulWindow {
     private Gtk.ListBox _notif_list_box;
     private GSound.Context _scontext;
     private uint _notif_count = 0;
+    private uint _default_notification_timeout;
 
     public NotifPopItemsCenter(WindowAnchor x_anchor = WindowAnchor.RIGHT) {
         Object(
@@ -15,6 +16,8 @@ public class NotifPopItemsCenter : MorghulWindow {
             overflow: Gtk.Overflow.HIDDEN,
             namespace : "Morghulis.Notifications"
         );
+
+        _default_notification_timeout = Morghulis.gsettings.get_uint("notifications-default-timeout");
 
         setup_sound();
         setup_window();
@@ -61,7 +64,7 @@ public class NotifPopItemsCenter : MorghulWindow {
 
         uint timeout_ms = notification.expire_timeout > 0
                                                   ? notification.expire_timeout * 1000
-                                                  : 3000;
+                                                  : _default_notification_timeout;
         Timeout.add(timeout_ms, () => {
             remove_notification(notification_id);
             return Source.REMOVE;
