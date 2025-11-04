@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="com.arkye.morghulis" path="/com/arkye/morghulis/">
+    <key name="gtk-theme" type="b">
+      <default>true</default>
+      <summary>Whether to use default built-in theme or not</summary>
+    </key>
+
     <key name="navbar-anchor" type="s">
       <default>"bottom"</default>
       <summary>NavBar anchor position</summary>
       <description>The anchor position for NavBar ("top" or "bottom")</description>
       <choices>
-        <choice value="top"/>
-        <choice value="bottom"/>
+        <choice value="top" />
+        <choice value="bottom" />
       </choices>
     </key>
-    
+
     <key name="notifications-default-timeout" type="u">
       <default>5000</default>
       <summary>Default notification timeout</summary>
       <description>The default timeout (in milliseconds) for notifications before they disappear.</description>
+    </key>
+
+    <key name="osd-timeout" type="u">
+      <default>3000</default>
+      <summary>Timeout to hide OSD</summary>
     </key>
   </schema>
 </schemalist>

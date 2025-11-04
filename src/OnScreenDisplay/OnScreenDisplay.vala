@@ -1,6 +1,8 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
 public class OnScreenDisplay : MorghulWindow {
     private uint _hide_timeout_id = 0;
+    private GSound.Context _scontext;
+    private uint _osd_timeout = 3000;
 
     public static OnScreenDisplay instance { get; private set; }
     public AstalWp.Endpoint speaker { get; private set; }
@@ -16,6 +18,14 @@ public class OnScreenDisplay : MorghulWindow {
         } else {
             this.destroy();
         }
+
+        try {
+            this._scontext = new GSound.Context();
+            this._scontext.init();
+        } catch (Error e) {
+            warning("Failed to create sound context: %s", e.message);
+        }
+
         speaker = AstalWp.get_default().audio.default_speaker;
         backlight = Backlight.get_default();
         battery = AstalBattery.Device.get_default();
@@ -26,6 +36,8 @@ public class OnScreenDisplay : MorghulWindow {
                 handle_timeout();
             });
         }
+
+        _osd_timeout = Morghulis.gsettings.get_uint("osd-timeout");
 
 #if hyprland
         // "Long ass name" ahh function name
@@ -78,7 +90,7 @@ public class OnScreenDisplay : MorghulWindow {
         }
 
         // Set a new timeout
-        _hide_timeout_id = GLib.Timeout.add(3000, () => {
+        _hide_timeout_id = GLib.Timeout.add(_osd_timeout, () => {
             this.visible = false;
             _hide_timeout_id = 0;
             return false;
@@ -86,20 +98,33 @@ public class OnScreenDisplay : MorghulWindow {
     }
 
     public void change_volume() {
+        play_notification_sound.begin();
         if (!this.visible) {
             this.visible = true;
         }
-
         this.stack_osd.visible_child_name = "volume_osd";
         handle_timeout();
     }
 
     public void change_brightness() {
+        play_notification_sound.begin();
         if (!this.visible) {
             this.visible = true;
         }
         this.stack_osd.visible_child_name = "brightness_osd";
         handle_timeout();
+    }
+
+    private async void play_notification_sound() {
+        try {
+            yield this._scontext.play_full(
+                null,
+                GSound.Attribute.EVENT_ID,
+                "audio-volume-change"
+            );
+        } catch (Error e) {
+            warning("Failed to play sound: %s", e.message);
+        }
     }
 
     [GtkCallback]
