@@ -1,7 +1,6 @@
 public class CssManager : Object {
     private File _user_css_file;
     private FileMonitor? _css_file_monitor;
-    private Gtk.CssProvider? _app_css_provider;
     private Gtk.CssProvider? _user_css_provider;
     private uint _reload_count = 0;
 
@@ -14,13 +13,18 @@ public class CssManager : Object {
     }
 
     public void load_app_css() {
-        if (_app_css_provider != null) {
-            remove_provider(_app_css_provider);
-        }
+        var main_css_provider = new Gtk.CssProvider();
 
-        _app_css_provider = new Gtk.CssProvider();
-        _app_css_provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
-        add_provider(_app_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        main_css_provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
+        add_provider(main_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+        bool use_built_in_gtk_theme = Morghulis.gsettings.get_boolean("gtk-theme");
+
+        if (use_built_in_gtk_theme) {
+            var app_css_provider = new Gtk.CssProvider();
+            app_css_provider.load_from_resource("com/github/ARKye03/morghulis/app.css");
+            add_provider(app_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        }
     }
 
     public void load_user_css() {
@@ -63,7 +67,8 @@ public class CssManager : Object {
                             load_user_css();
                             css_created();
                         break;
-                            default:
+
+                        default:
                             warning("Unknown CSS file event");
                         break;
                 }
