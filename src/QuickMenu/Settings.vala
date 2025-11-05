@@ -161,4 +161,9 @@ public class Settings : Adw.Bin {
             warning("Failed to load image: %s", e.message);
         }
     }
+
+    [GtkCallback]
+    private void push_app_settings() {
+        quick_settings_navigation_view.push_by_tag("app_settings");
+    }
 }

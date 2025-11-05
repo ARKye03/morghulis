@@ -1,0 +1,84 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $AppSettings: Box {
+  orientation: vertical;
+
+  Adw.HeaderBar {
+    show-end-title-buttons: false;
+
+    [end]
+    Button {
+      icon-name: "view-refresh-symbolic";
+      clicked => $reload_gsettings();
+      overflow: hidden;
+    }
+  }
+
+  ScrolledWindow {
+    vexpand: true;
+    hscrollbar-policy: never;
+
+    styles [
+      "background",
+      "padding_10",
+    ]
+
+    ListBox {
+      selection-mode: none;
+
+      styles [
+        "boxed-list",
+      ]
+
+      Adw.SwitchRow {
+        title: _("Gtk Theme");
+        subtitle: _("Whether to use built-in theme or not");
+        name: "gtk-theme";
+        active: bind template.gtk_theme bidirectional;
+      }
+
+      Adw.ComboRow {
+        title: _("NavBar Position");
+        subtitle: _("Select the position");
+
+        model: StringList {
+          strings [
+            _("bottom"),
+            _("top"),
+          ]
+        };
+
+        selected: bind template.navbar_anchor bidirectional;
+      }
+
+      Adw.SpinRow {
+        name: "notifications-default-timeout";
+        title: _("Notification Timeout");
+        subtitle: _("Timeout for notifications");
+        value: bind template.notifications_default_timeout bidirectional;
+        can-focus: false;
+
+        adjustment: Adjustment {
+          lower: 0;
+          upper: 10000;
+          step-increment: 100;
+        };
+      }
+
+      Adw.SpinRow {
+        name: "osd-timeout";
+        title: _("OSD Timeout");
+        subtitle: _("Timeout for on-screen display");
+        value: bind template.osd_timeout bidirectional;
+        can-focus: false;
+
+        adjustment: Adjustment {
+          lower: 0;
+          upper: 10000;
+          step-increment: 100;
+        };
+      }
+    }
+  }
+}

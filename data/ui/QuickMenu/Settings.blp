@@ -6,184 +6,197 @@ using AstalWp 0.1;
 using AstalNotifd 0.1;
 
 template $Settings: Adw.Bin {
-    Adw.NavigationView quick_settings_navigation_view {
+  Adw.NavigationView quick_settings_navigation_view {
+    styles [
+      "rounded",
+    ]
+
+    Adw.NavigationPage {
+      title: "Quick settings";
+
+      Box {
+        orientation: vertical;
+        spacing: 10;
+
         styles [
-            "rounded",
+          "background",
+          "padding_10",
+          "master_border",
+          "rounded",
+          "squares",
         ]
 
-        Adw.NavigationPage {
-            title: "Quick settings";
+        Button {
+          halign: end;
+          icon-name: "applications-system-symbolic";
+          clicked => $push_app_settings();
+        }
 
-            Box {
-                orientation: vertical;
-                spacing: 10;
+        Grid {
+          column-homogeneous: true;
+          hexpand: true;
+          column-spacing: 10;
+          row-spacing: 10;
 
-                Grid {
-                    column-homogeneous: true;
-                    hexpand: true;
-                    column-spacing: 10;
-                    row-spacing: 10;
-
-                    styles [
-                        "background",
-                        "padding_10",
-                        "master_border",
-                        "rounded",
-                        "squares",
-                    ]
-
-                    $QButton {
-                        layout {
-                            row: 0;
-                            column: 0;
-                        }
-
-                        name: "Network";
-                        identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
-                        status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
-                        icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
-                        active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
-                        clicked => $network_clicked();
-                        clicked_extras => $network_clicked_extras();
-                    }
-
-                    $QButton {
-                        layout {
-                            row: 0;
-                            column: 1;
-                        }
-
-                        name: "Bluetooth";
-                        identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
-                        status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
-                        icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
-                        active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
-                        clicked => $bluetooth_clicked();
-                        clicked_extras => $bluetooth_clicked_extras();
-                    }
-
-                    $QButton {
-                        layout {
-                            row: 1;
-                            column: 0;
-                        }
-
-                        name: "Audio";
-                        identity: "Audio";
-                        status: bind $audio_status(template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute) as <string>;
-                        icon: "audio-volume-high-symbolic";
-                        inactive: bind template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute;
-                        clicked => $audio_clicked();
-                        clicked_extras => $audio_clicked_extras();
-                    }
-
-                    $QButton {
-                        layout {
-                            row: 1;
-                            column: 1;
-                        }
-
-                        name: "Don't disturb";
-                        identity: "Notifications";
-                        clicked => $notifications_clicked();
-                        clicked_extras => $notifications_clicked_extras();
-                        inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
-                        status: bind $notif_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
-                        icon: bind $notif_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
-                    }
-                }
-
-                Stack {
-                    transition-type: slide_left_right;
-                    transition-duration: 200;
-                    visible-child-name: bind $mpris_stack(players.n-pages) as <string>;
-                    vexpand: true;
-
-                    StackPage {
-                        name: "no_mpris";
-
-                        child: Box {
-                            orientation: vertical;
-                            spacing: 10;
-
-                            styles [
-                                "background",
-                                "padding_10",
-                                "master_border",
-                                "rounded",
-                            ]
-
-                            Picture {
-                                paintable: bind template.no_media_players;
-                            }
-
-                            Label {
-                                label: "No Media Players";
-
-                                styles [
-                                    "dim-label",
-                                    "title-1",
-                                ]
-                            }
-                        };
-                    }
-
-                    StackPage {
-                        name: "mpris";
-
-                        child: Box {
-                            hexpand: true;
-                            orientation: vertical;
-
-                            styles [
-                                "background",
-                                "padding_10",
-                                "master_border",
-                                "rounded",
-                                "flats",
-                            ]
-
-                            Adw.Carousel players {
-                                orientation: horizontal;
-                                spacing: 5;
-                                hexpand: true;
-                            }
-
-                            Adw.CarouselIndicatorDots {
-                                carousel: players;
-                            }
-                        };
-                    }
-                }
+          $QButton {
+            layout {
+              row: 0;
+              column: 0;
             }
+
+            name: "Network";
+            identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
+            status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
+            icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
+            active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
+            clicked => $network_clicked();
+            clicked_extras => $network_clicked_extras();
+          }
+
+          $QButton {
+            layout {
+              row: 0;
+              column: 1;
+            }
+
+            name: "Bluetooth";
+            identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
+            status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
+            icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
+            active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
+            clicked => $bluetooth_clicked();
+            clicked_extras => $bluetooth_clicked_extras();
+          }
+
+          $QButton {
+            layout {
+              row: 1;
+              column: 0;
+            }
+
+            name: "Audio";
+            identity: "Audio";
+            status: bind $audio_status(template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute) as <string>;
+            icon: "audio-volume-high-symbolic";
+            inactive: bind template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute;
+            clicked => $audio_clicked();
+            clicked_extras => $audio_clicked_extras();
+          }
+
+          $QButton {
+            layout {
+              row: 1;
+              column: 1;
+            }
+
+            name: "Don't disturb";
+            identity: "Notifications";
+            clicked => $notifications_clicked();
+            clicked_extras => $notifications_clicked_extras();
+            inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
+            status: bind $notif_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+            icon: bind $notif_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+          }
         }
 
-        Adw.NavigationPage {
-            tag: "network";
-            title: "Network";
+        Stack {
+          transition-type: slide_left_right;
+          transition-duration: 200;
+          visible-child-name: bind $mpris_stack(players.n-pages) as <string>;
+          vexpand: true;
 
-            $QNetwork {}
+          StackPage {
+            name: "no_mpris";
+
+            child: Box {
+              orientation: vertical;
+              spacing: 10;
+
+              styles [
+                "background",
+                "padding_10",
+                "master_border",
+                "rounded",
+              ]
+
+              Picture {
+                paintable: bind template.no_media_players;
+              }
+
+              Label {
+                label: "No Media Players";
+
+                styles [
+                  "dim-label",
+                  "title-1",
+                ]
+              }
+            };
+          }
+
+          StackPage {
+            name: "mpris";
+
+            child: Box {
+              hexpand: true;
+              orientation: vertical;
+
+              styles [
+                "background",
+                "padding_10",
+                "master_border",
+                "rounded",
+                "flats",
+              ]
+
+              Adw.Carousel players {
+                orientation: horizontal;
+                spacing: 5;
+                hexpand: true;
+              }
+
+              Adw.CarouselIndicatorDots {
+                carousel: players;
+              }
+            };
+          }
         }
-
-        Adw.NavigationPage {
-            tag: "bluetooth";
-            title: "Bluetooth";
-
-            $QBluetooth {}
-        }
-
-        Adw.NavigationPage {
-            tag: "audio";
-            title: "Audio";
-
-            $QAudioBox {}
-        }
-
-        Adw.NavigationPage {
-            tag: "notifications";
-            title: "Notifications";
-
-            $QNotifications {}
-        }
+      }
     }
+
+    Adw.NavigationPage {
+      tag: "network";
+      title: "Network";
+
+      $QNetwork {}
+    }
+
+    Adw.NavigationPage {
+      tag: "bluetooth";
+      title: "Bluetooth";
+
+      $QBluetooth {}
+    }
+
+    Adw.NavigationPage {
+      tag: "audio";
+      title: "Audio";
+
+      $QAudioBox {}
+    }
+
+    Adw.NavigationPage {
+      tag: "notifications";
+      title: "Notifications";
+
+      $QNotifications {}
+    }
+
+    Adw.NavigationPage {
+      tag: "app_settings";
+      title: _("Settings");
+
+      $AppSettings {}
+    }
+  }
 }
