@@ -19,9 +19,10 @@ public class Settings : Adw.Bin {
         bluetooth = AstalBluetooth.get_default();
         wp = AstalWp.get_default();
         notifd = AstalNotifd.get_default();
-        _gsettings = new GLib.Settings("org.gnome.desktop.interface");
 
+        _gsettings = new GLib.Settings("org.gnome.desktop.interface");
         _gsettings.bind("color-scheme", this, "color_scheme", GLib.SettingsBindFlags.GET);
+
         setup_empty_notif();
 
         _mpris = AstalMpris.get_default();
@@ -39,9 +40,7 @@ public class Settings : Adw.Bin {
 
     [GtkCallback]
     public string notif_icon(bool dnd) {
-        return dnd
-                           ? "notifications-disabled-symbolic"
-                           : "preferences-system-notifications-symbolic";
+        return dnd ? "notifications-disabled-symbolic" : "preferences-system-notifications-symbolic";
     }
 
     [GtkCallback]
@@ -171,7 +170,11 @@ public class Settings : Adw.Bin {
 
     [GtkCallback]
     private async void color_scheme_clicked() {
-        color_scheme = color_scheme == "prefer-dark" ? "prefer-light" : "prefer-dark";
+        if (color_scheme == "default" || color_scheme == "prefer-light") {
+            color_scheme = "prefer-dark";
+        } else {
+            color_scheme = "prefer-light";
+        }
         _gsettings.set_string("color-scheme", color_scheme);
     }
 
