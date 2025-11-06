@@ -124,6 +124,7 @@
         runtime-utils = with pkgs; [
           gsound
           libgtop
+          libportal
         ];
         compiler-utils = with pkgs; [
           vala
@@ -148,8 +149,6 @@
           river
           apps
           tray
-          io
-          astal4
           battery
           powerprofiles
           bluetooth
@@ -163,7 +162,7 @@
               nativeBuildInputs =
                 with pkgs.buildPackages;
                 [
-                  glfw-wayland
+                  glfw
                   gobject-introspection
                 ]
                 ++ nix-utils
@@ -172,14 +171,12 @@
                 ++ compiler-utils
                 ++ build-utils
                 ++ astal-libs;
-              buildInputs =
-                with pkgs;
-                [
-                  pkg-config
-                  networkmanager
-                  glib
-                  gdk-pixbuf
-                ];
+              buildInputs = with pkgs; [
+                pkg-config
+                networkmanager
+                glib
+                gdk-pixbuf
+              ];
               XCURSOR_THEME = "Bibata-Modern-Classic";
               XCURSOR_SIZE = "20";
             };
