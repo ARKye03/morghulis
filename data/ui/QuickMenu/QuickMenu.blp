@@ -1,37 +1,38 @@
 using Gtk 4.0;
 
 template $QuickMenu: $MorghulWindow {
-    styles [
-        "all_unset",
-    ]
+  styles [
+    "all_unset",
+  ]
 
-    default-width: 400;
-    default-height: 1;
-    title: "QuickMenu";
-    namespace: "Morghulis.QuickMenu";
-    anchor: bottom | right;
-    margin-right: 5;
+  default-width: 400;
+  default-height: 1;
+  title: "QuickMenu";
+  namespace: "Morghulis.QuickMenu";
+  anchor: bottom | right;
+  margin-right: 5;
 
-    Box {
-        vexpand: true;
-        orientation: vertical;
-        spacing: 10;
+  Box {
+    vexpand: true;
+    orientation: vertical;
+    spacing: 10;
 
-        $Settings {
-            // I hate this below
-            height-request: 398;
-            hexpand: true;
-            vexpand: true;
-        }
-
-        $BatteryBox {
-            hexpand: true;
-            vexpand: false;
-        }
-
-        $PowerBox {
-            hexpand: true;
-            vexpand: false;
-        }
+    $Settings {
+      // I hate this below (398)
+      // 9 months later I still fucking hate it (442)
+      height-request: 442;
+      hexpand: true;
+      vexpand: true;
     }
+
+    $BatteryBox {
+      hexpand: true;
+      vexpand: false;
+    }
+
+    $PowerBox {
+      hexpand: true;
+      vexpand: false;
+    }
+  }
 }
