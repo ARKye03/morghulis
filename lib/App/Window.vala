@@ -29,7 +29,7 @@ public enum Keymode {
     ON_DEMAND = 2,
 }
 
-public class MorghulWindow : Gtk.Window {
+public class MorghulWindow : Adw.Window {
     private bool _is_not_hyprland;
     private Adw.TimedAnimation? _animation = null;
     private Adw.CallbackAnimationTarget? _animation_target = null;

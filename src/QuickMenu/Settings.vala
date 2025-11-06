@@ -1,7 +1,9 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/Settings.ui")]
 public class Settings : Adw.Bin {
     private AstalMpris.Mpris _mpris;
+    private GLib.Settings _gsettings;
 
+    public string color_scheme { get; set; }
     public AstalNetwork.Network network { get; private set; }
     public AstalBluetooth.Bluetooth bluetooth { get; private set; }
     public AstalNotifd.Notifd notifd { get; private set; }
@@ -17,7 +19,9 @@ public class Settings : Adw.Bin {
         bluetooth = AstalBluetooth.get_default();
         wp = AstalWp.get_default();
         notifd = AstalNotifd.get_default();
+        _gsettings = new GLib.Settings("org.gnome.desktop.interface");
 
+        _gsettings.bind("color-scheme", this, "color_scheme", GLib.SettingsBindFlags.GET);
         setup_empty_notif();
 
         _mpris = AstalMpris.get_default();
@@ -30,9 +34,7 @@ public class Settings : Adw.Bin {
 
     [GtkCallback]
     public string notif_status(bool dnd) {
-        return dnd
-                           ? "Don't disturb"
-                           : "Enabled";
+        return dnd ? "Don't disturb" : "Enabled";
     }
 
     [GtkCallback]
@@ -165,5 +167,19 @@ public class Settings : Adw.Bin {
     [GtkCallback]
     private void push_app_settings() {
         quick_settings_navigation_view.push_by_tag("app_settings");
+    }
+
+    [GtkCallback]
+    private async void color_scheme_clicked() {
+        color_scheme = color_scheme == "prefer-dark" ? "prefer-light" : "prefer-dark";
+        _gsettings.set_string("color-scheme", color_scheme);
+    }
+
+    [GtkCallback]
+    private string color_scheme_icon(string? color_scheme) {
+        if (color_scheme == null) {
+            return "weather-clear-symbolic";
+        }
+        return color_scheme == "prefer-dark" ? "weather-clear-night-symbolic" : "weather-clear-symbolic";
     }
 }

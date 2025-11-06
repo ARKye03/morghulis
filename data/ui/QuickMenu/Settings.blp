@@ -26,10 +26,19 @@ template $Settings: Adw.Bin {
           "squares",
         ]
 
-        Button {
+        Box {
+          spacing: 10;
           halign: end;
-          icon-name: "applications-system-symbolic";
-          clicked => $push_app_settings();
+
+          Button {
+            icon-name: bind $color_scheme_icon(template.color_scheme) as <string>;
+            clicked => $color_scheme_clicked();
+          }
+
+          Button {
+            icon-name: "applications-system-symbolic";
+            clicked => $push_app_settings();
+          }
         }
 
         Grid {

@@ -1,4 +1,4 @@
-public class Morghulis : Gtk.Application {
+public class Morghulis : Adw.Application {
     private GTop.Uptime _g_uptime;
     private List<MorghulWindow> _windows;
     private CssManager _css_manager;
@@ -134,15 +134,12 @@ public class Morghulis : Gtk.Application {
 
     protected override void activate() {
         _windows = new List<MorghulWindow>();
-
-        Adw.init();
         gsettings = new GLib.Settings("com.arkye.morghulis");
         user_name = Environment.get_user_name();
         is_hyprland = Environment.get_variable("XDG_CURRENT_DESKTOP") == "Hyprland";
-
         _css_manager = new CssManager();
-        setup_css_signals();
 
+        setup_css_signals();
         setup_display_and_monitor();
         setup_ui();
         setup_timers();

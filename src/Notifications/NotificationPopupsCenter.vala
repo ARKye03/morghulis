@@ -38,7 +38,7 @@ public class NotifPopItemsCenter : MorghulWindow {
             css_classes = { "boxed-list-separate" }
         };
 
-        this.child = _notif_list_box;
+        this.content = _notif_list_box;
     }
 
     private void setup_notifications() {
