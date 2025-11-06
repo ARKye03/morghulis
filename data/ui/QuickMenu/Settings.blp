@@ -23,7 +23,6 @@ template $Settings: Adw.Bin {
           "padding_10",
           "master_border",
           "rounded",
-          "squares",
         ]
 
         Box {
@@ -46,6 +45,10 @@ template $Settings: Adw.Bin {
           hexpand: true;
           column-spacing: 10;
           row-spacing: 10;
+
+          styles [
+            "squares",
+          ]
 
           $QButton {
             layout {
