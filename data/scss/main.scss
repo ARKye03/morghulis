@@ -202,3 +202,16 @@ circularprogress {
         transform: rotate(0deg) scale(1) translateY(10px);
     }
 }
+
+.float-y {
+    animation: float-y 2s ease-in-out infinite alternate;
+}
+
+@keyframes float-y {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-10px);
+    }
+}

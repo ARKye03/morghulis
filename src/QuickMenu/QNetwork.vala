@@ -23,8 +23,8 @@ public class QNetwork : Gtk.Box {
 
         _wifi.access_point_added.connect(on_added_ap);
         _wifi.access_point_removed.connect(on_removed_ap);
-        _wifi.access_points.foreach(on_added_ap);
         _wifi.notify["active-access-point"].connect(update_active_states);
+        _wifi.access_points.foreach(on_added_ap);
         update_active_states();
     }
 
