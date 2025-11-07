@@ -28,6 +28,11 @@ template $QNetwork: Box {
   }
 
   Overlay {
+    styles [
+      "background",
+      "padding_10",
+    ]
+
     [overlay]
     Revealer go_down_revealer {
       transition-duration: 200;
@@ -48,19 +53,15 @@ template $QNetwork: Box {
     }
 
     ScrolledWindow scrolled_window {
+      overflow: hidden;
       vexpand: true;
 
       styles [
-        "background",
-        "padding_10",
+        "rounded",
       ]
 
       ListBox wifi_list {
         selection-mode: none;
-
-        styles [
-          "rounded",
-        ]
       }
     }
   }
