@@ -3,44 +3,65 @@ using Adw 1;
 using AstalNetwork 0.1;
 
 template $QNetwork: Box {
-    orientation: vertical;
+  orientation: vertical;
 
-    Adw.HeaderBar {
-        show-end-title-buttons: false;
+  Adw.HeaderBar {
+    show-end-title-buttons: false;
 
-        [end]
-        Box {
-            spacing: 10;
+    [end]
+    Box {
+      spacing: 10;
 
-            Revealer {
-                transition-duration: 200;
-                transition-type: slide_left;
-                reveal-child: bind template.network as <AstalNetwork.Wifi>.scanning;
+      Revealer {
+        transition-duration: 200;
+        transition-type: slide_left;
+        reveal-child: bind template.network as <AstalNetwork.Wifi>.scanning;
 
-                Adw.Spinner spinner {}
-            }
+        Adw.Spinner spinner {}
+      }
 
-            Button {
-                icon-name: "view-refresh-symbolic";
-                clicked => $refresh();
-            }
-        }
+      Button {
+        icon-name: "view-refresh-symbolic";
+        clicked => $refresh();
+      }
+    }
+  }
+
+  Overlay {
+    [overlay]
+    Revealer go_down_revealer {
+      transition-duration: 200;
+      transition-type: slide_up;
+      reveal-child: true;
+      halign: center;
+      valign: end;
+
+      styles [
+        "float-y",
+      ]
+
+      Image {
+        icon-name: "go-down-symbolic";
+        pixel-size: 32;
+        margin-bottom: 10;
+      }
     }
 
-    ScrolledWindow {
-        vexpand: true;
+    ScrolledWindow scrolled_window {
+      vexpand: true;
+
+      styles [
+        "background",
+        "padding_10",
+      ]
+
+      ListBox wifi_list {
+        selection-mode: none;
 
         styles [
-            "background",
-            "padding_10",
+          "rounded",
         ]
-
-        ListBox wifi_list {
-            selection-mode: none;
-
-            styles [
-                "rounded",
-            ]
-        }
+      }
     }
+  }
 }
