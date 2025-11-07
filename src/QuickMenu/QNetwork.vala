@@ -1,6 +1,8 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
     private AstalNetwork.Wifi _wifi;
+    // Use the AccessPoint object itself as the key, as idk what else to do
+    private HashTable<AstalNetwork.AccessPoint, QNetworkItem> ap_items;
 
     public AstalNetwork.Network network { get; set; }
 
@@ -8,6 +10,8 @@ public class QNetwork : Gtk.Box {
     private unowned Gtk.ListBox wifi_list;
 
     construct {
+        ap_items = new HashTable<AstalNetwork.AccessPoint, QNetworkItem>(direct_hash, direct_equal);
+
         network = AstalNetwork.get_default();
         if (network == null || network.wifi == null) {
             warning("Network or WiFi interface not available");
@@ -25,20 +29,21 @@ public class QNetwork : Gtk.Box {
     }
 
     private void on_added_ap(AstalNetwork.AccessPoint ap) {
-        var item = new QNetworkItem(ap, network);
+        if (ap_items.contains(ap)) {
+            return;
+        }
 
+        var item = new QNetworkItem(ap, network);
+        ap_items.insert(ap, item);
         wifi_list.append(item);
     }
 
     private void on_removed_ap(AstalNetwork.AccessPoint ap) {
-        var current = (QNetworkItem)wifi_list.get_first_child();
+        var item = ap_items.lookup(ap);
 
-        while (current != null) {
-            if (current.access_point.ssid == ap.ssid) {
-                wifi_list.remove(current);
-                return;
-            }
-            current = (QNetworkItem)current.get_next_sibling();
+        if (item != null) {
+            wifi_list.remove(item);
+            ap_items.remove(ap);
         }
     }
 
@@ -54,22 +59,16 @@ public class QNetwork : Gtk.Box {
             return;
         }
 
-        var active_ap_ssid = network.wifi.active_access_point.ssid;
+        var active_ap = network.wifi.active_access_point;
 
-        if (active_ap_ssid == null || active_ap_ssid == "") {
-            return;
-        }
+        // Reset all items to inactive - O(n) but necessary
+        ap_items.foreach((ap, item) => {
+            item.active = false;
+        });
 
-        var current = (QNetworkItem)wifi_list.get_first_child();
-
-        while (current != null) {
-            if (current.access_point.ssid == active_ap_ssid) {
-                current.active = true;
-                break;
-            } else {
-                current.active = false;
-            }
-            current = (QNetworkItem)current.get_next_sibling();
+        var active_item = ap_items.lookup(active_ap);
+        if (active_item != null) {
+            active_item.active = true;
         }
 
         wifi_list.invalidate_sort();
