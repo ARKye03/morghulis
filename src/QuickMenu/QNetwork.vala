@@ -15,6 +15,9 @@ public class QNetwork : Gtk.Box {
     [GtkChild]
     private unowned Gtk.Revealer go_down_revealer;
 
+    [GtkChild]
+    private unowned Gtk.Image scan_button_image;
+
     construct {
         ap_items = new HashTable<AstalNetwork.AccessPoint, QNetworkItem>(direct_hash, direct_equal);
 
@@ -31,6 +34,13 @@ public class QNetwork : Gtk.Box {
         _wifi.access_point_removed.connect(on_removed_ap);
         _wifi.notify["active-access-point"].connect(update_active_states);
         _wifi.access_points.foreach(on_added_ap);
+        _wifi.notify["scanning"].connect(() => {
+            if (_wifi.scanning) {
+                scan_button_image.add_css_class("rotieren");
+            } else {
+                scan_button_image.remove_css_class("rotieren");
+            }
+        });
         update_active_states();
 
         var vadj = scrolled_window.vadjustment;

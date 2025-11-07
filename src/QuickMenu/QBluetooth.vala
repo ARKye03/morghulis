@@ -3,7 +3,10 @@ public class QBluetooth : Gtk.Box {
     public AstalBluetooth.Bluetooth bluetooth { get; set; }
 
     [GtkChild]
-    public unowned Gtk.ListBox blue_list;
+    private unowned Gtk.ListBox blue_list;
+
+    [GtkChild]
+    private unowned Gtk.Image scan_button_image;
 
     construct {
         bluetooth = AstalBluetooth.get_default();
@@ -11,6 +14,14 @@ public class QBluetooth : Gtk.Box {
         bluetooth.devices.@foreach(dev => on_added(dev));
         bluetooth.device_added.connect((_, dev) => on_added(dev));
         bluetooth.device_removed.connect((_, dev) => on_removed(dev));
+        bluetooth.adapter.notify["discovering"].connect(() => {
+            if (bluetooth.adapter.discovering) {
+                scan_button_image.add_css_class("rotieren");
+            } else {
+                scan_button_image.remove_css_class("rotieren");
+            }
+        });
+
         this.blue_list.set_sort_func(sfunc);
         this.blue_list.invalidate_sort();
     }

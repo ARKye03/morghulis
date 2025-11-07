@@ -1,50 +1,38 @@
 using Gtk 4.0;
 using Adw 1;
-using AstalBluetooth 0.1;
 
 template $QBluetooth: Box {
-    orientation: vertical;
+  orientation: vertical;
 
-    Adw.HeaderBar {
-        show-end-title-buttons: false;
+  Adw.HeaderBar {
+    show-end-title-buttons: false;
 
-        [end]
-        Box {
-            spacing: 10;
+    [end]
+    Button {
+      tooltip-text: "Discover";
+      clicked => $toggle_discover();
 
-            Revealer {
-                transition-duration: 200;
-                transition-type: slide_left;
-                reveal-child: bind template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.discovering;
-
-                Adw.Spinner spinner {
-                    tooltip-text: "What do you think?";
-                }
-            }
-
-            Button {
-                icon-name: "view-refresh-symbolic";
-                tooltip-text: "Discover";
-                clicked => $toggle_discover();
-            }
-        }
+      Image scan_button_image {
+        icon-name: "view-refresh-symbolic";
+      }
     }
+  }
 
-    ScrolledWindow {
-        vexpand: true;
+  ScrolledWindow {
+    vexpand: true;
 
-        styles [
-            "background",
-            "padding_10",
-        ]
+    styles [
+      "background",
+      "padding_10",
+    ]
 
-        ListBox blue_list {
-            show-separators: true;
-            selection-mode: none;
+    ListBox blue_list {
+      show-separators: true;
+      selection-mode: none;
 
-            styles [
-                "boxed-list",
-            ]
-        }
+      styles [
+        "boxed-list",
+      ]
     }
+  }
 }
