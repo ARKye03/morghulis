@@ -1,6 +1,6 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNetwork.ui")]
 public class QNetwork : Gtk.Box {
-    private NM.DeviceWifi _net_dev;
+    private AstalNetwork.Wifi _wifi;
 
     public AstalNetwork.Network network { get; set; }
 
@@ -13,71 +13,28 @@ public class QNetwork : Gtk.Box {
             warning("Network or WiFi interface not available");
             return;
         }
-
-        _net_dev = network.wifi.device;
-        if (_net_dev == null) {
-            warning("WiFi device not available");
-            return;
-        }
+        _wifi = network.wifi;
 
         wifi_list.set_sort_func(sort_network_items);
 
-        _net_dev.access_point_added.connect(on_added_ap);
-        _net_dev.access_point_removed.connect(on_removed_ap);
-        network.wifi.notify["active-access-point"].connect(update_active_states);
-
-        network.wifi.access_points.foreach(add_astal_ap);
+        _wifi.access_point_added.connect(on_added_ap);
+        _wifi.access_point_removed.connect(on_removed_ap);
+        _wifi.access_points.foreach(on_added_ap);
+        _wifi.notify["active-access-point"].connect(update_active_states);
         update_active_states();
     }
 
-    private void on_added_ap(Object ap) {
-        if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
-            return;
-        }
-        var nap = (NM.AccessPoint)ap;
-        if (nap.ssid == null) {
-            debug("Skipping AP with null SSID");
-            return;
-        }
-        var nap_ssid = (string)nap.ssid.get_data();
-        if (nap_ssid == null || nap_ssid == "") {
-            debug("Skipping AP with empty SSID");
-            return;
-        }
-        debug(@"Adding AP $(nap_ssid)");
-        network.wifi.access_points.foreach((ap) => {
-            if (ap.ssid == nap_ssid) {
-                add_astal_ap(ap);
-            }
-        });
-    }
-
-    private void add_astal_ap(AstalNetwork.AccessPoint ap) {
+    private void on_added_ap(AstalNetwork.AccessPoint ap) {
         var item = new QNetworkItem(ap, network);
 
         wifi_list.append(item);
     }
 
-    private void on_removed_ap(Object ap) {
-        if (ap == null || ap.get_type() != typeof(NM.AccessPoint)) {
-            return;
-        }
-        var nap = (NM.AccessPoint)ap;
-        if (nap.ssid == null) {
-            debug("Skipping removal of AP with null SSID");
-            return;
-        }
-        var nap_ssid = (string)nap.ssid.get_data();
-        if (nap_ssid == null || nap_ssid == "") {
-            debug("Skipping removal of AP with empty SSID");
-            return;
-        }
-        debug(@"Removing AP $(nap_ssid)");
-
+    private void on_removed_ap(AstalNetwork.AccessPoint ap) {
         var current = (QNetworkItem)wifi_list.get_first_child();
 
         while (current != null) {
-            if (current.access_point.ssid == nap_ssid) {
+            if (current.access_point.ssid == ap.ssid) {
                 wifi_list.remove(current);
                 return;
             }
