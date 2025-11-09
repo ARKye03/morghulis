@@ -27,25 +27,46 @@ template $QNotifications: Box {
       name: "notifications";
       title: "Notifications";
 
-      child: ScrolledWindow {
-        overflow: hidden;
-        vexpand: true;
-        hscrollbar-policy: never;
-        margin-top: 10;
-        margin-end: 10;
-        margin-bottom: 10;
-        margin-start: 10;
-
-        styles [
-          "rounded",
-        ]
-
-        ListBox notifications {
-          selection-mode: none;
+      child: Overlay {
+        [overlay]
+        Revealer go_down_revealer {
+          transition-duration: 200;
+          transition-type: slide_up;
+          reveal-child: true;
+          halign: center;
+          valign: end;
 
           styles [
-            "boxed-list-separate",
+            "float-y",
           ]
+
+          Image {
+            icon-name: "go-down-symbolic";
+            pixel-size: 32;
+            margin-bottom: 10;
+          }
+        }
+
+        ScrolledWindow scrolled_window {
+          overflow: hidden;
+          vexpand: true;
+          hscrollbar-policy: never;
+          margin-top: 10;
+          margin-end: 10;
+          margin-bottom: 10;
+          margin-start: 10;
+
+          styles [
+            "rounded",
+          ]
+
+          ListBox notif_list {
+            selection-mode: none;
+
+            styles [
+              "boxed-list-separate",
+            ]
+          }
         }
       };
     }
