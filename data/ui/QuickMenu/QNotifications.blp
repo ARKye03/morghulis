@@ -2,79 +2,81 @@ using Gtk 4.0;
 using Adw 1;
 
 template $QNotifications: Box {
-    orientation: vertical;
+  orientation: vertical;
 
-    Adw.HeaderBar {
-        show-end-title-buttons: false;
+  Adw.HeaderBar {
+    show-end-title-buttons: false;
 
-        [end]
-        Button {
-            icon-name: "user-trash-symbolic";
-            clicked => $clear_notifications();
-        }
+    [end]
+    Button {
+      icon-name: "user-trash-symbolic";
+      clicked => $clear_notifications();
     }
+  }
 
-    Stack {
-        transition-duration: 250;
-        transition-type: slide_up_down;
-        visible-child-name: bind $get_stack_page_to_show(template.at_least_one_notification) as <string>;
+  Stack {
+    transition-duration: 250;
+    transition-type: slide_up_down;
+    visible-child-name: bind $get_stack_page_to_show(template.at_least_one_notification) as <string>;
+
+    styles [
+      "background",
+    ]
+
+    StackPage {
+      name: "notifications";
+      title: "Notifications";
+
+      child: ScrolledWindow {
+        overflow: hidden;
+        vexpand: true;
+        hscrollbar-policy: never;
+        margin-top: 10;
+        margin-end: 10;
+        margin-bottom: 10;
+        margin-start: 10;
 
         styles [
-            "background",
+          "rounded",
         ]
 
-        StackPage {
-            name: "notifications";
-            title: "Notifications";
+        ListBox notifications {
+          selection-mode: none;
 
-            child: ScrolledWindow {
-                overflow: hidden;
-                vexpand: true;
-                hscrollbar-policy: never;
-
-                styles [
-                    "background",
-                    "padding_10",
-                ]
-
-                ListBox notifications {
-                    selection-mode: none;
-                    show-separators: true;
-
-                    styles [
-                        "boxed-list",
-                    ]
-                }
-            };
+          styles [
+            "boxed-list-separate",
+          ]
         }
-
-        StackPage {
-            name: "no_notifications";
-
-            child: Box {
-                orientation: vertical;
-                spacing: 10;
-                vexpand: true;
-                halign: center;
-                valign: center;
-
-                styles [
-                    "background",
-                ]
-
-                Image {
-                    icon-name: "bell-minus-symbolic";
-                    pixel-size: 120;
-                }
-
-                Label {
-                    label: "No notifications";
-
-                    styles [
-                        "title-1",
-                    ]
-                }
-            };
-        }
+      };
     }
+
+    StackPage {
+      name: "no_notifications";
+
+      child: Box {
+        orientation: vertical;
+        spacing: 10;
+        vexpand: true;
+        halign: center;
+        valign: center;
+
+        styles [
+          "background",
+        ]
+
+        Image {
+          icon-name: "bell-minus-symbolic";
+          pixel-size: 120;
+        }
+
+        Label {
+          label: "No notifications";
+
+          styles [
+            "title-1",
+          ]
+        }
+      };
+    }
+  }
 }

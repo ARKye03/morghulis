@@ -4,7 +4,10 @@ public class NotificationItem : Gtk.ListBoxRow {
 
     public NotificationItem(AstalNotifd.Notification notification) {
         Object(
-            notification: notification
+            notification: notification,
+            overflow: Gtk.Overflow.HIDDEN,
+            css_classes: new string[] { "rounded", "zero_padding" },
+            activatable: false
         );
 
         _content = new NotificationContent(notification);
