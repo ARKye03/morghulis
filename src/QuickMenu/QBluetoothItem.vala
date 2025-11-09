@@ -2,8 +2,18 @@
 public class QBluetoothItem : Gtk.ListBoxRow {
     public AstalBluetooth.Device device { get; construct set; }
 
-    [GtkChild]
-    public unowned Gtk.Label battery_label;
+    public bool active {
+        get {
+            return has_css_class("accent");
+        }
+        set {
+            if (value) {
+                this.add_css_class("accent");
+            } else {
+                this.remove_css_class("accent");
+            }
+        }
+    }
 
     public QBluetoothItem(AstalBluetooth.Device? device) {
         Object(
@@ -18,6 +28,11 @@ public class QBluetoothItem : Gtk.ListBoxRow {
         } else {
             this.device.connect_device.begin();
         }
+    }
+
+    [GtkCallback]
+    public string get_device_name(string? name) {
+        return name ?? "Unknown Device";
     }
 
     [GtkCallback]
@@ -36,18 +51,5 @@ public class QBluetoothItem : Gtk.ListBoxRow {
     [GtkCallback]
     public bool is_battery_a_real_thing(double percent) {
         return percent != -1;
-    }
-
-    public bool active {
-        get {
-            return has_css_class("button_accent_bg");
-        }
-        set {
-            if (value) {
-                this.add_css_class("button_accent_bg");
-            } else {
-                this.remove_css_class("button_accent_bg");
-            }
-        }
     }
 }

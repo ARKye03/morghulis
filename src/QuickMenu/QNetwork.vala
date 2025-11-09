@@ -3,6 +3,7 @@ public class QNetwork : Gtk.Box {
     private AstalNetwork.Wifi _wifi;
     private HashTable<AstalNetwork.AccessPoint, QNetworkItem> ap_items;
     private uint _scroll_indicator_timeout_id = 0;
+    private Gtk.Adjustment _vadj;
 
     public AstalNetwork.Network network { get; set; }
 
@@ -43,10 +44,10 @@ public class QNetwork : Gtk.Box {
         });
         update_active_states();
 
-        var vadj = scrolled_window.vadjustment;
-        vadj.notify["upper"].connect(debounce_scroll_indicator);
-        vadj.notify["page-size"].connect(debounce_scroll_indicator);
-        vadj.notify["value"].connect(debounce_scroll_indicator);
+        _vadj = scrolled_window.vadjustment;
+        _vadj.notify["upper"].connect(debounce_scroll_indicator);
+        _vadj.notify["page-size"].connect(debounce_scroll_indicator);
+        _vadj.notify["value"].connect(debounce_scroll_indicator);
 
         update_scroll_indicator();
     }
@@ -121,9 +122,8 @@ public class QNetwork : Gtk.Box {
     }
 
     private void update_scroll_indicator() {
-        var vadj = scrolled_window.vadjustment;
-        bool is_scrollable = vadj.upper > vadj.page_size;
-        bool not_at_bottom = (vadj.value + vadj.page_size) < vadj.upper - 1;
+        bool is_scrollable = _vadj.upper > _vadj.page_size;
+        bool not_at_bottom = (_vadj.value + _vadj.page_size) < _vadj.upper - 1;
 
         go_down_revealer.reveal_child = is_scrollable && not_at_bottom;
     }

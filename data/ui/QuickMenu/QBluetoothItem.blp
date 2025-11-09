@@ -3,82 +3,83 @@ using AstalBluetooth 0.1;
 using Adw 1;
 
 template $QBluetoothItem: Gtk.ListBoxRow {
-    GestureClick {
-        pressed => $switch_connection();
+  GestureClick {
+    pressed => $switch_connection();
+  }
+
+  selectable: false;
+  active: bind template.device as <AstalBluetooth.Device>.connected;
+
+  Gtk.Box {
+    spacing: 10;
+    hexpand: true;
+
+    styles [
+      "padding_10",
+    ]
+
+    Image {
+      icon-size: large;
+      icon-name: bind $device_icon(template.device as <AstalBluetooth.Device>.icon) as <string>;
     }
 
-    selectable: false;
-    active: bind template.device as <AstalBluetooth.Device>.connected;
+    Box {
+      orientation: vertical;
+      hexpand: true;
+      spacing: 5;
 
-    Gtk.Box {
-        spacing: 10;
-        hexpand: true;
+      Label {
+        halign: start;
+        label: bind $get_device_name(template.device as <AstalBluetooth.Device>.name) as <string>;
 
         styles [
-            "padding_10",
+          "title-4",
         ]
+      }
 
-        Image {
-            icon-size: large;
-            icon-name: bind $device_icon(template.device as <AstalBluetooth.Device>.icon) as <string>;
-        }
+      Label {
+        halign: start;
+        label: bind template.device as <AstalBluetooth.Device>.address;
 
-        Box {
-            orientation: vertical;
-            hexpand: true;
-            spacing: 5;
-
-            Label {
-                halign: start;
-                label: bind template.device as <AstalBluetooth.Device>.name;
-
-                styles [
-                    "title-4",
-                ]
-            }
-
-            Label {
-                halign: start;
-                label: bind template.device as <AstalBluetooth.Device>.address;
-
-                styles [
-                    "dim-label",
-                ]
-            }
-        }
-
-        Revealer {
-            halign: end;
-            transition-duration: 200;
-            transition-type: slide_left;
-            reveal-child: bind template.device as <AstalBluetooth.Device>.connecting;
-
-            Adw.Spinner {}
-        }
-
-        Revealer {
-            halign: end;
-            transition-duration: 200;
-            transition-type: slide_left;
-            reveal-child: bind template.device as <AstalBluetooth.Device>.connected;
-
-            Box {
-                orientation: vertical;
-                halign: end;
-                spacing: 5;
-
-                Label battery_label {
-                    visible: bind $is_battery_a_real_thing(template.device as <AstalBluetooth.Device>.battery-percentage) as <bool>;
-                    label: bind $battery_percent(template.device as <AstalBluetooth.Device>.battery-percentage) as <string>;
-                    halign: center;
-                }
-
-                Label {
-                    label: "Connected";
-                    valign: center;
-                    vexpand: true;
-                }
-            }
-        }
+        styles [
+          "dim-label",
+        ]
+      }
     }
+
+    Revealer {
+      halign: end;
+      transition-duration: 200;
+      transition-type: slide_left;
+      reveal-child: bind template.device as <AstalBluetooth.Device>.connecting;
+
+      Adw.Spinner {}
+    }
+
+    Revealer {
+      halign: end;
+      transition-duration: 200;
+      transition-type: slide_left;
+      reveal-child: bind template.device as <AstalBluetooth.Device>.connected;
+
+      Box {
+        orientation: vertical;
+        halign: end;
+        spacing: 5;
+
+        Label {
+          visible: bind $is_battery_a_real_thing(template.device as <AstalBluetooth.Device>.battery-percentage) as <bool>;
+          label: bind $battery_percent(template.device as <AstalBluetooth.Device>.battery-percentage) as <string>;
+          halign: center;
+        }
+
+        Label {
+          label: "Connected";
+          valign: center;
+          halign: center;
+          vexpand: true;
+        }
+      }
+    }
+  }
 }
