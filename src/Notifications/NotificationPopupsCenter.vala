@@ -4,13 +4,6 @@ public class NotifPopItemsCenter : MorghulWindow {
     private GSound.Context _scontext;
     private uint _notif_count = 0;
     private uint _default_notification_timeout;
-    private Queue<NotificationOperation?> _operation_queue;
-    private uint _batch_process_timeout_id = 0;
-    private uint _sound_timeout_id = 0;
-    private bool _sound_playing = false;
-
-    private const int MAX_NOTIFICATIONS = 6;
-    private const uint SOUND_COOLDOWN_MS = 1000;
 
     public NotifPopItemsCenter(WindowAnchor x_anchor = WindowAnchor.RIGHT) {
         Object(
@@ -25,7 +18,6 @@ public class NotifPopItemsCenter : MorghulWindow {
         );
 
         _default_notification_timeout = Morghulis.gsettings.get_uint("notifications-default-timeout");
-        _operation_queue = new Queue<NotificationOperation?>();
 
         setup_sound();
         setup_window();
@@ -51,90 +43,19 @@ public class NotifPopItemsCenter : MorghulWindow {
 
     private void setup_notifications() {
         this._notifd = AstalNotifd.Notifd.get_default();
-        this._notifd.notified.connect((id, replace) => this.queue_notification(id, replace));
-        this._notifd.resolved.connect((id) => this.queue_removal(id));
+        this._notifd.notified.connect((id, replace) => this.handle_notification(id, replace));
+        this._notifd.resolved.connect((id) => this.remove_notification(id));
     }
 
-    private void queue_notification(uint notification_id, bool replace) {
-        NotificationOperation op = NotificationOperation() {
-            id = notification_id,
-            is_addition = true,
-            is_replaced = replace
-        };
-
-        _operation_queue.push_tail(op);
-        schedule_batch_process();
-    }
-
-    private void queue_removal(uint notification_id) {
-        NotificationOperation op = NotificationOperation() {
-            id = notification_id,
-            is_addition = false,
-            is_replaced = false
-        };
-
-        _operation_queue.push_tail(op);
-        schedule_batch_process();
-    }
-
-    private void schedule_batch_process() {
-        if (_batch_process_timeout_id > 0) {
-            return;
+    private void handle_notification(uint notification_id, bool replace) {
+        if (replace) {
+            remove_notification(notification_id);
         }
 
-        _batch_process_timeout_id = Timeout.add(50, () => {
-            process_batch();
-            _batch_process_timeout_id = 0;
-            return Source.REMOVE;
-        });
-    }
-
-    private void process_batch() {
-        bool should_play_sound = false;
-
-        while (!_operation_queue.is_empty()) {
-            var op = _operation_queue.pop_head();
-
-            if (op.is_addition) {
-                if (op.is_replaced) {
-                    remove_notification_by_id(op.id);
-                }
-
-                if (process_addition(op.id)) {
-                    should_play_sound = true;
-                }
-            } else {
-                remove_notification_by_id(op.id);
-            }
-        }
-
-        if (_notif_count > 0) {
-            this.visible = true;
-        } else {
-            this.visible = false;
-        }
-
-        if (should_play_sound) {
-            schedule_notification_sound();
-        }
-    }
-
-    private bool process_addition(uint notification_id) {
         var notification = _notifd.get_notification(notification_id);
 
-        if (notification == null) {
-            return false;
-        }
-
         if (_notifd.dont_disturb && notification.urgency != AstalNotifd.Urgency.CRITICAL) {
-            return false;
-        }
-
-        if (_notif_count >= MAX_NOTIFICATIONS) {
-            var oldest = (PopupNotificationItem)_notif_list_box.get_last_child();
-            if (oldest != null) {
-                remove_notification_immediately(oldest);
-            }
+            return;
         }
 
         var notif_item = new PopupNotificationItem(notification);
@@ -145,64 +66,11 @@ public class NotifPopItemsCenter : MorghulWindow {
                                                   ? notification.expire_timeout * 1000
                                                   : _default_notification_timeout;
         Timeout.add(timeout_ms, () => {
-            queue_removal(notification_id);
+            remove_notification(notification_id);
             return Source.REMOVE;
         });
-
-        return true;
-    }
-
-    private void remove_notification_by_id(uint notification_id) {
-        PopupNotificationItem? notif_item = (PopupNotificationItem)_notif_list_box.get_first_child();
-
-        while (notif_item != null) {
-            if (notif_item.notification.id == notification_id) {
-                remove_notification_with_animation(notif_item);
-                return;
-            }
-            notif_item = (PopupNotificationItem)notif_item.get_next_sibling();
-        }
-    }
-
-    private void remove_notification_with_animation(PopupNotificationItem notif_item) {
-        if (notif_item.get_parent() == null) {
-            return;
-        }
-
-        notif_item.dismiss_notif(false);
-        Timeout.add(notif_item.transition_duration + 50, () => {
-            if (notif_item.get_parent() != null) {
-                this._notif_list_box.remove(notif_item);
-                this._notif_count--;
-                if (this._notif_count == 0) {
-                    this.visible = false;
-                }
-            }
-            return Source.REMOVE;
-        });
-    }
-
-    private void remove_notification_immediately(PopupNotificationItem notif_item) {
-        if (notif_item.get_parent() != null) {
-            this._notif_list_box.remove(notif_item);
-            this._notif_count--;
-        }
-    }
-
-    private void schedule_notification_sound() {
-        if (_sound_playing) {
-            return;
-        }
-
-        if (_sound_timeout_id > 0) {
-            return;
-        }
-
-        _sound_timeout_id = Timeout.add(0, () => {
-            play_notification_sound.begin();
-            _sound_timeout_id = 0;
-            return Source.REMOVE;
-        });
+        this.visible = true;
+        this.play_notification_sound.begin();
     }
 
     private void setup_sound() {
@@ -215,12 +83,6 @@ public class NotifPopItemsCenter : MorghulWindow {
     }
 
     private async void play_notification_sound() {
-        if (_sound_playing) {
-            return;
-        }
-
-        _sound_playing = true;
-
         if (!this._notifd.dont_disturb) {
             try {
                 yield this._scontext.play_full(
@@ -232,10 +94,25 @@ public class NotifPopItemsCenter : MorghulWindow {
                 warning("Failed to play sound: %s", e.message);
             }
         }
+    }
 
-        Timeout.add(SOUND_COOLDOWN_MS, () => {
-            _sound_playing = false;
-            return Source.REMOVE;
-        });
+    private void remove_notification(uint notification_id) {
+        PopupNotificationItem? notif_popup = (PopupNotificationItem)_notif_list_box.get_first_child();
+
+        while (notif_popup != null) {
+            if (notif_popup.notification.id == notification_id) {
+                notif_popup.dismiss_notif(false);
+                Timeout.add(notif_popup.transition_duration + 50, () => {
+                    this._notif_list_box.remove(notif_popup);
+                    this._notif_count--;
+                    if (this._notif_count == 0) {
+                        this.visible = false;
+                    }
+                    return Source.REMOVE;
+                });
+                break;
+            }
+            notif_popup = (PopupNotificationItem)notif_popup.get_next_sibling();
+        }
     }
 }
