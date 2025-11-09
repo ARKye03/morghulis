@@ -1,7 +1,7 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/QuickMenu/QNotifications.ui")]
 public class QNotifications : Gtk.Box {
     private AstalNotifd.Notifd _notifd;
-    private HashTable<uint32, NotificationItem> _notif_items;
+    private HashTable<uint, NotificationItem> _notif_items;
     private uint _scroll_indicator_timeout_id = 0;
     private Gtk.Adjustment _vadj;
 
@@ -18,7 +18,7 @@ public class QNotifications : Gtk.Box {
 
     construct {
         this._notifd = AstalNotifd.get_default();
-        this._notif_items = new HashTable<uint32, NotificationItem>(direct_hash, direct_equal);
+        this._notif_items = new HashTable<uint, NotificationItem>(direct_hash, direct_equal);
         this._vadj = scrolled_window.get_vadjustment();
         _vadj.notify["upper"].connect(debounce_scroll_indicator);
         _vadj.notify["page-size"].connect(debounce_scroll_indicator);
@@ -28,9 +28,7 @@ public class QNotifications : Gtk.Box {
         this._notifd.notified.connect(on_notification_added);
         this._notifd.resolved.connect(remove_notification);
 
-        if (_notifd.notifications.length() == 0) {
-            this.at_least_one_notification = false;
-        }
+        this.at_least_one_notification = _notif_items.size() > 0;
         update_scroll_indicator();
     }
 
@@ -50,38 +48,29 @@ public class QNotifications : Gtk.Box {
         }
 
         var notification = _notifd.get_notification(notification_id);
-        notif_list.prepend(new NotificationItem(notification));
+        var item = new NotificationItem(notification);
+
+        _notif_items.insert(notification_id, item);
+        notif_list.prepend(item);
 
         Idle.add(() => {
-            if (_notifd.notifications.length() > 0) {
-                this.at_least_one_notification = true;
-            }
+            this.at_least_one_notification = _notif_items.size() > 0;
             debounce_scroll_indicator();
-
             return Source.REMOVE;
         });
     }
 
     private void remove_notification(uint notification_id) {
-        NotificationItem? notif_popup = (NotificationItem)notif_list.get_first_child();
+        var item = _notif_items.lookup(notification_id);
 
-        while (notif_popup != null) {
-            if (notif_popup.notification.id == notification_id) {
-                notif_list.remove(notif_popup);
-                break;
-            }
-            notif_popup = (NotificationItem)notif_popup.get_next_sibling();
-        }
-        if (_notifd.notifications.length() == 0) {
-            this.at_least_one_notification = false;
+        if (item != null) {
+            notif_list.remove(item);
+            _notif_items.remove(notification_id);
         }
 
         Idle.add(() => {
-            if (_notifd.notifications.length() > 0) {
-                this.at_least_one_notification = true;
-            }
+            this.at_least_one_notification = _notif_items.size() > 0;
             debounce_scroll_indicator();
-
             return Source.REMOVE;
         });
     }
@@ -90,7 +79,7 @@ public class QNotifications : Gtk.Box {
         if (_scroll_indicator_timeout_id > 0) {
             Source.remove(_scroll_indicator_timeout_id);
         }
-        // ----------------------------------- ¯\_(ツ)_/¯
+
         _scroll_indicator_timeout_id = Timeout.add(0x64, () => {
             update_scroll_indicator();
             _scroll_indicator_timeout_id = 0;
