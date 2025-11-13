@@ -9,12 +9,11 @@ public class RiverTags : Rolltop {
     public RiverTags(AstalRiver.River river, uint max_tags = 9) {
         this._river = river;
         this._total_tags = max_tags;
-        string focused_output = river.get_focused_output();
-        this._output = river.get_output(focused_output);
+        this._output = river.focused_output;
 
         initialize_items();
 
-        _output.changed.connect(update_css);
+        _output.notify.connect(update_css);
         update_css();
 
         setup_scroll_handler();

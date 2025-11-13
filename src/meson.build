@@ -5,6 +5,8 @@ vapidir = meson.current_source_dir() + '/vapi/'
 
 # Optional dependencies
 astal_hyprland_dep = dependency('astal-hyprland-0.1', required: false)
+wl_dep = dependency('wayland-client', required: false)
+astal_wl_dep = dependency('astal-wl-0.1', required: false)
 astal_river_dep = dependency('astal-river-0.1', required: false)
 astal_battery_dep = dependency('astal-battery-0.1', required: false)
 astal_power_profiles_dep = dependency('astal-power-profiles-0.1', required: false)
@@ -33,7 +35,7 @@ if astal_hyprland_dep.found()
 endif
 
 if astal_river_dep.found()
-    deps += astal_river_dep
+    deps += [astal_river_dep, astal_wl_dep, wl_dep]
 endif
 
 if astal_battery_dep.found()
