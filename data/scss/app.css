@@ -1,11 +1,4 @@
-@define-color accent_color #8839ef;
-@define-color accent_bg_color #8839ef;
-@define-color accent_fg_color #ffffff;
-
 :root {
-    --accent-color: #8839ef;
-    --accent-bg-color: #8839ef;
-    --accent-fg-color: #ffffff;
     --destructive-color: #e01b24;
     --destructive-bg-color: #a51d2d;
     --destructive-fg-color: #ffffff;

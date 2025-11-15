@@ -33,7 +33,7 @@ button {
 }
 
 .master_border {
-    // border: 1px solid adw.$borders_color;
+    // border: 1px solid adw.$borders-color;
     border: unset;
 }
 
@@ -94,12 +94,12 @@ button {
 }
 
 .qbutton {
-    & > button {
-        background-color: adw.$accent_bg_color;
-        color: adw.$accent_fg_color;
+    &>button {
+        background-color: adw.$accent-bg-color;
+        color: adw.$accent-fg-color;
 
         &:hover {
-            background-color: #{"hsl(from @accent_bg_color h s calc(l + 5%))"};
+            background-color: #{"hsl(from var(--accent-bg-color) h s calc(l + 5%))"};
         }
     }
 }
@@ -108,15 +108,15 @@ circularprogress {
     background-color: transparent;
 
     & progress {
-        color: adw.$accent_color;
+        color: adw.$accent-color;
     }
 
     & radius {
-        color: adw.$dark_1;
+        color: adw.$dark-1;
     }
 
     & center {
-        color: adw.$headerbar_shade_color;
+        color: adw.$headerbar-shade-color;
     }
 }
 
@@ -128,7 +128,7 @@ circularprogress {
 
         & highlight {
             @extend .rounded;
-            background-color: adw.$accent_color;
+            background-color: adw.$accent-color;
         }
 
         & slider {
@@ -145,7 +145,7 @@ circularprogress {
 
         & progress {
             @extend .rounded;
-            background-color: adw.$accent_color;
+            background-color: adw.$accent-color;
             min-height: 10px;
         }
     }
@@ -157,7 +157,7 @@ circularprogress {
         min-width: 10px;
 
         & highlight {
-            background-color: adw.$accent_color;
+            background-color: adw.$accent-color;
         }
 
         & slider {
@@ -211,6 +211,7 @@ circularprogress {
     0% {
         transform: translateY(0);
     }
+
     100% {
         transform: translateY(-10px);
     }
@@ -224,6 +225,7 @@ circularprogress {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

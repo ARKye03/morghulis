@@ -5,24 +5,16 @@
 }
 
 .empty {
-    color: adw.$dark_1;
+    color: adw.$dark-1;
 }
 
 .occupied {
-    @extend .focused;
+    color: adw.$accent-color;
     filter: hue-rotate(90deg) brightness(0.5);
 }
 
 .urgent {
-    color: adw.$red_5;
-}
-
-.focused {
-    color: adw.$accent_color;
-
-    * {
-        color: adw.$accent_color;
-    }
+    color: adw.$red-5;
 }
 
 .tray_button {
