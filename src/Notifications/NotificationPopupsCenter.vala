@@ -69,7 +69,11 @@ public class NotifPopItemsCenter : MorghulWindow {
             remove_notification(notification_id);
             return Source.REMOVE;
         });
-        this.visible = true;
+
+        if (!this.visible) {
+            this.visible = true;
+        }
+
         this.play_notification_sound.begin();
     }
 
