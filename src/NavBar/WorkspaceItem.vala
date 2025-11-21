@@ -36,7 +36,8 @@ public class WorkspaceItem : Gtk.Button {
 
     private void setup_click_handlers() {
         var gesture = new Gtk.GestureClick() {
-            button = 0
+            button = 0,
+            propagation_phase = Gtk.PropagationPhase.CAPTURE
         };
 
         gesture.pressed.connect((n_press, x, y) => {
