@@ -4,6 +4,7 @@ project_resources += files(
     'AppsCmdButton.vala',
     'HelpCmd.vala',
     'MathCmd.vala',
+    'MathHistoryManager.vala',
     'SysInfoCmd.vala',
     'SysInfoItem.vala',
     'WeatherCmd.vala'

@@ -39,4 +39,31 @@ template $MathCmd: Box {
             "title-4",
         ]
     }
+
+    Box history_container {
+        orientation: vertical;
+        spacing: 12;
+        visible: false;
+
+        ScrolledWindow history_scroll {
+            max-content-height: 400;
+            propagate-natural-height: true;
+            hscrollbar-policy: never;
+
+            Box history_box {
+                orientation: vertical;
+                spacing: 12;
+            }
+        }
+
+        Button clear_button {
+            label: "Clear History";
+            halign: end;
+            margin-top: 6;
+
+            styles [
+                "destructive-action",
+            ]
+        }
+    }
 }

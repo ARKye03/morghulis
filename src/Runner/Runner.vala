@@ -39,10 +39,8 @@ public class Runner : MorghulWindow {
                 commands_stack.visible_child_name = "apps";
             } else {
                 this.entry.grab_focus();
-                if (commands_stack.visible_child_name == "apps") {
-                    if (_apps_cmd is ICommand) {
-                        ((ICommand)_apps_cmd).on_activate();
-                    }
+                if (commands_stack.visible_child_name == "apps" && _apps_cmd is ICommand) {
+                    ((ICommand)_apps_cmd).on_activate();
                 }
             }
         });
