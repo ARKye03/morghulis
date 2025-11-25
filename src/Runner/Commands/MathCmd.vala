@@ -5,11 +5,11 @@ public extern double mpars_evaluate(string expression, out string? error);
 public class MathCmd : Gtk.Box, ICommand {
     private MathHistoryManager _history_manager;
     private string? _last_saved_expression = null;
+    private string _current_expression = "";
 
     public string icon_name { get { return "math-symbolic"; } }
+    public bool has_result { get; set; }
 
-    [GtkChild]
-    private unowned Gtk.Label expression_label;
     [GtkChild]
     private unowned Gtk.Label result_label;
     [GtkChild]
@@ -41,20 +41,21 @@ public class MathCmd : Gtk.Box, ICommand {
             return;
         }
 
-        expression_label.label = expression;
-        expression_label.visible = true;
+        _current_expression = expression;
 
         string? error;
         double result = mpars_evaluate(expression, out error);
 
         if (error == null) {
             result_label.label = format_result(result);
-            result_label.visible = true;
+            has_result = true;
             error_label.visible = false;
+            result_label.visible = true;
         } else {
-            result_label.visible = false;
+            has_result = true;
             error_label.label = "Error: " + error;
             error_label.visible = true;
+            result_label.visible = false;
         }
     }
 
@@ -70,9 +71,8 @@ public class MathCmd : Gtk.Box, ICommand {
     }
 
     private void show_placeholder() {
-        expression_label.visible = false;
         result_label.label = "Enter a math expression";
-        result_label.visible = true;
+        has_result = false;
         error_label.visible = false;
     }
 
@@ -86,11 +86,12 @@ public class MathCmd : Gtk.Box, ICommand {
 
     public void on_deactivate() {
         save_current_calculation();
+        reset();
     }
 
     private void save_current_calculation() {
-        if (expression_label.visible && !error_label.visible && result_label.visible) {
-            string expr = expression_label.label;
+        if (has_result && !error_label.visible && result_label.visible) {
+            string expr = _current_expression;
             if (expr != _last_saved_expression) {
                 _history_manager.add_entry(expr, result_label.label);
                 populate_history();

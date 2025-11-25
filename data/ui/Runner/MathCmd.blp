@@ -8,36 +8,35 @@ template $MathCmd: Box {
         "padding_10",
     ]
 
-    Label expression_label {
-        halign: start;
-        wrap: true;
+    Revealer {
+        transition-type: slide_down;
+        transition-duration: 250;
+        reveal-child: bind template.has_result;
 
-        styles [
-            "title-3",
-            "dim-label",
-            "numeric",
-        ]
-    }
+        Box {
+            orientation: vertical;
 
-    Label result_label {
-        halign: start;
-        selectable: true;
+            Label result_label {
+                halign: start;
+                selectable: true;
 
-        styles [
-            "title-1",
-            "numeric",
-        ]
-    }
+                styles [
+                    "title-1",
+                    "numeric",
+                ]
+            }
 
-    Label error_label {
-        halign: start;
-        wrap: true;
-        visible: false;
+            Label error_label {
+                halign: start;
+                wrap: true;
+                visible: false;
 
-        styles [
-            "error",
-            "title-4",
-        ]
+                styles [
+                    "error",
+                    "title-4",
+                ]
+            }
+        }
     }
 
     Box history_container {
