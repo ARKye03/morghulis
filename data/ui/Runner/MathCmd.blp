@@ -44,10 +44,8 @@ template $MathCmd: Box {
         spacing: 12;
         visible: false;
 
-        ScrolledWindow history_scroll {
+        $ScrollableIndicatorMenu {
             max-content-height: 400;
-            propagate-natural-height: true;
-            hscrollbar-policy: never;
 
             Box history_box {
                 orientation: vertical;
