@@ -40,7 +40,7 @@ public class ScrollableIndicatorMenu : Gtk.Widget, Gtk.Buildable {
         layout_manager = new Gtk.BinLayout();
 
         _overlay = new Gtk.Overlay() {
-            css_classes = new string[] { "background", "padding_10" }
+            css_classes = new string[] { "background" }
         };
         _overlay.set_parent(this);
 
