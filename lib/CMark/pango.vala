@@ -1,6 +1,6 @@
 namespace CMark {
-public static string parse_to_pango(string markdown) {
-    if (markdown == "") {
+public static string parse_to_pango(string? markdown) {
+    if (markdown == null || markdown == "") {
         return "";
     }
 
