@@ -76,8 +76,7 @@ template $NotificationContent: Gtk.Box {
       max-width-chars: 15;
     }
 
-    Label {
-      label: bind template.notification as <AstalNotifd.Notification>.body;
+    Label label_body {
       wrap: true;
       wrap-mode: word_char;
       justify: left;
