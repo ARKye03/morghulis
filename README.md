@@ -48,6 +48,7 @@ A Wayland desktop shell created with GTK4, Libadwaita, and Astal.
     </details>
 - [libgtop](https://gitlab.gnome.org/GNOME/libgtop)
 - [muparser](https://beltoforion.de/en/muparser/)
+- [CMark](https://github.com/commonmark/cmark)
 
 > [!NOTE]
 > Optional dependencies are not required only if built from source; the binary release requires all.

@@ -5,12 +5,16 @@ public class NotificationContent : Gtk.Box {
     [GtkChild]
     public unowned Gtk.Box actions_box;
 
+    [GtkChild]
+    public unowned Gtk.Label label_body;
+
     public NotificationContent(AstalNotifd.Notification notification) {
         Object(
             notification: notification
         );
         setup_actions();
         setup_urgency();
+        setup_body();
     }
 
     [GtkCallback]
@@ -41,5 +45,21 @@ public class NotificationContent : Gtk.Box {
             action.clicked.connect(() => this.notification.invoke(a.id));
             this.actions_box.append(action);
         });
+    }
+
+    private void setup_body() {
+        if (notification == null) {
+            return;
+        }
+
+        string body_text = notification.body ?? "";
+        if (body_text == "") {
+            label_body.hide();
+            return;
+        }
+        label_body.show();
+
+        string pango = CMark.parse_to_pango(body_text);
+        label_body.set_markup(pango);
     }
 }
