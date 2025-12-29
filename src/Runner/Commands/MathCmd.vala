@@ -5,7 +5,7 @@ public class MathCmd : Gtk.Box, ICommand {
     private MathHistoryManager _history_manager;
     private string? _last_saved_expression = null;
     private string _current_expression = "";
-    private Handle _parser;
+    private Parser _parser;
 
     public string icon_name { get { return "math-symbolic"; } }
     public bool has_result { get; set; }
@@ -23,19 +23,20 @@ public class MathCmd : Gtk.Box, ICommand {
 
     construct {
         _history_manager = new MathHistoryManager();
-        _parser = MuParser.create();
+        _parser = new Parser(){
+            decimal_separator = '.',
+            argument_separator = ';'
+        };
 
-        MuParser.set_decimal_separator(_parser, '.');
-        MuParser.set_argument_separator(_parser, ';');
-        MuParser.define_const(_parser, "pi", 3.14159265359);
-        MuParser.define_const(_parser, "e", 2.718281828459);
+        _parser.define_constant("pi", 3.14159265359);
+        _parser.define_constant("e", 2.718281828459);
 
         clear_button.clicked.connect(on_clear_history);
         populate_history();
     }
 
     ~MathCmd() {
-        MuParser.release(_parser);
+        // Vala handles the release of _parser automatically if I'm not wrong
     }
 
     public void handle_input(string input) {
@@ -54,12 +55,12 @@ public class MathCmd : Gtk.Box, ICommand {
 
         _current_expression = expression;
 
-        MuParser.set_expr(_parser, expression);
-        double result = MuParser.eval(_parser);
+        _parser.expression = expression;
+        double result = _parser.eval();
 
-        if (MuParser.has_error(_parser)) {
+        if (_parser.has_error) {
             has_result = true;
-            error_label.label = "Error: " + MuParser.get_error_msg(_parser);
+            error_label.label = "Error: " + _parser.error_message;
             error_label.visible = true;
             result_label.visible = false;
         } else {

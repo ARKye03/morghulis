@@ -2,74 +2,110 @@
 namespace MuParser {
 [CCode(cname = "muParserHandle_t", has_type_id = false)]
 [SimpleType]
-public struct Handle {
+private struct ParserHandle {
 }
 
-[CCode(cname = "muFloat_t")]
-public struct Float : double {
-}
-
-[CCode(cname = "muChar_t")]
-public struct Char : char {
-}
-
-[CCode(cname = "muBool_t")]
-public struct Bool : int {
-}
-
-// Parser type constants
 [CCode(cname = "muBASETYPE_INT")]
 public const int BASETYPE_INT;
 
 [CCode(cname = "muBASETYPE_FLOAT")]
 public const int BASETYPE_FLOAT;
 
-// Core functions
-[CCode(cname = "mupCreate")]
-public Handle create(int base_type = 0);
+[Compact]
+[CCode(cname = "muParserHandle_t", free_function = "mupRelease")]
+public class Parser {
+    [CCode(cname = "mupCreate")]
+    public Parser(int base_type = BASETYPE_FLOAT);
 
-[CCode(cname = "mupRelease")]
-public void release(Handle parser);
+    public string expression {
+        [CCode(cname = "mupGetExpr")]
+        get;
+        [CCode(cname = "mupSetExpr")]
+        set;
+    }
 
-[CCode(cname = "mupSetExpr")]
-public void set_expr(Handle parser, string expr);
+    public string version {
+        [CCode(cname = "mupGetVersion")]
+        get;
+    }
 
-[CCode(cname = "mupGetExpr")]
-public unowned string get_expr(Handle parser);
+    public bool has_error {
+        [CCode(cname = "mupError")]
+        get;
+    }
 
-[CCode(cname = "mupEval")]
-public double eval(Handle parser);
+    public string error_message {
+        [CCode(cname = "mupGetErrorMsg")]
+        get;
+    }
 
-[CCode(cname = "mupGetVersion")]
-public unowned string get_version(Handle parser);
+    public string error_token {
+        [CCode(cname = "mupGetErrorToken")]
+        get;
+    }
 
-// Variable management
-[CCode(cname = "mupDefineVar")]
-public void define_var(Handle parser, string name, out double var);
+    public int error_position {
+        [CCode(cname = "mupGetErrorPos")]
+        get;
+    }
 
-[CCode(cname = "mupDefineConst")]
-public void define_const(Handle parser, string name, double value);
+    public int error_code {
+        [CCode(cname = "mupGetErrorCode")]
+        get;
+    }
 
-// Locale settings
-[CCode(cname = "mupSetDecSep")]
-public void set_decimal_separator(Handle parser, char sep);
+    public int expression_variable_count {
+        [CCode(cname = "mupGetExprVarNum")]
+        get;
+    }
 
-[CCode(cname = "mupSetThousandsSep")]
-public void set_thousands_separator(Handle parser, char sep);
+    public int variable_count {
+        [CCode(cname = "mupGetVarNum")]
+        get;
+    }
 
-[CCode(cname = "mupSetArgSep")]
-public void set_argument_separator(Handle parser, char sep);
+    public int constant_count {
+        [CCode(cname = "mupGetConstNum")]
+        get;
+    }
 
-// Error handling
-[CCode(cname = "mupError")]
-public bool has_error(Handle parser);
+    public char decimal_separator {
+        [CCode(cname = "mupSetDecSep")]
+        set;
+    }
 
-[CCode(cname = "mupGetErrorMsg")]
-public unowned string get_error_msg(Handle parser);
+    public char thousands_separator {
+        [CCode(cname = "mupSetThousandsSep")]
+        set;
+    }
 
-[CCode(cname = "mupGetErrorToken")]
-public unowned string get_error_token(Handle parser);
+    public char argument_separator {
+        [CCode(cname = "mupSetArgSep")]
+        set;
+    }
 
-[CCode(cname = "mupGetErrorPos")]
-public int get_error_pos(Handle parser);
+    [CCode(cname = "mupEval")]
+    public double eval();
+
+    [CCode(cname = "mupDefineVar")]
+    public void define_variable(string name, out double var);
+
+    [CCode(cname = "mupDefineConst")]
+    public void define_constant(string name, double value);
+
+    [CCode(cname = "mupRemoveVar")]
+    public void remove_variable(string name);
+
+    [CCode(cname = "mupClearVar")]
+    public void clear_variables();
+
+    [CCode(cname = "mupClearConst")]
+    public void clear_constants();
+
+    [CCode(cname = "mupResetLocale")]
+    public void reset_locale();
+
+    [CCode(cname = "mupErrorReset")]
+    public void reset_error();
+}
 }
