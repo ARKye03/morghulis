@@ -50,6 +50,7 @@
         <file preprocess="xml-stripblanks">ui/Runner/MathCmd.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/SysInfoCmd.ui</file>
         <file preprocess="xml-stripblanks">ui/Runner/SysInfoItem.ui</file>
+        <file preprocess="xml-stripblanks">ui/Runner/WeatherCmd.ui</file>
         <!-- QuickMenu -->
         <file preprocess="xml-stripblanks">ui/QuickMenu/QuickMenu.ui</file>
         <file preprocess="xml-stripblanks">ui/QuickMenu/QButton.ui</file>
