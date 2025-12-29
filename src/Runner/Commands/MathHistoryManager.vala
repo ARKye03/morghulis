@@ -10,8 +10,7 @@ public class MathHistoryManager : Object {
     private uint _max_days_to_remember;
 
     construct {
-        //  _max_days_to_remember = Morghulis.gsettings.get_uint("math-history-max-days");
-        _max_days_to_remember = 7;
+        _max_days_to_remember = Morghulis.gsettings.get_uint("math-history-max-days");
 
         key_file = new KeyFile();
         string data_dir = Environment.get_user_data_dir();
