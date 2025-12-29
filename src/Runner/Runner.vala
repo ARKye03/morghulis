@@ -99,7 +99,7 @@ public class Runner : MorghulWindow {
 
         Command weather_cmd = {
             name : "w",
-            description : "Weather information (placeholder)",
+            description : "View current weather information",
             widget : new WeatherBox()
         };
         _commands.insert(weather_cmd.name, weather_cmd);

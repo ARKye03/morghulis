@@ -27,6 +27,8 @@ deps = [
     dependency('libportal'),
     dependency('libcmark'),
     dependency('muparser'),
+    dependency('libsoup-3.0'),
+    dependency('json-glib-1.0')
 ]
 
 # Add optional dependencies if found
