@@ -25,6 +25,7 @@ deps = [
     dependency('libadwaita-1', version: '>= 1.6.0'),
     dependency('libgtop-2.0'),
     dependency('libportal'),
+    dependency('muparser'),
 ]
 
 # Add optional dependencies if found

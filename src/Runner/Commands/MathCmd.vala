@@ -1,11 +1,11 @@
-[CCode(cname = "mpars_evaluate")]
-public extern double mpars_evaluate(string expression, out string? error);
+using MuParser;
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/MathCmd.ui")]
 public class MathCmd : Gtk.Box, ICommand {
     private MathHistoryManager _history_manager;
     private string? _last_saved_expression = null;
     private string _current_expression = "";
+    private Handle _parser;
 
     public string icon_name { get { return "math-symbolic"; } }
     public bool has_result { get; set; }
@@ -23,8 +23,19 @@ public class MathCmd : Gtk.Box, ICommand {
 
     construct {
         _history_manager = new MathHistoryManager();
+        _parser = MuParser.create();
+
+        MuParser.set_decimal_separator(_parser, '.');
+        MuParser.set_argument_separator(_parser, ';');
+        MuParser.define_const(_parser, "pi", 3.14159265359);
+        MuParser.define_const(_parser, "e", 2.718281828459);
+
         clear_button.clicked.connect(on_clear_history);
         populate_history();
+    }
+
+    ~MathCmd() {
+        MuParser.release(_parser);
     }
 
     public void handle_input(string input) {
@@ -43,19 +54,19 @@ public class MathCmd : Gtk.Box, ICommand {
 
         _current_expression = expression;
 
-        string? error;
-        double result = mpars_evaluate(expression, out error);
+        MuParser.set_expr(_parser, expression);
+        double result = MuParser.eval(_parser);
 
-        if (error == null) {
+        if (MuParser.has_error(_parser)) {
+            has_result = true;
+            error_label.label = "Error: " + MuParser.get_error_msg(_parser);
+            error_label.visible = true;
+            result_label.visible = false;
+        } else {
             result_label.label = format_result(result);
             has_result = true;
             error_label.visible = false;
             result_label.visible = true;
-        } else {
-            has_result = true;
-            error_label.label = "Error: " + error;
-            error_label.visible = true;
-            result_label.visible = false;
         }
     }
 
