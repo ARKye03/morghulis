@@ -40,15 +40,14 @@ A Wayland desktop shell created with GTK4, Libadwaita, and Astal.
   - Apps
   - River (Optional)
   - Hyprland (Optional)
-  - <details> <summary>Battery</summary>
-      While it might not be used, its mandatory to install it (For now).
-    </details>
-  - <details> <summary>Power Profiles</summary>
-      While it might not be used, its mandatory to install it (For now).
-    </details>
+  - Battery
+  - Power Profiles
 - [libgtop](https://gitlab.gnome.org/GNOME/libgtop)
 - [muparser](https://beltoforion.de/en/muparser/)
 - [CMark](https://github.com/commonmark/cmark)
+- [JsonGLib](https://gitlab.gnome.org/GNOME/json-glib)
+- [libsoup](https://gitlab.gnome.org/GNOME/libsoup)
+- [libportal](https://github.com/flatpak/libportal)
 
 > [!NOTE]
 > Optional dependencies are not required only if built from source; the binary release requires all.
