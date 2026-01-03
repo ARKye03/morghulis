@@ -54,10 +54,10 @@ public class NotificationContent : Gtk.Box {
 
         string body_text = notification.body ?? "";
         if (body_text == "") {
-            label_body.hide();
+            label_body.visible = false;
             return;
         }
-        label_body.show();
+        label_body.visible = true;
 
         string pango = CMark.parse_to_pango(body_text);
         label_body.set_markup(pango);
