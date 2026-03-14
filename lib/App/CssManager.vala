@@ -13,18 +13,18 @@ public class CssManager : Object {
     }
 
     public void load_app_css() {
-        var main_css_provider = new Gtk.CssProvider();
-
-        main_css_provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
-        add_provider(main_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
         bool use_built_in_gtk_theme = Morghulis.gsettings.get_boolean("gtk-theme");
 
         if (use_built_in_gtk_theme) {
             var app_css_provider = new Gtk.CssProvider();
             app_css_provider.load_from_resource("com/github/ARKye03/morghulis/app.css");
-            add_provider(app_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+            add_provider(app_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
+
+        var main_css_provider = new Gtk.CssProvider();
+
+        main_css_provider.load_from_resource("com/github/ARKye03/morghulis/morghulis.css");
+        add_provider(main_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     public void load_user_css() {

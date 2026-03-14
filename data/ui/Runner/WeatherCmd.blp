@@ -1,0 +1,248 @@
+using Gtk 4.0;
+
+template $WeatherBox: Box {
+    orientation: vertical;
+    spacing: 8;
+    margin-top: 16;
+    margin-bottom: 16;
+    margin-start: 16;
+    margin-end: 16;
+
+    Stack stack {
+        visible-child-name: bind template.view-state;
+        transition-type: crossfade;
+        transition-duration: 200;
+
+        StackPage {
+            name: "initial";
+
+            child: Box {
+                orientation: vertical;
+                halign: center;
+                valign: center;
+                spacing: 12;
+
+                Image {
+                    icon-name: "weather-few-clouds-symbolic";
+                    pixel-size: 48;
+
+                    styles [
+                        "dim-label",
+                    ]
+                }
+
+                Label {
+                    label: "Press Enter to see the weather";
+
+                    styles [
+                        "caption",
+                        "dim-label",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "loading";
+
+            child: Box {
+                orientation: vertical;
+                halign: center;
+                valign: center;
+                spacing: 12;
+
+                Spinner {
+                    spinning: true;
+                }
+
+                Label {
+                    label: "Fetching weather data...";
+
+                    styles [
+                        "caption",
+                        "dim-label",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "success";
+
+            child: Box {
+                orientation: vertical;
+                spacing: 8;
+
+                Box {
+                    orientation: horizontal;
+                    spacing: 12;
+
+                    Image {
+                        icon-name: "weather-few-clouds-symbolic";
+                        pixel-size: 48;
+
+                        styles [
+                            "weather-icon",
+                        ]
+                    }
+
+                    Box {
+                        orientation: vertical;
+                        halign: start;
+
+                        Label {
+                            label: bind template.temp;
+
+                            styles [
+                                "title-1",
+                            ]
+                        }
+
+                        Label {
+                            label: bind template.condition;
+
+                            styles [
+                                "caption",
+                                "dim-label",
+                            ]
+                        }
+                    }
+
+                    Box {
+                        hexpand: true;
+                    }
+
+                    Box {
+                        orientation: vertical;
+                        halign: end;
+                        valign: center;
+
+                        Label {
+                            label: bind template.location;
+
+                            styles [
+                                "body",
+                            ]
+                        }
+
+                        Label {
+                            label: bind template.updated-at;
+
+                            styles [
+                                "caption",
+                                "dim-label",
+                            ]
+                        }
+                    }
+                }
+
+                Separator {
+                    margin-top: 8;
+                    margin-bottom: 8;
+                }
+
+                Box {
+                    orientation: horizontal;
+                    homogeneous: true;
+                    spacing: 12;
+
+                    Box {
+                        orientation: vertical;
+
+                        Label {
+                            label: "Apparent";
+
+                            styles [
+                                "caption",
+                                "dim-label",
+                            ]
+                        }
+
+                        Label {
+                            label: bind template.apparent;
+
+                            styles [
+                                "body",
+                            ]
+                        }
+                    }
+
+                    Box {
+                        orientation: vertical;
+
+                        Label {
+                            label: "Precipitation";
+
+                            styles [
+                                "caption",
+                                "dim-label",
+                            ]
+                        }
+
+                        Label {
+                            label: bind template.precip;
+
+                            styles [
+                                "body",
+                            ]
+                        }
+                    }
+
+                    Box {
+                        orientation: vertical;
+
+                        Label {
+                            label: "Wind";
+
+                            styles [
+                                "caption",
+                                "dim-label",
+                            ]
+                        }
+
+                        Label {
+                            label: bind template.wind;
+
+                            styles [
+                                "body",
+                            ]
+                        }
+                    }
+                }
+            };
+        }
+
+        StackPage {
+            name: "error";
+
+            child: Box {
+                orientation: vertical;
+                halign: center;
+                valign: center;
+                spacing: 12;
+
+                Image {
+                    icon-name: "dialog-error-symbolic";
+                    pixel-size: 32;
+                }
+
+                Label {
+                    label: bind template.error-msg;
+
+                    styles [
+                        "body",
+                    ]
+                }
+
+                Label {
+                    label: "Press Enter to retry";
+
+                    styles [
+                        "caption",
+                        "dim-label",
+                    ]
+                }
+            };
+        }
+    }
+}

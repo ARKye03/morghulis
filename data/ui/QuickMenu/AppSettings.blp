@@ -79,6 +79,20 @@ template $AppSettings: Box {
           step-increment: 100;
         };
       }
+
+      Adw.SpinRow {
+        name: "math-history-max-days";
+        title: _("Math History Max Days");
+        subtitle: _("Maximum days to remember math history");
+        value: bind template.math_history_max_days bidirectional;
+        can-focus: false;
+
+        adjustment: Adjustment {
+          lower: 0;
+          upper: 30;
+          step-increment: 1;
+        };
+      }
     }
   }
 }

@@ -15,143 +15,122 @@ template $QAudioBox: Gtk.Box {
     show-end-title-buttons: false;
   }
 
-  Overlay {
-    ScrolledWindow scrolled_window {
-      hscrollbar-policy: never;
+  $ScrollableIndicatorMenu scrolled_window {
+    vexpand: true;
+
+    styles [
+      "background",
+      "padding_10",
+      "rounded",
+    ]
+
+    Box {
       vexpand: true;
+      spacing: 10;
+      orientation: vertical;
 
       Box {
-        vexpand: true;
-        spacing: 10;
-        orientation: vertical;
+        spacing: 5;
 
         styles [
+          "view",
           "rounded",
-          "padding_10",
         ]
 
-        Box {
-          spacing: 5;
-
-          styles [
-            "view",
-            "rounded",
-          ]
-
-          Button {
-            icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
-            clicked => $toggle_speaker();
-          }
-
-          Scale {
-            hexpand: true;
-            adjustment: bind template.speaker_adj;
-
-            styles [
-              "hslider",
-              "rounded",
-              "padding_5",
-            ]
-          }
+        Button {
+          icon-name: bind template.speaker as <AstalWp.Endpoint>.volume-icon;
+          clicked => $toggle_speaker();
         }
 
-        Box {
-          spacing: 5;
-
-          styles [
-            "view",
-            "rounded",
-          ]
-
-          Button {
-            icon-name: bind template.microphone as <AstalWp.Endpoint>.volume-icon;
-            clicked => $toggle_microphone();
-          }
-
-          Scale {
-            hexpand: true;
-            adjustment: bind template.microphone_adj;
-
-            styles [
-              "hslider",
-              "rounded",
-              "padding_5",
-            ]
-          }
-        }
-
-        Separator {}
-
-        Label {
-          label: "Sinks";
-          halign: center;
+        Scale {
           hexpand: true;
-        }
-
-        ListBox sinks {
-          show-separators: false;
-          selection-mode: none;
-          overflow: hidden;
+          adjustment: bind template.speaker_adj;
 
           styles [
+            "hslider",
             "rounded",
-          ]
-        }
-
-        Separator {}
-
-        Label {
-          label: "Sources";
-          halign: center;
-          hexpand: true;
-        }
-
-        ListBox sources {
-          show-separators: false;
-          selection-mode: none;
-          overflow: hidden;
-
-          styles [
-            "rounded",
-          ]
-        }
-
-        Separator {}
-
-        Label {
-          label: "Mixers";
-          halign: center;
-          hexpand: true;
-        }
-
-        ListBox mixers {
-          show-separators: false;
-          selection-mode: none;
-          overflow: hidden;
-
-          styles [
-            "rounded",
+            "padding_5",
           ]
         }
       }
-    }
 
-    [overlay]
-    Revealer go_down_revealer {
-      transition-duration: 200;
-      transition-type: slide_up;
-      reveal-child: true;
-      halign: center;
-      valign: end;
+      Box {
+        spacing: 5;
 
-      styles [
-        "float-y",
-      ]
+        styles [
+          "view",
+          "rounded",
+        ]
 
-      Image {
-        icon-name: "go-down-symbolic";
-        pixel-size: 32;
-        margin-bottom: 10;
+        Button {
+          icon-name: bind template.microphone as <AstalWp.Endpoint>.volume-icon;
+          clicked => $toggle_microphone();
+        }
+
+        Scale {
+          hexpand: true;
+          adjustment: bind template.microphone_adj;
+
+          styles [
+            "hslider",
+            "rounded",
+            "padding_5",
+          ]
+        }
+      }
+
+      Separator {}
+
+      Label {
+        label: "Sinks";
+        halign: center;
+        hexpand: true;
+      }
+
+      ListBox sinks {
+        show-separators: false;
+        selection-mode: none;
+        overflow: hidden;
+
+        styles [
+          "rounded",
+        ]
+      }
+
+      Separator {}
+
+      Label {
+        label: "Sources";
+        halign: center;
+        hexpand: true;
+      }
+
+      ListBox sources {
+        show-separators: false;
+        selection-mode: none;
+        overflow: hidden;
+
+        styles [
+          "rounded",
+        ]
+      }
+
+      Separator {}
+
+      Label {
+        label: "Mixers";
+        halign: center;
+        hexpand: true;
+      }
+
+      ListBox mixers {
+        show-separators: false;
+        selection-mode: none;
+        overflow: hidden;
+
+        styles [
+          "rounded",
+        ]
       }
     }
   }

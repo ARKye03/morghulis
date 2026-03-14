@@ -8,35 +8,65 @@ template $MathCmd: Box {
         "padding_10",
     ]
 
-    Label expression_label {
-        halign: start;
-        wrap: true;
+    Revealer {
+        transition-type: slide_down;
+        transition-duration: 250;
+        reveal-child: bind template.has_result;
 
-        styles [
-            "title-3",
-            "dim-label",
-            "numeric",
-        ]
+        Box {
+            orientation: vertical;
+
+            Label result_label {
+                halign: start;
+                selectable: true;
+
+                styles [
+                    "title-1",
+                    "numeric",
+                ]
+            }
+
+            Label error_label {
+                halign: start;
+                wrap: true;
+                visible: false;
+
+                styles [
+                    "error",
+                    "title-4",
+                ]
+            }
+        }
     }
 
-    Label result_label {
-        halign: start;
-        selectable: true;
-
-        styles [
-            "title-1",
-            "numeric",
-        ]
-    }
-
-    Label error_label {
-        halign: start;
-        wrap: true;
+    Box history_container {
+        orientation: vertical;
+        spacing: 12;
         visible: false;
 
-        styles [
-            "error",
-            "title-4",
-        ]
+        $ScrollableIndicatorMenu {
+            max-content-height: 400;
+
+            styles [
+                "background",
+                "padding_10",
+                "rounded",
+            ]
+
+            Box history_box {
+                orientation: vertical;
+                spacing: 12;
+            }
+        }
+
+        Button clear_button {
+            label: "Clear History";
+            halign: end;
+            margin-top: 6;
+
+            styles [
+                "destructive-action",
+            ]
+        }
     }
 }

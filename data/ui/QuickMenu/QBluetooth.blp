@@ -18,42 +18,16 @@ template $QBluetooth: Box {
     }
   }
 
-  Overlay {
+  $ScrollableIndicatorMenu scrolled_window {
+    vexpand: true;
+
     styles [
       "background",
       "padding_10",
     ]
 
-    [overlay]
-    Revealer go_down_revealer {
-      transition-duration: 200;
-      transition-type: slide_up;
-      reveal-child: true;
-      halign: center;
-      valign: end;
-
-      styles [
-        "float-y",
-      ]
-
-      Image {
-        icon-name: "go-down-symbolic";
-        pixel-size: 32;
-        margin-bottom: 10;
-      }
-    }
-
-    ScrolledWindow scrolled_window {
-      overflow: hidden;
-      vexpand: true;
-
-      styles [
-        "rounded",
-      ]
-
-      ListBox blue_list {
-        selection-mode: none;
-      }
+    ListBox blue_list {
+      selection-mode: none;
     }
   }
 }

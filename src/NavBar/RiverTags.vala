@@ -89,7 +89,7 @@ public class RiverTags : Rolltop {
             uint urgent_tags = _output.urgent_tags;
 
             if ((focused_tags & (1 << index)) != 0) {
-                tag_button.set_css_classes({ "focused" });
+                tag_button.set_css_classes({ "accent" });
                 focused_index = index;
             } else if ((urgent_tags & (1 << index)) != 0) {
                 tag_button.set_css_classes({ "urgent" });

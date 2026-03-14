@@ -86,8 +86,8 @@ public class Morghulis : Adw.Application {
 
     private void handle_request(string request, ApplicationCommandLine command_line) {
         switch (request) {
-            case "change_volume"
-                                :if (OnScreenDisplay.instance != null) {
+            case "change_volume":
+                if (OnScreenDisplay.instance != null) {
                     OnScreenDisplay.instance.change_volume();
                     command_line.print("Volume changed\n");
                 } else {
@@ -95,8 +95,8 @@ public class Morghulis : Adw.Application {
                 }
             break;
 
-            case "change_brightness"
-                                :if (OnScreenDisplay.instance != null) {
+            case "change_brightness":
+                if (OnScreenDisplay.instance != null) {
                     OnScreenDisplay.instance.change_brightness();
                     command_line.print("Brightness changed\n");
                 } else {

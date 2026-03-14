@@ -5,6 +5,7 @@ public class AppSettings : Gtk.Box {
     private uint _navbar_anchor;
     private uint _notifications_default_timeout;
     private uint _osd_timeout;
+    private uint _math_history_max_days;
 
     public bool gtk_theme {
         get { return _gtk_theme; }
@@ -35,6 +36,14 @@ public class AppSettings : Gtk.Box {
         }
     }
 
+    public uint math_history_max_days {
+        get { return _math_history_max_days; }
+        set {
+            _math_history_max_days = value;
+            _gsettings.set_uint("math-history-max-days", _math_history_max_days);
+        }
+    }
+
     construct {
         _gsettings = Morghulis.gsettings;
         reload_gsettings();
@@ -46,5 +55,6 @@ public class AppSettings : Gtk.Box {
         navbar_anchor = _gsettings.get_string("navbar-anchor") == "bottom" ? 0 : 1;
         notifications_default_timeout = _gsettings.get_uint("notifications-default-timeout");
         osd_timeout = _gsettings.get_uint("osd-timeout");
+        math_history_max_days = _gsettings.get_uint("math-history-max-days");
     }
 }

@@ -8,6 +8,7 @@ public static void main(string[] args) {
 private void init_types() {
     typeof(MorghulWindow).ensure();
     typeof(MorghulProgressBar).ensure();
+    typeof(ScrollableIndicatorMenu).ensure();
 #if river
     typeof(RiverTags).ensure();
 #endif

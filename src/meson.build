@@ -27,6 +27,10 @@ deps = [
     dependency('libadwaita-1', version: '>= 1.6.0'),
     dependency('libgtop-2.0'),
     dependency('libportal'),
+    dependency('libcmark'),
+    dependency('muparser'),
+    dependency('libsoup-3.0'),
+    dependency('json-glib-1.0')
 ]
 
 # Add optional dependencies if found

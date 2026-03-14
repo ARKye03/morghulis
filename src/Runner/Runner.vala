@@ -39,10 +39,8 @@ public class Runner : MorghulWindow {
                 commands_stack.visible_child_name = "apps";
             } else {
                 this.entry.grab_focus();
-                if (commands_stack.visible_child_name == "apps") {
-                    if (_apps_cmd is ICommand) {
-                        ((ICommand)_apps_cmd).on_activate();
-                    }
+                if (commands_stack.visible_child_name == "apps" && _apps_cmd is ICommand) {
+                    ((ICommand)_apps_cmd).on_activate();
                 }
             }
         });
@@ -101,7 +99,7 @@ public class Runner : MorghulWindow {
 
         Command weather_cmd = {
             name : "w",
-            description : "Weather information (placeholder)",
+            description : "View current weather information",
             widget : new WeatherBox()
         };
         _commands.insert(weather_cmd.name, weather_cmd);

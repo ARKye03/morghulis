@@ -6,4 +6,5 @@ blps += files(
     'Runner.blp',
     'SysInfoCmd.blp',
     'SysInfoItem.blp',
+    'WeatherCmd.blp'
 )

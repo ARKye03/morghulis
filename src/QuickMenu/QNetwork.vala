@@ -2,19 +2,14 @@
 public class QNetwork : Gtk.Box {
     private AstalNetwork.Wifi _wifi;
     private HashTable<AstalNetwork.AccessPoint, QNetworkItem> ap_items;
-    private uint _scroll_indicator_timeout_id = 0;
-    private Gtk.Adjustment _vadj;
 
     public AstalNetwork.Network network { get; set; }
 
     [GtkChild]
-    private unowned Gtk.ScrolledWindow scrolled_window;
+    private unowned ScrollableIndicatorMenu scrolled_window;
 
     [GtkChild]
     private unowned Gtk.ListBox wifi_list;
-
-    [GtkChild]
-    private unowned Gtk.Revealer go_down_revealer;
 
     [GtkChild]
     private unowned Gtk.Image scan_button_image;
@@ -43,13 +38,6 @@ public class QNetwork : Gtk.Box {
             }
         });
         update_active_states();
-
-        _vadj = scrolled_window.vadjustment;
-        _vadj.notify["upper"].connect(debounce_scroll_indicator);
-        _vadj.notify["page-size"].connect(debounce_scroll_indicator);
-        _vadj.notify["value"].connect(debounce_scroll_indicator);
-
-        update_scroll_indicator();
     }
 
     private void on_added_ap(AstalNetwork.AccessPoint ap) {
@@ -62,7 +50,7 @@ public class QNetwork : Gtk.Box {
         wifi_list.append(item);
 
         Idle.add(() => {
-            debounce_scroll_indicator();
+            scrolled_window.refresh_scroll_indicator();
             return Source.REMOVE;
         });
     }
@@ -75,7 +63,7 @@ public class QNetwork : Gtk.Box {
             ap_items.remove(ap);
 
             Idle.add(() => {
-                debounce_scroll_indicator();
+                scrolled_window.refresh_scroll_indicator();
                 return Source.REMOVE;
             });
         }
@@ -105,27 +93,6 @@ public class QNetwork : Gtk.Box {
         }
 
         wifi_list.invalidate_sort();
-    }
-
-    // Debouncing shits is the coolest shit ever
-    // It's like using HashMaps in LeetCode, feels like chee'in (<== Read it with brit accent)
-    private void debounce_scroll_indicator() {
-        if (_scroll_indicator_timeout_id > 0) {
-            Source.remove(_scroll_indicator_timeout_id);
-        }
-        // ----------------------------------- ¯\_(ツ)_/¯
-        _scroll_indicator_timeout_id = Timeout.add(0x64, () => {
-            update_scroll_indicator();
-            _scroll_indicator_timeout_id = 0;
-            return Source.REMOVE;
-        });
-    }
-
-    private void update_scroll_indicator() {
-        bool is_scrollable = _vadj.upper > _vadj.page_size;
-        bool not_at_bottom = (_vadj.value + _vadj.page_size) < _vadj.upper - 1;
-
-        go_down_revealer.reveal_child = is_scrollable && not_at_bottom;
     }
 
     [GtkCallback]

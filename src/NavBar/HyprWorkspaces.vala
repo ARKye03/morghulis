@@ -63,7 +63,7 @@ public class HyprWorkspaces : Rolltop {
 
         while (current != null) {
             if (index + 1 == focused_workspace_id) {
-                current.set_css_classes({ "focused" });
+                current.set_css_classes({ "accent" });
                 focused_index = index;
             } else if (workspace_exists(index + 1)) {
                 current.set_css_classes({ "occupied" });

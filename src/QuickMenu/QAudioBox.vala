@@ -17,10 +17,7 @@ public class QAudioBox : Gtk.Box {
     public unowned Gtk.ListBox sinks;
 
     [GtkChild]
-    private unowned Gtk.Revealer go_down_revealer;
-
-    [GtkChild]
-    private unowned Gtk.ScrolledWindow scrolled_window;
+    private unowned ScrollableIndicatorMenu scrolled_window;
 
     construct {
         this.wp = AstalWp.get_default();
@@ -59,8 +56,6 @@ public class QAudioBox : Gtk.Box {
 
         wp.audio.stream_added.connect((e) => on_added(e, mixers));
         wp.audio.stream_removed.connect((e) => on_removed(e, mixers));
-
-        scrolled_window.edge_reached.connect(on_edge_reached);
     }
 
     [GtkCallback]
@@ -75,6 +70,11 @@ public class QAudioBox : Gtk.Box {
 
     private void on_added(AstalWp.Node e, Gtk.ListBox l) {
         l.append(new QAudioItem(e));
+
+        Idle.add(() => {
+            scrolled_window.refresh_scroll_indicator();
+            return Source.REMOVE;
+        });
     }
 
     private void on_removed(AstalWp.Node e, Gtk.ListBox l) {
@@ -87,13 +87,10 @@ public class QAudioBox : Gtk.Box {
             }
             current = (QAudioItem)current.get_next_sibling();
         }
-    }
 
-    private void on_edge_reached(Gtk.PositionType pos) {
-        if (pos == Gtk.PositionType.TOP) {
-            go_down_revealer.reveal_child = true;
-        } else {
-            go_down_revealer.reveal_child = false;
-        }
+        Idle.add(() => {
+            scrolled_window.refresh_scroll_indicator();
+            return Source.REMOVE;
+        });
     }
 }
