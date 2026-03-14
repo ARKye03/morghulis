@@ -125,6 +125,9 @@
           gsound
           libgtop
           libportal
+          cmark
+          muparser
+          libsoup_3
         ];
         compiler-utils = with pkgs; [
           vala
@@ -152,6 +155,7 @@
           battery
           powerprofiles
           bluetooth
+          wl
         ];
         shell =
           pkgs.mkShell.override
