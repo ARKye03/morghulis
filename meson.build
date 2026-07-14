@@ -20,6 +20,8 @@ subdir('src')
 
 gnome.post_install(
   glib_compile_schemas: true,
-  gtk_update_icon_cache: true,
+  # Disabled: this project ships no hicolor icons (assets go through gresource),
+  # so /usr/local/share/icons/hicolor never exists and gtk4-update-icon-cache fails.
+  # gtk_update_icon_cache: true,
   update_desktop_database: true,
 )

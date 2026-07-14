@@ -9,7 +9,7 @@ cli: build
     ./{{BIN_DIR}}/cli/{{CLI_APP_NAME}}
 
 init:
-    meson setup build
+    arch-meson build
 
 rinit:
     meson setup --reconfigure build
