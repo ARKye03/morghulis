@@ -12,7 +12,6 @@ astal_battery_dep = dependency('astal-battery-0.1', required: false)
 astal_power_profiles_dep = dependency('astal-power-profiles-0.1', required: false)
 
 deps = [
-    wl_dep,
     dependency('gtk4'),
     dependency('gtk4-layer-shell-0'),
     dependency('gsound'),
@@ -33,6 +32,11 @@ deps = [
     dependency('libsoup-3.0'),
     dependency('json-glib-1.0')
 ]
+
+# wayland-client MUST come after gtk4-layer-shell-0 in the link line:
+# gtk4-layer-shell interposes libwayland-client symbols and only works when
+# linked before it. Appending here (rather than prepending) preserves that.
+deps += wl_dep
 
 # Add optional dependencies if found
 if astal_hyprland_dep.found()
