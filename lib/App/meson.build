@@ -13,6 +13,7 @@ project_resources += [
     files(
         'Application.vala',
         'CircularProgress.vala',
+        'CubicBezier.vala',
         'CssManager.vala',
         'MorghulProgressBar.vala',
         'ScrollableIndicatorMenu.vala',
