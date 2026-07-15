@@ -15,7 +15,8 @@ internal class WaylandSource : GLib.Source {
     }
 
     public override bool prepare(out int timeout) {
-        if (display.flush() < 0) {
+        // EAGAIN just means the send buffer is momentarily full; not fatal.
+        if (display.flush() < 0 && Posix.errno != Posix.EAGAIN) {
             err = Posix.errno;
         }
         timeout = -1;

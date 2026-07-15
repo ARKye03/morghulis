@@ -23,6 +23,8 @@ public class ClipboardEntry : Object {
  */
 public class Clipboard : Object {
     private const int MAX_ENTRIES = 50;
+    private const int MAX_PAYLOAD = 5 * 1024 * 1024; // cap a single entry at 5 MB
+    private const int READ_TIMEOUT_MS = 1000;
     private const string[] TEXT_MIMES = {
         "text/plain;charset=utf-8", "text/plain", "UTF8_STRING", "STRING", "TEXT"
     };
@@ -165,15 +167,44 @@ public class Clipboard : Object {
         Posix.close(fds[1]);
         display.flush();
 
+        // Drain the pipe without blocking the UI: non-blocking fd, bounded by a
+        // per-wait timeout and a total size cap so a stalled or flooding source
+        // client can neither freeze the shell nor exhaust memory.
+        int rfd = fds[0];
+        Posix.fcntl(rfd, Posix.F_SETFL, Posix.O_NONBLOCK);
+
         var ba = new ByteArray();
         uint8[] buf = new uint8[4096];
-        ssize_t n;
-        while ((n = Posix.read(fds[0], buf, buf.length)) > 0) {
+        bool ok = true;
+        while (true) {
+            Posix.pollfd[] pfds = new Posix.pollfd[1];
+            pfds[0].fd = rfd;
+            pfds[0].events = (int16) Posix.POLLIN;
+            int pr = Posix.poll(pfds, READ_TIMEOUT_MS);
+            if (pr <= 0) {
+                ok = false; // timeout or poll error
+                break;
+            }
+            ssize_t n = Posix.read(rfd, buf, buf.length);
+            if (n < 0) {
+                if (Posix.errno == Posix.EAGAIN) {
+                    continue;
+                }
+                ok = false;
+                break;
+            }
+            if (n == 0) {
+                break; // EOF
+            }
             ba.append(buf[0 : (int) n]);
+            if (ba.len > MAX_PAYLOAD) {
+                ok = false; // oversized payload, drop it
+                break;
+            }
         }
-        Posix.close(fds[0]);
+        Posix.close(rfd);
 
-        if (ba.len == 0) {
+        if (!ok || ba.len == 0) {
             return;
         }
         Bytes data = new Bytes(ba.data);
@@ -268,8 +299,11 @@ public class Clipboard : Object {
 
     private static string make_preview(string mime, Bytes data, bool is_text) {
         if (is_text) {
-            var s = (string) data.get_data();
-            s = s.strip();
+            // Clipboard bytes are not NUL-terminated: bound the conversion by length.
+            unowned uint8[] raw = data.get_data();
+            var sb = new StringBuilder();
+            sb.append_len((string) raw, raw.length);
+            var s = sb.str.strip();
             if (s.char_count() > 80) {
                 s = s.substring(0, s.index_of_nth_char(80)) + "…";
             }
@@ -307,8 +341,11 @@ public class Clipboard : Object {
             var dir = File.new_for_path(path).get_parent();
             if (dir != null && !dir.query_exists()) {
                 dir.make_directory_with_parents();
+                FileUtils.chmod(dir.get_path(), 0700);
             }
             gen.to_file(path);
+            // History can hold secrets (passwords, tokens) — keep it owner-only.
+            FileUtils.chmod(path, 0600);
         } catch (Error e) {
             warning("clipboard: failed to save history: %s", e.message);
         }

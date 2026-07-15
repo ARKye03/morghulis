@@ -34,6 +34,7 @@ public class Gamma : Object {
         }
     }
 
+    private bool ready = false;
     private Wl.Display? display;
     private Wl.Registry registry;
     private ZwlrGammaControlManagerV1? manager;
@@ -63,6 +64,7 @@ public class Gamma : Object {
         source = new WaylandSource(display);
         source.attach(null);
 
+        ready = true;
         apply_all();
     }
 
@@ -77,7 +79,7 @@ public class Gamma : Object {
         } else if (iface == "wl_output") {
             var wl_output = reg.bind<Wl.Output>(
                 name, ref wl_output_interface, uint.min(version, 4));
-            var output = new Output((owned) wl_output, name);
+            var output = new Output(this, (owned) wl_output, name);
             output.ensure_control(manager);
             outputs.add(output);
         }
@@ -93,11 +95,30 @@ public class Gamma : Object {
         }
     }
 
+    private int current_temp() {
+        return _night ? NIGHT_TEMP : DAY_TEMP;
+    }
+
+    // Re-apply the current temperature to a single output (e.g. once a
+    // hot-plugged monitor reports its gamma size). Skipped during the initial
+    // sync — construct's apply_all() covers the first batch and we must not
+    // roundtrip re-entrantly from inside a dispatch.
+    private void apply_single(Output o) {
+        if (display == null || !ready) {
+            return;
+        }
+        int fd = o.apply(current_temp());
+        if (fd >= 0) {
+            display.flush(); // flush transmits the fd; safe to close after
+            Posix.close(fd);
+        }
+    }
+
     private void apply_all() {
         if (display == null) {
             return;
         }
-        int temp = _night ? NIGHT_TEMP : DAY_TEMP;
+        int temp = current_temp();
         int[] fds = {};
         for (uint i = 0; i < outputs.length; i++) {
             unowned Output o = outputs[i];
@@ -144,6 +165,7 @@ public class Gamma : Object {
     }
 
     private class Output : Object {
+        private unowned Gamma gamma;
         public Wl.Output wl_output;
         public uint32 global_name;
         private ZwlrGammaControlV1? control;
@@ -155,7 +177,8 @@ public class Gamma : Object {
             handle_failed
         };
 
-        public Output(owned Wl.Output wl_output, uint32 global_name) {
+        public Output(Gamma gamma, owned Wl.Output wl_output, uint32 global_name) {
+            this.gamma = gamma;
             this.wl_output = (owned) wl_output;
             this.global_name = global_name;
         }
@@ -171,6 +194,7 @@ public class Gamma : Object {
         private void handle_gamma_size(ZwlrGammaControlV1 c, uint32 size) {
             gamma_size = size;
             failed = false;
+            gamma.apply_single(this);
         }
 
         private void handle_failed(ZwlrGammaControlV1 c) {
