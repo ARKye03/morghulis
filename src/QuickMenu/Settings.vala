@@ -2,6 +2,15 @@
 public class Settings : Adw.Bin {
     private AstalMpris.Mpris _mpris;
     private GLib.Settings _gsettings;
+    private int _night_temp;
+
+    public int night_temp {
+        get { return _night_temp; }
+        set {
+            _night_temp = value;
+            Morghulis.gsettings.set_int("night-temp", value);
+        }
+    }
 
     public string color_scheme { get; set; }
     public AstalNetwork.Network network { get; private set; }
@@ -24,6 +33,8 @@ public class Settings : Adw.Bin {
 
         gamma = Gamma.get_default();
         Morghulis.gsettings.bind("night-light", gamma, "night", GLib.SettingsBindFlags.DEFAULT);
+        Morghulis.gsettings.bind("night-temp", gamma, "night-temp", GLib.SettingsBindFlags.DEFAULT);
+        night_temp = Morghulis.gsettings.get_int("night-temp");
 
         clipboard = Clipboard.get_default();
         Morghulis.gsettings.bind("clipboard-watch", clipboard, "watching", GLib.SettingsBindFlags.DEFAULT);
@@ -133,6 +144,16 @@ public class Settings : Adw.Bin {
     [GtkCallback]
     public void gamma_clicked() {
         gamma.night = !gamma.night;
+    }
+
+    [GtkCallback]
+    public void gamma_clicked_extras() {
+        quick_settings_navigation_view.push_by_tag("night_light");
+    }
+
+    [GtkCallback]
+    public string gamma_temp_label(int temp) {
+        return @"$(temp)K";
     }
 
     [GtkCallback]

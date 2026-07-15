@@ -38,6 +38,13 @@
       <description>Whether the night-light gamma adjustment is enabled.</description>
     </key>
 
+    <key name="night-temp" type="i">
+      <default>4000</default>
+      <range min="2500" max="6500" />
+      <summary>Night light color temperature (Kelvin)</summary>
+      <description>The color temperature applied when night light is enabled.</description>
+    </key>
+
     <key name="clipboard-watch" type="b">
       <default>true</default>
       <summary>Clipboard history watching</summary>

@@ -85,6 +85,12 @@ button {
     padding: 10px;
 }
 
+.temp_legend {
+    @extend .rounded;
+    background-color: color-mix(in srgb, currentColor 10%, transparent);
+    padding: 4px 12px;
+}
+
 .title_5 {
     font-size: 15px;
 }

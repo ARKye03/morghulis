@@ -12,7 +12,21 @@ private extern Wl.Interface wl_output_interface;
  */
 public class Gamma : Object {
     public const int DAY_TEMP = 6500;
-    public const int NIGHT_TEMP = 4000;
+
+    private int _night_temp = 4000;
+    public int night_temp {
+        get { return _night_temp; }
+        set {
+            int v = value.clamp(2500, 6500);
+            if (_night_temp == v) {
+                return;
+            }
+            _night_temp = v;
+            if (_night) {
+                apply_all();
+            }
+        }
+    }
 
     private static Gamma? instance;
     public static Gamma get_default() {
@@ -96,7 +110,7 @@ public class Gamma : Object {
     }
 
     private int current_temp() {
-        return _night ? NIGHT_TEMP : DAY_TEMP;
+        return _night ? _night_temp : DAY_TEMP;
     }
 
     // Re-apply the current temperature to a single output (e.g. once a
@@ -230,6 +244,7 @@ public class Gamma : Object {
             }
 
             Posix.write(fd, (void*) table, n);
+            Posix.lseek(fd, 0, Posix.SEEK_SET); // compositor reads from offset 0
             control.set_gamma(fd);
             return fd;
         }

@@ -32,10 +32,19 @@ public class QClipboard : Adw.Bin {
             QuickMenu.instance.visible = false;
         });
 
-        this.child = new Gtk.ScrolledWindow() {
-            hscrollbar_policy = Gtk.PolicyType.NEVER,
+        var scrollable = new ScrollableIndicatorMenu() {
             vexpand = true,
+            css_classes = new string[] { "background", "padding_10" },
             child = list_view,
         };
+
+        var header = new Adw.HeaderBar() {
+            show_end_title_buttons = false,
+        };
+
+        var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+        box.append(header);
+        box.append(scrollable);
+        this.child = box;
     }
 }
