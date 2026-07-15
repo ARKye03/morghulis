@@ -18,14 +18,14 @@ public class HyprWorkspaces : Rolltop {
             var workspace_button = new WorkspaceItem(
                 () => {
                 if (!(workspace_number == _hyprland.focused_workspace.id)) {
-                    _hyprland.dispatch("workspace", workspace_number.to_string());
+                    _hyprland.message_async.begin(@"dispatch workspace $workspace_number");
                 }
             },
                 () => {
-                _hyprland.dispatch("movetoworkspacesilent", workspace_number.to_string());
+                _hyprland.message_async.begin(@"dispatch movetoworkspacesilent $workspace_number");
             },
                 () => {
-                _hyprland.dispatch("movetoworkspace", workspace_number.to_string());
+                _hyprland.message_async.begin(@"dispatch movetoworkspace $workspace_number");
             }) {
                 child = new Gtk.Image.from_icon_name(NavBar.icon_names[i - 1]) {
                     pixel_size = 20
@@ -48,7 +48,7 @@ public class HyprWorkspaces : Rolltop {
 
         scroll_controller.scroll.connect((delta_x, delta_y) => {
             string direction = delta_y > 0 ? "e-1" : "e+1";
-            _hyprland.dispatch("workspace", direction);
+            _hyprland.message_async.begin(@"dispatch workspace $direction");
             return true;
         });
         this.add_controller(scroll_controller);
