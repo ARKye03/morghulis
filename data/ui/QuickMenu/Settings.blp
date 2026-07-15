@@ -113,6 +113,21 @@ template $Settings: Adw.Bin {
           $QButton {
             layout {
               row: 2;
+              column: 0;
+            }
+
+            name: "Clipboard";
+            identity: "Clipboard";
+            icon: "edit-paste-symbolic";
+            active: bind template.clipboard as <$Clipboard>.watching;
+            status: bind $clipboard_status(template.clipboard as <$Clipboard>.watching) as <string>;
+            clicked => $clipboard_clicked();
+            clicked_extras => $clipboard_clicked_extras();
+          }
+
+          $QButton {
+            layout {
+              row: 2;
               column: 1;
             }
 
@@ -216,6 +231,13 @@ template $Settings: Adw.Bin {
       title: "Notifications";
 
       $QNotifications {}
+    }
+
+    Adw.NavigationPage {
+      tag: "clipboard";
+      title: "Clipboard";
+
+      $QClipboard {}
     }
 
     Adw.NavigationPage {

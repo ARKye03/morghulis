@@ -37,5 +37,11 @@
       <summary>Night light (warm color temperature)</summary>
       <description>Whether the night-light gamma adjustment is enabled.</description>
     </key>
+
+    <key name="clipboard-watch" type="b">
+      <default>true</default>
+      <summary>Clipboard history watching</summary>
+      <description>Whether new clipboard selections are recorded into history.</description>
+    </key>
   </schema>
 </schemalist>

@@ -9,6 +9,7 @@ public class Settings : Adw.Bin {
     public AstalNotifd.Notifd notifd { get; private set; }
     public AstalWp.Wp? wp { get; private set; }
     public Gamma gamma { get; private set; }
+    public Clipboard clipboard { get; private set; }
     public Gdk.Paintable no_media_players { get; private set; }
     public static Adw.NavigationView settings_navigation { get; private set; }
 
@@ -23,6 +24,9 @@ public class Settings : Adw.Bin {
 
         gamma = Gamma.get_default();
         Morghulis.gsettings.bind("night-light", gamma, "night", GLib.SettingsBindFlags.DEFAULT);
+
+        clipboard = Clipboard.get_default();
+        Morghulis.gsettings.bind("clipboard-watch", clipboard, "watching", GLib.SettingsBindFlags.DEFAULT);
 
         _gsettings = new GLib.Settings("org.gnome.desktop.interface");
         _gsettings.bind("color-scheme", this, "color_scheme", GLib.SettingsBindFlags.GET);
@@ -129,6 +133,21 @@ public class Settings : Adw.Bin {
     [GtkCallback]
     public void gamma_clicked() {
         gamma.night = !gamma.night;
+    }
+
+    [GtkCallback]
+    public void clipboard_clicked() {
+        clipboard.watching = !clipboard.watching;
+    }
+
+    [GtkCallback]
+    public void clipboard_clicked_extras() {
+        quick_settings_navigation_view.push_by_tag("clipboard");
+    }
+
+    [GtkCallback]
+    public string clipboard_status(bool watching) {
+        return watching ? "On" : "Off";
     }
 
     [GtkCallback]
