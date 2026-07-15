@@ -47,3 +47,5 @@ foreach proto : wl_protocols
 
     project_resources += [proto_header, proto_code, proto_vapi]
 endforeach
+
+project_resources += files('wl-source.vala')

@@ -8,6 +8,7 @@ public class Settings : Adw.Bin {
     public AstalBluetooth.Bluetooth bluetooth { get; private set; }
     public AstalNotifd.Notifd notifd { get; private set; }
     public AstalWp.Wp? wp { get; private set; }
+    public Gamma gamma { get; private set; }
     public Gdk.Paintable no_media_players { get; private set; }
     public static Adw.NavigationView settings_navigation { get; private set; }
 
@@ -19,6 +20,9 @@ public class Settings : Adw.Bin {
         bluetooth = AstalBluetooth.get_default();
         wp = AstalWp.get_default();
         notifd = AstalNotifd.get_default();
+
+        gamma = Gamma.get_default();
+        Morghulis.gsettings.bind("night-light", gamma, "night", GLib.SettingsBindFlags.DEFAULT);
 
         _gsettings = new GLib.Settings("org.gnome.desktop.interface");
         _gsettings.bind("color-scheme", this, "color_scheme", GLib.SettingsBindFlags.GET);
@@ -120,6 +124,16 @@ public class Settings : Adw.Bin {
     [GtkCallback]
     public void notifications_clicked_extras() {
         quick_settings_navigation_view.push_by_tag("notifications");
+    }
+
+    [GtkCallback]
+    public void gamma_clicked() {
+        gamma.night = !gamma.night;
+    }
+
+    [GtkCallback]
+    public string gamma_status(bool night) {
+        return night ? "On" : "Off";
     }
 
     public void TODO() {

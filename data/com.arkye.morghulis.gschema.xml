@@ -31,5 +31,11 @@
       <default>7</default>
       <summary>Maximum number of days to keep math history</summary>
     </key>
+
+    <key name="night-light" type="b">
+      <default>false</default>
+      <summary>Night light (warm color temperature)</summary>
+      <description>Whether the night-light gamma adjustment is enabled.</description>
+    </key>
   </schema>
 </schemalist>
