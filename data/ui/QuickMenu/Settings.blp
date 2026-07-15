@@ -109,6 +109,20 @@ template $Settings: Adw.Bin {
             status: bind $notif_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
             icon: bind $notif_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
           }
+
+          $QButton {
+            layout {
+              row: 2;
+              column: 1;
+            }
+
+            name: "Night Light";
+            identity: "Night Light";
+            icon: "night-light-symbolic";
+            active: bind template.gamma as <$Gamma>.night;
+            status: bind $gamma_status(template.gamma as <$Gamma>.night) as <string>;
+            clicked => $gamma_clicked();
+          }
         }
 
         Stack {

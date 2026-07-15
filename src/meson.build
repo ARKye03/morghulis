@@ -66,6 +66,8 @@ executable(
     vala_args: [
         '--gresourcesdir=data/',
         '--vapidir=' + vapidir,
+        '--pkg=posix',
+        '--pkg=linux',
     ]
     + project_args,
     c_args: '-w',
