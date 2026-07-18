@@ -61,7 +61,7 @@ public class Gamma : Object {
     };
 
     construct {
-        display = new Wl.Display.connect(null);
+        display = new Wl.Display.connect(Environment.get_variable("WAYLAND_DISPLAY") ?? "wayland-0");
         if (display == null) {
             warning("gamma: could not connect to a Wayland display");
             return;

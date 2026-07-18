@@ -83,7 +83,7 @@ public class Clipboard : Object {
         history = new ListStore(typeof(ClipboardEntry));
         load_history();
 
-        display = new Wl.Display.connect(null);
+        display = new Wl.Display.connect(Environment.get_variable("WAYLAND_DISPLAY") ?? "wayland-0");
         if (display == null) {
             warning("clipboard: could not connect to a Wayland display");
             return;
