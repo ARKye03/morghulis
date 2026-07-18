@@ -1,3 +1,4 @@
+// register-if: river
 public class RiverTags : Rolltop {
     private AstalRiver.River _river;
     private AstalRiver.Output _output;

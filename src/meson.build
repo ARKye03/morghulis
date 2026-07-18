@@ -1,6 +1,23 @@
 project_resources += ['Main.vala']
 project_args = []
 
+# Auto-generate ensure_types(): forces GType registration for every class so
+# Blueprint can instantiate custom widgets by name. build_always_stale keeps it
+# fresh; the generator only rewrites on change, so no needless recompiles.
+ensure_types_vala = custom_target(
+    'ensure-types',
+    output: 'ensure-types.vala',
+    command: [
+        find_program('python3'),
+        files('../scripts/gen-ensure-types.py'),
+        '@OUTPUT@',
+        meson.project_source_root() / 'src',
+        meson.project_source_root() / 'lib',
+    ],
+    build_always_stale: true,
+)
+project_resources += ensure_types_vala
+
 vapidir = meson.current_source_dir() + '/vapi/'
 
 # Optional dependencies

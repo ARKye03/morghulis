@@ -1,3 +1,4 @@
+// register-if: hyprland
 public class HyprWorkspaces : Rolltop {
     private AstalHyprland.Hyprland _hyprland;
 
