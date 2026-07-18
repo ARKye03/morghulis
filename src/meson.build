@@ -11,8 +11,7 @@ ensure_types_vala = custom_target(
         find_program('python3'),
         files('../scripts/gen-ensure-types.py'),
         '@OUTPUT@',
-        meson.project_source_root() / 'src',
-        meson.project_source_root() / 'lib',
+        meson.current_source_dir(),
     ],
     build_always_stale: true,
 )
@@ -71,6 +70,11 @@ endif
 if astal_power_profiles_dep.found()
     deps += astal_power_profiles_dep
 endif
+
+subdir('App')
+subdir('Widgets')
+subdir('Services')
+subdir('Platform')
 
 subdir('NavBar')
 subdir('PowerMenu')
