@@ -207,7 +207,12 @@ public class Settings : Adw.Bin {
     }
 
     private void setup_empty_notif() {
-        no_media_players = Gdk.Texture.from_resource("/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg");
+        try {
+            var bytes = resources_lookup_data("/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg", ResourceLookupFlags.NONE);
+            no_media_players = Gdk.Texture.from_bytes(bytes);
+        } catch (Error e) {
+            warning("Failed to load image: %s", e.message);
+        }
     }
 
     [GtkCallback]
