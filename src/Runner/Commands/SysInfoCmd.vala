@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/SysInfoCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/SysInfoCmd.ui")]
 public class SysInfo : Gtk.Box, ICommand {
     // System info properties
     public string hostname { get; set; }

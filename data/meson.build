@@ -1,4 +1,3 @@
-subdir('ui')
 subdir('scss')
 subdir('desktop')
 
@@ -11,6 +10,8 @@ install_data(
 fs = import('fs')
 
 # Icon assets exposed under the icons/scalable/actions prefix; alias is the basename.
+# The .ui entries and final gresource assembly happen in ../src/meson.build, where
+# the blueprint list (colocated with the .vala) is known.
 icon_paths = [
     'assets/bell-minus-symbolic.svg',
     'assets/NavBar/terminal-symbolic.svg',
@@ -45,26 +46,6 @@ foreach p : icon_paths
     icon_entries += '        <file alias="' + fs.name(p) + '">' + p + '</file>\n'
 endforeach
 
-# UI entries derive from blp_rel (set in ui/meson.build): one .ui per blueprint.
-ui_entries = ''
-foreach r : blp_rel
-    ui = r.replace('.blp', '.ui')
-    ui_entries += '        <file preprocess="xml-stripblanks">ui/' + ui + '</file>\n'
-endforeach
-
-gresource_conf = configuration_data()
-gresource_conf.set('ICON_ENTRIES', icon_entries)
-gresource_conf.set('UI_ENTRIES', ui_entries)
-
-gresource_xml = configure_file(
-    input: 'gresource.xml.in',
-    output: project_name + '.gresource.xml',
-    configuration: gresource_conf,
-)
-
-project_resources += gnome.compile_resources(
-    project_name,
-    gresource_xml,
-    dependencies: [blueprints, scss],
-    source_dir: [meson.current_build_dir(), meson.current_source_dir()],
-)
+# Exposed to ../src/meson.build for the final gresource assembly.
+gresource_template = files('gresource.xml.in')
+data_source_dir = meson.current_source_dir()

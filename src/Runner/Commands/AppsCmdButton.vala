@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/AppsCmdButton.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/AppsCmdButton.ui")]
 public class AppsCmdButton : Gtk.ListBoxRow {
     private delegate void launch_app();
 

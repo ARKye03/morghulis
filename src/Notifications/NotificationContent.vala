@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/NotificationContent.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Notifications/NotificationContent.ui")]
 public class NotificationContent : Gtk.Box {
     public AstalNotifd.Notification notification { get; set; }
 
