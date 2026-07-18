@@ -2,12 +2,23 @@
 public class Settings : Adw.Bin {
     private AstalMpris.Mpris _mpris;
     private GLib.Settings _gsettings;
+    private int _night_temp;
+
+    public int night_temp {
+        get { return _night_temp; }
+        set {
+            _night_temp = value;
+            Morghulis.gsettings.set_int("night-temp", value);
+        }
+    }
 
     public string color_scheme { get; set; }
     public AstalNetwork.Network network { get; private set; }
     public AstalBluetooth.Bluetooth bluetooth { get; private set; }
     public AstalNotifd.Notifd notifd { get; private set; }
     public AstalWp.Wp? wp { get; private set; }
+    public Gamma gamma { get; private set; }
+    public Clipboard clipboard { get; private set; }
     public Gdk.Paintable no_media_players { get; private set; }
     public static Adw.NavigationView settings_navigation { get; private set; }
 
@@ -19,6 +30,14 @@ public class Settings : Adw.Bin {
         bluetooth = AstalBluetooth.get_default();
         wp = AstalWp.get_default();
         notifd = AstalNotifd.get_default();
+
+        gamma = Gamma.get_default();
+        Morghulis.gsettings.bind("night-light", gamma, "night", GLib.SettingsBindFlags.DEFAULT);
+        Morghulis.gsettings.bind("night-temp", gamma, "night-temp", GLib.SettingsBindFlags.DEFAULT);
+        night_temp = Morghulis.gsettings.get_int("night-temp");
+
+        clipboard = Clipboard.get_default();
+        Morghulis.gsettings.bind("clipboard-watch", clipboard, "watching", GLib.SettingsBindFlags.DEFAULT);
 
         _gsettings = new GLib.Settings("org.gnome.desktop.interface");
         _gsettings.bind("color-scheme", this, "color_scheme", GLib.SettingsBindFlags.GET);
@@ -122,6 +141,41 @@ public class Settings : Adw.Bin {
         quick_settings_navigation_view.push_by_tag("notifications");
     }
 
+    [GtkCallback]
+    public void gamma_clicked() {
+        gamma.night = !gamma.night;
+    }
+
+    [GtkCallback]
+    public void gamma_clicked_extras() {
+        quick_settings_navigation_view.push_by_tag("night_light");
+    }
+
+    [GtkCallback]
+    public string gamma_temp_label(int temp) {
+        return @"$(temp)K";
+    }
+
+    [GtkCallback]
+    public void clipboard_clicked() {
+        clipboard.watching = !clipboard.watching;
+    }
+
+    [GtkCallback]
+    public void clipboard_clicked_extras() {
+        quick_settings_navigation_view.push_by_tag("clipboard");
+    }
+
+    [GtkCallback]
+    public string clipboard_status(bool watching) {
+        return watching ? "On" : "Off";
+    }
+
+    [GtkCallback]
+    public string gamma_status(bool night) {
+        return night ? "On" : "Off";
+    }
+
     public void TODO() {
         message("TODO!");
     }
@@ -154,10 +208,8 @@ public class Settings : Adw.Bin {
 
     private void setup_empty_notif() {
         try {
-            var pixbuf = new Gdk.Pixbuf.from_resource("/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg");
-            if (pixbuf != null) {
-                no_media_players = Gdk.Texture.for_pixbuf(pixbuf);
-            }
+            var bytes = resources_lookup_data("/com/github/ARKye03/morghulis/assets/wyvern-svgrepo-com.svg", ResourceLookupFlags.NONE);
+            no_media_players = Gdk.Texture.from_bytes(bytes);
         } catch (Error e) {
             warning("Failed to load image: %s", e.message);
         }

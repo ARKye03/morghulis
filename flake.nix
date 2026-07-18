@@ -128,6 +128,7 @@
           cmark
           muparser
           libsoup_3
+          wayland # libwayland-client + wayland-client.pc for generated protocol bindings
         ];
         compiler-utils = with pkgs; [
           vala
@@ -137,6 +138,13 @@
           dart-sass
           blueprint-compiler
           desktop-file-utils
+          # Wayland protocol binding generation (lib/wayland). Protocol XMLs are
+          # vendored in-repo, so only the toolchain is needed here.
+          wayland-scanner
+          python3 # wl-vapi-gen is a python3 script
+          # NOTE: wl-vapi-gen (https://codeberg.org/kotontrion/wl-vapi-gen) is not
+          # in nixpkgs. meson finds it on PATH; if absent it falls back to the
+          # subprojects/wl-vapi-gen.wrap git subproject (needs network at setup).
         ];
         build-utils = with pkgs.buildPackages; [
           muon

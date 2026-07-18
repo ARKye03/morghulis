@@ -57,8 +57,12 @@ template $Settings: Adw.Bin {
             }
 
             name: "Network";
-            identity: bind $network_identity(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid) as <string>;
-            status: bind $conn_status(template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled) as <string>;
+            identity: bind $network_identity(
+              template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.ssid
+              ) as <string>;
+            status: bind $conn_status(
+              template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled
+              ) as <string>;
             icon: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
             active: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.enabled;
             clicked => $network_clicked();
@@ -72,8 +76,12 @@ template $Settings: Adw.Bin {
             }
 
             name: "Bluetooth";
-            identity: bind $bluetooth_identity(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name) as <string>;
-            status: bind $conn_status(template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered) as <string>;
+            identity: bind $bluetooth_identity(
+              template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.name
+              ) as <string>;
+            status: bind $conn_status(
+              template.bluetooth as <AstalBluetooth.Bluetooth>.adapter as <AstalBluetooth.Adapter>.powered
+              ) as <string>;
             icon: bind $bluetooth_icon_name(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
             active: bind template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered;
             clicked => $bluetooth_clicked();
@@ -88,9 +96,15 @@ template $Settings: Adw.Bin {
 
             name: "Audio";
             identity: "Audio";
-            status: bind $audio_status(template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute) as <string>;
+            status: bind $audio_status(
+              template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute
+              ) as <string>;
             icon: "audio-volume-high-symbolic";
-            inactive: bind template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.mute;
+            inactive: bind template
+              .wp as <AstalWp.Wp>
+              .audio as <AstalWp.Audio>
+              .default-speaker as <AstalWp.Endpoint>
+              .mute;
             clicked => $audio_clicked();
             clicked_extras => $audio_clicked_extras();
           }
@@ -108,6 +122,36 @@ template $Settings: Adw.Bin {
             inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
             status: bind $notif_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
             icon: bind $notif_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
+          }
+
+          $QButton {
+            layout {
+              row: 2;
+              column: 0;
+            }
+
+            name: "Clipboard";
+            identity: "Clipboard";
+            icon: "edit-paste-symbolic";
+            active: bind template.clipboard as <$Clipboard>.watching;
+            status: bind $clipboard_status(template.clipboard as <$Clipboard>.watching) as <string>;
+            clicked => $clipboard_clicked();
+            clicked_extras => $clipboard_clicked_extras();
+          }
+
+          $QButton {
+            layout {
+              row: 2;
+              column: 1;
+            }
+
+            name: "Night Light";
+            identity: "Night Light";
+            icon: "night-light-symbolic";
+            active: bind template.gamma as <$Gamma>.night;
+            status: bind $gamma_status(template.gamma as <$Gamma>.night) as <string>;
+            clicked => $gamma_clicked();
+            clicked_extras => $gamma_clicked_extras();
           }
         }
 
@@ -202,6 +246,111 @@ template $Settings: Adw.Bin {
       title: "Notifications";
 
       $QNotifications {}
+    }
+
+    Adw.NavigationPage {
+      tag: "clipboard";
+      title: "Clipboard";
+
+      $QClipboard {}
+    }
+
+    Adw.NavigationPage {
+      tag: "night_light";
+      title: "Night Light";
+
+      Box {
+        orientation: vertical;
+
+        Adw.HeaderBar {
+          show-end-title-buttons: false;
+        }
+
+        Adw.Bin {
+          styles [
+            "background",
+            "padding_10",
+          ]
+
+          Box {
+            orientation: vertical;
+            spacing: 15;
+            vexpand: true;
+            valign: center;
+
+            styles [
+              "view",
+              "master_border",
+              "rounded",
+            ]
+
+            Label {
+              label: "Color temperature";
+
+              styles [
+                "title-4",
+              ]
+            }
+
+            Label {
+              label: bind $gamma_temp_label(template.night_temp) as <string>;
+
+              styles [
+                "title-2",
+                "numeric",
+              ]
+            }
+
+            Scale {
+              orientation: horizontal;
+              hexpand: true;
+              draw-value: false;
+
+              adjustment: Adjustment {
+                lower: 2500;
+                upper: 6500;
+                step-increment: 100;
+                page-increment: 500;
+                value: bind template.night_temp bidirectional;
+              };
+            }
+
+            Box {
+              orientation: horizontal;
+              halign: center;
+              spacing: 8;
+
+              styles [
+                "dim-label",
+              ]
+
+              Label {
+                label: "Warmer";
+
+                styles [
+                  "title-6",
+                ]
+              }
+
+              Image {
+                icon-name: "pan-start-symbolic";
+              }
+
+              Image {
+                icon-name: "pan-end-symbolic";
+              }
+
+              Label {
+                label: "Cooler";
+
+                styles [
+                  "title-6",
+                ]
+              }
+            }
+          }
+        }
+      }
     }
 
     Adw.NavigationPage {

@@ -23,55 +23,66 @@ public class Morghulis : Adw.Application {
     public override int command_line(ApplicationCommandLine command_line) {
         var args = command_line.get_arguments();
 
-        if (command_line.is_remote) {
-            // Check for help flag before option parsing to avoid issues with running instance
-            if (HelpDisplay.should_show_help(args)) {
-                HelpDisplay.show_help(command_line);
-                return 0;
-            }
-
-            var parser = new CommandLineParser();
-            var result = parser.parse(args, command_line);
-
-            if (result.should_exit) {
-                return result.exit_code;
-            }
-
-            if (result.show_version) {
-                command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
-                return 0;
-            }
-
-            if (result.quit_app) {
-                quit();
-                return 0;
-            }
-
-            if (result.inspector) {
-                toggle_inspector();
-                return 0;
-            }
-
-            if (result.toggle_window_name != null) {
-                toggle_window(result.toggle_window_name, command_line);
-                return 0;
-            }
-
-            if (result.request_type != null) {
-                handle_request(result.request_type, command_line);
-                return 0;
-            }
-
-            return 1;
-        } else {
-            if (_windows.length() > 0) {
-                command_line.printerr("Application is already running");
-                return 1;
-            } else {
-                activate();
-                return 0;
-            }
+        // Informational flags are handled the same whether this is the primary
+        // launch or a call forwarded to a running instance.
+        if (HelpDisplay.should_show_help(args)) {
+            HelpDisplay.show_help(command_line);
+            return 0;
         }
+
+        var parser = new CommandLineParser();
+        var result = parser.parse(args, command_line);
+
+        if (result.should_exit) {
+            return result.exit_code;
+        }
+
+        if (result.show_version) {
+            command_line.print(@"Morghulis version $(MorghulVersion.VERSION)\n");
+            return 0;
+        }
+
+        // Action flags operate on a live shell. When invoked with no instance
+        // running (the local/primary path), there is nothing to act on — never
+        // fall through to activate(), which would launch the shell instead.
+        if (!command_line.is_remote) {
+            if (result.quit_app) {
+                // Idempotent: nothing to quit. Succeed so `morghulis -q && …`
+                // restart chains still start a fresh instance.
+                return 0;
+            }
+
+            if (result.inspector || result.toggle_window_name != null || result.request_type != null) {
+                command_line.printerr("Morghulis is not running\n");
+                return 1;
+            }
+
+            activate();
+            return 0;
+        }
+
+        if (result.quit_app) {
+            quit();
+            return 0;
+        }
+
+        if (result.inspector) {
+            toggle_inspector();
+            return 0;
+        }
+
+        if (result.toggle_window_name != null) {
+            toggle_window(result.toggle_window_name, command_line);
+            return 0;
+        }
+
+        if (result.request_type != null) {
+            handle_request(result.request_type, command_line);
+            return 0;
+        }
+
+        command_line.printerr("Application is already running\n");
+        return 1;
     }
 
     private void setup_css_signals() {

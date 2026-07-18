@@ -1,0 +1,6 @@
+# Downloaded/extracted subprojects — keep only wrap definitions.
+*
+!*.wrap
+!*.build
+!packagefiles/
+!.gitignore

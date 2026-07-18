@@ -1,8 +1,8 @@
-public static void main(string[] args) {
+public static int main(string[] args) {
     var app = new Morghulis();
 
     init_types();
-    app.run(args);
+    return app.run(args);
 }
 
 private void init_types() {
@@ -21,6 +21,7 @@ private void init_types() {
     typeof(QButton).ensure();
     typeof(QNetwork).ensure();
     typeof(QBluetooth).ensure();
+    typeof(QClipboard).ensure();
     typeof(BatteryBox).ensure();
     typeof(QAudioBox).ensure();
     typeof(PowerBox).ensure();
