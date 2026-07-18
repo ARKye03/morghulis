@@ -9,6 +9,9 @@ public class MathCmd : Gtk.Box, ICommand {
 
     public string icon_name { get { return "math-symbolic"; } }
     public bool has_result { get; set; }
+    public bool has_valid_result {
+        get { return has_result && result_label.visible && !error_label.visible; }
+    }
 
     [GtkChild]
     private unowned Gtk.Label result_label;
@@ -45,6 +48,34 @@ public class MathCmd : Gtk.Box, ICommand {
         } else {
             reset();
         }
+    }
+
+    // Spotlight-style inference: does this unprefixed input look like a solvable
+    // math expression? Cheap syntactic gate first (skip probing muparser for
+    // ordinary app searches), then confirm by evaluating.
+    public bool looks_like_math(string input) {
+        string s = input.strip();
+        if (s.length == 0) {
+            return false;
+        }
+        // Needs an operator/paren AND a digit or known constant. Rejects bare
+        // words ("firefox") and bare numbers ("42").
+        if (!Regex.match_simple("[-+*/^%()]", s)) {
+            return false;
+        }
+        if (!Regex.match_simple("[0-9]|\\bpi\\b|\\be\\b", s)) {
+            return false;
+        }
+        // If it opens like an arithmetic expression, stay in math even while
+        // half-typed ("2+1 *") — don't flash the apps view. Letter-led strings
+        // ("python3-pip", "gtk4-layer-shell") must evaluate cleanly to qualify,
+        // so hyphenated app names still route to apps.
+        if (s[0].isdigit() || s[0] == '.' || s[0] == '(') {
+            return true;
+        }
+        _parser.expression = s;
+        double result = _parser.eval();
+        return !_parser.has_error && result.is_finite();
     }
 
     public void evaluate_expression(string expression) {
@@ -94,10 +125,12 @@ public class MathCmd : Gtk.Box, ICommand {
 
     public void on_enter() {
         save_current_calculation();
+        if (has_valid_result) {
+            Gdk.Display.get_default().get_clipboard().set_text(result_label.label);
+        }
     }
 
     public void on_deactivate() {
-        save_current_calculation();
         reset();
     }
 

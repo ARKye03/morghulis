@@ -8,6 +8,7 @@ public struct Command {
 public class Runner : MorghulWindow {
     private GLib.HashTable<string, Command?> _commands;
     private AppsCmd _apps_cmd;
+    private MathCmd _math_cmd;
     private string? _previous_page = null;
 
     public static Runner instance { get; private set; }
@@ -57,6 +58,13 @@ public class Runner : MorghulWindow {
             return;
         }
 
+        // Infer a bare math expression (Spotlight-style) before falling to apps
+        if (_math_cmd.looks_like_math(input)) {
+            commands_stack.visible_child_name = "m";
+            _math_cmd.handle_input(input);
+            return;
+        }
+
         // Default to showing apps
         commands_stack.visible_child_name = "apps";
 
@@ -73,6 +81,10 @@ public class Runner : MorghulWindow {
 
         if (current_widget is ICommand) {
             ((ICommand)current_widget).on_enter();
+        }
+
+        if (current_widget is MathCmd && ((MathCmd)current_widget).has_valid_result) {
+            this.visible = false;
         }
     }
 
@@ -105,10 +117,11 @@ public class Runner : MorghulWindow {
         _commands.insert(weather_cmd.name, weather_cmd);
         commands_stack.add_named(weather_cmd.widget, weather_cmd.name);
 
+        _math_cmd = new MathCmd();
         Command math_cmd = {
             name : "m",
             description : "Mathematical expression evaluator",
-            widget : new MathCmd()
+            widget : _math_cmd
         };
         _commands.insert(math_cmd.name, math_cmd);
         commands_stack.add_named(math_cmd.widget, math_cmd.name);
