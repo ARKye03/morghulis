@@ -18,8 +18,11 @@ import re
 import sys
 from pathlib import Path
 
+# Match public/internal/modifier-less classes (BatteryBox has no modifier).
+# private classes are excluded: they are file-local helpers, never
+# Blueprint-instantiated, and often nested (inaccessible by bare name).
 CLASS_RE = re.compile(
-    r'^\s*(?:public|internal)\s+(?:sealed\s+|abstract\s+)?class\s+(\w+)\s*(?::\s*([\w.]+))?')
+    r'^\s*(?:(?:public|internal)\s+)?(?:sealed\s+|abstract\s+)?class\s+(\w+)\s*(?::\s*([\w.]+))?')
 NS_RE = re.compile(r'^\s*namespace\s+(\w+)')
 MARKER_RE = re.compile(r'//\s*register-if:\s*(\w+)')
 
