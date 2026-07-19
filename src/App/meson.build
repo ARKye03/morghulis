@@ -1,4 +1,4 @@
-# Generate version configuration
+# Generate version constant
 version_conf = configuration_data()
 version_conf.set('VERSION', meson.project_version())
 
@@ -12,13 +12,8 @@ project_resources += [
     version_vala,
     files(
         'Application.vala',
-        'CircularProgress.vala',
-        'CubicBezier.vala',
-        'CssManager.vala',
-        'MorghulProgressBar.vala',
-        'ScrollableIndicatorMenu.vala',
-        'Gizmo.vala',
-        'Options.vala',
         'Window.vala',
+        'Options.vala',
+        'CssManager.vala',
     ),
 ]

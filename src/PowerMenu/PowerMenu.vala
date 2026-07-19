@@ -5,7 +5,7 @@ private enum PMOption {
     SUSPEND,
     LOGOUT
 }
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerMenu.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/PowerMenu/PowerMenu.ui")]
 public class PowerMenu : MorghulWindow {
     private PMOption _option;
     private uint _focused_button_index = 0;

@@ -138,7 +138,7 @@
           dart-sass
           blueprint-compiler
           desktop-file-utils
-          # Wayland protocol binding generation (lib/wayland). Protocol XMLs are
+          # Wayland protocol binding generation (src/Platform/Wayland). Protocol XMLs are
           # vendored in-repo, so only the toolchain is needed here.
           wayland-scanner
           python3 # wl-vapi-gen is a python3 script

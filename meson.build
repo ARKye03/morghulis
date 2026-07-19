@@ -14,7 +14,6 @@ i18n.gettext('morghulis', preset: 'glib')
 project_name = meson.project_name()
 project_resources = []
 
-subdir('lib')
 subdir('data')
 subdir('src')
 

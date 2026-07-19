@@ -1,6 +1,6 @@
 using MuParser;
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/MathCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/MathCmd.ui")]
 public class MathCmd : Gtk.Box, ICommand {
     private MathHistoryManager _history_manager;
     private string? _last_saved_expression = null;

@@ -1,6 +1,22 @@
 project_resources += ['Main.vala']
 project_args = []
 
+# Auto-generate ensure_types(): forces GType registration for every class so
+# Blueprint can instantiate custom widgets by name. build_always_stale keeps it
+# fresh; the generator only rewrites on change, so no needless recompiles.
+ensure_types_vala = custom_target(
+    'ensure-types',
+    output: 'ensure-types.vala',
+    command: [
+        find_program('python3'),
+        files('../scripts/gen-ensure-types.py'),
+        '@OUTPUT@',
+        meson.current_source_dir(),
+    ],
+    build_always_stale: true,
+)
+project_resources += ensure_types_vala
+
 vapidir = meson.current_source_dir() + '/vapi/'
 
 # Optional dependencies
@@ -55,6 +71,11 @@ if astal_power_profiles_dep.found()
     deps += astal_power_profiles_dep
 endif
 
+subdir('App')
+subdir('Widgets')
+subdir('Services')
+subdir('Platform')
+
 subdir('NavBar')
 subdir('PowerMenu')
 subdir('Tray')
@@ -64,11 +85,82 @@ subdir('QuickMenu')
 subdir('Runner')
 subdir('ScreenRecord')
 
+# Blueprint files, colocated on disk with their .vala (paths relative to src/).
+# Single source of truth: drives both the compiler and the gresource manifest,
+# and the resource path mirrors the source path (ui/<here>.ui).
+blp_rel = [
+    'NavBar/NavBar.blp',
+    'Notifications/NotificationContent.blp',
+    'Notifications/QNotifications.blp',
+    'OnScreenDisplay/OnScreenDisplay.blp',
+    'PowerMenu/PowerMenu.blp',
+    'ScreenRecord/ScreenRecord.blp',
+    'QuickMenu/AppSettings.blp',
+    'QuickMenu/BatteryBox.blp',
+    'QuickMenu/MprisPlayer.blp',
+    'QuickMenu/PowerBox.blp',
+    'QuickMenu/QAudioBox.blp',
+    'QuickMenu/QAudioItem.blp',
+    'QuickMenu/QBluetooth.blp',
+    'QuickMenu/QBluetoothItem.blp',
+    'QuickMenu/QButton.blp',
+    'QuickMenu/QNetwork.blp',
+    'QuickMenu/QNetworkItem.blp',
+    'QuickMenu/QuickMenu.blp',
+    'QuickMenu/Settings.blp',
+    'Runner/Runner.blp',
+    'Runner/Commands/AppsCmd.blp',
+    'Runner/Commands/AppsCmdButton.blp',
+    'Runner/Commands/HelpCmd.blp',
+    'Runner/Commands/MathCmd.blp',
+    'Runner/Commands/SysInfoCmd.blp',
+    'Runner/Commands/SysInfoItem.blp',
+    'Runner/Commands/WeatherCmd.blp',
+]
+
+# Compile all blueprints under a mirrored ui/ tree in the build dir.
+blueprints = custom_target(
+    'blueprints',
+    input: files(blp_rel),
+    output: 'ui',
+    command: [
+        find_program('blueprint-compiler'),
+        'batch-compile',
+        '@OUTPUT@',
+        meson.current_source_dir(),
+        '@INPUT@',
+    ],
+)
+
+# Assemble the gresource manifest from the icon list (../data) + the blueprints.
+ui_entries = ''
+foreach r : blp_rel
+    ui = r.replace('.blp', '.ui')
+    ui_entries += '        <file preprocess="xml-stripblanks">ui/' + ui + '</file>\n'
+endforeach
+
+gresource_conf = configuration_data()
+gresource_conf.set('ICON_ENTRIES', icon_entries)
+gresource_conf.set('UI_ENTRIES', ui_entries)
+
+gresource_xml = configure_file(
+    input: gresource_template,
+    output: project_name + '.gresource.xml',
+    configuration: gresource_conf,
+)
+
+project_resources += gnome.compile_resources(
+    project_name,
+    gresource_xml,
+    dependencies: [blueprints, scss],
+    source_dir: [meson.current_build_dir(), data_source_dir],
+)
+
 executable(
     project_name,
     project_resources,
     vala_args: [
-        '--gresourcesdir=data/',
+        '--gresourcesdir=' + meson.current_build_dir(),
         '--vapidir=' + vapidir,
         '--pkg=posix',
         '--pkg=linux',

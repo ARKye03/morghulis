@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/ScreenRecord.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/ScreenRecord/ScreenRecord.ui")]
 public class ScreenRecord : MorghulWindow {
     private AstalNotifd.Notifd _notifd;
     private uint _timer_id = 0;

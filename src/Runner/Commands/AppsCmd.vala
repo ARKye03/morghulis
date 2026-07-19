@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/AppsCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/AppsCmd.ui")]
 public class AppsCmd : Gtk.Widget, ICommand {
     private List<FileMonitor> _data_dirs_monitors;
     private uint _reload_timeout = 0;

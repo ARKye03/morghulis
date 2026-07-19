@@ -2,7 +2,7 @@ using Gtk;
 using Soup;
 using Json;
 
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/WeatherCmd.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/WeatherCmd.ui")]
 public class WeatherBox : Gtk.Box, ICommand {
     private Soup.Session _session;
     private const string IP_API_URL

@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/OnScreenDisplay/OnScreenDisplay.ui")]
 public class OnScreenDisplay : MorghulWindow {
     private uint _hide_timeout_id = 0;
     private GSound.Context _scontext;

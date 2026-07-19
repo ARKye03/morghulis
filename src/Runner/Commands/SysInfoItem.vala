@@ -1,4 +1,4 @@
-[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/SysInfoItem.ui")]
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/SysInfoItem.ui")]
 public class SysInfoItem : Gtk.Box {
     public double percentage_value { get; private set; }
     public string title { get; private set; }
