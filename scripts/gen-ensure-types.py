@@ -32,24 +32,37 @@ NON_GOBJECT_BASES = {'GLib.Source', 'Source'}
 
 
 def scan(path: Path):
-    """Yield (guard_or_None, qualified_class_name) for one .vala file."""
+    """Yield (guard_or_None, qualified_class_name) for one .vala file.
+
+    Brace-depth aware: namespaces are popped when their block closes (so sibling
+    namespaces and post-namespace code get the right prefix), and classes nested
+    inside another class are skipped (they are inaccessible by bare name).
+    """
     text = path.read_text(encoding='utf-8', errors='replace')
     guard = None
-    ns = []
+    ns_stack = []       # (name, depth_at_entry)
     depth = 0
+    class_depth = None  # depth at which the current top-level class opened
     for line in text.splitlines():
         m = MARKER_RE.search(line)
         if m:
             guard = m.group(1)
         nm = NS_RE.match(line)
-        if nm:
-            ns.append(nm.group(1))
         cm = CLASS_RE.match(line)
-        if cm:
-            if cm.group(2) in NON_GOBJECT_BASES:
-                continue
-            name = '.'.join(ns + [cm.group(1)]) if ns else cm.group(1)
-            yield guard, name
+        if nm:
+            ns_stack.append((nm.group(1), depth))
+        elif cm and class_depth is None:
+            class_depth = depth
+            if cm.group(2) not in NON_GOBJECT_BASES:
+                name = '.'.join([n for n, _ in ns_stack] + [cm.group(1)])
+                yield guard, name
+
+        depth += line.count('{') - line.count('}')
+
+        while ns_stack and depth <= ns_stack[-1][1]:
+            ns_stack.pop()
+        if class_depth is not None and depth <= class_depth:
+            class_depth = None
 
 
 def main():
