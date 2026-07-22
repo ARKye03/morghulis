@@ -8,5 +8,11 @@ public class NotificationCenter : MorghulWindow {
         } else {
             this.destroy();
         }
+
+        this.notify["visible"].connect(() => {
+            if (this.visible) {
+                QuickMenu.instance.visible = false;
+            }
+        });
     }
 }
