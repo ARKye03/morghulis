@@ -24,6 +24,15 @@ public class Runner : MorghulWindow {
     [GtkChild]
     private unowned Gtk.Stack commands_stack;
 
+    [GtkChild]
+    private unowned Gtk.Button apps_tab;
+
+    [GtkChild]
+    private unowned Gtk.Button clip_tab;
+
+    [GtkChild]
+    private unowned Gtk.Button files_tab;
+
     construct {
         if (instance == null) {
             instance = this;
@@ -32,6 +41,7 @@ public class Runner : MorghulWindow {
         }
 
         init_commands();
+        update_provider_tabs();
 
         commands_stack.notify["visible-child"].connect(on_stack_page_changed);
 
@@ -40,6 +50,7 @@ public class Runner : MorghulWindow {
                 this.entry.text = "";
                 _current_provider = "apps";
                 commands_stack.visible_child_name = "apps";
+                update_provider_tabs();
             } else {
                 this.entry.grab_focus();
                 var current = commands_stack.visible_child;
@@ -144,6 +155,31 @@ public class Runner : MorghulWindow {
         }
     }
 
+    [GtkCallback]
+    private void tab_prev() {
+        cycle_provider(-1);
+    }
+
+    [GtkCallback]
+    private void tab_next() {
+        cycle_provider(1);
+    }
+
+    [GtkCallback]
+    private void tab_apps() {
+        set_provider("apps");
+    }
+
+    [GtkCallback]
+    private void tab_clip() {
+        set_provider("clip");
+    }
+
+    [GtkCallback]
+    private void tab_files() {
+        set_provider("files");
+    }
+
     private void cycle_provider(int dir) {
         int idx = 0;
         for (int i = 0; i < PROVIDERS.length; i++) {
@@ -153,8 +189,27 @@ public class Runner : MorghulWindow {
             }
         }
         idx = ((idx + dir) % PROVIDERS.length + PROVIDERS.length) % PROVIDERS.length;
-        _current_provider = PROVIDERS[idx];
-        commands_stack.visible_child_name = _current_provider;
+        set_provider(PROVIDERS[idx]);
+    }
+
+    private void set_provider(string name) {
+        _current_provider = name;
+        update_list();
+        update_provider_tabs();
+    }
+
+    private void update_provider_tabs() {
+        set_tab_active(apps_tab, _current_provider == "apps");
+        set_tab_active(clip_tab, _current_provider == "clip");
+        set_tab_active(files_tab, _current_provider == "files");
+    }
+
+    private void set_tab_active(Gtk.Button button, bool active) {
+        if (active) {
+            button.add_css_class("active");
+        } else {
+            button.remove_css_class("active");
+        }
     }
 
     private void init_commands() {

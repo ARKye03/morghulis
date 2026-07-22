@@ -3,21 +3,67 @@ using Gtk 4.0;
 template $FilesCmd: Box {
     orientation: vertical;
 
-    ScrolledWindow scrolled {
-        max-content-height: 400;
-        propagate-natural-height: true;
-        hscrollbar-policy: never;
+    Stack files_stack {
+        interpolate-size: true;
+        hhomogeneous: false;
+        vhomogeneous: false;
+        transition-type: crossfade;
+        transition-duration: 200;
 
-        styles [
-            "bg_transparent",
-        ]
+        StackPage {
+            name: "results";
 
-        ListView list_view {
-            single-click-activate: true;
+            child: ScrolledWindow scrolled {
+                max-content-height: 400;
+                propagate-natural-height: true;
+                hscrollbar-policy: never;
 
-            styles [
-                "runner-results",
-            ]
+                styles [
+                    "bg_transparent",
+                ]
+
+                ListView list_view {
+                    single-click-activate: true;
+
+                    styles [
+                        "runner-results",
+                    ]
+                }
+            };
+        }
+
+        StackPage {
+            name: "empty";
+
+            child: Box {
+                orientation: vertical;
+                spacing: 12;
+                halign: center;
+                valign: center;
+
+                styles [
+                    "bg_transparent",
+                    "padding_10",
+                ]
+
+                Image {
+                    icon-name: "folder-symbolic";
+                    pixel-size: 128;
+
+                    styles [
+                        "dim-label",
+                    ]
+                }
+
+                Label placeholder {
+                    label: "Type to search files";
+
+                    styles [
+                        "title-2",
+                        "dim-label",
+                    ]
+                }
+            };
         }
     }
 }

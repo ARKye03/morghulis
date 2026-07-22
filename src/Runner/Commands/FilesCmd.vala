@@ -4,11 +4,18 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
     private GnomeSearchProvider _provider;
     private Gtk.SingleSelection _selection;
     private uint _debounce = 0;
+    private string _last_query = "";
 
     public string icon_name { get { return "folder-symbolic"; } }
 
     [GtkChild]
     private unowned Gtk.ListView list_view;
+
+    [GtkChild]
+    private unowned Gtk.Stack files_stack;
+
+    [GtkChild]
+    private unowned Gtk.Label placeholder;
 
     construct {
         _provider = new GnomeSearchProvider("org.gnome.Nautilus.search-provider.ini");
@@ -54,6 +61,18 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
         list_view.activate.connect((pos) => {
             run_result(_selection.get_item(pos) as SearchResult);
         });
+
+        _provider.results.items_changed.connect((pos, removed, added) => update_state());
+        update_state();
+    }
+
+    private void update_state() {
+        if (_provider.results.get_n_items() > 0) {
+            files_stack.visible_child_name = "results";
+        } else {
+            placeholder.label = _last_query == "" ? "Type to search files" : @"No files found for \"$_last_query\"";
+            files_stack.visible_child_name = "empty";
+        }
     }
 
     private void run_result(SearchResult? result) {
@@ -71,17 +90,19 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
     }
 
     public void handle_input(string input) {
+        _last_query = input.strip();
         if (_debounce > 0) {
             Source.remove(_debounce);
         }
         _debounce = Timeout.add(150, () => {
-            _provider.search.begin(input.strip());
+            _provider.search.begin(_last_query);
             _debounce = 0;
             return Source.REMOVE;
         });
     }
 
     public void on_activate() {
+        _last_query = "";
         _provider.search.begin("");
     }
 

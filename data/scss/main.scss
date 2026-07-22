@@ -211,6 +211,24 @@ circularprogress {
     border-radius: adw.$master-border-radius;
 }
 
+.provider-tabs {
+    padding: 6px;
+
+    & button {
+        padding: 2px 14px;
+        min-height: 0;
+
+        &.active {
+            background-color: adw.$accent-bg-color;
+            color: adw.$accent-fg-color;
+
+            &:hover {
+                background-color: #{"hsl(from var(--accent-bg-color) h s calc(l + 5%))"};
+            }
+        }
+    }
+}
+
 .screen_rec_overlay {
     background-color: rgba(0, 0, 0, 0.3);
 }
