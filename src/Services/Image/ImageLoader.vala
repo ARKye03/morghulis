@@ -13,7 +13,7 @@ public class ImageLoader : Object {
             uint h = image.get_height();
             if (w > 0 && h > 0 && (w > max_edge || h > max_edge)) {
                 double scale = (double) max_edge / (double) uint.max(w, h);
-                req.set_scale((uint) (w * scale), (uint) (h * scale));
+                req.set_scale(uint.max(1, (uint) (w * scale)), uint.max(1, (uint) (h * scale)));
             }
 
             var frame = yield image.get_specific_frame_async(req, cancellable);

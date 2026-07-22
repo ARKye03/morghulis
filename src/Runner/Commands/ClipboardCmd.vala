@@ -20,7 +20,11 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
     construct {
         _clipboard = Clipboard.get_default();
         _thumbs = new GLib.HashTable<ClipboardEntry, Gdk.Texture>(direct_hash, direct_equal);
-        _clipboard.history.items_changed.connect(prune_thumbs);
+        _clipboard.history.items_changed.connect((pos, removed, added) => {
+            if (removed > 0) {
+                prune_thumbs();
+            }
+        });
 
         _filter = new Gtk.CustomFilter((obj) => {
             if (_query == "") {

@@ -96,6 +96,8 @@ public class Clipboard : Object {
             _persist = settings.get_boolean("clipboard-persist");
             if (_persist) {
                 save_history();
+            } else {
+                delete_history_file();
             }
         });
 
@@ -342,6 +344,15 @@ public class Clipboard : Object {
     private string history_path() {
         return Path.build_filename(
             Environment.get_user_data_dir(), "morghulis", "clipboard", "history.json");
+    }
+
+    // Drop the on-disk history when the user opts out of persistence, so
+    // secrets (passwords, tokens) don't linger past an explicit opt-out.
+    private void delete_history_file() {
+        var path = history_path();
+        if (FileUtils.test(path, FileTest.EXISTS)) {
+            FileUtils.unlink(path);
+        }
     }
 
     private void save_history() {
