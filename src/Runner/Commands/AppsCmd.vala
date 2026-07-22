@@ -71,10 +71,6 @@ public class AppsCmd : Gtk.Widget, ICommand, IResultProvider {
         // Nothing special needed when deactivating
     }
 
-    public void on_enter() {
-        activate_selected();
-    }
-
     public void select_next() {
         var sel = app_list.get_selected_row();
         int start = sel != null ? sel.get_index() + 1 : 0;
