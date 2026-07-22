@@ -6,6 +6,7 @@ public class QButton : Gtk.Box {
     public string icon { get; set; }
     public string identity { get; set; }
     public string status { get; set; }
+    public bool has_extras { get; set; default = true; }
 
     public bool active {
         get {

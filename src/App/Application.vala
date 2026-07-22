@@ -195,6 +195,7 @@ public class Morghulis : Adw.Application {
         add_window(new NavBar());
         add_window(new Runner());
         add_window(new QuickMenu());
+        add_window(new NotificationCenter());
         add_window(new OnScreenDisplay());
         add_window(new NotifPopItemsCenter());
         add_window(new PowerMenu());

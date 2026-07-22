@@ -19,7 +19,9 @@ public class QuickMenu : MorghulWindow {
         }
 
         this.notify["visible"].connect(() => {
-            if (!this.visible) {
+            if (this.visible) {
+                NotificationCenter.instance.visible = false;
+            } else {
                 Settings.settings_navigation.pop();
                 PowerBox.mstack.set_visible_child_name("main");
                 BatteryBox.bb_stack_ref?.set_visible_child_name("sliders");

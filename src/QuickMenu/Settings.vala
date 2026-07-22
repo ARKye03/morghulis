@@ -137,11 +137,6 @@ public class Settings : Adw.Bin {
     }
 
     [GtkCallback]
-    public void notifications_clicked_extras() {
-        quick_settings_navigation_view.push_by_tag("notifications");
-    }
-
-    [GtkCallback]
     public void gamma_clicked() {
         gamma.night = !gamma.night;
     }

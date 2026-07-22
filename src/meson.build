@@ -91,6 +91,7 @@ subdir('ScreenRecord')
 blp_rel = [
     'NavBar/NavBar.blp',
     'Notifications/NotificationContent.blp',
+    'Notifications/NotificationCenter.blp',
     'Notifications/QNotifications.blp',
     'OnScreenDisplay/OnScreenDisplay.blp',
     'PowerMenu/PowerMenu.blp',

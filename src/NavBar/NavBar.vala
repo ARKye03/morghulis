@@ -54,6 +54,11 @@ public class NavBar : MorghulWindow {
     }
 
     [GtkCallback]
+    public void toggle_notification_center() {
+        NotificationCenter.instance.visible = !NotificationCenter.instance.visible;
+    }
+
+    [GtkCallback]
     public void toggle_runner() {
         Runner.instance.visible = !Runner.instance.visible;
     }

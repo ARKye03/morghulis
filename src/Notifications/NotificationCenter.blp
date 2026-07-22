@@ -1,0 +1,42 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $NotificationCenter: $MorghulWindow {
+  styles [
+    "all_unset",
+  ]
+
+  default-width: 400;
+  default-height: 1;
+  title: "NotificationCenter";
+  namespace: "Morghulis.NotificationCenter";
+  anchor: top | right | bottom;
+  layer: top;
+  margin-right: 5;
+  margin-top: 5;
+  margin-bottom: 5;
+
+  Box {
+    vexpand: true;
+    orientation: vertical;
+    spacing: 10;
+
+    $QNotifications {
+      vexpand: true;
+    }
+
+    Adw.Bin {
+      hexpand: true;
+
+      styles [
+        "background",
+        "master_border",
+        "rounded",
+        "padding_10",
+        "notification_calendar",
+      ]
+
+      Calendar {}
+    }
+  }
+}
