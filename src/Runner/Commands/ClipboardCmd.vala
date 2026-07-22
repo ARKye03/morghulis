@@ -3,6 +3,8 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/ClipboardCmd.ui")]
 public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
     private const int THUMB_PX = 256;
+    private const int LEAD_PX = 48;
+    private const int ROW_HEIGHT = 56;
 
     private Clipboard _clipboard;
     private Gtk.SingleSelection _selection;
@@ -36,18 +38,34 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
         var factory = new Gtk.SignalListItemFactory();
         factory.setup.connect((obj) => {
             var item = (Gtk.ListItem) obj;
-            var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
+            var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12) {
+                height_request = ROW_HEIGHT,
+            };
 
-            box.append(new Gtk.Picture() {
+            // Fixed leading slot: a type icon or (for images) a thumbnail, swapped
+            // in place so every row keeps the same footprint.
+            var lead = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0) {
+                width_request = LEAD_PX,
+                height_request = LEAD_PX,
+                halign = Gtk.Align.CENTER,
+                valign = Gtk.Align.CENTER,
+            };
+            lead.append(new Gtk.Image() {
+                pixel_size = 32,
+                halign = Gtk.Align.CENTER,
+                valign = Gtk.Align.CENTER,
+                hexpand = true,
+            });
+            lead.append(new Gtk.Picture() {
                 content_fit = Gtk.ContentFit.SCALE_DOWN,
-                halign = Gtk.Align.START,
                 can_shrink = true,
-                height_request = 40,
-                width_request = 40,
+                hexpand = true,
+                vexpand = true,
                 visible = false,
             });
+            box.append(lead);
 
-            var text = new Gtk.Box(Gtk.Orientation.VERTICAL, 0) {
+            var text = new Gtk.Box(Gtk.Orientation.VERTICAL, 2) {
                 valign = Gtk.Align.CENTER,
                 hexpand = true,
             };
@@ -58,8 +76,7 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
             text.append(new Gtk.Label(null) {
                 halign = Gtk.Align.START,
                 ellipsize = Pango.EllipsizeMode.END,
-                css_classes = { "dim-label" },
-                visible = false,
+                css_classes = { "dim-label", "caption" },
             });
             box.append(text);
             item.child = box;
@@ -85,31 +102,37 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
 
     private void bind_entry(Gtk.ListItem item, ClipboardEntry entry) {
         var box = (Gtk.Box) item.child;
-        var thumb = (Gtk.Picture) box.get_first_child();
+        var lead = (Gtk.Box) box.get_first_child();
+        var icon = (Gtk.Image) lead.get_first_child();
+        var thumb = (Gtk.Picture) lead.get_last_child();
         var text = (Gtk.Box) box.get_last_child();
         var title = (Gtk.Label) text.get_first_child();
         var meta = (Gtk.Label) text.get_last_child();
 
+        thumb.paintable = null;
+        thumb.visible = false;
+        icon.visible = true;
+
+        string time = format_time(entry.timestamp);
+
         if (entry.is_text) {
-            thumb.visible = false;
-            thumb.paintable = null;
-            meta.visible = false;
+            icon.icon_name = "text-x-generic-symbolic";
             title.label = entry.preview;
+            meta.label = time == "" ? "Text" : @"Text · $time";
             return;
         }
 
+        icon.icon_name = "image-x-generic-symbolic";
         title.label = entry.mime;
-        meta.label = "%s KB".printf((entry.data.length / 1024).to_string());
-        meta.visible = true;
+        string size = "%s KB".printf((entry.data.length / 1024).to_string());
+        meta.label = time == "" ? @"Image · $size" : @"Image · $size · $time";
 
         var cached = _thumbs.get(entry);
         if (cached != null) {
-            apply_thumb(thumb, cached);
+            apply_thumb(icon, thumb, cached);
             return;
         }
 
-        thumb.visible = false;
-        thumb.paintable = null;
         ImageLoader.from_bytes.begin(entry.data, THUMB_PX, null, (o, res) => {
             var tex = ImageLoader.from_bytes.end(res);
             if (tex == null) {
@@ -118,14 +141,26 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
             _thumbs.set(entry, tex);
             // Guard against ListItem recycling: only paint if still the same entry.
             if (item.item == entry) {
-                apply_thumb(thumb, tex);
+                apply_thumb(icon, thumb, tex);
             }
         });
     }
 
-    private static void apply_thumb(Gtk.Picture thumb, Gdk.Texture tex) {
+    private static void apply_thumb(Gtk.Image icon, Gtk.Picture thumb, Gdk.Texture tex) {
         thumb.paintable = tex;
         thumb.visible = true;
+        icon.visible = false;
+    }
+
+    private static string format_time(int64 ts) {
+        if (ts <= 0) {
+            return "";
+        }
+        var dt = new DateTime.from_unix_local(ts);
+        var now = new DateTime.now_local();
+        bool same_day = dt.get_year() == now.get_year()
+            && dt.get_day_of_year() == now.get_day_of_year();
+        return dt.format(same_day ? "%H:%M" : "%b %d");
     }
 
     private void prune_thumbs() {

@@ -93,6 +93,27 @@ template $AppSettings: Box {
           step-increment: 1;
         };
       }
+
+      Adw.SpinRow {
+        name: "clipboard-max-entries";
+        title: _("Clipboard History Size");
+        subtitle: _("Maximum clipboard entries to keep");
+        value: bind template.clipboard_max_entries bidirectional;
+        can-focus: false;
+
+        adjustment: Adjustment {
+          lower: 1;
+          upper: 200;
+          step-increment: 1;
+        };
+      }
+
+      Adw.SwitchRow {
+        name: "clipboard-persist";
+        title: _("Persist Clipboard History");
+        subtitle: _("Off = cleared each session");
+        active: bind template.clipboard_persist bidirectional;
+      }
     }
   }
 }

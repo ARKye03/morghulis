@@ -6,6 +6,8 @@ public class AppSettings : Gtk.Box {
     private uint _notifications_default_timeout;
     private uint _osd_timeout;
     private uint _math_history_max_days;
+    private uint _clipboard_max_entries;
+    private bool _clipboard_persist;
 
     public bool gtk_theme {
         get { return _gtk_theme; }
@@ -44,6 +46,22 @@ public class AppSettings : Gtk.Box {
         }
     }
 
+    public uint clipboard_max_entries {
+        get { return _clipboard_max_entries; }
+        set {
+            _clipboard_max_entries = value;
+            _gsettings.set_uint("clipboard-max-entries", _clipboard_max_entries);
+        }
+    }
+
+    public bool clipboard_persist {
+        get { return _clipboard_persist; }
+        set {
+            _clipboard_persist = value;
+            _gsettings.set_boolean("clipboard-persist", _clipboard_persist);
+        }
+    }
+
     construct {
         _gsettings = Morghulis.gsettings;
         reload_gsettings();
@@ -56,5 +74,7 @@ public class AppSettings : Gtk.Box {
         notifications_default_timeout = _gsettings.get_uint("notifications-default-timeout");
         osd_timeout = _gsettings.get_uint("osd-timeout");
         math_history_max_days = _gsettings.get_uint("math-history-max-days");
+        clipboard_max_entries = _gsettings.get_uint("clipboard-max-entries");
+        clipboard_persist = _gsettings.get_boolean("clipboard-persist");
     }
 }

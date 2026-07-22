@@ -8,9 +8,10 @@ public class ClipboardEntry : Object {
     public Bytes data { get; construct; }
     public bool is_text { get; construct; }
     public string preview { get; construct; }
+    public int64 timestamp { get; construct; }
 
-    public ClipboardEntry(string mime, Bytes data, bool is_text, string preview) {
-        Object(mime: mime, data: data, is_text: is_text, preview: preview);
+    public ClipboardEntry(string mime, Bytes data, bool is_text, string preview, int64 timestamp) {
+        Object(mime: mime, data: data, is_text: is_text, preview: preview, timestamp: timestamp);
     }
 }
 
@@ -22,7 +23,6 @@ public class ClipboardEntry : Object {
  * and can re-publish any stored entry as the current selection.
  */
 public class Clipboard : Object {
-    private const int MAX_ENTRIES = 50;
     private const int MAX_PAYLOAD = 5 * 1024 * 1024; // cap a single entry at 5 MB
     private const int READ_TIMEOUT_MS = 1000;
     private const string[] TEXT_MIMES = {
@@ -40,6 +40,8 @@ public class Clipboard : Object {
 
     public ListStore history { get; private set; }
 
+    private uint _max_entries = 50;
+    private bool _persist = true;
     private bool _watching = false;
     public bool watching {
         get { return _watching; }
@@ -81,7 +83,25 @@ public class Clipboard : Object {
 
     construct {
         history = new ListStore(typeof(ClipboardEntry));
-        load_history();
+
+        var settings = Morghulis.gsettings;
+        _max_entries = uint.max(1, settings.get_uint("clipboard-max-entries"));
+        _persist = settings.get_boolean("clipboard-persist");
+        settings.changed["clipboard-max-entries"].connect(() => {
+            _max_entries = uint.max(1, settings.get_uint("clipboard-max-entries"));
+            trim_history();
+            save_history();
+        });
+        settings.changed["clipboard-persist"].connect(() => {
+            _persist = settings.get_boolean("clipboard-persist");
+            if (_persist) {
+                save_history();
+            }
+        });
+
+        if (_persist) {
+            load_history();
+        }
 
         display = new Wl.Display.connect(Environment.get_variable("WAYLAND_DISPLAY") ?? "wayland-0");
         if (display == null) {
@@ -208,7 +228,8 @@ public class Clipboard : Object {
             return;
         }
         Bytes data = new Bytes(ba.data);
-        add_entry(new ClipboardEntry(mime, data, is_text, make_preview(mime, data, is_text)));
+        int64 ts = new DateTime.now_local().to_unix();
+        add_entry(new ClipboardEntry(mime, data, is_text, make_preview(mime, data, is_text), ts));
     }
 
     private void add_entry(ClipboardEntry entry) {
@@ -228,10 +249,14 @@ public class Clipboard : Object {
             }
         }
         history.insert(0, entry);
-        while (history.get_n_items() > MAX_ENTRIES) {
+        trim_history();
+        save_history();
+    }
+
+    private void trim_history() {
+        while (history.get_n_items() > _max_entries) {
             history.remove(history.get_n_items() - 1);
         }
-        save_history();
     }
 
     /** Re-publish a stored entry as the current selection. */
@@ -320,6 +345,9 @@ public class Clipboard : Object {
     }
 
     private void save_history() {
+        if (!_persist) {
+            return;
+        }
         var builder = new Json.Builder();
         builder.begin_array();
         for (uint i = 0; i < history.get_n_items(); i++) {
@@ -328,6 +356,7 @@ public class Clipboard : Object {
             builder.set_member_name("mime"); builder.add_string_value(e.mime);
             builder.set_member_name("is_text"); builder.add_boolean_value(e.is_text);
             builder.set_member_name("preview"); builder.add_string_value(e.preview);
+            builder.set_member_name("ts"); builder.add_int_value(e.timestamp);
             builder.set_member_name("data");
             builder.add_string_value(Base64.encode(e.data.get_data()));
             builder.end_object();
@@ -363,11 +392,13 @@ public class Clipboard : Object {
             arr.foreach_element((a, i, node) => {
                 var obj = node.get_object();
                 uint8[] data = Base64.decode(obj.get_string_member("data"));
+                int64 ts = obj.has_member("ts") ? obj.get_int_member("ts") : 0;
                 history.append(new ClipboardEntry(
                     obj.get_string_member("mime"),
                     new Bytes.take((owned) data),
                     obj.get_boolean_member("is_text"),
-                    obj.get_string_member("preview")));
+                    obj.get_string_member("preview"),
+                    ts));
             });
         } catch (Error e) {
             warning("clipboard: failed to load history: %s", e.message);
