@@ -41,6 +41,9 @@ public class Runner : MorghulWindow {
                 _current_provider = "apps";
                 commands_stack.visible_child_name = "apps";
             } else {
+                // gtk-layer-shell keeps the widest width a page ever forced (the
+                // help page is wide); reset so it renegotiates to content width.
+                this.default_width = -1;
                 this.entry.grab_focus();
                 var current = commands_stack.visible_child;
                 if (current is ICommand) {
