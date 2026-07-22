@@ -204,6 +204,10 @@ circularprogress {
     border-radius: adw.$master-border-radius;
 }
 
+.runner-results picture {
+    border-radius: adw.$master-border-radius;
+}
+
 .runner-nav row:selected,
 .runner-results row:selected {
     background-color: adw.$accent-bg-color;

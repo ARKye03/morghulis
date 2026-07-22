@@ -46,7 +46,9 @@ deps = [
     dependency('libcmark'),
     dependency('muparser'),
     dependency('libsoup-3.0'),
-    dependency('json-glib-1.0')
+    dependency('json-glib-1.0'),
+    dependency('glycin-2'),
+    dependency('glycin-gtk4-2')
 ]
 
 # wayland-client MUST come after gtk4-layer-shell-0 in the link line:
