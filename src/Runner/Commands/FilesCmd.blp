@@ -1,0 +1,23 @@
+using Gtk 4.0;
+
+template $FilesCmd: Box {
+    orientation: vertical;
+
+    ScrolledWindow scrolled {
+        max-content-height: 400;
+        propagate-natural-height: true;
+        hscrollbar-policy: never;
+
+        styles [
+            "bg_transparent",
+        ]
+
+        ListView list_view {
+            single-click-activate: true;
+
+            styles [
+                "runner-results",
+            ]
+        }
+    }
+}

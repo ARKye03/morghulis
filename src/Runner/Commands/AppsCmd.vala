@@ -14,6 +14,9 @@ public class AppsCmd : Gtk.Widget, ICommand, IResultProvider {
     [GtkChild]
     private unowned Gtk.Stack apps_stack;
 
+    [GtkChild]
+    private unowned Gtk.ScrolledWindow scrolled;
+
     construct {
         this.apps = new AstalApps.Apps();
         _is_uwsm_session = Environment.get_variable("IS_UWSM_ACTIVE") == "1";
@@ -78,6 +81,7 @@ public class AppsCmd : Gtk.Widget, ICommand, IResultProvider {
         var next = first_visible_from(start);
         if (next != null) {
             app_list.select_row(next);
+            scroll_to_row(next);
         }
     }
 
@@ -91,8 +95,16 @@ public class AppsCmd : Gtk.Widget, ICommand, IResultProvider {
             var row = app_list.get_row_at_index(i);
             if (row != null && row.get_child_visible()) {
                 app_list.select_row(row);
+                scroll_to_row(row);
                 return;
             }
+        }
+    }
+
+    private void scroll_to_row(Gtk.ListBoxRow row) {
+        var viewport = scrolled.child as Gtk.Viewport;
+        if (viewport != null) {
+            viewport.scroll_to(row, null);
         }
     }
 
@@ -124,6 +136,7 @@ public class AppsCmd : Gtk.Widget, ICommand, IResultProvider {
         var row = first_visible_from(0);
         if (row != null) {
             app_list.select_row(row);
+            scroll_to_row(row);
         }
     }
 

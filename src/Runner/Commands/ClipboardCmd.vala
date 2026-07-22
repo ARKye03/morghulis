@@ -1,5 +1,6 @@
 // Clipboard history picker: activating an entry re-publishes it as the current
 // selection and closes the Runner; typing filters by preview text.
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/ClipboardCmd.ui")]
 public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
     private Clipboard _clipboard;
     private Gtk.SingleSelection _selection;
@@ -8,8 +9,10 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
 
     public string icon_name { get { return "edit-paste-symbolic"; } }
 
+    [GtkChild]
+    private unowned Gtk.ListView list_view;
+
     construct {
-        this.orientation = Gtk.Orientation.VERTICAL;
         _clipboard = Clipboard.get_default();
 
         _filter = new Gtk.CustomFilter((obj) => {
@@ -43,23 +46,11 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
             ((Gtk.Label) item.child).label = entry.preview;
         });
 
-        var list_view = new Gtk.ListView(_selection, factory) {
-            single_click_activate = true,
-        };
-        list_view.add_css_class("runner-results");
+        list_view.model = _selection;
+        list_view.factory = factory;
         list_view.activate.connect((pos) => {
             run_entry(_selection.get_item(pos) as ClipboardEntry);
         });
-
-        var scrollable = new Gtk.ScrolledWindow() {
-            max_content_height = 400,
-            propagate_natural_height = true,
-            hscrollbar_policy = Gtk.PolicyType.NEVER,
-            vexpand = true,
-            child = list_view,
-        };
-        scrollable.add_css_class("bg_transparent");
-        this.append(scrollable);
     }
 
     private void run_entry(ClipboardEntry? entry) {
@@ -67,6 +58,13 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
             _clipboard.copy(entry);
         }
         Runner.instance.visible = false;
+    }
+
+    private void scroll_to_selected() {
+        uint sel = _selection.selected;
+        if (sel != Gtk.INVALID_LIST_POSITION) {
+            list_view.scroll_to(sel, Gtk.ListScrollFlags.NONE, null);
+        }
     }
 
     public void handle_input(string input) {
@@ -89,6 +87,7 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
         } else if (cur + 1 < n) {
             _selection.selected = cur + 1;
         }
+        scroll_to_selected();
     }
 
     public void select_prev() {
@@ -100,6 +99,7 @@ public class ClipboardCmd : Gtk.Box, ICommand, IResultProvider {
         } else if (cur > 0) {
             _selection.selected = cur - 1;
         }
+        scroll_to_selected();
     }
 
     public bool activate_selected() {

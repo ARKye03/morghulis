@@ -1,4 +1,5 @@
 // File search view backed by the GNOME Nautilus SearchProvider2 over DBus.
+[GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/FilesCmd.ui")]
 public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
     private GnomeSearchProvider _provider;
     private Gtk.SingleSelection _selection;
@@ -6,9 +7,10 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
 
     public string icon_name { get { return "folder-symbolic"; } }
 
-    construct {
-        this.orientation = Gtk.Orientation.VERTICAL;
+    [GtkChild]
+    private unowned Gtk.ListView list_view;
 
+    construct {
         _provider = new GnomeSearchProvider("org.gnome.Nautilus.search-provider.ini");
         _selection = new Gtk.SingleSelection(_provider.results) {
             autoselect = true,
@@ -47,23 +49,11 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
             ((Gtk.Label) text.get_last_child()).label = result.description;
         });
 
-        var list_view = new Gtk.ListView(_selection, factory) {
-            single_click_activate = true,
-        };
-        list_view.add_css_class("runner-results");
+        list_view.model = _selection;
+        list_view.factory = factory;
         list_view.activate.connect((pos) => {
             run_result(_selection.get_item(pos) as SearchResult);
         });
-
-        var scrollable = new Gtk.ScrolledWindow() {
-            max_content_height = 400,
-            propagate_natural_height = true,
-            hscrollbar_policy = Gtk.PolicyType.NEVER,
-            vexpand = true,
-            child = list_view,
-        };
-        scrollable.add_css_class("bg_transparent");
-        this.append(scrollable);
     }
 
     private void run_result(SearchResult? result) {
@@ -71,6 +61,13 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
             result.activate();
         }
         Runner.instance.visible = false;
+    }
+
+    private void scroll_to_selected() {
+        uint sel = _selection.selected;
+        if (sel != Gtk.INVALID_LIST_POSITION) {
+            list_view.scroll_to(sel, Gtk.ListScrollFlags.NONE, null);
+        }
     }
 
     public void handle_input(string input) {
@@ -106,6 +103,7 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
         } else if (cur + 1 < n) {
             _selection.selected = cur + 1;
         }
+        scroll_to_selected();
     }
 
     public void select_prev() {
@@ -117,6 +115,7 @@ public class FilesCmd : Gtk.Box, ICommand, IResultProvider {
         } else if (cur > 0) {
             _selection.selected = cur - 1;
         }
+        scroll_to_selected();
     }
 
     public bool activate_selected() {
