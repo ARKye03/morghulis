@@ -138,7 +138,7 @@ public class Settings : Adw.Bin {
 
     [GtkCallback]
     public void notifications_clicked_extras() {
-        quick_settings_navigation_view.push_by_tag("notifications");
+        NotificationCenter.instance.visible = true;
     }
 
     [GtkCallback]

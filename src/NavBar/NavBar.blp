@@ -142,7 +142,9 @@ template $NavBar: $MorghulWindow {
           "rounded",
         ]
 
-        MenuButton {
+        Button {
+          clicked => $toggle_notification_center();
+
           styles [
             "title-4",
             "numeric",
@@ -151,17 +153,6 @@ template $NavBar: $MorghulWindow {
           Label {
             label: bind template.current_time;
           }
-
-          popover: Popover {
-            position: top;
-            width-request: 350;
-            height-request: 250;
-            autohide: true;
-            has-arrow: false;
-            margin-bottom: 10;
-
-            Calendar {}
-          };
         }
       }
 
