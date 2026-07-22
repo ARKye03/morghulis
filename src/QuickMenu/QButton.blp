@@ -56,10 +56,12 @@ template $QButton: Box {
 
     Separator {
         orientation: vertical;
+        visible: bind template.has_extras;
     }
 
     Button {
         icon-name: "pan-end-symbolic";
         clicked => $on_clicked_extras();
+        visible: bind template.has_extras;
     }
 }

@@ -172,6 +172,33 @@ circularprogress {
     }
 }
 
+.notification_calendar calendar {
+    background-color: transparent;
+
+    &>header button {
+        background-color: transparent;
+        border-radius: adw.$master-border-radius;
+
+        &:hover {
+            background-color: color-mix(in srgb, currentColor 15%, transparent);
+        }
+    }
+
+    & label.day-number {
+        border-radius: adw.$master-border-radius;
+        padding: 2px 6px;
+
+        &.today {
+            color: adw.$accent-color;
+        }
+
+        &:selected {
+            background-color: adw.$accent-bg-color;
+            color: adw.$accent-fg-color;
+        }
+    }
+}
+
 .screen_rec_overlay {
     background-color: rgba(0, 0, 0, 0.3);
 }

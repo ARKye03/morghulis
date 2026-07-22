@@ -3,6 +3,13 @@ using Adw 1;
 
 template $QNotifications: Box {
   orientation: vertical;
+  overflow: hidden;
+
+  styles [
+    "background",
+    "master_border",
+    "rounded",
+  ]
 
   Adw.HeaderBar {
     show-end-title-buttons: false;

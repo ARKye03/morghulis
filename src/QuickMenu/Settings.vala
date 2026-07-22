@@ -137,11 +137,6 @@ public class Settings : Adw.Bin {
     }
 
     [GtkCallback]
-    public void notifications_clicked_extras() {
-        NotificationCenter.instance.visible = true;
-    }
-
-    [GtkCallback]
     public void gamma_clicked() {
         gamma.night = !gamma.night;
     }

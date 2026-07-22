@@ -117,8 +117,8 @@ template $Settings: Adw.Bin {
 
             name: "Don't disturb";
             identity: "Notifications";
+            has-extras: false;
             clicked => $notifications_clicked();
-            clicked_extras => $notifications_clicked_extras();
             inactive: bind template.notifd as <AstalNotifd.Notifd>.dont-disturb;
             status: bind $notif_status(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
             icon: bind $notif_icon(template.notifd as <AstalNotifd.Notifd>.dont-disturb) as <string>;
