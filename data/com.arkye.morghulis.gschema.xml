@@ -50,5 +50,18 @@
       <summary>Clipboard history watching</summary>
       <description>Whether new clipboard selections are recorded into history.</description>
     </key>
+
+    <key name="clipboard-max-entries" type="u">
+      <default>50</default>
+      <range min="1" max="200" />
+      <summary>Maximum clipboard history entries</summary>
+      <description>How many clipboard entries to keep in history.</description>
+    </key>
+
+    <key name="clipboard-persist" type="b">
+      <default>true</default>
+      <summary>Persist clipboard history across reboots</summary>
+      <description>When off, history lives only for the current session.</description>
+    </key>
   </schema>
 </schemalist>

@@ -3,6 +3,7 @@ project_resources += files(
     'CMark/Pango.vala',
     'Clipboard/Clipboard.vala',
     'Gamma/Gamma.vala',
+    'Image/ImageLoader.vala',
     'ScreenRec/ScreenRecorder.vala',
     'Backlight/Backlight.vala',
 )
