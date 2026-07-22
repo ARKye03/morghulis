@@ -42,6 +42,7 @@ public class Clipboard : Object {
 
     private uint _max_entries = 50;
     private bool _persist = true;
+    private uint _trim_debounce = 0;
     private bool _watching = false;
     public bool watching {
         get { return _watching; }
@@ -87,10 +88,19 @@ public class Clipboard : Object {
         var settings = Morghulis.gsettings;
         _max_entries = uint.max(1, settings.get_uint("clipboard-max-entries"));
         _persist = settings.get_boolean("clipboard-persist");
+        // The SpinRow fires on every intermediate value; debounce so a scrub
+        // doesn't run a full (base64 + file) save_history per step.
         settings.changed["clipboard-max-entries"].connect(() => {
             _max_entries = uint.max(1, settings.get_uint("clipboard-max-entries"));
-            trim_history();
-            save_history();
+            if (_trim_debounce > 0) {
+                Source.remove(_trim_debounce);
+            }
+            _trim_debounce = Timeout.add(400, () => {
+                _trim_debounce = 0;
+                trim_history();
+                save_history();
+                return Source.REMOVE;
+            });
         });
         settings.changed["clipboard-persist"].connect(() => {
             _persist = settings.get_boolean("clipboard-persist");
