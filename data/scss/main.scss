@@ -199,6 +199,18 @@ circularprogress {
     }
 }
 
+.runner-results row {
+    padding: 10px;
+    border-radius: adw.$master-border-radius;
+}
+
+.runner-nav row:selected,
+.runner-results row:selected {
+    background-color: adw.$accent-bg-color;
+    color: adw.$accent-fg-color;
+    border-radius: adw.$master-border-radius;
+}
+
 .screen_rec_overlay {
     background-color: rgba(0, 0, 0, 0.3);
 }

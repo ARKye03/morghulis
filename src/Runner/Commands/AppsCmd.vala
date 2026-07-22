@@ -1,5 +1,5 @@
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Commands/AppsCmd.ui")]
-public class AppsCmd : Gtk.Widget, ICommand {
+public class AppsCmd : Gtk.Widget, ICommand, IResultProvider {
     private List<FileMonitor> _data_dirs_monitors;
     private uint _reload_timeout = 0;
     private bool _is_uwsm_session = false;
@@ -69,12 +69,61 @@ public class AppsCmd : Gtk.Widget, ICommand {
     }
 
     public void on_enter() {
-        var first_app = (AppsCmdButton)app_list.get_first_child();
+        activate_selected();
+    }
 
-        if (first_app != null) {
-            debug("Launching application: " + first_app.app.name);
-            first_app.activate();
-            Runner.instance.visible = false;
+    public void select_next() {
+        var sel = app_list.get_selected_row();
+        int start = sel != null ? sel.get_index() + 1 : 0;
+        var next = first_visible_from(start);
+        if (next != null) {
+            app_list.select_row(next);
+        }
+    }
+
+    public void select_prev() {
+        var sel = app_list.get_selected_row();
+        if (sel == null) {
+            select_first_visible();
+            return;
+        }
+        for (int i = sel.get_index() - 1; i >= 0; i--) {
+            var row = app_list.get_row_at_index(i);
+            if (row != null && row.get_child_visible()) {
+                app_list.select_row(row);
+                return;
+            }
+        }
+    }
+
+    public bool activate_selected() {
+        var app = (AppsCmdButton) app_list.get_selected_row();
+        if (app == null) {
+            app = (AppsCmdButton) first_visible_from(0);
+        }
+        if (app != null) {
+            debug("Launching application: " + app.app.name);
+            app.activate();
+        }
+        return true;
+    }
+
+    private Gtk.ListBoxRow? first_visible_from(int start) {
+        for (int i = start; ; i++) {
+            var row = app_list.get_row_at_index(i);
+            if (row == null) {
+                return null;
+            }
+            if (row.get_child_visible()) {
+                return row;
+            }
+        }
+    }
+
+    private void select_first_visible() {
+        var row = first_visible_from(0);
+        if (row != null) {
+            app_list.select_row(row);
         }
     }
 
@@ -96,6 +145,7 @@ public class AppsCmd : Gtk.Widget, ICommand {
 
         app_list.invalidate_sort();
         app_list.invalidate_filter();
+        select_first_visible();
 
         string target_page = has_visible_apps ? "apps-list" : "no-results";
         debug(@"Switching to page: $target_page (has_visible_apps: $has_visible_apps)");

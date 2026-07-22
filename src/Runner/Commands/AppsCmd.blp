@@ -19,12 +19,13 @@ template $AppsCmd: Gtk.Widget {
                 hscrollbar-policy: never;
 
                 ListBox app_list {
-                    selection-mode: none;
+                    selection-mode: single;
                     overflow: hidden;
 
                     styles [
                         "bg_transparent",
                         "bottom_left_right_corner_borders",
+                        "runner-nav",
                     ]
                 }
             };

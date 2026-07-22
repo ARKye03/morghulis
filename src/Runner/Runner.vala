@@ -6,10 +6,12 @@ public struct Command {
 
 [GtkTemplate(ui = "/com/github/ARKye03/morghulis/ui/Runner/Runner.ui")]
 public class Runner : MorghulWindow {
+    private const string[] PROVIDERS = { "apps", "clip", "files" };
+
     private GLib.HashTable<string, Command?> _commands;
-    private AppsCmd _apps_cmd;
     private MathCmd _math_cmd;
     private string? _previous_page = null;
+    private string _current_provider = "apps";
 
     public static Runner instance { get; private set; }
 
@@ -29,7 +31,6 @@ public class Runner : MorghulWindow {
             this.destroy();
         }
 
-        _apps_cmd = new AppsCmd();
         init_commands();
 
         commands_stack.notify["visible-child"].connect(on_stack_page_changed);
@@ -37,11 +38,13 @@ public class Runner : MorghulWindow {
         this.notify["visible"].connect(() => {
             if (!this.visible) {
                 this.entry.text = "";
+                _current_provider = "apps";
                 commands_stack.visible_child_name = "apps";
             } else {
                 this.entry.grab_focus();
-                if (commands_stack.visible_child_name == "apps" && _apps_cmd is ICommand) {
-                    ((ICommand)_apps_cmd).on_activate();
+                var current = commands_stack.visible_child;
+                if (current is ICommand) {
+                    ((ICommand) current).on_activate();
                 }
             }
         });
@@ -58,20 +61,19 @@ public class Runner : MorghulWindow {
             return;
         }
 
-        // Infer a bare math expression (Spotlight-style) before falling to apps
-        if (_math_cmd.looks_like_math(input)) {
+        // Infer a bare math expression (Spotlight-style), but only from the apps
+        // provider so typing on clipboard/files filters those instead.
+        if (_current_provider == "apps" && _math_cmd.looks_like_math(input)) {
             commands_stack.visible_child_name = "m";
             _math_cmd.handle_input(input);
             return;
         }
 
-        // Default to showing apps
-        commands_stack.visible_child_name = "apps";
+        commands_stack.visible_child_name = _current_provider;
 
-        // Notify the current command about input changes
         var current_widget = commands_stack.visible_child;
         if (current_widget is ICommand) {
-            ((ICommand)current_widget).handle_input(input);
+            ((ICommand) current_widget).handle_input(input);
         }
     }
 
@@ -79,13 +81,57 @@ public class Runner : MorghulWindow {
     public void launch_first_runner_button() {
         var current_widget = commands_stack.visible_child;
 
-        if (current_widget is ICommand) {
-            ((ICommand)current_widget).on_enter();
+        if (current_widget is IResultProvider) {
+            if (((IResultProvider) current_widget).activate_selected()) {
+                this.visible = false;
+            }
+            return;
         }
 
-        if (current_widget is MathCmd && ((MathCmd)current_widget).has_valid_result) {
+        if (current_widget is ICommand) {
+            ((ICommand) current_widget).on_enter();
+        }
+
+        if (current_widget is MathCmd && ((MathCmd) current_widget).has_valid_result) {
             this.visible = false;
         }
+    }
+
+    [GtkCallback]
+    public bool key_pressed(uint keyval, uint keycode, Gdk.ModifierType state) {
+        var provider = commands_stack.visible_child as IResultProvider;
+
+        switch (keyval) {
+            case Gdk.Key.Down:
+                if (provider != null) {
+                    provider.select_next();
+                    return true;
+                }
+            break;
+
+            case Gdk.Key.Up:
+                if (provider != null) {
+                    provider.select_prev();
+                    return true;
+                }
+            break;
+
+            case Gdk.Key.Left:
+                if (this.entry.text == "") {
+                    cycle_provider(-1);
+                    return true;
+                }
+            break;
+
+            case Gdk.Key.Right:
+                if (this.entry.text == "") {
+                    cycle_provider(1);
+                    return true;
+                }
+            break;
+        }
+
+        return false;
     }
 
     [GtkCallback]
@@ -96,6 +142,19 @@ public class Runner : MorghulWindow {
             this.entry.text = "";
             this.entry.grab_focus();
         }
+    }
+
+    private void cycle_provider(int dir) {
+        int idx = 0;
+        for (int i = 0; i < PROVIDERS.length; i++) {
+            if (PROVIDERS[i] == _current_provider) {
+                idx = i;
+                break;
+            }
+        }
+        idx = ((idx + dir) % PROVIDERS.length + PROVIDERS.length) % PROVIDERS.length;
+        _current_provider = PROVIDERS[idx];
+        commands_stack.visible_child_name = _current_provider;
     }
 
     private void init_commands() {
@@ -126,6 +185,9 @@ public class Runner : MorghulWindow {
         _commands.insert(math_cmd.name, math_cmd);
         commands_stack.add_named(math_cmd.widget, math_cmd.name);
 
+        commands_stack.add_named(new ClipboardCmd(), "clip");
+        commands_stack.add_named(new FilesCmd(), "files");
+
         commands_stack.add_named(new HelpCmd(_commands.get_values()), "help");
     }
 
@@ -152,7 +214,7 @@ public class Runner : MorghulWindow {
             // If the command can handle input and has arguments, pass them
             if (cmd.widget is ICommand && args.length > 0) {
                 string command_input = string.joinv(" ", args);
-                ((ICommand)cmd.widget).handle_input(command_input);
+                ((ICommand) cmd.widget).handle_input(command_input);
             }
         } else {
             // Unknown command, show help
@@ -162,42 +224,27 @@ public class Runner : MorghulWindow {
 
     private void on_stack_page_changed() {
         if (_previous_page != null) {
-            if (_previous_page == "apps") {
-                if (_apps_cmd is ICommand) {
-                    ((ICommand)_apps_cmd).on_deactivate();
-                }
-            } else {
-                Command? prev_cmd = _commands.lookup(_previous_page);
-                if (prev_cmd != null && prev_cmd.widget is ICommand) {
-                    ((ICommand)prev_cmd.widget).on_deactivate();
-                }
+            var prev = commands_stack.get_child_by_name(_previous_page);
+            if (prev is ICommand) {
+                ((ICommand) prev).on_deactivate();
             }
         }
 
         string current_page = commands_stack.visible_child_name;
+        var current = commands_stack.visible_child;
 
-        // Update cmd_active and active_cmd_icon based on current page
+        // The default browsing modes hide the header icon; manually invoked
+        // commands (:m, :si, :w) and the clip/files providers show theirs.
         if (current_page == "apps" || current_page == "help") {
             cmd_active = false;
             active_cmd_icon = null;
-        } else {
-            // This is a manually invoked command (like :m, :si, :w)
-            Command? current_cmd = _commands.lookup(current_page);
-            if (current_cmd != null && current_cmd.widget is ICommand) {
-                cmd_active = true;
-                active_cmd_icon = ((ICommand)current_cmd.widget).icon_name;
-            }
+        } else if (current is ICommand) {
+            cmd_active = true;
+            active_cmd_icon = ((ICommand) current).icon_name;
         }
 
-        if (current_page == "apps") {
-            if (_apps_cmd is ICommand) {
-                ((ICommand)_apps_cmd).on_activate();
-            }
-        } else {
-            Command? current_cmd = _commands.lookup(current_page);
-            if (current_cmd != null && current_cmd.widget is ICommand) {
-                ((ICommand)current_cmd.widget).on_activate();
-            }
+        if (current is ICommand) {
+            ((ICommand) current).on_activate();
         }
 
         _previous_page = current_page;
