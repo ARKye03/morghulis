@@ -15,6 +15,11 @@ template $Runner: $MorghulWindow {
         key-released => $key_released();
     }
 
+    EventControllerKey {
+        propagation-phase: capture;
+        key-pressed => $key_pressed();
+    }
+
     Box {
         orientation: vertical;
         width-request: 512;
@@ -70,7 +75,7 @@ template $Runner: $MorghulWindow {
             hhomogeneous: false;
             vhomogeneous: false;
             transition-duration: 250;
-            transition-type: crossfade;
+            transition-type: slide_left_right;
 
             styles [
                 "bottom_left_right_corner_borders",

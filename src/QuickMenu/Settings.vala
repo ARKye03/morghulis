@@ -157,11 +157,6 @@ public class Settings : Adw.Bin {
     }
 
     [GtkCallback]
-    public void clipboard_clicked_extras() {
-        quick_settings_navigation_view.push_by_tag("clipboard");
-    }
-
-    [GtkCallback]
     public string clipboard_status(bool watching) {
         return watching ? "On" : "Off";
     }

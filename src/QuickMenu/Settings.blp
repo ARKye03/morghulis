@@ -133,10 +133,10 @@ template $Settings: Adw.Bin {
             name: "Clipboard";
             identity: "Clipboard";
             icon: "edit-paste-symbolic";
+            has-extras: false;
             active: bind template.clipboard as <$Clipboard>.watching;
             status: bind $clipboard_status(template.clipboard as <$Clipboard>.watching) as <string>;
             clicked => $clipboard_clicked();
-            clicked_extras => $clipboard_clicked_extras();
           }
 
           $QButton {
@@ -239,13 +239,6 @@ template $Settings: Adw.Bin {
       title: "Audio";
 
       $QAudioBox {}
-    }
-
-    Adw.NavigationPage {
-      tag: "clipboard";
-      title: "Clipboard";
-
-      $QClipboard {}
     }
 
     Adw.NavigationPage {

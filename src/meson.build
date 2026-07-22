@@ -112,6 +112,8 @@ blp_rel = [
     'Runner/Runner.blp',
     'Runner/Commands/AppsCmd.blp',
     'Runner/Commands/AppsCmdButton.blp',
+    'Runner/Commands/ClipboardCmd.blp',
+    'Runner/Commands/FilesCmd.blp',
     'Runner/Commands/HelpCmd.blp',
     'Runner/Commands/MathCmd.blp',
     'Runner/Commands/SysInfoCmd.blp',

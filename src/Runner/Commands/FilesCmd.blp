@@ -1,60 +1,66 @@
 using Gtk 4.0;
 
-template $AppsCmd: Gtk.Widget {
-    layout-manager: BinLayout {};
+template $FilesCmd: Box {
+    orientation: vertical;
 
-    Stack apps_stack {
-        transition-type: crossfade;
-        transition-duration: 200;
+    Stack files_stack {
         interpolate-size: true;
         hhomogeneous: false;
         vhomogeneous: false;
+        transition-type: crossfade;
+        transition-duration: 200;
 
         StackPage {
-            name: "apps-list";
+            name: "results";
 
             child: ScrolledWindow scrolled {
                 max-content-height: 400;
                 propagate-natural-height: true;
                 hscrollbar-policy: never;
 
-                ListBox app_list {
-                    selection-mode: single;
-                    overflow: hidden;
+                styles [
+                    "bg_transparent",
+                ]
+
+                ListView list_view {
+                    single-click-activate: true;
 
                     styles [
-                        "bg_transparent",
-                        "bottom_left_right_corner_borders",
-                        "runner-nav",
+                        "runner-results",
                     ]
                 }
             };
         }
 
         StackPage {
-            name: "no-results";
+            name: "empty";
 
             child: Box {
                 orientation: vertical;
                 spacing: 12;
                 halign: center;
+                valign: center;
 
                 styles [
                     "bg_transparent",
-                    "bottom_left_right_corner_borders",
                     "padding_10",
                 ]
 
                 Image {
-                    icon-name: "face-crying-symbolic";
-                    pixel-size: 216;
-                }
-
-                Label {
-                    label: "No matching applications found";
+                    icon-name: "folder-symbolic";
+                    pixel-size: 128;
 
                     styles [
-                        "title-1",
+                        "dim-label",
+                    ]
+                }
+
+                Label placeholder {
+                    label: "Type to search files";
+
+                    styles [
+                        "title-2",
+                        "dim-label",
                     ]
                 }
             };
