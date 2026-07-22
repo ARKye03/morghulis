@@ -51,11 +51,17 @@ public class NavBar : MorghulWindow {
     [GtkCallback]
     public void toggle_side_dashboard() {
         QuickMenu.instance.visible = !QuickMenu.instance.visible;
+        if (QuickMenu.instance.visible) {
+            NotificationCenter.instance.visible = false;
+        }
     }
 
     [GtkCallback]
     public void toggle_notification_center() {
         NotificationCenter.instance.visible = !NotificationCenter.instance.visible;
+        if (NotificationCenter.instance.visible) {
+            QuickMenu.instance.visible = false;
+        }
     }
 
     [GtkCallback]
