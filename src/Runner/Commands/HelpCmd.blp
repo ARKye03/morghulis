@@ -37,4 +37,53 @@ template $HelpCmd: Box {
             ]
         }
     }
+
+    Label {
+        label: "Navigation";
+        halign: center;
+
+        styles [
+            "title-1",
+        ]
+    }
+
+    Separator {
+        orientation: horizontal;
+    }
+
+    Box {
+        orientation: vertical;
+        spacing: 10;
+
+        styles [
+            "padding_10",
+        ]
+
+        Label {
+            label: "↑ / ↓   —   Move the selection up and down";
+            halign: start;
+
+            styles [
+                "title-3",
+            ]
+        }
+
+        Label {
+            label: "← / →   —   Switch section (Apps · Clipboard · Files) while the search is empty";
+            halign: start;
+
+            styles [
+                "title-3",
+            ]
+        }
+
+        Label {
+            label: "Enter   —   Open the selected result";
+            halign: start;
+
+            styles [
+                "title-3",
+            ]
+        }
+    }
 }

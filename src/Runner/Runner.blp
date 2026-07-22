@@ -70,68 +70,6 @@ template $Runner: $MorghulWindow {
             }
         }
 
-        Box {
-            spacing: 4;
-
-            styles [
-                "background",
-                "provider-tabs",
-            ]
-
-            Button {
-                icon-name: "go-previous-symbolic";
-                tooltip-text: "Previous section (Left arrow)";
-                clicked => $tab_prev();
-
-                styles [
-                    "flat",
-                ]
-            }
-
-            Box {
-                hexpand: true;
-                halign: center;
-                spacing: 4;
-
-                Button apps_tab {
-                    label: "Apps";
-                    clicked => $tab_apps();
-
-                    styles [
-                        "flat",
-                    ]
-                }
-
-                Button clip_tab {
-                    label: "Clipboard";
-                    clicked => $tab_clip();
-
-                    styles [
-                        "flat",
-                    ]
-                }
-
-                Button files_tab {
-                    label: "Files";
-                    clicked => $tab_files();
-
-                    styles [
-                        "flat",
-                    ]
-                }
-            }
-
-            Button {
-                icon-name: "go-next-symbolic";
-                tooltip-text: "Next section (Right arrow)";
-                clicked => $tab_next();
-
-                styles [
-                    "flat",
-                ]
-            }
-        }
-
         Stack commands_stack {
             interpolate-size: true;
             hhomogeneous: false;
