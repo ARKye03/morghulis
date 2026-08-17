@@ -1,3 +1,5 @@
+
+
 # Morghulis
 
 - [Morghulis](#morghulis)
@@ -141,7 +143,7 @@ nix run github:ARKye03/morghulis#fhs -- --help
 - [x] OnScreenDisplay
   - [x] Audio
   - [x] Brightness
-- [x] Backligh
+- [x] Backlight
 - [x] Hot Reload CSS
 
 > [!WARNING]
